@@ -1,0 +1,151 @@
+.login-page {
+  display: flex;
+  min-height: 100vh;
+}
+
+// Левая панель
+.login-left {
+  flex: 1;
+  background: linear-gradient(135deg, #0f2d52 0%, #1a73e8 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  color: white;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+}
+
+.brand-icon {
+  font-size: 48px !important;
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.brand-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  max-width: 400px;
+  margin-bottom: 48px;
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.9);
+
+  .material-icons {
+    color: #81c995;
+    font-size: 20px;
+  }
+}
+
+// Правая панель
+.login-right {
+  width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6f9;
+  padding: 40px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.login-header {
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f2d52;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #718096;
+    font-size: 14px;
+  }
+}
+
+.field-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 6px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ea4335;
+  font-size: 13px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fce8e6;
+  border-radius: 8px;
+
+  .material-icons { font-size: 18px; }
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background: #1a73e8 !important;
+  color: white !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  margin-bottom: 24px;
+}
+
+.login-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #718096;
+  font-size: 12px;
+  padding: 12px;
+  background: #f4f6f9;
+  border-radius: 8px;
+
+  .material-icons { font-size: 16px; color: #1a73e8; }
+}

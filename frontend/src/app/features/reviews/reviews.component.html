@@ -1,0 +1,45 @@
+<div class="reviews-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Отзывы</h1>
+      <p class="page-sub">{{ reviews.length }} отзывов</p>
+    </div>
+    <div class="rating-summary" *ngIf="reviews.length > 0">
+      <div class="avg-rating">{{ averageRating | number:'1.1-1' }}</div>
+      <div class="stars">
+        <span class="material-icons star" *ngFor="let s of getStars(averageRating)"
+          [class.filled]="s === 1">star</span>
+      </div>
+      <div class="rating-label">Средний рейтинг</div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span>
+    Загрузка...
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && reviews.length === 0">
+    <span class="material-icons">star_border</span>
+    <p>Отзывов пока нет</p>
+  </div>
+
+  <div class="reviews-grid" *ngIf="!isLoading && reviews.length > 0">
+    <div class="review-card" *ngFor="let review of reviews">
+      <div class="review-header">
+        <div class="avatar">{{ getInitials(review.patientId) }}</div>
+        <div class="review-meta">
+          <div class="patient-name">Пациент #{{ review.patientId }}</div>
+          <div class="review-date">{{ review.createdAt | date:'dd.MM.yyyy' }}</div>
+        </div>
+        <div class="stars">
+          <span class="material-icons star" *ngFor="let s of getStars(review.rating)"
+            [class.filled]="s === 1">star</span>
+        </div>
+      </div>
+      <p class="review-comment">{{ review.comment }}</p>
+    </div>
+  </div>
+
+</div>

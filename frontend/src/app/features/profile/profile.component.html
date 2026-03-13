@@ -1,0 +1,108 @@
+<div class="profile-page">
+  <div class="page-header">
+    <h1 class="page-title">Профиль</h1>
+    <p class="page-sub">Управление личными данными</p>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Карточка профиля -->
+    <div class="profile-card">
+      <div class="avatar-large">{{ getInitials() }}</div>
+      <div class="profile-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</div>
+      <div class="role-badge" [class]="currentUser?.role">{{ getRoleLabel() }}</div>
+      <div class="profile-meta">
+        <div class="meta-item">
+          <span class="material-icons">email</span>
+          <span>{{ currentUser?.email }}</span>
+        </div>
+        <div class="meta-item" *ngIf="currentUser?.phone">
+          <span class="material-icons">phone</span>
+          <span>{{ currentUser?.phone }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="material-icons">calendar_today</span>
+          <span>С {{ currentUser?.createdAt | date:'dd.MM.yyyy' }}</span>
+        </div>
+      </div>
+
+      <!-- Кабинет врача -->
+      <div class="room-card" *ngIf="authService.isDoctor">
+        <div class="room-header">
+          <span class="material-icons">meeting_room</span>
+          Мой кабинет
+        </div>
+        <div class="room-body" *ngIf="myRoom">
+          <div class="room-number">Кабинет №{{ myRoom.number }}</div>
+          <div class="room-info" *ngIf="myRoom.name">{{ myRoom.name }}</div>
+          <div class="room-info" *ngIf="myRoom.floor">Этаж {{ myRoom.floor }}</div>
+        </div>
+        <div class="room-empty" *ngIf="!myRoom">
+          <span class="material-icons">info</span>
+          Кабинет не назначен
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <!-- Форма редактирования -->
+      <div class="edit-card">
+        <h3>Редактировать данные</h3>
+        <div class="success-msg" *ngIf="successMessage">
+          <span class="material-icons">check_circle</span> {{ successMessage }}
+        </div>
+        <div class="error-msg" *ngIf="errorMessage">
+          <span class="material-icons">error</span> {{ errorMessage }}
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Имя</label>
+            <input [(ngModel)]="form.firstName" placeholder="Иван">
+          </div>
+          <div class="form-field">
+            <label>Фамилия</label>
+            <input [(ngModel)]="form.lastName" placeholder="Иванов">
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input [(ngModel)]="form.email" placeholder="doctor@med.com">
+        </div>
+        <div class="form-field">
+          <label>Телефон</label>
+          <input [(ngModel)]="form.phone" placeholder="+7 999 000 00 00">
+        </div>
+        <div class="form-field">
+          <label>Роль</label>
+          <input [value]="getRoleLabel()" disabled class="disabled-input">
+        </div>
+        <button class="btn-primary" (click)="saveProfile()" [disabled]="isSaving">
+          <span class="material-icons">save</span>
+          {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+        </button>
+      </div>
+
+      <!-- Расписание врача -->
+      <div class="schedule-card" *ngIf="authService.isDoctor">
+        <h3><span class="material-icons">calendar_month</span> Моё расписание</h3>
+        <div class="schedule-empty" *ngIf="mySchedules.length === 0">
+          <span class="material-icons">event_busy</span>
+          <p>Расписание не назначено</p>
+        </div>
+        <div class="schedule-list" *ngIf="mySchedules.length > 0">
+          <div class="schedule-item" *ngFor="let s of mySchedules">
+            <div class="schedule-day">{{ getDayLabel(s.dayOfWeek) }}</div>
+            <div class="schedule-time">
+              <span class="material-icons">schedule</span>
+              {{ s.startTime }} — {{ s.endTime }}
+            </div>
+            <span class="schedule-badge" [class.active]="s.isActive">
+              {{ s.isActive ? 'Активно' : 'Неактивно' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

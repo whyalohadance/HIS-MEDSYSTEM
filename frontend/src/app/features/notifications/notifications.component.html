@@ -1,0 +1,45 @@
+<div class="notifications-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Уведомления</h1>
+      <p class="page-sub" *ngIf="unreadCount > 0">{{ unreadCount }} непрочитанных</p>
+      <p class="page-sub" *ngIf="unreadCount === 0">Все прочитаны</p>
+    </div>
+    <button class="btn-secondary" (click)="markAllRead()" *ngIf="unreadCount > 0">
+      <span class="material-icons">done_all</span>
+      Прочитать все
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span>
+    Загрузка...
+  </div>
+
+  <div class="notifications-list" *ngIf="!isLoading">
+
+    <div class="empty-state" *ngIf="notifications.length === 0">
+      <span class="material-icons">notifications_none</span>
+      <p>Уведомлений нет</p>
+    </div>
+
+    <div
+      class="notif-item"
+      *ngFor="let n of notifications"
+      [class.unread]="!n.isRead"
+      (click)="markAsRead(n.id)">
+      <div class="notif-icon" [class.unread-icon]="!n.isRead">
+        <span class="material-icons">{{ getIcon(n.title) }}</span>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">{{ n.title }}</div>
+        <div class="notif-message">{{ n.message }}</div>
+        <div class="notif-time">{{ n.createdAt | date:'dd.MM.yyyy HH:mm' }}</div>
+      </div>
+      <div class="unread-dot" *ngIf="!n.isRead"></div>
+    </div>
+
+  </div>
+
+</div>

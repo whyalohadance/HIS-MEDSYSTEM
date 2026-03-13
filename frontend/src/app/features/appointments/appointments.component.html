@@ -1,0 +1,138 @@
+<div class="appointments-page">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Приёмы</h1>
+      <p class="page-sub">Записи пациентов на консультации</p>
+    </div>
+    <button class="btn-primary" (click)="openForm()" *ngIf="!authService.isDoctor">
+      <span class="material-icons">add</span> Новый приём
+    </button>
+  </div>
+
+  <div class="success-msg" *ngIf="successMsg">
+    <span class="material-icons">check_circle</span> {{ successMsg }}
+  </div>
+
+  <!-- Форма создания -->
+  <div class="form-card" *ngIf="showForm">
+    <h3>Запись на приём</h3>
+    <div class="form-row">
+      <!-- Пациент -->
+      <div class="form-field">
+        <label>Пациент *</label>
+        <select [(ngModel)]="form.patientId">
+          <option [value]="0" disabled>Выберите пациента</option>
+          <option *ngFor="let p of patients" [value]="p.id">
+            {{ p.lastName }} {{ p.firstName }}
+          </option>
+        </select>
+      </div>
+      <!-- Врач -->
+      <div class="form-field">
+        <label>Врач *</label>
+        <select [(ngModel)]="form.doctorId" [disabled]="authService.isDoctor">
+          <option [value]="0" disabled>Выберите врача</option>
+          <option *ngFor="let d of doctors" [value]="d.id">
+            {{ d.lastName }} {{ d.firstName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Дата *</label>
+        <input type="date" [(ngModel)]="form.date">
+      </div>
+      <div class="form-field">
+        <label>Время *</label>
+        <input type="time" [(ngModel)]="form.time">
+      </div>
+    </div>
+    <div class="form-field notes-field">
+      <label>Причина визита</label>
+      <input [(ngModel)]="form.notes" placeholder="Опишите причину обращения...">
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" (click)="save()"
+        [disabled]="isSaving || !form.patientId || !form.doctorId || !form.date || !form.time">
+        {{ isSaving ? 'Сохранение...' : 'Записать' }}
+      </button>
+      <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Фильтры -->
+  <div class="filters">
+    <button class="filter-btn" [class.active]="filterStatus === 'all'" (click)="filterStatus = 'all'">
+      Все <span class="count">{{ appointments.length }}</span>
+    </button>
+    <button class="filter-btn scheduled" [class.active]="filterStatus === 'scheduled'" (click)="filterStatus = 'scheduled'">
+      Запланированные
+    </button>
+    <button class="filter-btn completed" [class.active]="filterStatus === 'completed'" (click)="filterStatus = 'completed'">
+      Завершённые
+    </button>
+    <button class="filter-btn cancelled" [class.active]="filterStatus === 'cancelled'" (click)="filterStatus = 'cancelled'">
+      Отменённые
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> Загрузка...
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && filtered.length === 0">
+    <span class="material-icons">event_busy</span>
+    <p>Приёмов не найдено</p>
+  </div>
+
+  <div class="appointments-list" *ngIf="!isLoading && filtered.length > 0">
+    <div class="apt-card" *ngFor="let apt of filtered" [class]="apt.status">
+      <div class="apt-status-bar"></div>
+
+      <div class="apt-patient">
+        <div class="avatar patient">{{ getInitials(apt.patientId, 'patient') }}</div>
+        <div>
+          <div class="name">{{ getPatientName(apt.patientId) }}</div>
+          <div class="sub">Пациент</div>
+        </div>
+      </div>
+
+      <div class="apt-divider">→</div>
+
+      <div class="apt-doctor">
+        <div class="avatar doctor">{{ getInitials(apt.doctorId, 'doctor') }}</div>
+        <div>
+          <div class="name">{{ getDoctorName(apt.doctorId) }}</div>
+          <div class="sub">Врач</div>
+        </div>
+      </div>
+
+      <div class="apt-datetime">
+        <div class="date"><span class="material-icons">event</span> {{ formatDate(apt.date) }}</div>
+        <div class="time"><span class="material-icons">schedule</span> {{ apt.time }}</div>
+      </div>
+
+      <div class="apt-notes" *ngIf="apt.notes">
+        <span class="material-icons">notes</span> {{ apt.notes }}
+      </div>
+
+      <div class="apt-actions">
+        <span class="badge" [class]="apt.status">{{ getStatusLabel(apt.status) }}</span>
+        <div class="action-btns" *ngIf="apt.status === 'scheduled'">
+          <button class="btn-complete" (click)="updateStatus(apt.id, 'completed')">
+            <span class="material-icons">check</span>
+          </button>
+          <button class="btn-cancel" (click)="updateStatus(apt.id, 'cancelled')">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <button class="btn-delete" (click)="delete(apt.id)" title="Удалить">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

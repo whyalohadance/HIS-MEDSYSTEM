@@ -1,0 +1,76 @@
+.notifications-page { max-width: 700px; }
+
+.page-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 28px;
+}
+
+.page-title { font-size: 26px; font-weight: 700; color: #0f2d52; }
+.page-sub   { font-size: 14px; color: #718096; margin-top: 4px; }
+
+.btn-secondary {
+  display: flex; align-items: center; gap: 8px;
+  background: #f4f6f9; color: #2d3748; border: none;
+  border-radius: 10px; padding: 10px 18px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  .material-icons { font-size: 18px; }
+  &:hover { background: #e2e8f0; }
+}
+
+.loading {
+  display: flex; align-items: center; gap: 8px;
+  color: #718096; padding: 40px; justify-content: center;
+  .material-icons { animation: spin 1s linear infinite; }
+}
+
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+.empty-state {
+  text-align: center; padding: 60px; color: #a0aec0;
+  .material-icons { font-size: 48px; display: block; margin-bottom: 12px; }
+}
+
+.notif-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 20px; background: white;
+  border-radius: 12px; margin-bottom: 10px;
+  border: 1px solid #e2e8f0; cursor: pointer;
+  transition: all 0.2s; position: relative;
+
+  &:hover { border-color: #1a73e8; }
+
+  &.unread {
+    border-left: 3px solid #1a73e8;
+    background: #f8fbff;
+  }
+}
+
+.notif-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #f4f6f9; display: flex;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+  .material-icons { font-size: 20px; color: #718096; }
+
+  &.unread-icon {
+    background: #e8f0fe;
+    .material-icons { color: #1a73e8; }
+  }
+}
+
+.notif-body { flex: 1; }
+
+.notif-title {
+  font-size: 14px; font-weight: 600;
+  color: #0f2d52; margin-bottom: 4px;
+}
+
+.notif-message { font-size: 13px; color: #718096; margin-bottom: 6px; }
+
+.notif-time { font-size: 11px; color: #a0aec0; }
+
+.unread-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #1a73e8; flex-shrink: 0; margin-top: 6px;
+}

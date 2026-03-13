@@ -1,0 +1,69 @@
+.profile-page { max-width: 960px; }
+.page-header { margin-bottom: 24px; }
+.page-title { font-size: 26px; font-weight: 700; color: #0f2d52; }
+.page-sub { font-size: 14px; color: #718096; margin-top: 4px; }
+
+.profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+
+.profile-card {
+  background: white; border-radius: 16px; border: 1px solid #e2e8f0;
+  padding: 28px 20px; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.avatar-large {
+  width: 80px; height: 80px; border-radius: 50%; background: #e8f0fe;
+  color: #1a73e8; font-size: 28px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+}
+.profile-name { font-size: 18px; font-weight: 700; color: #0f2d52; margin-bottom: 8px; }
+.role-badge { display: inline-flex; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 20px; }
+.role-badge.doctor { background: #e8f0fe; color: #1a73e8; }
+.role-badge.admin { background: #f3e8fd; color: #9334e6; }
+.role-badge.receptionist { background: #e6f4ea; color: #34a853; }
+.role-badge.patient { background: #fef7e0; color: #f9ab00; }
+
+.profile-meta { text-align: left; border-top: 1px solid #f4f6f9; padding-top: 16px; }
+.meta-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; color: #4a5568; }
+.meta-item .material-icons { font-size: 16px; color: #a0aec0; }
+
+.room-card { margin-top: 16px; border-top: 1px solid #f4f6f9; padding-top: 16px; text-align: left; }
+.room-header { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #4a5568; margin-bottom: 10px; }
+.room-header .material-icons { font-size: 16px; color: #1a73e8; }
+.room-number { font-size: 20px; font-weight: 800; color: #0f2d52; }
+.room-info { font-size: 13px; color: #718096; margin-top: 2px; }
+.room-empty { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #a0aec0; }
+.room-empty .material-icons { font-size: 16px; }
+
+.right-col { display: flex; flex-direction: column; gap: 20px; }
+
+.edit-card, .schedule-card {
+  background: white; border-radius: 16px; border: 1px solid #e2e8f0;
+  padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.edit-card h3, .schedule-card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 20px; color: #0f2d52; font-size: 16px; }
+.schedule-card h3 .material-icons { color: #1a73e8; font-size: 20px; }
+
+.success-msg { display: flex; align-items: center; gap: 8px; background: #e6f4ea; color: #34a853; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; font-weight: 600; }
+.error-msg { display: flex; align-items: center; gap: 8px; background: #fce8e6; color: #ea4335; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-field label { font-size: 13px; font-weight: 600; color: #4a5568; }
+.form-field input { padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; }
+.form-field input:focus { border-color: #1a73e8; }
+.disabled-input { background: #f4f6f9 !important; color: #718096; cursor: not-allowed; }
+
+.btn-primary { display: flex; align-items: center; gap: 8px; background: #1a73e8; color: white; border: none; border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-primary:hover { background: #1557b0; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.schedule-empty { text-align: center; padding: 24px; color: #a0aec0; }
+.schedule-empty .material-icons { font-size: 36px; display: block; margin-bottom: 8px; }
+
+.schedule-list { display: flex; flex-direction: column; gap: 8px; }
+.schedule-item { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: #f8faff; border-radius: 10px; border: 1px solid #e8f0fe; }
+.schedule-day { font-size: 14px; font-weight: 600; color: #0f2d52; min-width: 120px; }
+.schedule-time { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4a5568; flex: 1; }
+.schedule-time .material-icons { font-size: 14px; color: #a0aec0; }
+.schedule-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #f4f6f9; color: #a0aec0; }
+.schedule-badge.active { background: #e6f4ea; color: #34a853; }

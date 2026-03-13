@@ -1,0 +1,37 @@
+<header class="header">
+  <div class="header-left">
+    <div class="greeting">
+      <span class="greeting-text">{{ getGreeting() }}, {{ currentUser?.firstName }}! 👋</span>
+      <span class="date">{{ currentDate | date:'EEEE, d MMMM':'':'ru' }}</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <!-- Уведомления -->
+    <a routerLink="/notifications" class="notif-btn">
+      <span class="material-icons">notifications</span>
+      <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+    </a>
+
+    <!-- Аватар + меню -->
+    <div class="user-menu" [matMenuTriggerFor]="userMenu">
+      <div class="avatar">{{ getInitials() }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <span class="user-role">{{ getRoleLabel() }}</span>
+      </div>
+      <span class="material-icons chevron">expand_more</span>
+    </div>
+
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <a mat-menu-item routerLink="/profile">
+        <span class="material-icons">person</span>
+        Профиль
+      </a>
+      <button mat-menu-item (click)="logout()">
+        <span class="material-icons">logout</span>
+        Выйти
+      </button>
+    </mat-menu>
+  </div>
+</header>

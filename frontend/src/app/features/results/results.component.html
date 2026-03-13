@@ -1,0 +1,100 @@
+<div class="results-page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Результаты</h1>
+      <p class="page-sub">Медицинские результаты и анализы пациентов</p>
+    </div>
+    <button class="btn-primary" (click)="showForm = !showForm" *ngIf="authService.isDoctor || authService.isAdmin">
+      <span class="material-icons">add</span> Добавить результат
+    </button>
+  </div>
+
+  <div class="success-msg" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span> {{ successMessage }}
+  </div>
+
+  <div class="form-card" *ngIf="showForm">
+    <h3>Новый результат</h3>
+    <div class="warn-msg" *ngIf="authService.isDoctor && myPatients.length === 0">
+      <span class="material-icons">info</span>
+      У вас нет прикреплённых пациентов. Попросите регистратуру назначить пациентов.
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Пациент *</label>
+        <select [(ngModel)]="form.patientId">
+          <option [value]="0" disabled>Выберите пациента</option>
+          <option *ngFor="let p of myPatients" [value]="p.id">{{ p.lastName }} {{ p.firstName }}</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Название *</label>
+        <input [(ngModel)]="form.title" placeholder="Общий анализ крови">
+      </div>
+    </div>
+    <div class="form-field desc-field">
+      <label>Описание / Заключение</label>
+      <input [(ngModel)]="form.description" placeholder="Результаты в норме...">
+    </div>
+    <div class="form-field upload-field">
+      <label>Файл (PDF, Word, изображение)</label>
+      <div class="upload-area" (click)="fileInput.click()">
+        <input #fileInput type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" (change)="onFileSelected($event)" style="display:none">
+        <span class="material-icons">upload_file</span>
+        <span *ngIf="!uploadProgress">Нажмите чтобы загрузить файл</span>
+        <span *ngIf="uploadProgress" [class.uploading]="isUploading">{{ uploadProgress }}</span>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" (click)="saveResult()" [disabled]="isSaving || !form.title || !form.patientId">
+        {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+      <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> Загрузка...
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && results.length === 0">
+    <span class="material-icons">assignment</span>
+    <p>Результатов пока нет</p>
+  </div>
+
+  <div class="results-grid" *ngIf="!isLoading && results.length > 0">
+    <div class="result-card" *ngFor="let r of results">
+
+      <div class="result-card-top">
+        <div class="result-type-row">
+          <div class="file-icon-wrap" [ngClass]="getFileType(r.fileName)">
+            <span class="material-icons">{{ getFileIcon(r.fileName) }}</span>
+          </div>
+          <div class="result-title-text">{{ r.title }}</div>
+        </div>
+        <div class="result-patient-row">
+          <div class="patient-avatar-sm">{{ getPatientInitials(r.patientId) }}</div>
+          <div class="patient-name-sm">{{ getPatientName(r.patientId) }}</div>
+        </div>
+      </div>
+
+      <p class="result-desc" *ngIf="r.description">{{ r.description }}</p>
+
+      <div class="result-card-bottom">
+        <div class="result-date">
+          <span class="material-icons">calendar_today</span>
+          {{ formatDate(r.createdAt) }}
+        </div>
+        <div class="result-actions">
+          <a class="action-btn view" *ngIf="r.fileUrl" [href]="r.fileUrl" target="_blank" title="Открыть файл">
+            <span class="material-icons">open_in_new</span>
+          </a>
+          <button class="action-btn delete" (click)="deleteResult(r.id, $event)" title="Удалить">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

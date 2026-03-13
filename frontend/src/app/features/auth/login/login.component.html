@@ -1,0 +1,88 @@
+<div class="login-page">
+
+  <!-- Левая панель — брендинг -->
+  <div class="login-left">
+    <div class="brand">
+      <span class="material-icons brand-icon">local_hospital</span>
+      <h1>MedSystem</h1>
+    </div>
+    <p class="brand-desc">
+      Система управления медицинскими данными для профессионального медицинского персонала
+    </p>
+    <div class="features-list">
+      <div class="feature-item">
+        <span class="material-icons">check_circle</span>
+        <span>Управление пациентами</span>
+      </div>
+      <div class="feature-item">
+        <span class="material-icons">check_circle</span>
+        <span>Запись на приём</span>
+      </div>
+      <div class="feature-item">
+        <span class="material-icons">check_circle</span>
+        <span>Результаты и отчёты</span>
+      </div>
+      <div class="feature-item">
+        <span class="material-icons">check_circle</span>
+        <span>Уведомления в реальном времени</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Правая панель — форма -->
+  <div class="login-right">
+    <div class="login-card">
+
+      <div class="login-header">
+        <h2>Вход в систему</h2>
+        <p>Введите ваши данные для входа</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="field-group">
+          <label>Email</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matPrefix>email</mat-icon>
+            <input matInput formControlName="email" placeholder="doctor@hospital.com" type="email">
+            <mat-error *ngIf="form.get('email')?.hasError('required')">Email обязателен</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">Некорректный email</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="field-group">
+          <label>Пароль</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="••••••••">
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">Пароль обязателен</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="error-msg" *ngIf="errorMessage">
+          <span class="material-icons">error_outline</span>
+          {{ errorMessage }}
+        </div>
+
+        <button
+          mat-raised-button
+          class="submit-btn"
+          type="submit"
+          [disabled]="isLoading">
+          <span *ngIf="!isLoading">Войти</span>
+          <span *ngIf="isLoading">Загрузка...</span>
+        </button>
+
+      </form>
+
+      <div class="login-hint">
+        <span class="material-icons">info</span>
+        Демо: doctor@med.com / password123
+      </div>
+
+    </div>
+  </div>
+</div>

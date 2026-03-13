@@ -1,0 +1,24 @@
+<aside class="sidebar">
+
+  <div class="sidebar-logo">
+    <span class="material-icons logo-icon">local_hospital</span>
+    <span class="logo-text">MedSystem</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ng-container *ngFor="let item of navItems">
+      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+        <span class="material-icons">{{ item.icon }}</span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    </ng-container>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="nav-item logout-btn" (click)="authService.logout()">
+      <span class="material-icons">logout</span>
+      <span class="nav-label">Выйти</span>
+    </button>
+  </div>
+
+</aside>
