@@ -34,6 +34,12 @@ export class Appointment {
   @Column({ nullable: true })
   notes: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true, default: 0 })
+  price: number;
+
+  @Column({ default: false })
+  notified: boolean;
+
   @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patientId' })
   patient: Patient;

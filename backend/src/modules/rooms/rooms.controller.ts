@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,6 +13,11 @@ export class RoomsController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+
+  @Get('available')
+  findAvailable(@Query('date') date: string, @Query('time') time: string) {
+    return this.service.findAvailable(date, time);
   }
 
   @Post()

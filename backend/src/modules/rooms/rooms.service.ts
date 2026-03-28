@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Appointment } from '../appointments/appointment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Room } from './room.entity';
@@ -9,6 +10,8 @@ export class RoomsService {
   constructor(
     @InjectRepository(Room)
     private repo: Repository<Room>,
+    @InjectRepository(Appointment)
+    private appointmentsRepo: Repository<Appointment>,
   ) {}
 
   async findAll(): Promise<Room[]> {
@@ -33,5 +36,20 @@ export class RoomsService {
 
   async remove(id: number): Promise<void> {
     await this.repo.delete(id);
+  }
+
+  async findAvailable(date: string, time: string): Promise<Room[]> {
+    const allRooms = await this.repo.find({ order: { name: 'ASC' } });
+    if (!date || !time) return allRooms;
+
+    const busyAppointments = await this.appointmentsRepo.find({
+      where: { date, time }
+    });
+
+    const busyRoomIds = busyAppointments
+      .filter(a => a.roomId)
+      .map(a => a.roomId);
+
+    return allRooms.filter(r => !busyRoomIds.includes(r.id));
   }
 }

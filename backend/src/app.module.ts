@@ -27,6 +27,7 @@ import { RoomsModule } from './modules/rooms/rooms.module';
 import { ExaminationsModule } from './modules/examinations/examinations.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -68,6 +69,7 @@ import { AppService } from './app.service';
     ExaminationsModule,
     SchedulesModule,
     UploadModule,
+    ReportsModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],
