@@ -3,83 +3,152 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Отчёты</h1>
-      <p class="page-sub">Экспорт данных в PDF и CSV</p>
+      <p class="page-sub">Месячные отчёты для бухгалтерии</p>
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="loading">
-    <span class="material-icons spin">autorenew</span>
-    Загрузка данных...
+  <!-- Выбор периода -->
+  <div class="period-selector">
+    <div class="period-field">
+      <label>Месяц</label>
+      <select [(ngModel)]="selectedMonth" (ngModelChange)="loadSummary()">
+        <option *ngFor="let m of months" [ngValue]="m.value">{{ m.label }}</option>
+      </select>
+    </div>
+    <div class="period-field">
+      <label>Год</label>
+      <select [(ngModel)]="selectedYear" (ngModelChange)="loadSummary()">
+        <option *ngFor="let y of years" [ngValue]="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="period-actions">
+      <button class="btn-pdf" (click)="downloadPDF()" [disabled]="isDownloading">
+        <span class="material-icons">picture_as_pdf</span>
+        {{ isDownloading ? 'Загрузка...' : 'Скачать PDF' }}
+      </button>
+      <button class="btn-excel" (click)="downloadExcel()" [disabled]="isDownloading">
+        <span class="material-icons">table_chart</span>
+        {{ isDownloading ? 'Загрузка...' : 'Скачать Excel' }}
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading" class="reports-grid">
-
-    <!-- Статистика -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <span class="material-icons" style="color:#1a73e8">people</span>
-        <div class="stat-value">{{ patients.length }}</div>
-        <div class="stat-label">Пациентов</div>
-      </div>
-      <div class="stat-card">
-        <span class="material-icons" style="color:#34a853">event_available</span>
-        <div class="stat-value">{{ completedAppointments }}</div>
-        <div class="stat-label">Завершённых приёмов</div>
-      </div>
-      <div class="stat-card">
-        <span class="material-icons" style="color:#f9ab00">pending</span>
-        <div class="stat-value">{{ scheduledAppointments }}</div>
-        <div class="stat-label">Запланированных</div>
-      </div>
-      <div class="stat-card">
-        <span class="material-icons" style="color:#ea4335">event_busy</span>
-        <div class="stat-value">{{ cancelledAppointments }}</div>
-        <div class="stat-label">Отменённых</div>
-      </div>
-    </div>
-
-    <!-- Экспорт пациентов -->
-    <div class="card">
-      <div class="card-icon" style="background:#e8f0fe">
-        <span class="material-icons" style="color:#1a73e8">people</span>
-      </div>
-      <div class="card-body">
-        <h3>Пациенты</h3>
-        <p>{{ patients.length }} записей</p>
-      </div>
-      <div class="card-actions">
-        <button class="btn-export pdf" (click)="exportPatientsPDF()">
-          <span class="material-icons">picture_as_pdf</span>
-          PDF
-        </button>
-        <button class="btn-export csv" (click)="exportPatientsCSV()">
-          <span class="material-icons">table_chart</span>
-          CSV
-        </button>
-      </div>
-    </div>
-
-    <!-- Экспорт приёмов -->
-    <div class="card">
-      <div class="card-icon" style="background:#e6f4ea">
-        <span class="material-icons" style="color:#34a853">event</span>
-      </div>
-      <div class="card-body">
-        <h3>Приёмы</h3>
-        <p>{{ appointments.length }} записей</p>
-      </div>
-      <div class="card-actions">
-        <button class="btn-export pdf" (click)="exportAppointmentsPDF()">
-          <span class="material-icons">picture_as_pdf</span>
-          PDF
-        </button>
-        <button class="btn-export csv" (click)="exportAppointmentsCSV()">
-          <span class="material-icons">table_chart</span>
-          CSV
-        </button>
-      </div>
-    </div>
-
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> Загрузка...
   </div>
+
+  <div class="error-state" *ngIf="!isLoading && error">
+    <span class="material-icons">error_outline</span>
+    <p>{{ error }}</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && summary">
+
+    <!-- Сводка -->
+    <div class="section-title">Сводка за {{ getMonthName() }} {{ selectedYear }}</div>
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <span class="material-icons">event</span>
+        <div class="stat-value">{{ summary.totalAppointments }}</div>
+        <div class="stat-label">Всего приёмов</div>
+      </div>
+      <div class="stat-card green">
+        <span class="material-icons">event_available</span>
+        <div class="stat-value">{{ summary.completedAppointments }}</div>
+        <div class="stat-label">Завершённых</div>
+      </div>
+      <div class="stat-card purple">
+        <span class="material-icons">person_add</span>
+        <div class="stat-value">{{ summary.newPatients }}</div>
+        <div class="stat-label">Новых пациентов</div>
+      </div>
+      <div class="stat-card orange">
+        <span class="material-icons">payments</span>
+        <div class="stat-value">{{ summary.totalRevenue | number:'1.2-2' }}</div>
+        <div class="stat-label">Выручка (MDL)</div>
+      </div>
+      <div class="stat-card teal">
+        <span class="material-icons">people</span>
+        <div class="stat-value">{{ summary.patients.length }}</div>
+        <div class="stat-label">Всего пациентов</div>
+      </div>
+      <div class="stat-card gray">
+        <span class="material-icons">badge</span>
+        <div class="stat-value">{{ summary.staff.length }}</div>
+        <div class="stat-label">Сотрудников</div>
+      </div>
+    </div>
+
+    <!-- Приёмы -->
+    <div class="section-title">Приёмы ({{ summary.appointments.length }})</div>
+    <div class="table-wrapper">
+      <table class="report-table" *ngIf="summary.appointments.length > 0">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Пациент</th>
+            <th>Врач</th>
+            <th>Статус</th>
+            <th>Цена (MDL)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of summary.appointments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.patient ? a.patient.lastName + ' ' + a.patient.firstName : '#' + a.patientId }}</td>
+            <td>{{ a.doctor ? a.doctor.lastName + ' ' + a.doctor.firstName : '#' + a.doctorId }}</td>
+            <td><span class="badge" [class]="a.status">{{ getStatusLabel(a.status) }}</span></td>
+            <td>{{ a.price || 0 }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="summary.appointments.length === 0">
+        <span class="material-icons">event_busy</span>
+        <p>Приёмов за этот месяц нет</p>
+      </div>
+    </div>
+
+    <!-- Персонал -->
+    <div class="section-title">Персонал ({{ summary.staff.length }})</div>
+    <div class="table-wrapper">
+      <table class="report-table">
+        <thead>
+          <tr><th>№</th><th>Имя</th><th>Фамилия</th><th>Роль</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of summary.staff; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.firstName }}</td>
+            <td>{{ s.lastName }}</td>
+            <td>{{ s.role }}</td>
+            <td>{{ s.email }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Кабинеты -->
+    <div class="section-title">Кабинеты ({{ summary.rooms.length }})</div>
+    <div class="table-wrapper">
+      <table class="report-table">
+        <thead>
+          <tr><th>№</th><th>Название</th><th>Номер</th><th>Этаж</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of summary.rooms; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.number }}</td>
+            <td>{{ r.floor || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
 
 </div>

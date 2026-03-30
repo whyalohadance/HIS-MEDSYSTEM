@@ -1,0 +1,215 @@
+<div class="patient-card-page" *ngIf="!isLoading && patient">
+
+  <!-- HEADER -->
+  <div class="card-header">
+    <button class="btn-back" (click)="goBack()">
+      <span class="material-icons">arrow_back</span> Назад
+    </button>
+    <div class="header-actions">
+      <button class="btn-print" (click)="printCard()">
+        <span class="material-icons">print</span> Печать
+      </button>
+      <button class="btn-book" (click)="bookAppointment()">
+        <span class="material-icons">event_available</span> Записать на приём
+      </button>
+    </div>
+  </div>
+
+  <!-- ПРОФИЛЬ ПАЦИЕНТА -->
+  <div class="profile-section">
+    <div class="profile-left">
+      <div class="patient-avatar-big">{{ initials }}</div>
+      <div class="patient-main-info">
+        <div class="patient-fullname">{{ patient.lastName }} {{ patient.firstName }}</div>
+        <div class="patient-id-badge">
+          <span class="material-icons">badge</span>
+          ID: {{ patientCode }}
+        </div>
+        <div class="patient-meta" *ngIf="patient.dateOfBirth">
+          <span class="material-icons">cake</span>
+          {{ formatDate(patient.dateOfBirth) }} · {{ age }} лет
+        </div>
+        <div class="patient-meta">
+          <span class="material-icons">{{ patient.gender === 'male' ? 'male' : 'female' }}</span>
+          {{ patient.gender === 'male' ? 'Мужской' : 'Женский' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-right">
+      <div class="contact-grid">
+        <div class="contact-item" *ngIf="patient.phone">
+          <span class="material-icons">phone</span>
+          <div>
+            <div class="contact-label">Телефон</div>
+            <div class="contact-value">{{ patient.phone }}</div>
+          </div>
+        </div>
+        <div class="contact-item" *ngIf="patient.email">
+          <span class="material-icons">email</span>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">{{ patient.email }}</div>
+          </div>
+        </div>
+        <div class="contact-item" *ngIf="patient.city || patient.country">
+          <span class="material-icons">location_on</span>
+          <div>
+            <div class="contact-label">Местоположение</div>
+            <div class="contact-value">{{ patient.city }}{{ patient.city && patient.country ? ', ' : '' }}{{ patient.country }}</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- СТАТИСТИКА -->
+  <div class="stats-row">
+    <div class="stat-pill blue">
+      <span class="material-icons">event</span>
+      <div>
+        <div class="stat-num">{{ appointments.length }}</div>
+        <div class="stat-lbl">Всего приёмов</div>
+      </div>
+    </div>
+    <div class="stat-pill green">
+      <span class="material-icons">event_available</span>
+      <div>
+        <div class="stat-num">{{ completedAppointments }}</div>
+        <div class="stat-lbl">Завершённых</div>
+      </div>
+    </div>
+    <div class="stat-pill purple">
+      <span class="material-icons">assignment</span>
+      <div>
+        <div class="stat-num">{{ results.length }}</div>
+        <div class="stat-lbl">Результатов</div>
+      </div>
+    </div>
+    <div class="stat-pill orange">
+      <span class="material-icons">payments</span>
+      <div>
+        <div class="stat-num">{{ totalSpent }}</div>
+        <div class="stat-lbl">Потрачено (MDL)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ИСТОРИЯ ПРИЁМОВ -->
+  <div class="section-title">
+    <span class="material-icons">history</span>
+    История приёмов ({{ appointments.length }})
+  </div>
+
+  <div class="appointments-history" *ngIf="appointments.length > 0">
+    <div class="history-item" *ngFor="let a of appointments" [class]="a.status">
+      <div class="history-date">
+        <div class="hdate">{{ formatDate(a.date) }}</div>
+        <div class="htime">{{ a.time }}</div>
+      </div>
+      <div class="history-info">
+        <div class="history-doctor">
+          <span class="material-icons">medical_services</span>
+          {{ getDoctorName(a.doctorId) }}
+        </div>
+        <div class="history-notes" *ngIf="a.notes">{{ a.notes }}</div>
+      </div>
+      <div class="history-right">
+        <span class="badge" [class]="a.status">{{ getStatusLabel(a.status) }}</span>
+        <div class="history-price" *ngIf="a.price">{{ a.price }} MDL</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="appointments.length === 0">
+    <span class="material-icons">event_busy</span>
+    <p>Приёмов нет</p>
+  </div>
+
+  <!-- РЕЗУЛЬТАТЫ -->
+  <div class="section-title">
+    <span class="material-icons">assignment</span>
+    Результаты и документы ({{ results.length }})
+  </div>
+
+  <div class="results-list" *ngIf="results.length > 0">
+    <div class="result-item" *ngFor="let r of results">
+      <div class="result-icon">
+        <span class="material-icons">description</span>
+      </div>
+      <div class="result-info">
+        <div class="result-title">{{ r.title || 'Результат #' + r.id }}</div>
+        <div class="result-date">{{ formatDate(r.createdAt) }}</div>
+        <div class="result-desc" *ngIf="r.description">{{ r.description }}</div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-view" *ngIf="r.fileUrl" (click)="openResultViewer(r)">
+          <span class="material-icons">visibility</span>
+          Просмотр
+        </button>
+        <button class="btn-download" *ngIf="r.fileUrl" (click)="downloadResultPDF(r)">
+          <span class="material-icons">download</span>
+          Скачать
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="results.length === 0">
+    <span class="material-icons">assignment_late</span>
+    <p>Результатов нет</p>
+  </div>
+
+</div>
+
+<!-- МОДАЛЬНЫЙ ПРОСМОТР ФАЙЛА -->
+<div class="file-viewer-overlay" *ngIf="viewingResult" (click)="closeResultViewer()">
+  <div class="file-viewer-modal" (click)="$event.stopPropagation()">
+
+    <div class="viewer-header">
+      <div class="viewer-title">
+        <span class="material-icons">description</span>
+        {{ viewingResult.title || viewingResult.fileName }}
+      </div>
+      <div class="viewer-actions">
+        <button class="viewer-btn" (click)="downloadResultPDF(viewingResult)">
+          <span class="material-icons">download</span> Скачать
+        </button>
+        <button class="viewer-btn" (click)="printResult()">
+          <span class="material-icons">print</span> Печать
+        </button>
+        <button class="viewer-close" (click)="closeResultViewer()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="viewer-body">
+      <!-- PDF и Office через iframe/Google Docs -->
+      <iframe *ngIf="isPDF(viewingResult) || isOffice(viewingResult)" id="result-iframe"
+        [src]="viewingFileUrl" class="pdf-viewer">
+      </iframe>
+      <!-- Изображение -->
+      <img *ngIf="isImage(viewingResult)" [src]="viewingFileUrl" class="image-viewer">
+      <!-- Другой файл -->
+      <div class="unsupported-file" *ngIf="!canPreview(viewingResult)">
+        <span class="material-icons">insert_drive_file</span>
+        <p>Предпросмотр недоступен для этого типа файла</p>
+        <button class="btn-download" (click)="downloadResultPDF(viewingResult)">
+          <span class="material-icons">download</span> Скачать файл
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  <span class="material-icons spin">autorenew</span> Загрузка...
+</div>
+
+<div class="empty-state" *ngIf="!isLoading && !patient">
+  <span class="material-icons">person_off</span>
+  <p>Пациент не найден</p>
+</div>

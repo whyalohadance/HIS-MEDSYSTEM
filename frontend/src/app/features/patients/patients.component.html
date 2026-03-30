@@ -5,9 +5,8 @@
       <h1 class="page-title">Пациенты</h1>
       <p class="page-sub">Поиск по имени, ID, телефону или email</p>
     </div>
-    <button class="btn-primary" (click)="showForm = !showForm">
-      <span class="material-icons">person_add</span>
-      Добавить пациента
+    <button class="btn-primary" (click)="showForm = !showForm; resetForm()">
+      <span class="material-icons">person_add</span> Добавить пациента
     </button>
   </div>
 
@@ -19,19 +18,22 @@
   <div class="form-card" *ngIf="showForm">
     <h3>Новый пациент</h3>
     <div class="form-row">
-      <div class="form-field">
+      <div class="form-field" [class.has-error]="fieldError('firstName')">
         <label>Имя *</label>
-        <input [(ngModel)]="form.firstName" placeholder="Иван">
+        <input [(ngModel)]="form.firstName" placeholder="Иван" (blur)="formTouched = true">
+        <span class="field-error" *ngIf="fieldError('firstName')">{{ fieldError('firstName') }}</span>
       </div>
-      <div class="form-field">
+      <div class="form-field" [class.has-error]="fieldError('lastName')">
         <label>Фамилия *</label>
-        <input [(ngModel)]="form.lastName" placeholder="Иванов">
+        <input [(ngModel)]="form.lastName" placeholder="Иванов" (blur)="formTouched = true">
+        <span class="field-error" *ngIf="fieldError('lastName')">{{ fieldError('lastName') }}</span>
       </div>
     </div>
     <div class="form-row">
-      <div class="form-field">
+      <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
         <label>Дата рождения</label>
-        <input type="date" [(ngModel)]="form.dateOfBirth">
+        <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true">
+        <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
       </div>
       <div class="form-field">
         <label>Пол</label>
@@ -42,26 +44,25 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="form-field">
+      <div class="form-field" [class.has-error]="fieldError('phone')">
         <label>Телефон</label>
-        <input [(ngModel)]="form.phone" placeholder="+7 999 000 00 00">
+        <input [(ngModel)]="form.phone" placeholder="+373 69 000 000" (blur)="formTouched = true">
+        <span class="field-error" *ngIf="fieldError('phone')">{{ fieldError('phone') }}</span>
       </div>
-      <div class="form-field">
+      <div class="form-field" [class.has-error]="fieldError('email')">
         <label>Email</label>
-        <input [(ngModel)]="form.email" placeholder="patient@mail.ru">
+        <input [(ngModel)]="form.email" placeholder="patient@mail.com" (blur)="formTouched = true">
+        <span class="field-error" *ngIf="fieldError('email')">{{ fieldError('email') }}</span>
       </div>
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label>Адрес</label>
-        <input [(ngModel)]="form.address" placeholder="г. Москва, ул. Ленина, 1">
+        <label>Город</label>
+        <input [(ngModel)]="form.city" placeholder="Кишинёв">
       </div>
       <div class="form-field">
-        <label>Врач</label>
-        <select [(ngModel)]="form.doctorId">
-          <option [value]="0">Не назначен</option>
-          <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
-        </select>
+        <label>Страна</label>
+        <input [(ngModel)]="form.country" placeholder="Молдова">
       </div>
     </div>
     <div class="form-actions">
@@ -75,17 +76,13 @@
   <!-- Поиск -->
   <div class="search-box">
     <span class="material-icons search-icon">search</span>
-    <input
-      class="search-input"
-      [(ngModel)]="searchQuery"
+    <input class="search-input" [(ngModel)]="searchQuery"
       placeholder="Введите имя, фамилию, ID, телефон или email..."
       (keyup.enter)="search()">
     <button class="btn-clear" *ngIf="searchQuery" (click)="clearSearch()">
       <span class="material-icons">close</span>
     </button>
-    <button class="btn-search" (click)="search()" [disabled]="!searchQuery.trim()">
-      Найти
-    </button>
+    <button class="btn-search" (click)="search()" [disabled]="!searchQuery.trim()">Найти</button>
   </div>
 
   <div class="loading" *ngIf="isLoading">
@@ -107,7 +104,7 @@
   </div>
 
   <div class="patients-list" *ngIf="!isLoading && filteredPatients.length > 0">
-    <div class="patient-card" *ngFor="let p of filteredPatients">
+    <div class="patient-card" *ngFor="let p of pagedPatients">
       <div class="patient-avatar">{{ getInitials(p) }}</div>
       <div class="patient-info">
         <div class="patient-name">{{ p.lastName }} {{ p.firstName }}</div>
@@ -117,14 +114,19 @@
           <span *ngIf="p.email"> · {{ p.email }}</span>
         </div>
         <div class="patient-doctor" *ngIf="getDoctorName(p.doctorId)">
-          <span class="material-icons">medical_services</span>
-          {{ getDoctorName(p.doctorId) }}
+          <span class="material-icons">medical_services</span> {{ getDoctorName(p.doctorId) }}
         </div>
       </div>
       <span class="gender-badge" [class.male]="p.gender === 'male'" [class.female]="p.gender === 'female'">
         {{ p.gender === 'male' ? 'Муж' : 'Жен' }}
       </span>
       <div class="patient-actions">
+        <button class="action-btn view" (click)="viewCard(p)" title="Карточка пациента">
+          <span class="material-icons">person</span>
+        </button>
+        <button class="action-btn book" (click)="bookAppointment(p)" title="Записать на приём" *ngIf="authService.isReceptionist || authService.isAdmin">
+          <span class="material-icons">event_available</span>
+        </button>
         <button class="action-btn edit" (click)="openEdit(p)" title="Редактировать">
           <span class="material-icons">edit</span>
         </button>
@@ -133,6 +135,17 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- Пагинация -->
+  <div class="pagination" *ngIf="!isLoading && totalPages > 1">
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+      <span class="material-icons">chevron_left</span>
+    </button>
+    <span class="page-info">Страница {{ currentPage }} из {{ totalPages }}</span>
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      <span class="material-icons">chevron_right</span>
+    </button>
   </div>
 
   <!-- Модал редактирования -->
@@ -146,19 +159,22 @@
       </div>
       <div class="modal-body">
         <div class="form-row">
-          <div class="form-field">
+          <div class="form-field" [class.has-error]="fieldError('firstName')">
             <label>Имя</label>
-            <input [(ngModel)]="form.firstName">
+            <input [(ngModel)]="form.firstName" (blur)="formTouched = true">
+            <span class="field-error" *ngIf="fieldError('firstName')">{{ fieldError('firstName') }}</span>
           </div>
-          <div class="form-field">
+          <div class="form-field" [class.has-error]="fieldError('lastName')">
             <label>Фамилия</label>
-            <input [(ngModel)]="form.lastName">
+            <input [(ngModel)]="form.lastName" (blur)="formTouched = true">
+            <span class="field-error" *ngIf="fieldError('lastName')">{{ fieldError('lastName') }}</span>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-field">
+          <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
             <label>Дата рождения</label>
-            <input type="date" [(ngModel)]="form.dateOfBirth">
+            <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true">
+            <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
           </div>
           <div class="form-field">
             <label>Пол</label>
@@ -169,20 +185,28 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-field">
+          <div class="form-field" [class.has-error]="fieldError('phone')">
             <label>Телефон</label>
-            <input [(ngModel)]="form.phone">
+            <input [(ngModel)]="form.phone" (blur)="formTouched = true">
+            <span class="field-error" *ngIf="fieldError('phone')">{{ fieldError('phone') }}</span>
           </div>
-          <div class="form-field">
+          <div class="form-field" [class.has-error]="fieldError('email')">
             <label>Email</label>
-            <input [(ngModel)]="form.email">
+            <input [(ngModel)]="form.email" (blur)="formTouched = true">
+            <span class="field-error" *ngIf="fieldError('email')">{{ fieldError('email') }}</span>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Адрес</label>
-            <input [(ngModel)]="form.address">
+            <label>Город</label>
+            <input [(ngModel)]="form.city">
           </div>
+          <div class="form-field">
+            <label>Страна</label>
+            <input [(ngModel)]="form.country">
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-field">
             <label>Врач</label>
             <select [(ngModel)]="form.doctorId">

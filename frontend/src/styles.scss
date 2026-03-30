@@ -56,3 +56,478 @@ body {
 .badge-warning { background: #fef9e7; color: #f39c12; }
 .badge-danger  { background: #fce8e6; color: #ea4335; }
 .badge-info    { background: #e8f0fe; color: #1a73e8; }
+
+/* ===== PATIENT CARD FILE VIEWER ===== */
+.file-viewer-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+}
+
+.file-viewer-modal {
+  background: white;
+  border-radius: 16px;
+  width: 90vw;
+  max-width: 900px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+}
+
+.viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  background: white;
+}
+
+.viewer-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2d52;
+  font-family: Arial, sans-serif;
+}
+
+.viewer-actions { display: flex; gap: 8px; align-items: center; }
+
+.viewer-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: #f4f6f9; border: 1px solid #e2e8f0;
+  border-radius: 8px; padding: 8px 16px;
+  font-size: 13px; font-weight: 600; color: #2d3748;
+  cursor: pointer; font-family: Arial, sans-serif;
+  transition: background 0.15s;
+  &:hover { background: #e2e8f0; }
+}
+
+.viewer-close {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  border-radius: 8px; color: #718096;
+  transition: all 0.15s;
+  &:hover { background: #fce8e6; color: #ea4335; }
+}
+
+.viewer-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6f9;
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.image-viewer {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.unsupported-file {
+  text-align: center;
+  color: #a0aec0;
+  font-family: Arial, sans-serif;
+  .material-icons { font-size: 64px; display: block; margin-bottom: 16px; color: #cbd5e0; }
+  p { font-size: 14px; margin-bottom: 20px; }
+}
+
+
+
+/* ===== DARK THEME ===== */
+body.dark-theme {
+  --dark-bg: #0f172a;
+  --dark-card: #1e293b;
+  --dark-card2: #263348;
+  --dark-border: #334155;
+  --dark-text: #e2e8f0;
+  --dark-text2: #94a3b8;
+  --dark-input: #1e293b;
+  background: var(--dark-bg) !important;
+  color: var(--dark-text);
+}
+
+/* Layout */
+body.dark-theme .main-content { background: var(--dark-bg) !important; }
+
+/* Header */
+body.dark-theme .header {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .greeting-text { color: var(--dark-text) !important; }
+body.dark-theme .date { color: var(--dark-text2) !important; }
+body.dark-theme .theme-btn { background: var(--dark-card2) !important; }
+body.dark-theme .theme-btn .material-icons { color: #fbbf24 !important; }
+body.dark-theme .notif-btn .material-icons { color: var(--dark-text2) !important; }
+body.dark-theme .user-name { color: var(--dark-text) !important; }
+body.dark-theme .user-role { color: var(--dark-text2) !important; }
+
+/* All white cards → dark */
+body.dark-theme .stat-card,
+body.dark-theme .form-card,
+body.dark-theme .apt-card,
+body.dark-theme .patient-card,
+body.dark-theme .staff-card,
+body.dark-theme .result-card,
+body.dark-theme .result-item,
+body.dark-theme .history-item,
+body.dark-theme .queue-section,
+body.dark-theme .queue-item,
+body.dark-theme .upcoming-item,
+body.dark-theme .chart-card,
+body.dark-theme .period-selector,
+body.dark-theme .table-wrapper,
+body.dark-theme .profile-section,
+body.dark-theme .patient-card-page .profile-section,
+body.dark-theme .stat-pill {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+
+/* Action cards */
+body.dark-theme .action-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+}
+body.dark-theme .action-card:hover {
+  background: var(--dark-card2) !important;
+  color: #818cf8 !important;
+}
+
+/* Search box */
+body.dark-theme .search-box,
+body.dark-theme .search-wrap {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .search-input,
+body.dark-theme .search-wrap input {
+  background: transparent !important;
+  color: var(--dark-text) !important;
+}
+
+/* All inputs */
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+body.dark-theme input::placeholder,
+body.dark-theme textarea::placeholder { color: #64748b !important; }
+body.dark-theme input:focus,
+body.dark-theme select:focus { border-color: #6366f1 !important; }
+
+/* Filter buttons */
+body.dark-theme .filter-btn {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+}
+body.dark-theme .filter-btn.active {
+  background: #4f46e5 !important;
+  border-color: #4f46e5 !important;
+  color: white !important;
+}
+
+/* Filter inputs */
+body.dark-theme .filter-input {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+
+/* Text */
+body.dark-theme .page-title,
+body.dark-theme .stat-value,
+body.dark-theme .staff-name,
+body.dark-theme .patient-name,
+body.dark-theme .patient-fullname,
+body.dark-theme .queue-patient,
+body.dark-theme .chart-title,
+body.dark-theme .section-title,
+body.dark-theme .results-header,
+body.dark-theme h1, body.dark-theme h2, body.dark-theme h3 {
+  color: var(--dark-text) !important;
+}
+body.dark-theme .page-sub,
+body.dark-theme .stat-label,
+body.dark-theme .staff-email,
+body.dark-theme .queue-doctor,
+body.dark-theme .queue-time,
+body.dark-theme .contact-label,
+body.dark-theme .htime {
+  color: var(--dark-text2) !important;
+}
+
+/* Tables */
+body.dark-theme .report-table th {
+  background: var(--dark-card2) !important;
+  color: var(--dark-text2) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .report-table td {
+  color: var(--dark-text) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .report-table tr:hover td { background: var(--dark-card2) !important; }
+
+/* Queue */
+body.dark-theme .queue-progress-bar { background: var(--dark-border) !important; }
+body.dark-theme .queue-empty { color: #64748b !important; }
+body.dark-theme .queue-num.scheduled { background: #1e3a5f !important; color: #60a5fa !important; }
+
+/* Role badge */
+body.dark-theme .role-badge.admin { background: rgba(139,92,246,0.2) !important; color: #a78bfa !important; }
+
+/* Empty state */
+body.dark-theme .empty-state { color: #64748b !important; }
+
+/* Buttons */
+body.dark-theme .btn-search {
+  background: #4f46e5 !important;
+  color: white !important;
+}
+
+/* Profile cards */
+body.dark-theme .profile-left,
+body.dark-theme .profile-right { color: var(--dark-text) !important; }
+body.dark-theme .contact-value { color: var(--dark-text) !important; }
+
+/* Result cards */
+body.dark-theme .result-icon { background: rgba(99,102,241,0.2) !important; }
+
+/* Charts - update colors for dark */
+body.dark-theme .chart-card { color: var(--dark-text) !important; }
+
+/* Autocomplete */
+body.dark-theme .suggestions {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .suggestion-item:hover { background: var(--dark-card2) !important; }
+body.dark-theme .sug-name { color: var(--dark-text) !important; }
+body.dark-theme .sug-phone { color: var(--dark-text2) !important; }
+body.dark-theme .sug-avatar { background: rgba(99,102,241,0.2) !important; color: #818cf8 !important; }
+
+/* Autocomplete input */
+body.dark-theme .autocomplete-input {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+body.dark-theme .autocomplete-input.selected {
+  background: rgba(52,168,83,0.1) !important;
+  border-color: #34a853 !important;
+}
+
+/* Success/error messages */
+body.dark-theme .success-msg { background: rgba(52,168,83,0.15) !important; }
+
+/* Modal */
+body.dark-theme .modal {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .modal-header { border-color: var(--dark-border) !important; }
+body.dark-theme .modal-footer { border-color: var(--dark-border) !important; }
+
+/* Dropdown mat-menu */
+body.dark-theme .mat-mdc-menu-panel {
+  background: var(--dark-card) !important;
+}
+body.dark-theme .mat-mdc-menu-item { color: var(--dark-text) !important; }
+
+/* File viewer modal */
+body.dark-theme .file-viewer-modal { background: var(--dark-card) !important; }
+body.dark-theme .viewer-header {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .viewer-body { background: var(--dark-bg) !important; }
+body.dark-theme .viewer-btn {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text) !important;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  /* Скрываем всё кроме карточки пациента */
+  app-root > * { display: none !important; }
+  app-root app-layout { display: block !important; }
+  app-layout .sidebar { display: none !important; }
+  app-layout .header { display: none !important; }
+  app-layout .main-content { padding: 0 !important; margin: 0 !important; }
+
+  /* Скрываем лишние элементы карточки */
+  .card-header,
+  .btn-print,
+  .btn-book,
+  .btn-back,
+  .header-actions,
+  .result-actions,
+  .btn-view,
+  .btn-download,
+  .file-viewer-overlay {
+    display: none !important;
+  }
+
+  /* Сброс фонов и теней для печати */
+  * {
+    background: white !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 11pt;
+    background: white !important;
+  }
+
+  .patient-card-page {
+    display: block !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Профиль пациента */
+  .profile-section {
+    display: flex !important;
+    border: 1px solid #ccc !important;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+  }
+
+  .patient-avatar-big {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 20px !important;
+    border: 2px solid #ccc !important;
+    background: #f0f0f0 !important;
+    color: #333 !important;
+  }
+
+  .patient-fullname {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    color: #000 !important;
+  }
+
+  .patient-id-badge,
+  .patient-meta {
+    color: #333 !important;
+    font-size: 10pt !important;
+  }
+
+  .contact-label { color: #666 !important; font-size: 9pt !important; }
+  .contact-value { color: #000 !important; font-size: 10pt !important; }
+
+  /* Статистика */
+  .stats-row {
+    display: flex !important;
+    gap: 12px;
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+  }
+
+  .stat-pill {
+    border: 1px solid #ccc !important;
+    border-radius: 8px;
+    padding: 10px;
+    flex: 1;
+  }
+
+  .stat-num { font-size: 16pt !important; font-weight: bold !important; }
+  .stat-lbl { font-size: 9pt !important; color: #666 !important; }
+
+  /* Заголовки секций */
+  .section-title {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px;
+    margin: 16px 0 10px;
+    color: #000 !important;
+  }
+
+  /* История приёмов */
+  .history-item {
+    border: 1px solid #ccc !important;
+    border-radius: 6px;
+    padding: 10px !important;
+    margin-bottom: 6px;
+    page-break-inside: avoid;
+    display: flex !important;
+    gap: 16px;
+  }
+
+  .hdate { font-weight: bold !important; font-size: 10pt !important; }
+  .htime { color: #666 !important; font-size: 9pt !important; }
+  .history-doctor { font-size: 10pt !important; }
+  .history-notes { color: #444 !important; font-size: 9pt !important; }
+  .history-price { font-weight: bold !important; font-size: 10pt !important; }
+
+  /* Badge статусов */
+  .badge {
+    border: 1px solid #ccc !important;
+    background: #eee !important;
+    color: #000 !important;
+    font-size: 9pt !important;
+  }
+
+  /* Результаты */
+  .result-item {
+    border: 1px solid #ccc !important;
+    border-radius: 6px;
+    padding: 10px !important;
+    margin-bottom: 6px;
+    page-break-inside: avoid;
+    display: flex !important;
+    gap: 12px;
+  }
+
+  .result-title { font-weight: bold !important; font-size: 10pt !important; }
+  .result-date { color: #666 !important; font-size: 9pt !important; }
+  .result-desc { color: #444 !important; font-size: 9pt !important; }
+
+  /* Скрываем иконки (не нужны на бумаге) */
+  .result-icon { display: none !important; }
+
+  /* Колонтитул */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+}

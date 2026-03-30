@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 import { Appointment, AppointmentStatus } from '../../core/models/appointment.model';
 import { AppointmentsService } from '../../core/services/appointments.service';
 import { PatientsService } from '../../core/services/patients.service';
@@ -10,7 +11,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { map } from 'rxjs';
 
 interface Doctor { id: number; firstName: string; lastName: string; }
-interface Patient { id: number; firstName: string; lastName: string; }
+interface Patient { id: number; firstName: string; lastName: string; phone?: string; dateOfBirth?: string; }
+interface Room { id: number; name: string; number: string; }
 
 @Component({
   selector: 'app-appointments',
@@ -21,34 +23,67 @@ interface Patient { id: number; firstName: string; lastName: string; }
 })
 export class AppointmentsComponent implements OnInit {
   filterStatus = 'all';
+  filterDate = '';
+  filterDoctor = 0;
+  searchQuery = '';
   showForm = false;
   appointments: Appointment[] = [];
   doctors: Doctor[] = [];
+  rooms: Room[] = [];
   patients: Patient[] = [];
   isLoading = true;
   isSaving = false;
   successMsg = '';
 
+  currentPage = 1;
+  readonly pageSize = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.filtered.length / this.pageSize) || 1;
+  }
+
+  get pagedFiltered(): Appointment[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filtered.slice(start, start + this.pageSize);
+  }
+
+  prevPage(): void { if (this.currentPage > 1) this.currentPage--; }
+  nextPage(): void { if (this.currentPage < this.totalPages) this.currentPage++; }
+
+  // Autocomplete
+  patientSearch = '';
+  patientSuggestions: Patient[] = [];
+  selectedPatient: Patient | null = null;
+  showSuggestions = false;
+
   form: {
     patientId: number;
     doctorId: number;
+    roomId: number;
     date: string;
     time: string;
     notes: string;
-  } = { patientId: 0, doctorId: 0, date: '', time: '', notes: '' };
+    price: number;
+  } = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0 };
 
   constructor(
     private service: AppointmentsService,
     private patientsService: PatientsService,
     private api: ApiService,
     public authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadAppointments();
     this.loadDoctors();
     this.loadPatients();
+
+    const state = window.history.state;
+    if (state?.patientId) {
+      setTimeout(() => this.openFormWithPatient(state.patientId, state.patientName), 500);
+    }
   }
 
   loadAppointments(): void {
@@ -71,9 +106,138 @@ export class AppointmentsComponent implements OnInit {
     });
   }
 
+  loadRooms(): void {
+    if (this.form.date && this.form.time) {
+      this.api.get<any>(`/rooms/available?date=${this.form.date}&time=${this.form.time}`)
+        .pipe(map(r => r.data || r)).subscribe({
+          next: data => { this.rooms = Array.isArray(data) ? data : []; this.cdr.detectChanges(); }
+        });
+    }
+  }
+
+  // Фильтрация
   get filtered(): Appointment[] {
-    if (this.filterStatus === 'all') return this.appointments;
-    return this.appointments.filter(a => a.status === this.filterStatus);
+    let result = this.appointments;
+
+    if (this.filterStatus !== 'all')
+      result = result.filter(a => a.status === this.filterStatus);
+
+    if (this.filterDate)
+      result = result.filter(a => a.date === this.filterDate);
+
+    if (this.filterDoctor)
+      result = result.filter(a => a.doctorId === Number(this.filterDoctor));
+
+    if (this.searchQuery.trim()) {
+      const q = this.searchQuery.toLowerCase().trim();
+      result = result.filter(a => {
+        const patientName = this.getPatientName(a.patientId).toLowerCase();
+        const doctorName = this.getDoctorName(a.doctorId).toLowerCase();
+        return patientName.includes(q) || doctorName.includes(q) || a.date.includes(q);
+      });
+    }
+
+    return result;
+  }
+
+  clearFilters(): void {
+    this.filterStatus = 'all';
+    this.filterDate = '';
+    this.filterDoctor = 0;
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.cdr.detectChanges();
+  }
+
+  get hasActiveFilters(): boolean {
+    return this.filterStatus !== 'all' || !!this.filterDate || !!this.filterDoctor || !!this.searchQuery;
+  }
+
+  // Autocomplete
+  onPatientSearch(): void {
+    const q = this.patientSearch.toLowerCase().trim();
+    if (q.length < 1) {
+      this.patientSuggestions = [];
+      this.showSuggestions = false;
+      this.form.patientId = 0;
+      this.selectedPatient = null;
+      return;
+    }
+    this.patientSuggestions = this.patients.filter(p =>
+      p.firstName?.toLowerCase().includes(q) ||
+      p.lastName?.toLowerCase().includes(q) ||
+      p.phone?.includes(q) ||
+      p.dateOfBirth?.includes(q)
+    ).slice(0, 6);
+    this.showSuggestions = this.patientSuggestions.length > 0;
+    this.cdr.detectChanges();
+  }
+
+  selectPatient(p: Patient): void {
+    this.selectedPatient = p;
+    this.form.patientId = p.id;
+    this.patientSearch = `${p.lastName} ${p.firstName}`;
+    this.showSuggestions = false;
+    this.cdr.detectChanges();
+  }
+
+  clearPatient(): void {
+    this.selectedPatient = null;
+    this.form.patientId = 0;
+    this.patientSearch = '';
+    this.patientSuggestions = [];
+    this.showSuggestions = false;
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: Event): void {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.autocomplete-wrapper')) {
+      this.showSuggestions = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  openFormWithPatient(patientId: number, patientName: string): void {
+    const p = this.patients.find(p => p.id === patientId);
+    if (p) this.selectPatient(p);
+    else { this.form.patientId = patientId; this.patientSearch = patientName; }
+    if (this.authService.isDoctor) this.form.doctorId = this.authService.currentUser?.id || 0;
+    this.showForm = true;
+    this.cdr.detectChanges();
+  }
+
+  openForm(): void {
+    if (this.authService.isDoctor) this.form.doctorId = this.authService.currentUser?.id || 0;
+    this.showForm = true;
+    this.cdr.detectChanges();
+  }
+
+  resetForm(): void {
+    this.form = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0 };
+    this.patientSearch = '';
+    this.selectedPatient = null;
+    this.patientSuggestions = [];
+    this.showSuggestions = false;
+    this.rooms = [];
+  }
+
+  save(): void {
+    if (!this.form.patientId || !this.form.doctorId || !this.form.date || !this.form.time) return;
+    this.isSaving = true;
+    this.service.create(this.form).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.showForm = false;
+        this.resetForm();
+        this.successMsg = 'Приём записан!';
+        setTimeout(() => { this.successMsg = ''; this.cdr.detectChanges(); }, 3000);
+        this.loadAppointments();
+        this.cdr.detectChanges();
+      },
+      error: () => { this.isSaving = false; this.cdr.detectChanges(); }
+    });
   }
 
   getPatientName(id: number): string {
@@ -95,37 +259,8 @@ export class AppointmentsComponent implements OnInit {
     return d ? `${d.firstName?.[0] || ''}${d.lastName?.[0] || ''}` : '?';
   }
 
-  openForm(): void {
-    // Если доктор — сразу ставим его ID
-    if (this.authService.isDoctor) {
-      const user = this.authService.currentUser;
-      this.form.doctorId = user?.id || 0;
-    }
-    this.showForm = true;
-    this.cdr.detectChanges();
-  }
-
-  save(): void {
-    if (!this.form.patientId || !this.form.doctorId || !this.form.date || !this.form.time) return;
-    this.isSaving = true;
-    this.service.create(this.form).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.showForm = false;
-        this.form = { patientId: 0, doctorId: 0, date: '', time: '', notes: '' };
-        this.successMsg = 'Приём записан!';
-        setTimeout(() => { this.successMsg = ''; this.cdr.detectChanges(); }, 3000);
-        this.loadAppointments();
-        this.cdr.detectChanges();
-      },
-      error: () => { this.isSaving = false; this.cdr.detectChanges(); }
-    });
-  }
-
   updateStatus(id: number, status: AppointmentStatus): void {
-    this.service.updateStatus(id, status).subscribe({
-      next: () => this.loadAppointments()
-    });
+    this.service.updateStatus(id, status).subscribe({ next: () => this.loadAppointments() });
   }
 
   delete(id: number): void {
@@ -137,9 +272,7 @@ export class AppointmentsComponent implements OnInit {
 
   getStatusLabel(status: AppointmentStatus): string {
     const map: Record<AppointmentStatus, string> = {
-      scheduled: 'Запланирован',
-      completed: 'Завершён',
-      cancelled: 'Отменён'
+      scheduled: 'Запланирован', completed: 'Завершён', cancelled: 'Отменён'
     };
     return map[status];
   }

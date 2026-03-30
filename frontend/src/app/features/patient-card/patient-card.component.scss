@@ -1,0 +1,336 @@
+.patient-card-page { max-width: 1000px; }
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.btn-back {
+  display: flex; align-items: center; gap: 6px;
+  background: white; border: 1px solid #e2e8f0;
+  border-radius: 10px; padding: 8px 16px;
+  font-size: 14px; font-weight: 600; color: #4a5568;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #f4f6f9; }
+  .material-icons { font-size: 18px; }
+}
+
+.btn-book {
+  display: flex; align-items: center; gap: 8px;
+  background: #1a73e8; color: white; border: none;
+  border-radius: 10px; padding: 10px 18px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #1557b0; }
+  .material-icons { font-size: 18px; }
+}
+
+.btn-print {
+  display: flex; align-items: center; gap: 8px;
+  background: white; color: #4a5568; border: 1px solid #e2e8f0;
+  border-radius: 10px; padding: 10px 18px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #f4f6f9; border-color: #cbd5e0; }
+  .material-icons { font-size: 18px; }
+}
+
+.profile-section {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.profile-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.patient-avatar-big {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a73e8, #0d47a1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.patient-fullname { font-size: 22px; font-weight: 700; color: #0f2d52; margin-bottom: 8px; }
+
+.patient-id-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e8f0fe;
+  color: #1a73e8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  .material-icons { font-size: 14px; }
+}
+
+.patient-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #718096;
+  margin-top: 4px;
+  .material-icons { font-size: 16px; color: #a0aec0; }
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  .material-icons { color: #1a73e8; font-size: 20px; margin-top: 2px; }
+}
+
+.contact-label { font-size: 11px; color: #a0aec0; font-weight: 600; text-transform: uppercase; }
+.contact-value { font-size: 14px; color: #2d3748; font-weight: 500; margin-top: 2px; }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  .material-icons { font-size: 28px; }
+  .stat-num { font-size: 22px; font-weight: 700; color: #0f2d52; }
+  .stat-lbl { font-size: 11px; color: #718096; font-weight: 600; margin-top: 2px; }
+  &.blue .material-icons { color: #1a73e8; }
+  &.green .material-icons { color: #34a853; }
+  &.purple .material-icons { color: #9334e6; }
+  &.orange .material-icons { color: #f9ab00; }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f2d52;
+  margin: 24px 0 12px;
+  .material-icons { color: #1a73e8; font-size: 20px; }
+}
+
+.appointments-history { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1a73e8;
+  &.completed { border-left-color: #34a853; }
+  &.cancelled { border-left-color: #ea4335; opacity: 0.7; }
+}
+
+.history-date { flex-shrink: 0; text-align: center; min-width: 100px; }
+.hdate { font-size: 13px; font-weight: 600; color: #0f2d52; }
+.htime { font-size: 12px; color: #718096; margin-top: 2px; }
+
+.history-info { flex: 1; }
+.history-doctor {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 600; color: #2d3748;
+  .material-icons { font-size: 15px; color: #1a73e8; }
+}
+.history-notes { font-size: 12px; color: #718096; margin-top: 3px; }
+
+.history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.history-price { font-size: 13px; font-weight: 700; color: #34a853; }
+
+.badge {
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  &.scheduled { background: #e8f0fe; color: #1a73e8; }
+  &.completed { background: #e6f4ea; color: #34a853; }
+  &.cancelled { background: #fce8e6; color: #ea4335; }
+}
+
+.results-list { display: flex; flex-direction: column; gap: 8px; }
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.result-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: #e8f0fe; display: flex;
+  align-items: center; justify-content: center;
+  .material-icons { color: #1a73e8; font-size: 22px; }
+}
+
+.result-info { flex: 1; }
+.result-title { font-size: 14px; font-weight: 600; color: #0f2d52; }
+.result-date { font-size: 12px; color: #718096; margin-top: 2px; }
+.result-desc { font-size: 12px; color: #a0aec0; margin-top: 3px; }
+
+.btn-download {
+  display: flex; align-items: center; gap: 6px;
+  background: #f4f6f9; border: 1px solid #e2e8f0;
+  border-radius: 8px; padding: 7px 12px;
+  font-size: 13px; font-weight: 600; color: #1a73e8;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #e8f0fe; }
+  .material-icons { font-size: 16px; }
+}
+
+.loading {
+  display: flex; align-items: center; gap: 8px;
+  color: #718096; padding: 60px; justify-content: center;
+  .material-icons { animation: spin 1s linear infinite; }
+}
+
+.empty-state {
+  text-align: center; padding: 40px; color: #a0aec0;
+  .material-icons { font-size: 40px; display: block; margin-bottom: 8px; }
+  p { font-size: 14px; }
+}
+
+@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+.btn-view {
+  display: flex; align-items: center; gap: 6px;
+  background: #e8f0fe; border: 1px solid #c5d9f7;
+  border-radius: 8px; padding: 7px 12px;
+  font-size: 13px; font-weight: 600; color: #1a73e8;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #d2e3fc; }
+  .material-icons { font-size: 16px; }
+}
+
+.result-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ===== FILE VIEWER MODAL ===== */
+.file-viewer-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.file-viewer-modal {
+  background: white;
+  border-radius: 16px;
+  width: 90vw;
+  max-width: 900px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+}
+
+.viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.viewer-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2d52;
+  .material-icons { color: #1a73e8; }
+}
+
+.viewer-actions { display: flex; gap: 8px; align-items: center; }
+
+.viewer-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: #f4f6f9; border: 1px solid #e2e8f0;
+  border-radius: 8px; padding: 7px 14px;
+  font-size: 13px; font-weight: 600; color: #2d3748;
+  cursor: pointer; font-family: inherit;
+  &:hover { background: #e2e8f0; }
+  .material-icons { font-size: 16px; }
+}
+
+.viewer-close {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer;
+  border-radius: 8px; color: #718096;
+  &:hover { background: #fce8e6; color: #ea4335; }
+  .material-icons { font-size: 20px; }
+}
+
+.viewer-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f6f9;
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.image-viewer {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.unsupported-file {
+  text-align: center;
+  color: #a0aec0;
+  .material-icons { font-size: 64px; display: block; margin-bottom: 16px; color: #cbd5e0; }
+  p { font-size: 14px; margin-bottom: 20px; }
+}

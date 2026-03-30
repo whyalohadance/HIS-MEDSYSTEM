@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 import { PatientsService } from '../../core/services/patients.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
@@ -28,21 +29,39 @@ export class PatientsComponent implements OnInit {
   isSaving = false;
   successMessage = '';
   selectedPatient: Patient | null = null;
+  formTouched = false;
+
+  currentPage = 1;
+  readonly pageSize = 10;
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredPatients.length / this.pageSize) || 1;
+  }
+
+  get pagedPatients(): Patient[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredPatients.slice(start, start + this.pageSize);
+  }
+
+  prevPage(): void { if (this.currentPage > 1) this.currentPage--; }
+  nextPage(): void { if (this.currentPage < this.totalPages) this.currentPage++; }
 
   form: {
     firstName: string; lastName: string; dateOfBirth: string;
     gender: 'male' | 'female'; phone: string; email: string;
-    address: string; doctorId: number;
+    city: string; country: string; doctorId: number;
   } = {
     firstName: '', lastName: '', dateOfBirth: '',
-    gender: 'male', phone: '', email: '', address: '', doctorId: 0
+    gender: 'male', phone: '', email: '',
+    city: '', country: '', doctorId: 0
   };
 
   constructor(
     public authService: AuthService,
     private patientsService: PatientsService,
     private api: ApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -57,12 +76,33 @@ export class PatientsComponent implements OnInit {
     });
   }
 
+  get errors(): Record<string, string> {
+    const e: Record<string, string> = {};
+    if (!this.form.firstName.trim()) e['firstName'] = 'Введите имя';
+    if (!this.form.lastName.trim()) e['lastName'] = 'Введите фамилию';
+    if (this.form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email))
+      e['email'] = 'Неверный формат email';
+    if (this.form.phone && !/^\+?[\d\s\-()]{7,}$/.test(this.form.phone))
+      e['phone'] = 'Неверный формат телефона';
+    if (this.form.dateOfBirth) {
+      const age = Math.floor((Date.now() - new Date(this.form.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+      if (age < 0 || age > 150) e['dateOfBirth'] = 'Неверная дата рождения';
+    }
+    return e;
+  }
+
+  get isFormValid(): boolean { return Object.keys(this.errors).length === 0; }
+
+  fieldError(field: string): string {
+    return this.formTouched ? (this.errors[field] || '') : '';
+  }
+
   search(): void {
     if (!this.searchQuery.trim()) return;
     this.isLoading = true;
     this.hasSearched = true;
+    this.currentPage = 1;
     this.cdr.detectChanges();
-
     this.patientsService.getAll().subscribe({
       next: data => {
         const q = this.searchQuery.toLowerCase().trim();
@@ -84,6 +124,7 @@ export class PatientsComponent implements OnInit {
     this.searchQuery = '';
     this.filteredPatients = [];
     this.hasSearched = false;
+    this.currentPage = 1;
     this.cdr.detectChanges();
   }
 
@@ -96,21 +137,31 @@ export class PatientsComponent implements OnInit {
       gender: patient.gender as 'male' | 'female',
       phone: patient.phone || '',
       email: patient.email || '',
-      address: patient.address || '',
+      city: (patient as any).city || '',
+      country: (patient as any).country || '',
       doctorId: patient.doctorId || 0
     };
+    this.formTouched = false;
     this.showEditModal = true;
     this.cdr.detectChanges();
   }
 
+  resetForm(): void {
+    this.form = { firstName: '', lastName: '', dateOfBirth: '', gender: 'male', phone: '', email: '', city: '', country: '', doctorId: 0 };
+    this.formTouched = false;
+  }
+
   saveNew(): void {
-    if (this.isSaving) return;
+    this.formTouched = true;
+    if (!this.isFormValid || this.isSaving) return;
     this.isSaving = true;
-    this.patientsService.create(this.form).subscribe({
+    const payload: any = { ...this.form };
+    if (!payload.doctorId) delete payload.doctorId;
+    this.patientsService.create(payload).subscribe({
       next: () => {
         this.isSaving = false;
         this.showForm = false;
-        this.form = { firstName: '', lastName: '', dateOfBirth: '', gender: 'male', phone: '', email: '', address: '', doctorId: 0 };
+        this.resetForm();
         this.successMessage = 'Пациент добавлен';
         this.cdr.detectChanges();
         setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
@@ -121,7 +172,8 @@ export class PatientsComponent implements OnInit {
   }
 
   saveEdit(): void {
-    if (!this.selectedPatient || this.isSaving) return;
+    this.formTouched = true;
+    if (!this.isFormValid || !this.selectedPatient || this.isSaving) return;
     this.isSaving = true;
     this.patientsService.update(this.selectedPatient.id, this.form).subscribe({
       next: updated => {
@@ -141,6 +193,16 @@ export class PatientsComponent implements OnInit {
     this.filteredPatients = this.filteredPatients.filter(p => p.id !== id);
     this.cdr.detectChanges();
     this.patientsService.delete(id).subscribe({ error: () => this.search() });
+  }
+
+  viewCard(p: Patient): void {
+    this.router.navigate(['/patients', p.id]);
+  }
+
+  bookAppointment(p: Patient): void {
+    this.router.navigate(['/appointments'], {
+      state: { patientId: p.id, patientName: `${p.lastName} ${p.firstName}` }
+    });
   }
 
   getDoctorName(doctorId: number): string {
