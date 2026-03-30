@@ -38,7 +38,16 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
     }
 
-    this.logger.error(`[${requestId}] ${status} ${request.method} ${request.url}: ${message}`);
+    // Логируем реальный exception (не только message для HttpException)
+    if (exception instanceof HttpException) {
+      this.logger.error(`[${requestId}] ${status} ${request.method} ${request.url}: ${message}`);
+    } else {
+      const err = exception as any;
+      this.logger.error(
+        `[${requestId}] ${status} ${request.method} ${request.url}: ${err?.message || message}`,
+        err?.stack,
+      );
+    }
 
     response.status(status).json(
       ApiResponse.fail(status, message, requestId)
