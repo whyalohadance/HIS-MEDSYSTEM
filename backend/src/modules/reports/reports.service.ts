@@ -7,6 +7,9 @@ import { User } from '../users/user.entity';
 import { Room } from '../rooms/room.entity';
 import PDFDocument = require('pdfkit');
 import * as ExcelJS from 'exceljs';
+import * as path from 'path';
+
+const FONT_PATH = path.join(__dirname, '../../../fonts/Arial.ttf');
 
 export interface ReportData {
   month: number;
@@ -76,6 +79,10 @@ export class ReportsService {
       doc.on('data', chunk => buffers.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(buffers)));
       doc.on('error', reject);
+
+      // Кириллица: регистрируем Roboto и устанавливаем как шрифт по умолчанию
+      doc.registerFont('Roboto', FONT_PATH);
+      doc.font('Roboto');
 
       // Заголовок
       doc.fontSize(20).text(`Отчёт за ${monthNames[month - 1]} ${year}`, { align: 'center' });
