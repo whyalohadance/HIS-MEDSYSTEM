@@ -334,3 +334,239 @@
   .material-icons { font-size: 64px; display: block; margin-bottom: 16px; color: #cbd5e0; }
   p { font-size: 14px; margin-bottom: 20px; }
 }
+
+/* ===== PRINT HEADER (скрыт на экране) ===== */
+.print-header { display: none; }
+
+/* ===== @MEDIA PRINT ===== */
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  /* Скрываем layout приложения */
+  app-layout .sidebar,
+  app-layout .header,
+  .card-header,
+  .btn-back,
+  .btn-book,
+  .btn-print,
+  .header-actions,
+  .result-actions,
+  .btn-view,
+  .btn-download,
+  .file-viewer-overlay {
+    display: none !important;
+  }
+
+  /* Сброс фонов */
+  * {
+    background: white !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: 'Times New Roman', Times, serif !important;
+    font-size: 11pt;
+    color: #000 !important;
+    background: white !important;
+  }
+
+  /* Показываем print-заголовок */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10pt;
+    margin-bottom: 16pt;
+    page-break-after: avoid;
+  }
+
+  .print-logo {
+    font-size: 10pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #000;
+  }
+
+  .print-title {
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 6pt 0 4pt;
+    color: #000;
+  }
+
+  .print-date {
+    font-size: 9pt;
+    color: #444;
+  }
+
+  /* Контейнер страницы */
+  .patient-card-page {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Профиль пациента */
+  .profile-section {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 20pt !important;
+    border: 1pt solid #000 !important;
+    border-radius: 0 !important;
+    padding: 14pt !important;
+    margin-bottom: 12pt !important;
+    page-break-inside: avoid;
+  }
+
+  .patient-avatar-big {
+    width: 56pt !important;
+    height: 56pt !important;
+    border-radius: 50% !important;
+    background: #ddd !important;
+    color: #000 !important;
+    font-size: 20pt !important;
+    font-weight: bold !important;
+    border: 1pt solid #000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .patient-fullname {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    color: #000 !important;
+    margin-bottom: 6pt !important;
+  }
+
+  .patient-id-badge {
+    display: inline-block !important;
+    background: #eee !important;
+    color: #000 !important;
+    border: 1pt solid #999 !important;
+    border-radius: 4pt !important;
+    padding: 2pt 8pt !important;
+    font-size: 10pt !important;
+    font-weight: bold !important;
+    margin-bottom: 6pt !important;
+    .material-icons { display: none !important; }
+  }
+
+  .patient-meta {
+    font-size: 10pt !important;
+    color: #222 !important;
+    margin-top: 3pt !important;
+    .material-icons { display: none !important; }
+  }
+
+  .contact-label {
+    font-size: 8pt !important;
+    color: #555 !important;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .contact-value {
+    font-size: 10pt !important;
+    color: #000 !important;
+  }
+
+  .contact-item .material-icons { display: none !important; }
+
+  /* Статистика */
+  .stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8pt !important;
+    margin-bottom: 14pt !important;
+    page-break-inside: avoid;
+  }
+
+  .stat-pill {
+    border: 1pt solid #000 !important;
+    border-radius: 0 !important;
+    padding: 8pt !important;
+    text-align: center;
+    .material-icons { display: none !important; }
+    .stat-num { font-size: 16pt !important; font-weight: bold !important; color: #000 !important; }
+    .stat-lbl { font-size: 8pt !important; color: #333 !important; text-transform: uppercase; }
+  }
+
+  /* Заголовки секций */
+  .section-title {
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    color: #000 !important;
+    border-bottom: 1pt solid #000 !important;
+    padding-bottom: 4pt !important;
+    margin: 14pt 0 8pt !important;
+    .material-icons { display: none !important; }
+  }
+
+  /* История приёмов */
+  .appointments-history { gap: 4pt !important; }
+
+  .history-item {
+    border: 1pt solid #ccc !important;
+    border-left: 3pt solid #000 !important;
+    border-radius: 0 !important;
+    padding: 8pt !important;
+    margin-bottom: 4pt !important;
+    page-break-inside: avoid;
+    &.completed { border-left-color: #555 !important; }
+    &.cancelled { border-left-color: #aaa !important; opacity: 1 !important; }
+  }
+
+  .hdate { font-size: 10pt !important; font-weight: bold !important; color: #000 !important; }
+  .htime { font-size: 9pt !important; color: #444 !important; }
+
+  .history-doctor {
+    font-size: 10pt !important;
+    color: #000 !important;
+    .material-icons { display: none !important; }
+  }
+
+  .history-notes { font-size: 9pt !important; color: #333 !important; }
+  .history-price { font-size: 10pt !important; font-weight: bold !important; color: #000 !important; }
+
+  .badge {
+    border: 1pt solid #999 !important;
+    background: #eee !important;
+    color: #000 !important;
+    font-size: 8pt !important;
+    padding: 1pt 6pt !important;
+    border-radius: 2pt !important;
+  }
+
+  /* Результаты */
+  .results-list { gap: 4pt !important; }
+
+  .result-item {
+    border: 1pt solid #ccc !important;
+    border-radius: 0 !important;
+    padding: 8pt !important;
+    margin-bottom: 4pt !important;
+    page-break-inside: avoid;
+    display: flex !important;
+    gap: 12pt !important;
+  }
+
+  .result-icon { display: none !important; }
+
+  .result-title { font-size: 10pt !important; font-weight: bold !important; color: #000 !important; }
+  .result-date { font-size: 9pt !important; color: #444 !important; }
+  .result-desc { font-size: 9pt !important; color: #333 !important; }
+
+  /* Empty state */
+  .empty-state {
+    color: #666 !important;
+    padding: 10pt 0 !important;
+    .material-icons { display: none !important; }
+    p { font-size: 10pt !important; }
+  }
+}

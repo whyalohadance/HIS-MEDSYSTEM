@@ -1,5 +1,12 @@
 <div class="patient-card-page" *ngIf="!isLoading && patient">
 
+  <!-- Заголовок только для печати -->
+  <div class="print-header">
+    <div class="print-logo">HIS-MedSystem</div>
+    <div class="print-title">Карточка пациента</div>
+    <div class="print-date">Дата печати: {{ formatDate(today) }}</div>
+  </div>
+
   <!-- HEADER -->
   <div class="card-header">
     <button class="btn-back" (click)="goBack()">

@@ -25,6 +25,7 @@ export class PatientCardComponent implements OnInit {
   viewingResult: any = null;
   viewingFileUrl: SafeResourceUrl = '';
   viewingRawUrl = '';
+  readonly today = new Date().toISOString().split('T')[0];
 
   constructor(
     private route: ActivatedRoute,
@@ -102,14 +103,20 @@ export class PatientCardComponent implements OnInit {
   openResultViewer(result: any): void {
     this.viewingResult = result;
     this.viewingRawUrl = `http://localhost:3000${result.fileUrl}`;
-    // Word/Excel файлы открываем через Google Docs Viewer
     if (this.isOffice(result)) {
+      // Word/Excel — Google Docs Viewer
       const encoded = encodeURIComponent(this.viewingRawUrl);
       this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
         `https://docs.google.com/viewer?url=${encoded}&embedded=true`
       );
-    } else {
+    } else if (this.isPDF(result)) {
+      // PDF — напрямую в iframe
       this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.viewingRawUrl);
+    } else if (this.isImage(result)) {
+      // Изображение — SafeUrl для img
+      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.viewingRawUrl);
+    } else {
+      this.viewingFileUrl = '';
     }
     this.cdr.detectChanges();
   }
@@ -139,19 +146,20 @@ export class PatientCardComponent implements OnInit {
     }
   }
 
+  private getFilename(result: any): string {
+    return result?.fileName || result?.fileUrl?.split('/').pop() || '';
+  }
+
   isImage(result: any): boolean {
-    if (!result?.fileName) return false;
-    return /\.(jpg|jpeg|png|gif|webp)$/i.test(result.fileName);
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(this.getFilename(result));
   }
 
   isPDF(result: any): boolean {
-    if (!result?.fileName) return false;
-    return /\.pdf$/i.test(result.fileName);
+    return /\.pdf$/i.test(this.getFilename(result));
   }
 
   isOffice(result: any): boolean {
-    if (!result?.fileName) return false;
-    return /\.(doc|docx|xls|xlsx|ppt|pptx)$/i.test(result.fileName);
+    return /\.(doc|docx|xls|xlsx|ppt|pptx)$/i.test(this.getFilename(result));
   }
 
   canPreview(result: any): boolean {
