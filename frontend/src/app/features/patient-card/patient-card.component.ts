@@ -25,6 +25,8 @@ export class PatientCardComponent implements OnInit {
   viewingResult: any = null;
   viewingFileUrl: SafeResourceUrl = '';
   viewingRawUrl = '';
+  previewType: 'html' | 'pdf' | 'image' | 'loading' | '' = '';
+  previewHtml = '';
   readonly today = new Date().toISOString().split('T')[0];
 
   constructor(
@@ -102,45 +104,63 @@ export class PatientCardComponent implements OnInit {
 
   openResultViewer(result: any): void {
     this.viewingResult = result;
-    this.viewingRawUrl = `http://localhost:3000${result.fileUrl}`;
-    if (this.isOffice(result)) {
-      // Word/Excel — Google Docs Viewer
-      const encoded = encodeURIComponent(this.viewingRawUrl);
-      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://docs.google.com/viewer?url=${encoded}&embedded=true`
-      );
-    } else if (this.isPDF(result)) {
-      // PDF — напрямую в iframe
-      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.viewingRawUrl);
-    } else if (this.isImage(result)) {
-      // Изображение — SafeUrl для img
-      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.viewingRawUrl);
-    } else {
-      this.viewingFileUrl = '';
-    }
+    // fileUrl is stored as a full URL (http://localhost:3000/uploads/name.docx)
+    this.viewingRawUrl = result.fileUrl || '';
+    this.previewType = 'loading';
+    this.previewHtml = '';
+    this.viewingFileUrl = '';
     this.cdr.detectChanges();
+
+    this.api.get<any>(`/results/${result.id}/preview`).subscribe({
+      next: (res) => {
+        if (res.type === 'html') {
+          this.previewType = 'html';
+          this.previewHtml = res.content || '';
+        } else if (res.type === 'pdf') {
+          this.previewType = 'pdf';
+          this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.url || this.viewingRawUrl);
+        } else if (res.type === 'image') {
+          this.previewType = 'image';
+          this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.url || this.viewingRawUrl);
+        } else {
+          this.previewType = '';
+        }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.previewType = '';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   closeResultViewer(): void {
     this.viewingResult = null;
     this.viewingFileUrl = '';
     this.viewingRawUrl = '';
+    this.previewType = '';
+    this.previewHtml = '';
     this.cdr.detectChanges();
   }
 
   downloadResultPDF(result: any): void {
-    if (result.fileUrl) {
-      const a = document.createElement('a');
-      a.href = `http://localhost:3000${result.fileUrl}`;
-      a.download = result.fileName || 'result';
-      a.click();
-    }
+    const url = result.fileUrl?.startsWith('http')
+      ? result.fileUrl
+      : `http://localhost:3000${result.fileUrl}`;
+    window.open(url, '_blank');
   }
 
   printResult(): void {
-    const iframe = document.getElementById('result-iframe') as HTMLIFrameElement;
-    if (iframe?.contentWindow) {
-      iframe.contentWindow.print();
+    if (this.previewType === 'html') {
+      const el = document.querySelector('.html-preview') as HTMLElement;
+      if (el) {
+        const win = window.open('', '_blank');
+        if (win) {
+          win.document.write(`<html><body>${el.innerHTML}</body></html>`);
+          win.document.close();
+          win.print();
+        }
+      }
     } else {
       window.open(this.viewingRawUrl, '_blank');
     }

@@ -10,7 +10,13 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // CORS — должен быть ДО всего остального
-  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads',
+    setHeaders: (res) => {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      res.setHeader('Access-Control-Allow-Methods', 'GET');
+    }
+  });
   app.enableCors({
     origin: true, // разрешаем все origins в dev режиме
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
