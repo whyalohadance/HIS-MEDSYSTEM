@@ -103,35 +103,25 @@ export class PatientCardComponent implements OnInit {
   }
 
   openResultViewer(result: any): void {
-    this.viewingResult = result;
-    // fileUrl is stored as a full URL (http://localhost:3000/uploads/name.docx)
-    this.viewingRawUrl = result.fileUrl || '';
-    this.previewType = 'loading';
-    this.previewHtml = '';
-    this.viewingFileUrl = '';
-    this.cdr.detectChanges();
+    const url = result.fileUrl?.startsWith('http')
+      ? result.fileUrl
+      : `http://localhost:3000${result.fileUrl}`;
 
-    this.api.get<any>(`/results/${result.id}/preview`).subscribe({
-      next: (res) => {
-        if (res.type === 'html') {
-          this.previewType = 'html';
-          this.previewHtml = res.content || '';
-        } else if (res.type === 'pdf') {
-          this.previewType = 'pdf';
-          this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.url || this.viewingRawUrl);
-        } else if (res.type === 'image') {
-          this.previewType = 'image';
-          this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(res.url || this.viewingRawUrl);
-        } else {
-          this.previewType = '';
-        }
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.previewType = '';
-        this.cdr.detectChanges();
-      }
-    });
+    if (this.isPDF(result)) {
+      this.viewingResult = result;
+      this.viewingRawUrl = url;
+      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.previewType = 'pdf';
+      this.cdr.detectChanges();
+    } else if (this.isImage(result)) {
+      this.viewingResult = result;
+      this.viewingRawUrl = url;
+      this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.previewType = 'image';
+      this.cdr.detectChanges();
+    } else {
+      window.open(url, '_blank');
+    }
   }
 
   closeResultViewer(): void {
