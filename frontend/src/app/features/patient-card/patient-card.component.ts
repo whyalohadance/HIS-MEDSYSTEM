@@ -123,8 +123,9 @@ export class PatientCardComponent implements OnInit {
       this.cdr.detectChanges();
       this.api.get<any>(`/results/${result.id}/preview`).subscribe({
         next: (res) => {
-          if (res.type === 'html' && res.content) {
-            this.previewHtml = res.content;
+          const data = res.data || res;
+          if (data.type === 'html' && data.content) {
+            this.previewHtml = data.content;
             this.previewType = 'html';
           } else {
             this.previewType = 'unsupported';
