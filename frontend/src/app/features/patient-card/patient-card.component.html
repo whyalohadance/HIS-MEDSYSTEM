@@ -193,14 +193,21 @@
     </div>
 
     <div class="viewer-body">
-      <!-- PDF и Office через iframe/Google Docs -->
-      <iframe *ngIf="isPDF(viewingResult) || isOffice(viewingResult)" id="result-iframe"
+      <!-- Загрузка -->
+      <div class="loading-preview" *ngIf="previewType === 'loading'">
+        <span class="material-icons spin">autorenew</span>
+        <p>Загрузка документа...</p>
+      </div>
+      <!-- DOCX в HTML -->
+      <div *ngIf="previewType === 'html'" [innerHTML]="previewHtml" class="html-preview"></div>
+      <!-- PDF в iframe -->
+      <iframe *ngIf="previewType === 'pdf'" id="result-iframe"
         [src]="viewingFileUrl" class="pdf-viewer">
       </iframe>
       <!-- Изображение -->
-      <img *ngIf="isImage(viewingResult)" [src]="viewingFileUrl" class="image-viewer">
-      <!-- Другой файл -->
-      <div class="unsupported-file" *ngIf="!canPreview(viewingResult)">
+      <img *ngIf="previewType === 'image'" [src]="viewingFileUrl" class="image-viewer">
+      <!-- Недоступен или ошибка -->
+      <div class="unsupported-file" *ngIf="previewType === 'unsupported' || previewType === ''">
         <span class="material-icons">insert_drive_file</span>
         <p>Предпросмотр недоступен для этого типа файла</p>
         <button class="btn-download" (click)="downloadResultPDF(viewingResult)">

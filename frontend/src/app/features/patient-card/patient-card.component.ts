@@ -25,7 +25,7 @@ export class PatientCardComponent implements OnInit {
   viewingResult: any = null;
   viewingFileUrl: SafeResourceUrl = '';
   viewingRawUrl = '';
-  previewType: 'html' | 'pdf' | 'image' | 'loading' | '' = '';
+  previewType: 'html' | 'pdf' | 'image' | 'loading' | 'unsupported' | '' = '';
   previewHtml = '';
   readonly today = new Date().toISOString().split('T')[0];
 
@@ -107,20 +107,38 @@ export class PatientCardComponent implements OnInit {
       ? result.fileUrl
       : `http://localhost:3000${result.fileUrl}`;
 
+    this.viewingResult = result;
+    this.viewingRawUrl = url;
+
     if (this.isPDF(result)) {
-      this.viewingResult = result;
-      this.viewingRawUrl = url;
       this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       this.previewType = 'pdf';
       this.cdr.detectChanges();
     } else if (this.isImage(result)) {
-      this.viewingResult = result;
-      this.viewingRawUrl = url;
       this.viewingFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       this.previewType = 'image';
       this.cdr.detectChanges();
+    } else if (this.isOffice(result)) {
+      this.previewType = 'loading';
+      this.cdr.detectChanges();
+      this.api.get<any>(`/results/${result.id}/preview`).subscribe({
+        next: (res) => {
+          if (res.type === 'html' && res.content) {
+            this.previewHtml = res.content;
+            this.previewType = 'html';
+          } else {
+            this.previewType = 'unsupported';
+          }
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.previewType = 'unsupported';
+          this.cdr.detectChanges();
+        }
+      });
     } else {
-      window.open(url, '_blank');
+      this.previewType = 'unsupported';
+      this.cdr.detectChanges();
     }
   }
 
