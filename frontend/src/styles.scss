@@ -946,3 +946,101 @@ body.dark-theme .day-badge { background: rgba(26,115,232,0.15) !important; color
   .nav-item { padding: 14px 16px !important; }
   .stat-card:hover, .patient-card:hover { transform: none !important; box-shadow: none !important; }
 }
+
+/* ===== MOBILE NATIVE APP REDESIGN (max-width: 768px) ===== */
+
+/* Part 2 — Hide sidebar, add bottom nav padding */
+@media (max-width: 768px) {
+  app-sidebar { display: none !important; }
+}
+
+/* Part 4 — Dashboard */
+@media (max-width: 768px) {
+  .dashboard { padding: 16px; }
+  .stats-grid-4 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .stat-card { padding: 14px !important; border-radius: 12px !important; }
+  .stat-value { font-size: 26px !important; }
+  .stat-icon .material-icons { font-size: 22px !important; }
+  .dashboard-layout { flex-direction: column !important; }
+  .dashboard-sidebar { width: 100% !important; margin-top: 16px !important; }
+  .charts-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .actions-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+  .action-card { padding: 12px 8px !important; font-size: 11px !important; border-radius: 10px !important; }
+  .action-card .material-icons { font-size: 22px !important; }
+}
+
+/* Part 5 — Patients list */
+@media (max-width: 768px) {
+  .patient-card { padding: 14px 16px !important; border-radius: 12px !important; gap: 12px !important; }
+  .patient-avatar { width: 44px !important; height: 44px !important; font-size: 14px !important; }
+  .patient-name { font-size: 15px !important; }
+  .patient-meta { font-size: 12px !important; }
+  .patient-actions { display: flex !important; gap: 8px !important; margin-left: auto !important; }
+  .action-btn { width: 36px !important; height: 36px !important; border-radius: 8px !important; }
+}
+
+/* Part 6 — Forms */
+@media (max-width: 768px) {
+  .form-card { border-radius: 16px !important; padding: 20px 16px !important; margin-bottom: 16px !important; }
+  .form-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .form-field input, .form-field select {
+    height: 48px !important; font-size: 16px !important;
+    border-radius: 10px !important; padding: 0 14px !important;
+  }
+  .form-actions { flex-direction: column !important; gap: 10px !important; }
+  .btn-primary, .btn-secondary {
+    width: 100% !important; height: 48px !important;
+    font-size: 15px !important; border-radius: 12px !important;
+    justify-content: center !important;
+  }
+}
+
+/* Part 7 — Appointments */
+@media (max-width: 768px) {
+  .apt-card { flex-direction: column !important; gap: 10px !important; padding: 14px 16px !important; border-radius: 12px !important; }
+  .apt-patient, .apt-doctor { gap: 10px !important; }
+  .apt-divider { display: none !important; }
+  .apt-datetime { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; }
+  .apt-actions {
+    width: 100% !important; justify-content: space-between !important;
+    border-top: 1px solid #f0f0f0 !important; padding-top: 10px !important; margin-top: 4px !important;
+  }
+  .search-filter-bar { flex-direction: column !important; gap: 10px !important; }
+  .search-wrap { width: 100% !important; }
+  .filter-input { width: 100% !important; }
+}
+
+/* Part 8 — Patient card page */
+@media (max-width: 768px) {
+  .patient-card-page { padding: 16px !important; }
+  .card-header { margin-bottom: 16px !important; }
+  .profile-section { grid-template-columns: 1fr !important; padding: 16px !important; gap: 16px !important; border-radius: 14px !important; }
+  .profile-left { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+  .patient-avatar-big { width: 72px !important; height: 72px !important; font-size: 26px !important; }
+  .contact-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .stats-row { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .stat-pill { padding: 12px !important; }
+  .history-item { flex-direction: column !important; gap: 8px !important; padding: 12px 14px !important; }
+  .history-date { display: flex !important; gap: 12px !important; align-items: center !important; }
+  .file-viewer-modal { width: 100vw !important; height: 100vh !important; border-radius: 0 !important; }
+}
+
+/* Part 10 — Reports page */
+@media (max-width: 768px) {
+  .reports-page { padding: 16px !important; }
+  .period-selector { flex-direction: column !important; gap: 12px !important; padding: 16px !important; }
+  .period-field select { width: 100% !important; height: 44px !important; }
+  .period-actions { flex-direction: column !important; width: 100% !important; }
+  .btn-pdf, .btn-excel { width: 100% !important; height: 48px !important; justify-content: center !important; }
+  .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .table-wrapper { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  .report-table { min-width: 560px !important; }
+}
+
+/* Part 9 — Dark theme for bottom nav */
+body.dark-theme .bottom-nav {
+  background: #1e293b !important;
+  border-top-color: #334155 !important;
+}
+body.dark-theme .nav-tab { color: #64748b !important; }
+body.dark-theme .nav-tab.active { color: #818cf8 !important; }

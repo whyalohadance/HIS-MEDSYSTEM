@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
+import { BottomNavComponent } from '../bottom-nav/bottom-nav.component';
 import { filter } from 'rxjs';
 import { routeAnimations } from '../../../animations';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, HeaderComponent],
+  imports: [RouterOutlet, SidebarComponent, HeaderComponent, BottomNavComponent],
   animations: [routeAnimations],
   template: `
     <div class="app-layout">
@@ -20,13 +21,14 @@ import { routeAnimations } from '../../../animations';
         </main>
       </div>
     </div>
+    <app-bottom-nav></app-bottom-nav>
   `,
   styles: [`
     .app-layout { display: flex; min-height: 100vh; }
     .main-wrapper { margin-left: 220px; flex: 1; display: flex; flex-direction: column; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .main-content { flex: 1; padding: 24px; background: #f4f6f9; overflow-x: hidden; position: relative; }
     @media (max-width: 1024px) and (min-width: 768px) { .main-wrapper { margin-left: 64px; } }
-    @media (max-width: 768px) { .main-wrapper { margin-left: 0; } .main-content { padding: 16px; } }
+    @media (max-width: 768px) { .main-wrapper { margin-left: 0; } .main-content { padding: 16px; padding-bottom: 80px; } }
   `]
 })
 export class LayoutComponent implements OnInit {

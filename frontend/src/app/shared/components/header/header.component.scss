@@ -166,10 +166,24 @@ mat-menu a, mat-menu button {
 
 // sm — phone (0-768px)
 @media (max-width: 768px) {
-  .header { padding: 0 16px; }
-  .hamburger-btn { display: flex; }
+  .header {
+    padding: 0 16px;
+    height: 56px;
+  }
+  // Sidebar is hidden on mobile — no hamburger needed
+  .hamburger-btn { display: none !important; }
   .hide-mobile { display: none !important; }
+  .greeting { display: none; }
   .greeting-text { display: none; }
+
+  // Show app name in place of greeting
+  .header-left::before {
+    content: 'MedSystem';
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f2d52;
+    font-family: 'Inter', sans-serif;
+  }
 }
 
 // xs — small phones (0-480px)
