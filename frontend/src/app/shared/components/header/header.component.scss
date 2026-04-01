@@ -11,6 +11,12 @@
   z-index: 100;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .greeting-text {
   display: block;
   font-size: 15px;
@@ -118,4 +124,58 @@ mat-menu a, mat-menu button {
   align-items: center;
   gap: 8px;
   .material-icons { font-size: 18px; }
+}
+
+.theme-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: #f4f6f9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  .material-icons { font-size: 20px; color: #718096; }
+  &:hover { background: #e2e8f0; }
+}
+
+.hamburger-btn {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+  background: #f4f6f9;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  .material-icons { font-size: 22px; color: #718096; }
+  &:hover { background: #e2e8f0; }
+}
+
+.hide-mobile { display: flex; }
+
+// md — tablet (768-1024px)
+@media (max-width: 1024px) {
+  .greeting-text { font-size: 14px; }
+  .date { display: none; }
+}
+
+// sm — phone (0-768px)
+@media (max-width: 768px) {
+  .header { padding: 0 16px; }
+  .hamburger-btn { display: flex; }
+  .hide-mobile { display: none !important; }
+  .greeting-text { display: none; }
+}
+
+// xs — small phones (0-480px)
+@media (max-width: 480px) {
+  .header { padding: 0 12px; }
+  .header-right { gap: 8px; }
+  .notif-btn { width: 36px; height: 36px; }
+  .theme-btn { width: 34px; height: 34px; }
 }

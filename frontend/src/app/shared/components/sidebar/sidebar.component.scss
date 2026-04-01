@@ -92,3 +92,64 @@
     }
   }
 }
+
+// ===== COLLAPSED (tablet 768-1024px) =====
+.sidebar.collapsed {
+  width: 64px;
+
+  .sidebar-logo {
+    justify-content: center;
+    padding: 20px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-nav {
+    padding: 16px 8px;
+    gap: 4px;
+  }
+
+  .nav-item {
+    padding: 11px;
+    justify-content: center;
+    gap: 0;
+
+    .material-icons { min-width: unset; }
+  }
+
+  .sidebar-footer {
+    padding: 8px;
+    .logout-btn { padding: 11px; justify-content: center; gap: 0; }
+  }
+}
+
+// ===== MOBILE =====
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 299;
+  animation: sidebarFadeIn 0.2s ease;
+}
+
+@keyframes sidebarFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 300;
+
+    &.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 32px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+}

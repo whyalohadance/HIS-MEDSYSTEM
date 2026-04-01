@@ -1,23 +1,28 @@
-<aside class="sidebar">
+<!-- Overlay (mobile only) -->
+<div class="sidebar-overlay" [class.active]="isOpen" (click)="sidebarService.close()"></div>
+
+<aside class="sidebar" [class.open]="isOpen" [class.collapsed]="collapsed">
 
   <div class="sidebar-logo">
     <span class="material-icons logo-icon">local_hospital</span>
-    <span class="logo-text">MedSystem</span>
+    <span class="logo-text" *ngIf="!collapsed">MedSystem</span>
   </div>
 
   <nav class="sidebar-nav">
     <ng-container *ngFor="let item of navItems">
-      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item"
+         [title]="item.label"
+         (click)="sidebarService.close()">
         <span class="material-icons">{{ item.icon }}</span>
-        <span class="nav-label">{{ item.label }}</span>
+        <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
       </a>
     </ng-container>
   </nav>
 
   <div class="sidebar-footer">
-    <button class="nav-item logout-btn" (click)="authService.logout()">
+    <button class="nav-item logout-btn" title="Выйти" (click)="authService.logout(); sidebarService.close()">
       <span class="material-icons">logout</span>
-      <span class="nav-label">Выйти</span>
+      <span class="nav-label" *ngIf="!collapsed">Выйти</span>
     </button>
   </div>
 
