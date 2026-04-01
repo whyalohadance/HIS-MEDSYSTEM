@@ -157,6 +157,104 @@ body {
 
 
 
+/* ===== ANIMATIONS ===== */
+
+/* 1 — Кнопки: плавные переходы и нажатие */
+button {
+  transition: background 0.2s ease, color 0.2s ease,
+              box-shadow 0.2s ease, transform 0.15s ease,
+              border-color 0.2s ease;
+}
+button:active { transform: scale(0.97); }
+
+/* Не трогаем mat-icon-button — у него свой ripple */
+button[mat-icon-button]:active { transform: none; }
+
+/* 2 — Карточки: hover подъём */
+.stat-card, .patient-card, .staff-card, .apt-card, .action-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.stat-card:hover, .patient-card:hover, .staff-card:hover,
+.apt-card:hover, .action-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* 3 — Появление элементов списка (stagger через nth-child) */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.patient-card { animation: fadeSlideIn 0.3s ease both; }
+.patient-card:nth-child(1) { animation-delay: 0.05s; }
+.patient-card:nth-child(2) { animation-delay: 0.10s; }
+.patient-card:nth-child(3) { animation-delay: 0.15s; }
+.patient-card:nth-child(4) { animation-delay: 0.20s; }
+.patient-card:nth-child(5) { animation-delay: 0.25s; }
+.patient-card:nth-child(n+6) { animation-delay: 0.30s; }
+
+.apt-card { animation: fadeSlideIn 0.3s ease both; }
+.apt-card:nth-child(1) { animation-delay: 0.05s; }
+.apt-card:nth-child(2) { animation-delay: 0.10s; }
+.apt-card:nth-child(3) { animation-delay: 0.15s; }
+.apt-card:nth-child(4) { animation-delay: 0.20s; }
+.apt-card:nth-child(5) { animation-delay: 0.25s; }
+.apt-card:nth-child(n+6) { animation-delay: 0.30s; }
+
+.staff-card { animation: fadeSlideIn 0.3s ease both; }
+.staff-card:nth-child(1) { animation-delay: 0.05s; }
+.staff-card:nth-child(2) { animation-delay: 0.10s; }
+.staff-card:nth-child(3) { animation-delay: 0.15s; }
+.staff-card:nth-child(4) { animation-delay: 0.20s; }
+.staff-card:nth-child(5) { animation-delay: 0.25s; }
+.staff-card:nth-child(n+6) { animation-delay: 0.30s; }
+
+/* 4 — Модальные окна */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal, .form-card {
+  animation: modalIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.file-viewer-modal {
+  animation: modalIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 5 — Пункты сайдбара */
+@keyframes navIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.nav-item:nth-child(1)  { animation: navIn 0.3s ease 0.05s both; }
+.nav-item:nth-child(2)  { animation: navIn 0.3s ease 0.10s both; }
+.nav-item:nth-child(3)  { animation: navIn 0.3s ease 0.15s both; }
+.nav-item:nth-child(4)  { animation: navIn 0.3s ease 0.20s both; }
+.nav-item:nth-child(5)  { animation: navIn 0.3s ease 0.25s both; }
+.nav-item:nth-child(6)  { animation: navIn 0.3s ease 0.30s both; }
+.nav-item:nth-child(7)  { animation: navIn 0.3s ease 0.35s both; }
+.nav-item:nth-child(8)  { animation: navIn 0.3s ease 0.40s both; }
+.nav-item:nth-child(9)  { animation: navIn 0.3s ease 0.45s both; }
+.nav-item:nth-child(10) { animation: navIn 0.3s ease 0.50s both; }
+.nav-item:nth-child(11) { animation: navIn 0.3s ease 0.55s both; }
+
+/* 6 — Success/Error сообщения */
+@keyframes alertIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.success-msg { animation: alertIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.error-msg   { animation: alertIn 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Отключаем анимации при печати */
+@media print {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* ===== DARK THEME ===== */
 body.dark-theme {
   --dark-bg: #0f172a;
@@ -376,6 +474,202 @@ body.dark-theme .viewer-btn {
   border-color: var(--dark-border) !important;
   color: var(--dark-text) !important;
 }
+
+/* ===== DARK THEME EXTENDED ===== */
+
+/* Dashboard queue */
+body.dark-theme .queue-all { color: var(--dark-text) !important; }
+body.dark-theme .queue-done { color: #4ade80 !important; }
+body.dark-theme .queue-sep { color: var(--dark-border) !important; }
+body.dark-theme .queue-label { color: var(--dark-text2) !important; }
+body.dark-theme .upcoming-date { color: var(--dark-text) !important; }
+body.dark-theme .upcoming-patient { color: var(--dark-text2) !important; }
+body.dark-theme .queue-status-badge { background: rgba(26,115,232,0.15) !important; color: #60a5fa !important; }
+body.dark-theme .queue-status-badge.completed { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .queue-status-badge.cancelled { background: rgba(234,67,53,0.15) !important; color: #f87171 !important; }
+body.dark-theme .queue-num { background: rgba(26,115,232,0.2) !important; color: #60a5fa !important; }
+body.dark-theme .queue-num.completed { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .queue-num.cancelled { background: rgba(234,67,53,0.15) !important; color: #f87171 !important; }
+body.dark-theme .queue-item.completed { background: rgba(52,168,83,0.05) !important; border-color: rgba(52,168,83,0.2) !important; }
+body.dark-theme .queue-item.cancelled { background: rgba(234,67,53,0.05) !important; border-color: rgba(234,67,53,0.2) !important; }
+
+/* Appointments - card content */
+body.dark-theme .name { color: var(--dark-text) !important; }
+body.dark-theme .sub { color: var(--dark-text2) !important; }
+body.dark-theme .apt-datetime .date,
+body.dark-theme .apt-datetime .time { color: var(--dark-text2) !important; }
+body.dark-theme .apt-notes { color: var(--dark-text2) !important; }
+body.dark-theme .price { color: #4ade80 !important; }
+body.dark-theme .count { background: var(--dark-border) !important; color: var(--dark-text2) !important; }
+body.dark-theme .btn-complete { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .btn-cancel { background: rgba(234,67,53,0.15) !important; color: #f87171 !important; }
+body.dark-theme .btn-delete { color: var(--dark-border) !important; }
+body.dark-theme .results-count { color: #818cf8 !important; }
+body.dark-theme .btn-clear-filters {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: #f87171 !important;
+}
+body.dark-theme .apt-divider { color: var(--dark-border) !important; }
+
+/* Pagination */
+body.dark-theme .page-btn {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+}
+body.dark-theme .page-info { color: var(--dark-text2) !important; }
+
+/* Patients list */
+body.dark-theme .patient-details { color: var(--dark-text2) !important; }
+body.dark-theme .patient-address { color: #64748b !important; }
+body.dark-theme .gender-badge.male { background: rgba(26,115,232,0.15) !important; color: #60a5fa !important; }
+body.dark-theme .gender-badge.female { background: rgba(147,52,230,0.15) !important; color: #c084fc !important; }
+body.dark-theme .btn-clear { color: var(--dark-text2) !important; }
+
+/* Form fields (all components) */
+body.dark-theme .form-field label { color: var(--dark-text2) !important; }
+
+/* Secondary button (all components) */
+body.dark-theme .btn-secondary {
+  background: var(--dark-card2) !important;
+  color: var(--dark-text2) !important;
+}
+
+/* Notifications */
+body.dark-theme .notif-item {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .notif-item.unread {
+  background: rgba(99,102,241,0.06) !important;
+  border-left-color: #818cf8 !important;
+}
+body.dark-theme .notif-icon { background: var(--dark-card2) !important; }
+body.dark-theme .notif-icon .material-icons { color: var(--dark-text2) !important; }
+body.dark-theme .notif-title { color: var(--dark-text) !important; }
+body.dark-theme .notif-message { color: var(--dark-text2) !important; }
+body.dark-theme .notif-time { color: #64748b !important; }
+
+/* Profile page */
+body.dark-theme .profile-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .profile-name { color: var(--dark-text) !important; }
+body.dark-theme .profile-meta { border-color: var(--dark-border) !important; }
+body.dark-theme .meta-item { color: var(--dark-text2) !important; }
+body.dark-theme .avatar-large { background: rgba(99,102,241,0.2) !important; color: #818cf8 !important; }
+body.dark-theme .edit-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .schedule-item {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .schedule-day { color: var(--dark-text) !important; }
+body.dark-theme .schedule-badge { background: var(--dark-card2) !important; color: var(--dark-text2) !important; }
+body.dark-theme .schedule-badge.active { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .disabled-input { background: var(--dark-card2) !important; color: var(--dark-text2) !important; }
+body.dark-theme .room-number { color: var(--dark-text) !important; }
+body.dark-theme .room-empty { color: #64748b !important; }
+body.dark-theme .room-sub { color: var(--dark-text2) !important; }
+body.dark-theme .room-desc { color: var(--dark-text2) !important; }
+
+/* Results page */
+body.dark-theme .result-card-top { border-color: var(--dark-border) !important; }
+body.dark-theme .result-title-text { color: var(--dark-text) !important; }
+body.dark-theme .patient-name-sm { color: var(--dark-text2) !important; }
+body.dark-theme .result-desc {
+  color: var(--dark-text2) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .result-card-bottom { background: var(--dark-card) !important; }
+body.dark-theme .result-date { color: var(--dark-text2) !important; }
+body.dark-theme .action-btn.view { background: rgba(26,115,232,0.15) !important; color: #60a5fa !important; }
+body.dark-theme .action-btn.delete { background: var(--dark-card2) !important; color: var(--dark-text2) !important; }
+body.dark-theme .upload-area {
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+  background: var(--dark-card2) !important;
+}
+body.dark-theme .warn-msg { background: rgba(251,188,4,0.08) !important; color: #fbbf24 !important; }
+body.dark-theme .file-icon-wrap.pdf { background: rgba(234,67,53,0.15) !important; }
+body.dark-theme .file-icon-wrap.image { background: rgba(26,115,232,0.15) !important; }
+body.dark-theme .file-icon-wrap.doc { background: rgba(52,168,83,0.15) !important; }
+
+/* Patient card page */
+body.dark-theme .btn-back,
+body.dark-theme .btn-print {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+}
+body.dark-theme .patient-meta { color: var(--dark-text2) !important; }
+body.dark-theme .patient-id-badge {
+  background: rgba(26,115,232,0.15) !important;
+  color: #60a5fa !important;
+}
+body.dark-theme .stat-num { color: var(--dark-text) !important; }
+body.dark-theme .stat-lbl { color: var(--dark-text2) !important; }
+body.dark-theme .hdate { color: var(--dark-text) !important; }
+body.dark-theme .history-doctor { color: var(--dark-text2) !important; }
+body.dark-theme .history-notes { color: #64748b !important; }
+body.dark-theme .history-price { color: var(--dark-text) !important; }
+body.dark-theme .result-title { color: var(--dark-text) !important; }
+body.dark-theme .result-date { color: var(--dark-text2) !important; }
+
+/* Reports page */
+body.dark-theme .period-field label { color: var(--dark-text2) !important; }
+body.dark-theme .error-state {
+  background: rgba(197,48,48,0.1) !important;
+  border-color: rgba(197,48,48,0.3) !important;
+  color: #f87171 !important;
+}
+
+/* Staff (inline-styled component overrides) */
+body.dark-theme .staff-avatar.doctor { background: rgba(26,115,232,0.2) !important; color: #60a5fa !important; }
+body.dark-theme .staff-avatar.receptionist { background: rgba(52,168,83,0.2) !important; color: #4ade80 !important; }
+body.dark-theme .staff-avatar.admin { background: rgba(147,52,230,0.2) !important; color: #c084fc !important; }
+body.dark-theme .staff-phone { color: #64748b !important; }
+body.dark-theme .email-preview {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+  color: #818cf8 !important;
+}
+body.dark-theme .role-badge.doctor { background: rgba(26,115,232,0.15) !important; color: #60a5fa !important; }
+body.dark-theme .role-badge.receptionist { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .status-badge.available { background: rgba(52,168,83,0.15) !important; color: #4ade80 !important; }
+body.dark-theme .status-badge.busy { background: rgba(249,171,0,0.15) !important; color: #fbbf24 !important; }
+
+/* Rooms (inline-styled component overrides) */
+body.dark-theme .room-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .room-name { color: var(--dark-text) !important; }
+body.dark-theme .badge.inactive { background: var(--dark-card2) !important; color: var(--dark-text2) !important; }
+
+/* Examinations (inline-styled component overrides) */
+body.dark-theme .exam-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .exam-name { color: var(--dark-text) !important; }
+body.dark-theme .exam-desc,
+body.dark-theme .exam-duration { color: var(--dark-text2) !important; }
+body.dark-theme .exam-icon { background: rgba(52,168,83,0.15) !important; }
+
+/* Schedules (inline-styled component overrides) */
+body.dark-theme .schedule-card {
+  background: var(--dark-card) !important;
+  border-color: var(--dark-border) !important;
+}
+body.dark-theme .schedule-doctor { color: var(--dark-text) !important; }
+body.dark-theme .schedule-room { color: var(--dark-text2) !important; }
+body.dark-theme .schedule-time { color: var(--dark-text2) !important; }
+body.dark-theme .day-badge { background: rgba(26,115,232,0.15) !important; color: #60a5fa !important; }
 
 /* ===== PRINT STYLES ===== */
 @media print {
