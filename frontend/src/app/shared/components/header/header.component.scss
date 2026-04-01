@@ -167,23 +167,35 @@ mat-menu a, mat-menu button {
 // sm — phone (0-768px)
 @media (max-width: 768px) {
   .header {
-    padding: 0 16px;
     height: 56px;
+    padding: 0 16px;
+    background: white;
+    border-bottom: 1px solid #f0f0f0;
+
+    // App name as flex item before header content
+    &::before {
+      content: '✚ MedSystem';
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f2d52;
+      font-family: 'Inter', sans-serif;
+      flex: 1;
+    }
   }
-  // Sidebar is hidden on mobile — no hamburger needed
+
+  // Header-left is empty on mobile (hamburger + greeting both hidden)
+  .header-left { display: none !important; }
   .hamburger-btn { display: none !important; }
   .hide-mobile { display: none !important; }
-  .greeting { display: none; }
-  .greeting-text { display: none; }
+  .greeting { display: none !important; }
+  .greeting-text { display: none !important; }
+  .user-info { display: none !important; }
+  .chevron { display: none !important; }
 
-  // Show app name in place of greeting
-  .header-left::before {
-    content: 'MedSystem';
-    font-size: 18px;
-    font-weight: 700;
-    color: #0f2d52;
-    font-family: 'Inter', sans-serif;
-  }
+  .theme-btn { width: 36px; height: 36px; border-radius: 10px; }
+  .avatar { width: 34px; height: 34px; font-size: 12px; }
+  .notif-btn { position: relative; }
+  .header-right { gap: 10px; }
 }
 
 // xs — small phones (0-480px)

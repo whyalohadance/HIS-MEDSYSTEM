@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,21 +22,37 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
   hidePassword = true;
   errorMessage = '';
+  animState: 'logo' | 'form' = 'logo';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       email: ['doctor@med.com', [Validators.required, Validators.email]],
       password: ['password123', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  get isMobile(): boolean { return window.innerWidth <= 768; }
+
+  ngOnInit(): void {
+    if (this.isMobile) {
+      this.animState = 'form';
+      this.cdr.detectChanges();
+    } else {
+      setTimeout(() => {
+        this.animState = 'form';
+        this.cdr.detectChanges();
+      }, 1800);
+    }
   }
 
   onSubmit(): void {
