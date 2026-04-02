@@ -104,3 +104,22 @@ CORS uploads: файлы доступны без токена по http://localh
 - Минимальная высота кнопок 48px
 - font-size для input: 16px (предотвращает zoom на iOS)
 - Safe area для iPhone notch: env(safe-area-inset-bottom)
+
+## Стиль работы Claude Code
+- Будь краток — только необходимый код без объяснений
+- Не спрашивай подтверждения на мелкие правки — просто делай
+- После каждого изменения сразу проверяй билд
+- Используй && для цепочки команд
+- Если задача ясна — выполняй немедленно
+- Всегда завершай задачу git commit && git push
+- При ошибке — сам диагностируй и исправляй без вопросов
+
+## Приоритеты при разработке
+1. Сначала backend (проверь npm run build)
+2. Потом frontend (проверь ng build)
+3. Потом git commit && git push
+
+## Быстрые команды
+- Перезапуск backend: kill -9 $(lsof -ti:3000) && cd backend && npm run start:dev
+- Перезапуск frontend: kill -9 $(lsof -ti:4200) && cd frontend && ng serve
+- Проверка БД: psql postgresql://medical_user:medical123@localhost:5432/medical_db -c "SELECT NOW();"
