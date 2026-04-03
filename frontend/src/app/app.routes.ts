@@ -17,12 +17,11 @@ export const routes: Routes = [
       { path: 'profile', loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent) },
       { path: 'notifications', loadComponent: () => import('./features/notifications/notifications.component').then(m => m.NotificationsComponent) },
       { path: 'patients', loadComponent: () => import('./features/patients/patients.component').then(m => m.PatientsComponent) },
+      { path: 'patients/:id', loadComponent: () => import('./features/patient-card/patient-card.component').then(m => m.PatientCardComponent) },
       { path: 'appointments', loadComponent: () => import('./features/appointments/appointments.component').then(m => m.AppointmentsComponent) },
       { path: 'results', loadComponent: () => import('./features/results/results.component').then(m => m.ResultsComponent) },
-      { path: 'reviews', loadComponent: () => import('./features/reviews/reviews.component').then(m => m.ReviewsComponent) },
-      { path: 'my-appointments', loadComponent: () => import('./features/my-appointments/my-appointments.component').then(m => m.MyAppointmentsComponent) },
-      { path: 'my-results', loadComponent: () => import('./features/my-results/my-results.component').then(m => m.MyResultsComponent) },
       { path: 'my-room', loadComponent: () => import('./features/my-room/my-room.component').then(m => m.MyRoomComponent) },
+      { path: 'my-cabinet', loadComponent: () => import('./features/my-cabinet/my-cabinet.component').then(m => m.MyCabinetComponent) },
 
       // Только АДМИН
       { path: 'staff', loadComponent: () => import('./features/staff/staff.component').then(m => m.StaffComponent), canActivate: [adminGuard] },

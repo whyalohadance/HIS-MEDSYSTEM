@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'Дашборд',     icon: 'dashboard',     route: '/dashboard' },
     { label: 'Пациенты',    icon: 'people',        route: '/patients' },
     { label: 'Приёмы',      icon: 'event',         route: '/appointments' },
-    { label: 'Мой кабинет', icon: 'meeting_room',  route: '/my-room' },
+    { label: 'Мой кабинет', icon: 'meeting_room',  route: '/my-cabinet' },
     { label: 'Уведомления', icon: 'notifications', route: '/notifications' },
     { label: 'Профиль',     icon: 'person',        route: '/profile' },
   ];
