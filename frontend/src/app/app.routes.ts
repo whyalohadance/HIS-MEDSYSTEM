@@ -19,7 +19,7 @@ export const routes: Routes = [
       { path: 'patients', loadComponent: () => import('./features/patients/patients.component').then(m => m.PatientsComponent) },
       { path: 'patients/:id', loadComponent: () => import('./features/patient-card/patient-card.component').then(m => m.PatientCardComponent) },
       { path: 'appointments', loadComponent: () => import('./features/appointments/appointments.component').then(m => m.AppointmentsComponent) },
-      { path: 'results', loadComponent: () => import('./features/results/results.component').then(m => m.ResultsComponent) },
+      { path: 'results', redirectTo: '/patients', pathMatch: 'full' },
       { path: 'my-room', loadComponent: () => import('./features/my-room/my-room.component').then(m => m.MyRoomComponent) },
       { path: 'my-cabinet', loadComponent: () => import('./features/my-cabinet/my-cabinet.component').then(m => m.MyCabinetComponent) },
 

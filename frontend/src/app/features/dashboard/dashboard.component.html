@@ -1,63 +1,78 @@
 <div class="dashboard">
 
-  <div class="welcome">
-    <div>
-      <h1>{{ greeting }}, {{ authService.currentUser?.firstName }}! 👋</h1>
-      <p class="date">{{ today | date:'EEEE, d MMMM' : '' : 'ru' }}</p>
-    </div>
-    <div class="role-badge" [class]="authService.currentUser?.role">
-      <span class="material-icons">{{ authService.isAdmin ? 'admin_panel_settings' : authService.isDoctor ? 'medical_services' : authService.isReceptionist ? 'badge' : 'person' }}</span>
-      {{ authService.isAdmin ? 'Администратор' : authService.isDoctor ? 'Врач' : authService.isReceptionist ? 'Регистратура' : 'Пациент' }}
-    </div>
-  </div>
-
   <div class="loading" *ngIf="isLoading">
     <span class="material-icons spin">autorenew</span> Загрузка...
   </div>
 
   <!-- ===== АДМИН ===== -->
   <ng-container *ngIf="!isLoading && authService.isAdmin && adminStats">
-    <div class="stats-grid-4">
-      <div class="stat-card blue">
-        <div class="stat-icon"><span class="material-icons">people</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.totalPatients }}</div><div class="stat-label">Пациентов</div></div>
+    <div class="dashboard-layout">
+
+      <!-- ЛЕВАЯ ЧАСТЬ -->
+      <div class="dashboard-main">
+        <div class="stats-grid-4">
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">people</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalPatients }}</div><div class="stat-label">Пациентов</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">medical_services</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalDoctors }}</div><div class="stat-label">Врачей</div></div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon"><span class="material-icons">badge</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalReceptionists }}</div><div class="stat-label">Регистраторов</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><span class="material-icons">event</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalAppointments }}</div><div class="stat-label">Всего приёмов</div></div>
+          </div>
+        </div>
+
+        <div class="section-title">Приёмы по статусам</div>
+        <div class="stats-grid-3">
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">event_available</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.completedAppointments }}</div><div class="stat-label">Завершённых</div></div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">pending</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.scheduledAppointments }}</div><div class="stat-label">Запланированных</div></div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon"><span class="material-icons">event_busy</span></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.cancelledAppointments }}</div><div class="stat-label">Отменённых</div></div>
+          </div>
+        </div>
+
+        <div class="section-title">Аналитика</div>
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="chart-title">Приёмы по месяцам</div>
+            <canvas #monthChart></canvas>
+          </div>
+          <div class="chart-card chart-card-sm">
+            <div class="chart-title">По статусам</div>
+            <canvas #statusChart></canvas>
+          </div>
+        </div>
+
+        <div class="section-title">Быстрые действия</div>
+        <div class="actions-grid">
+          <a routerLink="/staff" class="action-card"><span class="material-icons">badge</span><span>Персонал</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
+          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
+          <a routerLink="/schedules" class="action-card"><span class="material-icons">calendar_month</span><span>Расписание</span></a>
+          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
+          <a routerLink="/reports" class="action-card"><span class="material-icons">assessment</span><span>Отчёты</span></a>
+        </div>
       </div>
-      <div class="stat-card green">
-        <div class="stat-icon"><span class="material-icons">medical_services</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.totalDoctors }}</div><div class="stat-label">Врачей</div></div>
+
+      <!-- ПРАВАЯ ПАНЕЛЬ — ОЧЕРЕДЬ -->
+      <div class="dashboard-sidebar">
+        <ng-container *ngTemplateOutlet="queueWidget"></ng-container>
       </div>
-      <div class="stat-card purple">
-        <div class="stat-icon"><span class="material-icons">badge</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.totalReceptionists }}</div><div class="stat-label">Регистраторов</div></div>
-      </div>
-      <div class="stat-card orange">
-        <div class="stat-icon"><span class="material-icons">event</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.totalAppointments }}</div><div class="stat-label">Всего приёмов</div></div>
-      </div>
-    </div>
-    <div class="section-title">Приёмы по статусам</div>
-    <div class="stats-grid-3">
-      <div class="stat-card green">
-        <div class="stat-icon"><span class="material-icons">event_available</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.completedAppointments }}</div><div class="stat-label">Завершённых</div></div>
-      </div>
-      <div class="stat-card blue">
-        <div class="stat-icon"><span class="material-icons">pending</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.scheduledAppointments }}</div><div class="stat-label">Запланированных</div></div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-icon"><span class="material-icons">event_busy</span></div>
-        <div class="stat-info"><div class="stat-value">{{ adminStats.cancelledAppointments }}</div><div class="stat-label">Отменённых</div></div>
-      </div>
-    </div>
-    <div class="section-title">Быстрые действия</div>
-    <div class="actions-grid">
-      <a routerLink="/staff" class="action-card"><span class="material-icons">badge</span><span>Персонал</span></a>
-      <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
-      <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
-      <a routerLink="/schedules" class="action-card"><span class="material-icons">calendar_month</span><span>Расписание</span></a>
-      <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
-      <a routerLink="/reports" class="action-card"><span class="material-icons">assessment</span><span>Отчёты</span></a>
+
     </div>
   </ng-container>
 
@@ -81,97 +96,113 @@
         <div class="stat-info"><div class="stat-value">{{ doctorResults }}</div><div class="stat-label">Результатов</div></div>
       </div>
     </div>
-
     <div class="section-title" *ngIf="recentAppointments.length > 0">Ближайшие приёмы</div>
     <div class="upcoming-list" *ngIf="recentAppointments.length > 0">
       <div class="upcoming-item" *ngFor="let a of recentAppointments">
-        <div class="upcoming-date">
-          <span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}
-        </div>
+        <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
         <div class="upcoming-patient">Пациент #{{ a.patientId }}</div>
         <span class="badge scheduled">Запланирован</span>
       </div>
     </div>
-
     <div class="section-title">Быстрые действия</div>
     <div class="actions-grid">
       <a routerLink="/appointments" class="action-card"><span class="material-icons">event</span><span>Мои приёмы</span></a>
       <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
-      <a routerLink="/results" class="action-card"><span class="material-icons">assignment</span><span>Результаты</span></a>
+      <a routerLink="/my-cabinet" class="action-card"><span class="material-icons">meeting_room</span><span>Мой кабинет</span></a>
       <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Мой профиль</span></a>
     </div>
   </ng-container>
 
   <!-- ===== РЕГИСТРАТУРА ===== -->
   <ng-container *ngIf="!isLoading && authService.isReceptionist">
-    <div class="stats-grid-4">
-      <div class="stat-card blue">
-        <div class="stat-icon"><span class="material-icons">people</span></div>
-        <div class="stat-info"><div class="stat-value">{{ receptionPatients }}</div><div class="stat-label">Пациентов</div></div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-icon"><span class="material-icons">today</span></div>
-        <div class="stat-info"><div class="stat-value">{{ receptionAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
-      </div>
-      <div class="stat-card orange">
-        <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
-        <div class="stat-info"><div class="stat-value">{{ receptionScheduled }}</div><div class="stat-label">Запланировано</div></div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-icon"><span class="material-icons">event_note</span></div>
-        <div class="stat-info"><div class="stat-value">{{ receptionTotal }}</div><div class="stat-label">Всего приёмов</div></div>
-      </div>
-    </div>
+    <div class="dashboard-layout">
 
-    <div class="section-title" *ngIf="recentAppointments.length > 0">Приёмы сегодня</div>
-    <div class="upcoming-list" *ngIf="recentAppointments.length > 0">
-      <div class="upcoming-item" *ngFor="let a of recentAppointments">
-        <div class="upcoming-date"><span class="material-icons">schedule</span> {{ a.time }}</div>
-        <div class="upcoming-patient">Пациент #{{ a.patientId }} → Врач #{{ a.doctorId }}</div>
-        <span class="badge scheduled">Запланирован</span>
-      </div>
-    </div>
+      <!-- ЛЕВАЯ ЧАСТЬ -->
+      <div class="dashboard-main">
+        <div class="stats-grid-4">
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">people</span></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionPatients }}</div><div class="stat-label">Пациентов</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">today</span></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionScheduled }}</div><div class="stat-label">Запланировано</div></div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon"><span class="material-icons">event_note</span></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionTotal }}</div><div class="stat-label">Всего приёмов</div></div>
+          </div>
+        </div>
 
-    <div class="section-title">Быстрые действия</div>
-    <div class="actions-grid">
-      <a routerLink="/appointments" class="action-card"><span class="material-icons">add_circle</span><span>Новый приём</span></a>
-      <a routerLink="/patients" class="action-card"><span class="material-icons">person_add</span><span>Пациенты</span></a>
-      <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
-      <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
+        <div class="section-title">Быстрые действия</div>
+        <div class="actions-grid">
+          <a routerLink="/appointments" class="action-card"><span class="material-icons">add_circle</span><span>Новый приём</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">person_add</span><span>Пациенты</span></a>
+          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
+          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ ПАНЕЛЬ — ОЧЕРЕДЬ -->
+      <div class="dashboard-sidebar">
+        <ng-container *ngTemplateOutlet="queueWidget"></ng-container>
+      </div>
+
     </div>
   </ng-container>
 
-  <!-- ===== ПАЦИЕНТ ===== -->
-  <ng-container *ngIf="!isLoading && authService.isPatient">
-    <div class="stats-grid-3">
-      <div class="stat-card blue">
-        <div class="stat-icon"><span class="material-icons">event</span></div>
-        <div class="stat-info"><div class="stat-value">{{ patientAppointments }}</div><div class="stat-label">Моих приёмов</div></div>
+  <!-- ===== ВИДЖЕТ ОЧЕРЕДИ (шаблон) ===== -->
+  <ng-template #queueWidget>
+    <div class="queue-section">
+      <div class="queue-header">
+        <div class="queue-title">
+          <span class="material-icons">format_list_numbered</span>
+          Очередь на сегодня
+        </div>
+        <div class="queue-progress">
+          <span class="queue-done">{{ queueCompleted }}</span>
+          <span class="queue-sep">/</span>
+          <span class="queue-all">{{ queueTotal }}</span>
+          <span class="queue-label">завершено</span>
+        </div>
       </div>
-      <div class="stat-card green">
-        <div class="stat-icon"><span class="material-icons">assignment</span></div>
-        <div class="stat-info"><div class="stat-value">{{ patientResults }}</div><div class="stat-label">Результатов</div></div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-icon"><span class="material-icons">notifications</span></div>
-        <div class="stat-info"><div class="stat-value">{{ patientNotifications }}</div><div class="stat-label">Уведомлений</div></div>
-      </div>
-    </div>
 
-    <div class="next-appointment" *ngIf="patientNextAppointment">
-      <div class="next-label"><span class="material-icons">upcoming</span> Следующий приём</div>
-      <div class="next-details">
-        <span class="material-icons">event</span> {{ formatDate(patientNextAppointment.date) }} в {{ patientNextAppointment.time }}
+      <div class="queue-progress-bar">
+        <div class="queue-progress-fill"
+          [style.width.%]="queueTotal > 0 ? (queueCompleted / queueTotal * 100) : 0">
+        </div>
+      </div>
+
+      <div class="queue-empty" *ngIf="queueItems.length === 0">
+        <span class="material-icons">event_busy</span>
+        <p>Приёмов на сегодня нет</p>
+      </div>
+
+      <div class="queue-list" *ngIf="queueItems.length > 0">
+        <div class="queue-item" *ngFor="let q of queueItems" [class]="q.status">
+          <div class="queue-num" [class]="q.status">{{ q.queueNumber }}</div>
+          <div class="queue-info">
+            <div class="queue-patient">{{ q.patientName }}</div>
+            <div class="queue-doctor">
+              <span class="material-icons">medical_services</span>
+              {{ q.doctorName }}
+            </div>
+          </div>
+          <div class="queue-right">
+            <div class="queue-time">
+              <span class="material-icons">schedule</span>{{ q.time }}
+            </div>
+            <div class="queue-status-badge" [class]="q.status">
+              {{ getQueueStatusLabel(q.status) }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="section-title">Быстрые действия</div>
-    <div class="actions-grid">
-      <a routerLink="/my-appointments" class="action-card"><span class="material-icons">event</span><span>Мои приёмы</span></a>
-      <a routerLink="/my-results" class="action-card"><span class="material-icons">assignment</span><span>Мои результаты</span></a>
-      <a routerLink="/notifications" class="action-card"><span class="material-icons">notifications</span><span>Уведомления</span></a>
-      <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Профиль</span></a>
-    </div>
-  </ng-container>
+  </ng-template>
 
 </div>
