@@ -35,6 +35,12 @@ export class AppointmentsComponent implements OnInit {
   isSaving = false;
   successMsg = '';
 
+  showResultModal = false;
+  selectedAptForResult: any = null;
+  resultForm = { title: '', description: '' };
+  resultFile: File | null = null;
+  isSavingResult = false;
+
   currentPage = 1;
   readonly pageSize = 10;
 
@@ -268,6 +274,71 @@ export class AppointmentsComponent implements OnInit {
     this.appointments = this.appointments.filter(a => a.id !== id);
     this.cdr.detectChanges();
     this.service.delete(id).subscribe({ error: () => this.loadAppointments() });
+  }
+
+  openResultModal(apt: any): void {
+    this.selectedAptForResult = apt;
+    this.resultForm = { title: '', description: '' };
+    this.resultFile = null;
+    this.showResultModal = true;
+    this.cdr.detectChanges();
+  }
+
+  closeResultModal(): void {
+    this.showResultModal = false;
+    this.selectedAptForResult = null;
+    this.cdr.detectChanges();
+  }
+
+  onResultFileChange(event: any): void {
+    this.resultFile = event.target.files[0] || null;
+  }
+
+  saveResult(): void {
+    if (!this.resultForm.title || !this.selectedAptForResult) return;
+    this.isSavingResult = true;
+
+    const token = localStorage.getItem('token') || '';
+
+    if (this.resultFile) {
+      const formData = new FormData();
+      formData.append('file', this.resultFile);
+      formData.append('title', this.resultForm.title);
+      formData.append('description', this.resultForm.description);
+      formData.append('patientId', String(this.selectedAptForResult.patientId));
+      formData.append('doctorId', String(this.selectedAptForResult.doctorId));
+
+      fetch('http://localhost:3000/api/results', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
+      })
+      .then(r => r.json())
+      .then(() => {
+        this.isSavingResult = false;
+        this.showResultModal = false;
+        this.successMsg = 'Результат добавлен!';
+        setTimeout(() => { this.successMsg = ''; this.cdr.detectChanges(); }, 3000);
+        this.cdr.detectChanges();
+      })
+      .catch(() => { this.isSavingResult = false; this.cdr.detectChanges(); });
+    } else {
+      this.api.post<any>('/results', {
+        title: this.resultForm.title,
+        description: this.resultForm.description,
+        patientId: this.selectedAptForResult.patientId,
+        doctorId: this.selectedAptForResult.doctorId
+      }).subscribe({
+        next: () => {
+          this.isSavingResult = false;
+          this.showResultModal = false;
+          this.successMsg = 'Результат добавлен!';
+          setTimeout(() => { this.successMsg = ''; this.cdr.detectChanges(); }, 3000);
+          this.cdr.detectChanges();
+        },
+        error: () => { this.isSavingResult = false; this.cdr.detectChanges(); }
+      });
+    }
   }
 
   getStatusLabel(status: AppointmentStatus): string {

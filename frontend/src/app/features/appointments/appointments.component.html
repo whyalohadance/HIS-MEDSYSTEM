@@ -160,6 +160,11 @@
           <button class="btn-complete" (click)="updateStatus(apt.id, 'completed')"><span class="material-icons">check</span></button>
           <button class="btn-cancel" (click)="updateStatus(apt.id, 'cancelled')"><span class="material-icons">close</span></button>
         </div>
+        <button class="btn-add-result" (click)="openResultModal(apt)"
+          *ngIf="authService.isDoctor && (apt.status === 'completed' || apt.status === 'scheduled')"
+          title="Добавить результат">
+          <span class="material-icons">assignment_add</span>
+        </button>
         <button class="btn-delete" (click)="delete(apt.id)" title="Удалить"><span class="material-icons">delete</span></button>
       </div>
     </div>
@@ -176,4 +181,41 @@
     </button>
   </div>
 
+</div>
+
+<!-- МОДАЛ ДОБАВЛЕНИЯ РЕЗУЛЬТАТА -->
+<div class="modal-overlay" *ngIf="showResultModal" (click)="closeResultModal()">
+  <div class="modal result-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Добавить результат</h3>
+      <div class="modal-subtitle" *ngIf="selectedAptForResult">
+        Пациент: {{ getPatientName(selectedAptForResult.patientId) }} · {{ selectedAptForResult.date }}
+      </div>
+      <button class="btn-close" (click)="closeResultModal()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label>Название результата *</label>
+        <input [(ngModel)]="resultForm.title" placeholder="Например: Анализ крови, МРТ, ЭКГ...">
+      </div>
+      <div class="form-field">
+        <label>Описание</label>
+        <textarea [(ngModel)]="resultForm.description" placeholder="Описание результата или заключение..." rows="3"></textarea>
+      </div>
+      <div class="form-field">
+        <label>Прикрепить файл (PDF, Word, изображение)</label>
+        <input type="file" (change)="onResultFileChange($event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        <small *ngIf="resultFile">Выбран: {{ resultFile.name }}</small>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="saveResult()" [disabled]="isSavingResult || !resultForm.title">
+        <span class="material-icons">save</span>
+        {{ isSavingResult ? 'Сохранение...' : 'Сохранить результат' }}
+      </button>
+      <button class="btn-secondary" (click)="closeResultModal()">Отмена</button>
+    </div>
+  </div>
 </div>

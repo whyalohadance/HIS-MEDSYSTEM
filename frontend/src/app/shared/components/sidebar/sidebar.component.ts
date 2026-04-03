@@ -33,7 +33,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'Кабинеты',     icon: 'meeting_room',    route: '/rooms' },
     { label: 'Графики',      icon: 'calendar_month',  route: '/schedules' },
     { label: 'Обследования', icon: 'biotech',         route: '/examinations' },
-    { label: 'Результаты',   icon: 'assignment',      route: '/results' },
     { label: 'Уведомления',  icon: 'notifications',   route: '/notifications' },
     { label: 'Отчёты',       icon: 'assessment',      route: '/reports' },
     { label: 'Профиль',      icon: 'person',          route: '/profile' },
@@ -44,7 +43,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'Пациенты',    icon: 'people',        route: '/patients' },
     { label: 'Приёмы',      icon: 'event',         route: '/appointments' },
     { label: 'Мой кабинет', icon: 'meeting_room',  route: '/my-room' },
-    { label: 'Результаты',  icon: 'assignment',    route: '/results' },
     { label: 'Уведомления', icon: 'notifications', route: '/notifications' },
     { label: 'Профиль',     icon: 'person',        route: '/profile' },
   ];
@@ -55,7 +53,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { label: 'Запись',       icon: 'edit_calendar', route: '/appointments' },
     { label: 'Кабинеты',     icon: 'meeting_room',  route: '/rooms' },
     { label: 'Обследования', icon: 'biotech',       route: '/examinations' },
-    { label: 'Результаты',   icon: 'assignment',    route: '/results' },
     { label: 'Уведомления',  icon: 'notifications', route: '/notifications' },
     { label: 'Профиль',      icon: 'person',        route: '/profile' },
   ];
