@@ -1,4 +1,4 @@
-.dashboard { max-width: 960px; }
+.dashboard { width: 100%; box-sizing: border-box; }
 
 .welcome { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
 .welcome h1 { font-size: 24px; font-weight: 700; color: #0f2d52; margin: 0; }
@@ -16,7 +16,9 @@
 
 .section-title { font-size: 13px; font-weight: 700; color: #718096; margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.8px; }
 
-.stats-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 8px; }
+.dashboard-main .dashboard-main .stats-grid-4 { overflow: hidden; }
+.stats-grid-4 { overflow: hidden; }
+.stats-grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 8px; }
 .stats-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 8px; }
 
 .stat-card { display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 16px; background: white; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
@@ -52,4 +54,321 @@
   .stats-grid-4 { grid-template-columns: repeat(2, 1fr); }
   .stats-grid-3 { grid-template-columns: repeat(2, 1fr); }
   .actions-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== ОЧЕРЕДЬ ===== */
+.queue-section {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.queue-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f2d52;
+  .material-icons { color: #1a73e8; font-size: 20px; }
+}
+
+.queue-progress {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+.queue-done { font-weight: 700; color: #34a853; font-size: 18px; }
+.queue-sep { color: #a0aec0; }
+.queue-all { font-weight: 700; color: #0f2d52; font-size: 18px; }
+.queue-label { color: #718096; font-size: 12px; margin-left: 4px; }
+
+.queue-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.queue-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #34a853, #1a73e8);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.queue-empty {
+  text-align: center;
+  padding: 30px;
+  color: #a0aec0;
+  .material-icons { font-size: 36px; display: block; margin-bottom: 8px; }
+  p { font-size: 14px; }
+}
+
+.queue-list { display: flex; flex-direction: column; gap: 8px; }
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+
+  &.completed {
+    background: #f0faf4;
+    border-color: #c6f0d4;
+    opacity: 0.75;
+  }
+  &.cancelled {
+    background: #fff8f7;
+    border-color: #ffd0cc;
+    opacity: 0.6;
+  }
+}
+
+.queue-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  flex-shrink: 0;
+  background: #e8f0fe;
+  color: #1a73e8;
+  letter-spacing: 1px;
+
+  &.completed { background: #e6f4ea; color: #34a853; }
+  &.cancelled { background: #fce8e6; color: #ea4335; }
+}
+
+.queue-info { flex: 1; }
+.queue-patient { font-size: 14px; font-weight: 600; color: #0f2d52; }
+.queue-doctor {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #718096;
+  margin-top: 2px;
+  .material-icons { font-size: 13px; }
+}
+
+.queue-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  .material-icons { font-size: 15px; color: #a0aec0; }
+}
+
+.queue-status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #e8f0fe;
+  color: #1a73e8;
+
+  &.completed { background: #e6f4ea; color: #34a853; }
+  &.cancelled { background: #fce8e6; color: #ea4335; }
+}
+
+
+/* ===== ДВУХКОЛОНОЧНЫЙ LAYOUT ===== */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-main { min-width: 0; }
+
+.dashboard-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+.dashboard-sidebar .queue-section {
+  margin-bottom: 0;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.queue-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.queue-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+  white-space: nowrap;
+  .material-icons { font-size: 14px; color: #a0aec0; }
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+
+.chart-card-sm {
+  justify-content: center;
+}
+
+/* ===== ДОКТОР: приёмы сегодня ===== */
+.today-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: #e6f4ea;
+  border-radius: 12px;
+  border: 1px solid #b7dfbe;
+  color: #34a853;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  .material-icons { font-size: 20px; }
+}
+
+.today-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+
+.today-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1a73e8;
+  flex-wrap: wrap;
+  &.completed { border-left-color: #34a853; background: #f0faf4; }
+  &.cancelled { border-left-color: #ea4335; background: #fff5f5; opacity: 0.7; }
+}
+
+.today-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f2d52;
+  min-width: 72px;
+  .material-icons { font-size: 15px; color: #a0aec0; }
+}
+
+.today-patient { flex: 1; font-size: 14px; font-weight: 600; color: #0f2d52; }
+
+.today-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  &.scheduled { background: #e8f0fe; color: #1a73e8; }
+  &.completed { background: #e6f4ea; color: #34a853; }
+  &.cancelled { background: #fce8e6; color: #ea4335; }
+}
+
+.today-actions { display: flex; gap: 6px; }
+
+.btn-complete-sm, .btn-patient-sm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  .material-icons { font-size: 13px; }
+}
+.btn-complete-sm { background: #e6f4ea; color: #34a853; &:hover { background: #34a853; color: white; } }
+.btn-patient-sm  { background: #e8f0fe; color: #1a73e8; &:hover { background: #1a73e8; color: white; } }
+
+/* ===== ДОКТОР: пациенты сегодня (sidebar) ===== */
+.today-patients-list { display: flex; flex-direction: column; gap: 6px; }
+
+.today-patient-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  text-decoration: none;
+  transition: all 0.15s;
+  &:hover { background: #f0f7ff; border-color: #1a73e8; }
+}
+
+.tp-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #1a73e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.tp-info { flex: 1; min-width: 0; }
+.tp-name { font-size: 13px; font-weight: 600; color: #0f2d52; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tp-time { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #718096; margin-top: 1px; .material-icons { font-size: 12px; } }
+
+.tp-badge { font-size: 14px; flex-shrink: 0; }
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
 }

@@ -78,38 +78,110 @@
 
   <!-- ===== ДОКТОР ===== -->
   <ng-container *ngIf="!isLoading && authService.isDoctor">
-    <div class="stats-grid-4">
-      <div class="stat-card blue">
-        <div class="stat-icon"><span class="material-icons">people</span></div>
-        <div class="stat-info"><div class="stat-value">{{ doctorPatients }}</div><div class="stat-label">Моих пациентов</div></div>
+    <div class="dashboard-layout">
+
+      <!-- ЛЕВАЯ ЧАСТЬ -->
+      <div class="dashboard-main">
+
+        <!-- Статистика -->
+        <div class="stats-grid-4">
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">people</span></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorPatients }}</div><div class="stat-label">Моих пациентов</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">today</span></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorScheduled }}</div><div class="stat-label">Запланировано</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><span class="material-icons">assignment</span></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorResults }}</div><div class="stat-label">Результатов</div></div>
+          </div>
+        </div>
+
+        <!-- Приёмы сегодня -->
+        <div class="section-title">Приёмы сегодня</div>
+        <div class="today-empty" *ngIf="todayAppointments.length === 0">
+          <span class="material-icons">event_available</span>
+          <span>Сегодня приёмов нет — можно отдохнуть!</span>
+        </div>
+        <div class="today-list" *ngIf="todayAppointments.length > 0">
+          <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
+            <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
+            <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
+            <span class="today-badge" [class]="a.status">{{ a.status === 'scheduled' ? 'Ожидает' : a.status === 'completed' ? 'Завершён' : 'Отменён' }}</span>
+            <div class="today-actions">
+              <button class="btn-complete-sm" *ngIf="a.status === 'scheduled'" (click)="completeAppointment(a.id)">
+                <span class="material-icons">check</span> Завершить
+              </button>
+              <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
+                <span class="material-icons">person</span> Карточка
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ближайшие приёмы -->
+        <div class="section-title" *ngIf="upcomingAppointments.length > 0">Ближайшие приёмы</div>
+        <div class="upcoming-list" *ngIf="upcomingAppointments.length > 0">
+          <div class="upcoming-item" *ngFor="let a of upcomingAppointments">
+            <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
+            <div class="upcoming-patient">{{ getPatientName(a.patientId) }}</div>
+            <span class="badge scheduled">Запланирован</span>
+          </div>
+        </div>
+
+        <!-- Быстрые действия -->
+        <div class="section-title">Быстрые действия</div>
+        <div class="actions-grid">
+          <a routerLink="/appointments" class="action-card"><span class="material-icons">event</span><span>Мои приёмы</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
+          <a routerLink="/my-cabinet" class="action-card"><span class="material-icons">meeting_room</span><span>Мой кабинет</span></a>
+          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Мой профиль</span></a>
+        </div>
+
       </div>
-      <div class="stat-card green">
-        <div class="stat-icon"><span class="material-icons">today</span></div>
-        <div class="stat-info"><div class="stat-value">{{ doctorAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
+
+      <!-- ПРАВАЯ ЧАСТЬ -->
+      <div class="dashboard-sidebar">
+
+        <!-- Мои пациенты сегодня -->
+        <div class="queue-section" style="margin-bottom:16px">
+          <div class="queue-header">
+            <div class="queue-title">
+              <span class="material-icons">people</span> Пациенты сегодня
+            </div>
+            <span class="queue-label" style="font-size:13px;color:#718096">{{ todayPatients.length }} чел.</span>
+          </div>
+          <div class="queue-empty" *ngIf="todayPatients.length === 0">
+            <span class="material-icons">person_off</span>
+            <p>Сегодня пациентов нет</p>
+          </div>
+          <div class="today-patients-list" *ngIf="todayPatients.length > 0">
+            <a class="today-patient-item" *ngFor="let p of todayPatients" [routerLink]="['/patients', p.patientId]">
+              <div class="tp-avatar">{{ p.patientName[0] }}</div>
+              <div class="tp-info">
+                <div class="tp-name">{{ p.patientName }}</div>
+                <div class="tp-time"><span class="material-icons">schedule</span>{{ p.time }}</div>
+              </div>
+              <span class="tp-badge" [class]="p.status">{{ p.status === 'scheduled' ? '⏳' : p.status === 'completed' ? '✓' : '✕' }}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- График за 7 дней -->
+        <div class="chart-card" style="min-height:200px">
+          <div class="chart-title">Приёмы за 7 дней</div>
+          <div style="flex:1;min-height:160px;position:relative">
+            <canvas #doctorWeekChart></canvas>
+          </div>
+        </div>
+
       </div>
-      <div class="stat-card purple">
-        <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
-        <div class="stat-info"><div class="stat-value">{{ doctorScheduled }}</div><div class="stat-label">Запланировано</div></div>
-      </div>
-      <div class="stat-card orange">
-        <div class="stat-icon"><span class="material-icons">assignment</span></div>
-        <div class="stat-info"><div class="stat-value">{{ doctorResults }}</div><div class="stat-label">Результатов</div></div>
-      </div>
-    </div>
-    <div class="section-title" *ngIf="recentAppointments.length > 0">Ближайшие приёмы</div>
-    <div class="upcoming-list" *ngIf="recentAppointments.length > 0">
-      <div class="upcoming-item" *ngFor="let a of recentAppointments">
-        <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
-        <div class="upcoming-patient">Пациент #{{ a.patientId }}</div>
-        <span class="badge scheduled">Запланирован</span>
-      </div>
-    </div>
-    <div class="section-title">Быстрые действия</div>
-    <div class="actions-grid">
-      <a routerLink="/appointments" class="action-card"><span class="material-icons">event</span><span>Мои приёмы</span></a>
-      <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
-      <a routerLink="/my-cabinet" class="action-card"><span class="material-icons">meeting_room</span><span>Мой кабинет</span></a>
-      <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Мой профиль</span></a>
     </div>
   </ng-container>
 
