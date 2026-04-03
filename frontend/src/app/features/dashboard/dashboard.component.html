@@ -191,6 +191,8 @@
 
       <!-- ЛЕВАЯ ЧАСТЬ -->
       <div class="dashboard-main">
+
+        <!-- Статистика -->
         <div class="stats-grid-4">
           <div class="stat-card blue">
             <div class="stat-icon"><span class="material-icons">people</span></div>
@@ -210,20 +212,120 @@
           </div>
         </div>
 
+        <!-- Приёмы на сегодня -->
+        <div class="section-title">Приёмы на сегодня</div>
+        <div class="today-empty" *ngIf="receptionTodayAppointments.length === 0">
+          <span class="material-icons">event_available</span>
+          <span>Сегодня приёмов не запланировано</span>
+        </div>
+        <div class="today-list" *ngIf="receptionTodayAppointments.length > 0">
+          <div class="today-item rec-item" *ngFor="let a of receptionTodayAppointments" [class]="a.status">
+            <div class="rec-queue">{{ a.queueNumber }}</div>
+            <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
+            <div class="rec-names">
+              <div class="rec-patient">{{ a.patientName }}</div>
+              <div class="rec-doctor"><span class="material-icons">medical_services</span>{{ a.doctorName }}</div>
+            </div>
+            <span class="today-badge" [class]="a.status">
+              {{ a.status === 'scheduled' ? 'Ожидает' : a.status === 'completed' ? 'Завершён' : 'Отменён' }}
+            </span>
+            <div class="today-actions" *ngIf="a.status === 'scheduled'">
+              <button class="btn-complete-sm" (click)="updateAptStatus(a.id, 'completed')">
+                <span class="material-icons">check</span> Завершить
+              </button>
+              <button class="btn-cancel-sm" (click)="updateAptStatus(a.id, 'cancelled')">
+                <span class="material-icons">close</span> Отменить
+              </button>
+            </div>
+            <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
+              <span class="material-icons">person</span> Карточка
+            </a>
+          </div>
+        </div>
+
+        <!-- Последние пациенты -->
+        <div class="section-title">Последние добавленные пациенты</div>
+        <div class="recent-patients-list">
+          <div class="recent-patient-item" *ngFor="let p of receptionRecentPatients">
+            <div class="rp-avatar">{{ p.firstName?.[0] }}{{ p.lastName?.[0] }}</div>
+            <div class="rp-info">
+              <div class="rp-name">{{ p.lastName }} {{ p.firstName }}</div>
+              <div class="rp-meta">
+                <span *ngIf="p.phone"><span class="material-icons">phone</span>{{ p.phone }}</span>
+                <span><span class="material-icons">calendar_today</span>{{ p.createdAt | date:'dd.MM.yyyy' }}</span>
+              </div>
+            </div>
+            <a class="btn-patient-sm" routerLink="/appointments">
+              <span class="material-icons">add</span> Записать
+            </a>
+          </div>
+        </div>
+
+        <!-- Быстрые действия -->
         <div class="section-title">Быстрые действия</div>
         <div class="actions-grid">
           <a routerLink="/appointments" class="action-card"><span class="material-icons">add_circle</span><span>Новый приём</span></a>
           <a routerLink="/patients" class="action-card"><span class="material-icons">person_add</span><span>Пациенты</span></a>
           <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
           <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
+          <a routerLink="/notifications" class="action-card"><span class="material-icons">notifications</span><span>Уведомления</span></a>
+          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Профиль</span></a>
         </div>
+
       </div>
 
-      <!-- ПРАВАЯ ПАНЕЛЬ — ОЧЕРЕДЬ -->
+      <!-- ПРАВАЯ ЧАСТЬ -->
       <div class="dashboard-sidebar">
-        <ng-container *ngTemplateOutlet="queueWidget"></ng-container>
-      </div>
 
+        <!-- Очередь -->
+        <ng-container *ngTemplateOutlet="queueWidget"></ng-container>
+
+        <!-- Статус врачей -->
+        <div class="queue-section" style="margin:16px 0">
+          <div class="queue-header">
+            <div class="queue-title"><span class="material-icons">medical_services</span> Врачи сегодня</div>
+          </div>
+          <div class="doctors-status-list">
+            <div class="doctor-status-item" *ngFor="let d of receptionDoctors">
+              <div class="ds-avatar">{{ d.firstName?.[0] }}{{ d.lastName?.[0] }}</div>
+              <div class="ds-info">
+                <div class="ds-name">{{ d.lastName }} {{ d.firstName }}</div>
+                <div class="ds-status">
+                  <span class="status-dot" [class.busy]="d.isBusy"></span>
+                  {{ d.isBusy ? 'На приёме' : 'Доступен' }}
+                </div>
+              </div>
+              <a *ngIf="!d.isBusy" class="btn-patient-sm" routerLink="/appointments">
+                <span class="material-icons">add</span> Записать
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кабинеты -->
+        <div class="queue-section">
+          <div class="queue-header">
+            <div class="queue-title"><span class="material-icons">meeting_room</span> Кабинеты сейчас</div>
+          </div>
+          <div class="rooms-status-list">
+            <div class="room-status-item" *ngFor="let r of receptionRooms">
+              <span class="material-icons room-icon" [class.busy]="r.isBusy">
+                {{ r.isBusy ? 'door_front' : 'meeting_room' }}
+              </span>
+              <div class="rs-info">
+                <div class="rs-name">{{ r.name }}</div>
+                <div class="rs-number">№{{ r.number }}</div>
+              </div>
+              <span class="rs-badge" [class.busy]="r.isBusy">{{ r.isBusy ? 'Занят' : 'Свободен' }}</span>
+            </div>
+            <div class="queue-empty" *ngIf="receptionRooms.length === 0">
+              <span class="material-icons">meeting_room</span>
+              <p>Кабинеты не загружены</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </ng-container>
 

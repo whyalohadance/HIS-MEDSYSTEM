@@ -57,6 +57,10 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   receptionScheduled = 0;
   receptionTotal = 0;
   receptionPatients = 0;
+  receptionTodayAppointments: any[] = [];
+  receptionRecentPatients: any[] = [];
+  receptionDoctors: any[] = [];
+  receptionRooms: any[] = [];
 
   queueItems: QueueItem[] = [];
   queueCompleted = 0;
@@ -189,24 +193,74 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadReceptionStats(): void {
-    const today = new Date().toISOString().split('T')[0];
+    const todayStr = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
     forkJoin({
       patients: this.patientsService.getAll(),
       appointments: this.appointmentsService.getAll(),
-      doctors: this.api.get<any>('/users/doctors').pipe(map(r => r.data))
+      doctors: this.api.get<any>('/users/doctors').pipe(map(r => r.data)),
+      rooms: this.api.get<any>('/rooms').pipe(map(r => r.data || r))
     }).subscribe({
-      next: ({ patients, appointments, doctors }) => {
+      next: ({ patients, appointments, doctors, rooms }) => {
         this.allPatients = patients;
         this.allDoctors = doctors;
         this.receptionPatients = patients.length;
-        this.receptionAppointmentsToday = appointments.filter(a => a.date === today).length;
-        this.receptionScheduled = appointments.filter(a => a.status === 'scheduled').length;
+        this.receptionAppointmentsToday = appointments.filter((a: any) => a.date === todayStr).length;
+        this.receptionScheduled = appointments.filter((a: any) => a.status === 'scheduled').length;
         this.receptionTotal = appointments.length;
         this.loadQueue(appointments);
+
+        this.receptionTodayAppointments = appointments
+          .filter((a: any) => a.date === todayStr)
+          .sort((a: any, b: any) => a.time.localeCompare(b.time))
+          .map((a: any, index: number) => {
+            const patient = patients.find((p: any) => p.id === a.patientId);
+            const doctor = doctors.find((d: any) => d.id === a.doctorId);
+            return {
+              ...a,
+              queueNumber: String(index + 1).padStart(3, '0'),
+              patientName: patient ? `${patient.lastName} ${patient.firstName}` : `Пациент #${a.patientId}`,
+              doctorName: doctor ? `${doctor.lastName} ${doctor.firstName}` : `Врач #${a.doctorId}`
+            };
+          });
+
+        this.receptionRecentPatients = [...patients]
+          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 5);
+
+        this.receptionDoctors = doctors.map((d: any) => ({
+          ...d,
+          isBusy: appointments.some((a: any) => {
+            if (a.doctorId !== d.id || a.date !== todayStr || a.status !== 'scheduled') return false;
+            const [h, m] = a.time.split(':').map(Number);
+            const aptMin = h * 60 + m;
+            return currentMinutes >= aptMin && currentMinutes <= aptMin + 30;
+          })
+        }));
+
+        const roomsArr = Array.isArray(rooms) ? rooms : [];
+        this.receptionRooms = roomsArr.map((r: any) => ({
+          ...r,
+          isBusy: appointments.some((a: any) => {
+            if (a.roomId !== r.id || a.date !== todayStr || a.status !== 'scheduled') return false;
+            const [h, m] = a.time.split(':').map(Number);
+            const aptMin = h * 60 + m;
+            return currentMinutes >= aptMin - 30 && currentMinutes <= aptMin + 30;
+          })
+        }));
+
         this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: () => { this.isLoading = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  updateAptStatus(id: number, status: string): void {
+    this.appointmentsService.updateStatus(id, status as any).subscribe({
+      next: () => this.loadReceptionStats()
     });
   }
 

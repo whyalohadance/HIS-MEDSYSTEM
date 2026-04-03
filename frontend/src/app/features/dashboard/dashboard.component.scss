@@ -327,7 +327,75 @@
   .material-icons { font-size: 13px; }
 }
 .btn-complete-sm { background: #e6f4ea; color: #34a853; &:hover { background: #34a853; color: white; } }
+.btn-cancel-sm   { background: #fce8e6; color: #ea4335; &:hover { background: #ea4335; color: white; } }
 .btn-patient-sm  { background: #e8f0fe; color: #1a73e8; &:hover { background: #1a73e8; color: white; } }
+
+/* ===== РЕГИСТРАТУРА: приёмы сегодня ===== */
+.rec-item { gap: 10px; }
+.rec-queue { font-size: 13px; font-weight: 800; color: #a0aec0; min-width: 36px; letter-spacing: 1px; }
+.rec-names { flex: 1; min-width: 0; }
+.rec-patient { font-size: 13px; font-weight: 600; color: #0f2d52; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-doctor { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #718096; margin-top: 2px;
+  .material-icons { font-size: 12px; }
+}
+
+/* ===== РЕГИСТРАТУРА: последние пациенты ===== */
+.recent-patients-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.recent-patient-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  &:hover { border-color: #1a73e8; background: #f8fbff; }
+}
+.rp-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fef7e0; color: #f9ab00; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.rp-info { flex: 1; min-width: 0; }
+.rp-name { font-size: 13px; font-weight: 600; color: #0f2d52; }
+.rp-meta { display: flex; gap: 10px; margin-top: 2px; font-size: 11px; color: #718096;
+  span { display: flex; align-items: center; gap: 3px; .material-icons { font-size: 12px; } }
+}
+
+/* ===== РЕГИСТРАТУРА: статус врачей ===== */
+.doctors-status-list { display: flex; flex-direction: column; gap: 8px; }
+.doctor-status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #fafafa;
+}
+.ds-avatar { width: 34px; height: 34px; border-radius: 50%; background: #e8f0fe; color: #1a73e8; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.ds-info { flex: 1; min-width: 0; }
+.ds-name { font-size: 13px; font-weight: 600; color: #0f2d52; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #718096; margin-top: 2px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #34a853; flex-shrink: 0;
+  &.busy { background: #f9ab00; }
+}
+
+/* ===== РЕГИСТРАТУРА: кабинеты ===== */
+.rooms-status-list { display: flex; flex-direction: column; gap: 6px; }
+.room-status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f0faf4;
+  &:has(.busy) { background: #fff5f5; }
+}
+.room-icon { font-size: 20px; color: #34a853; flex-shrink: 0; &.busy { color: #ea4335; } }
+.rs-info { flex: 1; }
+.rs-name { font-size: 13px; font-weight: 600; color: #0f2d52; }
+.rs-number { font-size: 11px; color: #718096; }
+.rs-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #e6f4ea; color: #34a853; white-space: nowrap;
+  &.busy { background: #fce8e6; color: #ea4335; }
+}
 
 /* ===== ДОКТОР: пациенты сегодня (sidebar) ===== */
 .today-patients-list { display: flex; flex-direction: column; gap: 6px; }
