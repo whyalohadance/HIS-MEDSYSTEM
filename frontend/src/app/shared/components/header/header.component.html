@@ -1,32 +1,48 @@
 <header class="header">
   <div class="header-left">
-    <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Открыть меню">
+    <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Меню">
       <span class="material-icons">menu</span>
     </button>
     <div class="greeting">
-      <span class="greeting-text">{{ getGreeting() }}, {{ currentUser?.firstName }}! 👋</span>
+      <span class="greeting-text">{{ getGreeting() | translate }}, {{ currentUser?.firstName }}! 👋</span>
       <span class="date">{{ currentDate | date:'EEEE, d MMMM':'':'ru' }}</span>
     </div>
   </div>
 
   <div class="header-right">
+    <!-- Language switcher -->
+    <div class="lang-switcher">
+      <button
+        *ngFor="let lang of langService.languages"
+        class="lang-btn"
+        [class.active]="langService.getCurrentLanguage() === lang.code"
+        (click)="langService.setLanguage(lang.code)"
+        [title]="lang.label">
+        {{ lang.flag }} {{ lang.label }}
+      </button>
+    </div>
+
+    <!-- Dark theme toggle -->
     <button class="theme-btn" (click)="toggleTheme()" [title]="isDarkTheme ? 'Светлая тема' : 'Тёмная тема'">
       <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
     </button>
 
+    <!-- Notifications -->
     <a routerLink="/notifications" class="notif-btn">
       <span class="material-icons">notifications</span>
       <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
     </a>
 
+    <!-- Avatar + dropdown -->
     <div class="user-menu" (click)="toggleUserDropdown($event)" [class.open]="showUserDropdown">
       <div class="avatar">{{ getInitials() }}</div>
       <div class="user-info hide-mobile">
         <span class="user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
-        <span class="user-role">{{ getRoleLabel() }}</span>
+        <span class="user-role">{{ getRoleLabel() | translate }}</span>
       </div>
       <span class="material-icons chevron hide-mobile" [class.rotated]="showUserDropdown">expand_more</span>
 
+      <!-- Custom dropdown -->
       <div class="user-dropdown" *ngIf="showUserDropdown" (click)="$event.stopPropagation()">
         <div class="dropdown-top">
           <div class="dropdown-avatar">{{ getInitials() }}</div>
@@ -38,11 +54,11 @@
         <div class="dropdown-divider"></div>
         <a routerLink="/profile" class="dropdown-item" (click)="closeDropdown()">
           <span class="material-icons">person</span>
-          Профиль
+          {{ 'NAV.PROFILE' | translate }}
         </a>
         <button class="dropdown-item danger" (click)="logout()">
           <span class="material-icons">logout</span>
-          Выйти
+          {{ 'NAV.LOGOUT' | translate }}
         </button>
       </div>
     </div>

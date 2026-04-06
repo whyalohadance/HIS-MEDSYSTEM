@@ -663,6 +663,13 @@ body.dark-theme .dropdown-item {
 }
 body.dark-theme .user-menu:hover { background: var(--dark-card2) !important; }
 body.dark-theme .user-menu.open { background: var(--dark-card2) !important; }
+body.dark-theme .lang-btn {
+  background: var(--dark-card2) !important;
+  border-color: var(--dark-border) !important;
+  color: var(--dark-text2) !important;
+  &.active { background: #4f46e5 !important; border-color: #4f46e5 !important; color: white !important; }
+  &:hover:not(.active) { border-color: #6366f1 !important; color: #818cf8 !important; }
+}
 body.dark-theme .notif-btn {
   background: var(--dark-card2) !important;
   color: var(--dark-text2) !important;

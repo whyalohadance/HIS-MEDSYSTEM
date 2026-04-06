@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { Subscription } from 'rxjs';
 
 interface NavItem {
-  label: string;
+  key: string;
   icon: string;
   route: string;
 }
@@ -15,7 +15,7 @@ interface NavItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MatIconModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
@@ -26,35 +26,35 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   private adminNav: NavItem[] = [
-    { label: 'Дашборд',      icon: 'dashboard',      route: '/dashboard' },
-    { label: 'Персонал',     icon: 'badge',           route: '/staff' },
-    { label: 'Пациенты',     icon: 'people',          route: '/patients' },
-    { label: 'Приёмы',       icon: 'event',           route: '/appointments' },
-    { label: 'Кабинеты',     icon: 'meeting_room',    route: '/rooms' },
-    { label: 'Графики',      icon: 'calendar_month',  route: '/schedules' },
-    { label: 'Обследования', icon: 'biotech',         route: '/examinations' },
-    { label: 'Уведомления',  icon: 'notifications',   route: '/notifications' },
-    { label: 'Отчёты',       icon: 'assessment',      route: '/reports' },
-    { label: 'Профиль',      icon: 'person',          route: '/profile' },
+    { key: 'NAV.DASHBOARD',    icon: 'dashboard',      route: '/dashboard' },
+    { key: 'NAV.STAFF',        icon: 'badge',           route: '/staff' },
+    { key: 'NAV.PATIENTS',     icon: 'people',          route: '/patients' },
+    { key: 'NAV.APPOINTMENTS', icon: 'event',           route: '/appointments' },
+    { key: 'NAV.ROOMS',        icon: 'meeting_room',    route: '/rooms' },
+    { key: 'NAV.SCHEDULES',    icon: 'calendar_month',  route: '/schedules' },
+    { key: 'NAV.EXAMINATIONS', icon: 'biotech',         route: '/examinations' },
+    { key: 'NAV.NOTIFICATIONS',icon: 'notifications',   route: '/notifications' },
+    { key: 'NAV.REPORTS',      icon: 'assessment',      route: '/reports' },
+    { key: 'NAV.PROFILE',      icon: 'person',          route: '/profile' },
   ];
 
   private doctorNav: NavItem[] = [
-    { label: 'Дашборд',     icon: 'dashboard',     route: '/dashboard' },
-    { label: 'Пациенты',    icon: 'people',        route: '/patients' },
-    { label: 'Приёмы',      icon: 'event',         route: '/appointments' },
-    { label: 'Мой кабинет', icon: 'meeting_room',  route: '/my-cabinet' },
-    { label: 'Уведомления', icon: 'notifications', route: '/notifications' },
-    { label: 'Профиль',     icon: 'person',        route: '/profile' },
+    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
+    { key: 'NAV.APPOINTMENTS', icon: 'event',         route: '/appointments' },
+    { key: 'NAV.MY_CABINET',   icon: 'meeting_room',  route: '/my-cabinet' },
+    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
   ];
 
   private receptionistNav: NavItem[] = [
-    { label: 'Дашборд',      icon: 'dashboard',     route: '/dashboard' },
-    { label: 'Пациенты',     icon: 'people',        route: '/patients' },
-    { label: 'Запись',       icon: 'edit_calendar', route: '/appointments' },
-    { label: 'Кабинеты',     icon: 'meeting_room',  route: '/rooms' },
-    { label: 'Обследования', icon: 'biotech',       route: '/examinations' },
-    { label: 'Уведомления',  icon: 'notifications', route: '/notifications' },
-    { label: 'Профиль',      icon: 'person',        route: '/profile' },
+    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
+    { key: 'NAV.APPOINTMENTS', icon: 'edit_calendar', route: '/appointments' },
+    { key: 'NAV.ROOMS',        icon: 'meeting_room',  route: '/rooms' },
+    { key: 'NAV.EXAMINATIONS', icon: 'biotech',       route: '/examinations' },
+    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
   ];
 
   constructor(

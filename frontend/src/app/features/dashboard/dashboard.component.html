@@ -1,7 +1,7 @@
 <div class="dashboard">
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Загрузка...
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
   </div>
 
   <!-- ===== АДМИН ===== -->
@@ -13,58 +13,58 @@
         <div class="stats-grid-4">
           <div class="stat-card blue">
             <div class="stat-icon"><span class="material-icons">people</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.totalPatients }}</div><div class="stat-label">Пациентов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalPatients }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_PATIENTS' | translate }}</div></div>
           </div>
           <div class="stat-card green">
             <div class="stat-icon"><span class="material-icons">medical_services</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.totalDoctors }}</div><div class="stat-label">Врачей</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalDoctors }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_DOCTORS' | translate }}</div></div>
           </div>
           <div class="stat-card purple">
             <div class="stat-icon"><span class="material-icons">badge</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.totalReceptionists }}</div><div class="stat-label">Регистраторов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalReceptionists }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_RECEPTIONISTS' | translate }}</div></div>
           </div>
           <div class="stat-card orange">
             <div class="stat-icon"><span class="material-icons">event</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.totalAppointments }}</div><div class="stat-label">Всего приёмов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.totalAppointments }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_APPOINTMENTS' | translate }}</div></div>
           </div>
         </div>
 
-        <div class="section-title">Приёмы по статусам</div>
+        <div class="section-title">{{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</div>
         <div class="stats-grid-3">
           <div class="stat-card green">
             <div class="stat-icon"><span class="material-icons">event_available</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.completedAppointments }}</div><div class="stat-label">Завершённых</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.completedAppointments }}</div><div class="stat-label">{{ 'DASHBOARD.COMPLETED' | translate }}</div></div>
           </div>
           <div class="stat-card blue">
             <div class="stat-icon"><span class="material-icons">pending</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.scheduledAppointments }}</div><div class="stat-label">Запланированных</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.scheduledAppointments }}</div><div class="stat-label">{{ 'DASHBOARD.SCHEDULED' | translate }}</div></div>
           </div>
           <div class="stat-card red">
             <div class="stat-icon"><span class="material-icons">event_busy</span></div>
-            <div class="stat-info"><div class="stat-value">{{ adminStats.cancelledAppointments }}</div><div class="stat-label">Отменённых</div></div>
+            <div class="stat-info"><div class="stat-value">{{ adminStats.cancelledAppointments }}</div><div class="stat-label">{{ 'DASHBOARD.CANCELLED' | translate }}</div></div>
           </div>
         </div>
 
-        <div class="section-title">Аналитика</div>
+        <div class="section-title">{{ 'DASHBOARD.ANALYTICS' | translate }}</div>
         <div class="charts-row">
           <div class="chart-card">
-            <div class="chart-title">Приёмы по месяцам</div>
+            <div class="chart-title">{{ 'DASHBOARD.APPOINTMENTS_BY_MONTH' | translate }}</div>
             <canvas #monthChart></canvas>
           </div>
           <div class="chart-card chart-card-sm">
-            <div class="chart-title">По статусам</div>
+            <div class="chart-title">{{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</div>
             <canvas #statusChart></canvas>
           </div>
         </div>
 
-        <div class="section-title">Быстрые действия</div>
+        <div class="section-title">{{ 'DASHBOARD.QUICK_ACTIONS' | translate }}</div>
         <div class="actions-grid">
-          <a routerLink="/staff" class="action-card"><span class="material-icons">badge</span><span>Персонал</span></a>
-          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
-          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
-          <a routerLink="/schedules" class="action-card"><span class="material-icons">calendar_month</span><span>Расписание</span></a>
-          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
-          <a routerLink="/reports" class="action-card"><span class="material-icons">assessment</span><span>Отчёты</span></a>
+          <a routerLink="/staff" class="action-card"><span class="material-icons">badge</span><span>{{ 'NAV.STAFF' | translate }}</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>{{ 'NAV.PATIENTS' | translate }}</span></a>
+          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>{{ 'NAV.ROOMS' | translate }}</span></a>
+          <a routerLink="/schedules" class="action-card"><span class="material-icons">calendar_month</span><span>{{ 'NAV.SCHEDULES' | translate }}</span></a>
+          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>{{ 'NAV.EXAMINATIONS' | translate }}</span></a>
+          <a routerLink="/reports" class="action-card"><span class="material-icons">assessment</span><span>{{ 'NAV.REPORTS' | translate }}</span></a>
         </div>
       </div>
 
@@ -87,27 +87,27 @@
         <div class="stats-grid-4">
           <div class="stat-card blue">
             <div class="stat-icon"><span class="material-icons">people</span></div>
-            <div class="stat-info"><div class="stat-value">{{ doctorPatients }}</div><div class="stat-label">Моих пациентов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorPatients }}</div><div class="stat-label">{{ 'DASHBOARD.MY_PATIENTS' | translate }}</div></div>
           </div>
           <div class="stat-card green">
             <div class="stat-icon"><span class="material-icons">today</span></div>
-            <div class="stat-info"><div class="stat-value">{{ doctorAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorAppointmentsToday }}</div><div class="stat-label">{{ 'DASHBOARD.APPOINTMENTS_TODAY' | translate }}</div></div>
           </div>
           <div class="stat-card purple">
             <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
-            <div class="stat-info"><div class="stat-value">{{ doctorScheduled }}</div><div class="stat-label">Запланировано</div></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorScheduled }}</div><div class="stat-label">{{ 'DASHBOARD.PLANNED' | translate }}</div></div>
           </div>
           <div class="stat-card orange">
             <div class="stat-icon"><span class="material-icons">assignment</span></div>
-            <div class="stat-info"><div class="stat-value">{{ doctorResults }}</div><div class="stat-label">Результатов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ doctorResults }}</div><div class="stat-label">{{ 'DASHBOARD.RESULTS' | translate }}</div></div>
           </div>
         </div>
 
         <!-- Приёмы сегодня -->
-        <div class="section-title">Приёмы сегодня</div>
+        <div class="section-title">{{ 'DASHBOARD.TODAY_APPOINTMENTS' | translate }}</div>
         <div class="today-empty" *ngIf="todayAppointments.length === 0">
           <span class="material-icons">event_available</span>
-          <span>Сегодня приёмов нет — можно отдохнуть!</span>
+          <span>{{ 'DASHBOARD.NO_TODAY' | translate }}</span>
         </div>
         <div class="today-list" *ngIf="todayAppointments.length > 0">
           <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
@@ -126,7 +126,7 @@
         </div>
 
         <!-- Ближайшие приёмы -->
-        <div class="section-title" *ngIf="upcomingAppointments.length > 0">Ближайшие приёмы</div>
+        <div class="section-title" *ngIf="upcomingAppointments.length > 0">{{ 'DASHBOARD.UPCOMING' | translate }}</div>
         <div class="upcoming-list" *ngIf="upcomingAppointments.length > 0">
           <div class="upcoming-item" *ngFor="let a of upcomingAppointments">
             <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
@@ -136,12 +136,12 @@
         </div>
 
         <!-- Быстрые действия -->
-        <div class="section-title">Быстрые действия</div>
+        <div class="section-title">{{ 'DASHBOARD.QUICK_ACTIONS' | translate }}</div>
         <div class="actions-grid">
-          <a routerLink="/appointments" class="action-card"><span class="material-icons">event</span><span>Мои приёмы</span></a>
-          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>Пациенты</span></a>
-          <a routerLink="/my-cabinet" class="action-card"><span class="material-icons">meeting_room</span><span>Мой кабинет</span></a>
-          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Мой профиль</span></a>
+          <a routerLink="/appointments" class="action-card"><span class="material-icons">event</span><span>{{ 'DASHBOARD.MY_APPOINTMENTS' | translate }}</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">people</span><span>{{ 'NAV.PATIENTS' | translate }}</span></a>
+          <a routerLink="/my-cabinet" class="action-card"><span class="material-icons">meeting_room</span><span>{{ 'DASHBOARD.MY_CABINET' | translate }}</span></a>
+          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>{{ 'DASHBOARD.MY_PROFILE' | translate }}</span></a>
         </div>
 
       </div>
@@ -155,11 +155,11 @@
             <div class="queue-title">
               <span class="material-icons">people</span> Пациенты сегодня
             </div>
-            <span class="queue-label" style="font-size:13px;color:#718096">{{ todayPatients.length }} чел.</span>
+            <span class="queue-label" style="font-size:13px;color:#718096">{{ todayPatients.length }}</span>
           </div>
           <div class="queue-empty" *ngIf="todayPatients.length === 0">
             <span class="material-icons">person_off</span>
-            <p>Сегодня пациентов нет</p>
+            <p>{{ 'DASHBOARD.NO_PATIENTS_TODAY' | translate }}</p>
           </div>
           <div class="today-patients-list" *ngIf="todayPatients.length > 0">
             <a class="today-patient-item" *ngFor="let p of todayPatients" [routerLink]="['/patients', p.patientId]">
@@ -175,7 +175,7 @@
 
         <!-- График за 7 дней -->
         <div class="chart-card" style="min-height:200px">
-          <div class="chart-title">Приёмы за 7 дней</div>
+          <div class="chart-title">{{ 'DASHBOARD.APPOINTMENTS_7_DAYS' | translate }}</div>
           <div style="flex:1;min-height:160px;position:relative">
             <canvas #doctorWeekChart></canvas>
           </div>
@@ -196,27 +196,27 @@
         <div class="stats-grid-4">
           <div class="stat-card blue">
             <div class="stat-icon"><span class="material-icons">people</span></div>
-            <div class="stat-info"><div class="stat-value">{{ receptionPatients }}</div><div class="stat-label">Пациентов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionPatients }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_PATIENTS' | translate }}</div></div>
           </div>
           <div class="stat-card green">
             <div class="stat-icon"><span class="material-icons">today</span></div>
-            <div class="stat-info"><div class="stat-value">{{ receptionAppointmentsToday }}</div><div class="stat-label">Приёмов сегодня</div></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionAppointmentsToday }}</div><div class="stat-label">{{ 'DASHBOARD.APPOINTMENTS_TODAY' | translate }}</div></div>
           </div>
           <div class="stat-card orange">
             <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
-            <div class="stat-info"><div class="stat-value">{{ receptionScheduled }}</div><div class="stat-label">Запланировано</div></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionScheduled }}</div><div class="stat-label">{{ 'DASHBOARD.PLANNED' | translate }}</div></div>
           </div>
           <div class="stat-card purple">
             <div class="stat-icon"><span class="material-icons">event_note</span></div>
-            <div class="stat-info"><div class="stat-value">{{ receptionTotal }}</div><div class="stat-label">Всего приёмов</div></div>
+            <div class="stat-info"><div class="stat-value">{{ receptionTotal }}</div><div class="stat-label">{{ 'DASHBOARD.TOTAL_APPOINTMENTS' | translate }}</div></div>
           </div>
         </div>
 
         <!-- Приёмы на сегодня -->
-        <div class="section-title">Приёмы на сегодня</div>
+        <div class="section-title">{{ 'DASHBOARD.TODAY_APPOINTMENTS' | translate }}</div>
         <div class="today-empty" *ngIf="receptionTodayAppointments.length === 0">
           <span class="material-icons">event_available</span>
-          <span>Сегодня приёмов не запланировано</span>
+          <span>{{ 'DASHBOARD.NO_APPOINTMENTS_TODAY' | translate }}</span>
         </div>
         <div class="today-list" *ngIf="receptionTodayAppointments.length > 0">
           <div class="today-item rec-item" *ngFor="let a of receptionTodayAppointments" [class]="a.status">
@@ -244,7 +244,7 @@
         </div>
 
         <!-- Последние пациенты -->
-        <div class="section-title">Последние добавленные пациенты</div>
+        <div class="section-title">{{ 'DASHBOARD.LATEST_PATIENTS' | translate }}</div>
         <div class="recent-patients-list">
           <div class="recent-patient-item" *ngFor="let p of receptionRecentPatients">
             <div class="rp-avatar">{{ p.firstName?.[0] }}{{ p.lastName?.[0] }}</div>
@@ -262,14 +262,14 @@
         </div>
 
         <!-- Быстрые действия -->
-        <div class="section-title">Быстрые действия</div>
+        <div class="section-title">{{ 'DASHBOARD.QUICK_ACTIONS' | translate }}</div>
         <div class="actions-grid">
-          <a routerLink="/appointments" class="action-card"><span class="material-icons">add_circle</span><span>Новый приём</span></a>
-          <a routerLink="/patients" class="action-card"><span class="material-icons">person_add</span><span>Пациенты</span></a>
-          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>Кабинеты</span></a>
-          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>Обследования</span></a>
-          <a routerLink="/notifications" class="action-card"><span class="material-icons">notifications</span><span>Уведомления</span></a>
-          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>Профиль</span></a>
+          <a routerLink="/appointments" class="action-card"><span class="material-icons">add_circle</span><span>{{ 'APPOINTMENTS.NEW_APPOINTMENT' | translate }}</span></a>
+          <a routerLink="/patients" class="action-card"><span class="material-icons">person_add</span><span>{{ 'NAV.PATIENTS' | translate }}</span></a>
+          <a routerLink="/rooms" class="action-card"><span class="material-icons">meeting_room</span><span>{{ 'NAV.ROOMS' | translate }}</span></a>
+          <a routerLink="/examinations" class="action-card"><span class="material-icons">biotech</span><span>{{ 'NAV.EXAMINATIONS' | translate }}</span></a>
+          <a routerLink="/notifications" class="action-card"><span class="material-icons">notifications</span><span>{{ 'NAV.NOTIFICATIONS' | translate }}</span></a>
+          <a routerLink="/profile" class="action-card"><span class="material-icons">person</span><span>{{ 'NAV.PROFILE' | translate }}</span></a>
         </div>
 
       </div>
@@ -283,7 +283,7 @@
         <!-- Статус врачей -->
         <div class="queue-section" style="margin:16px 0">
           <div class="queue-header">
-            <div class="queue-title"><span class="material-icons">medical_services</span> Врачи сегодня</div>
+            <div class="queue-title"><span class="material-icons">medical_services</span> {{ 'DASHBOARD.DOCTORS_STATUS' | translate }}</div>
           </div>
           <div class="doctors-status-list">
             <div class="doctor-status-item" *ngFor="let d of receptionDoctors">
@@ -305,7 +305,7 @@
         <!-- Кабинеты -->
         <div class="queue-section">
           <div class="queue-header">
-            <div class="queue-title"><span class="material-icons">meeting_room</span> Кабинеты сейчас</div>
+            <div class="queue-title"><span class="material-icons">meeting_room</span> {{ 'DASHBOARD.ROOMS_STATUS' | translate }}</div>
           </div>
           <div class="rooms-status-list">
             <div class="room-status-item" *ngFor="let r of receptionRooms">
@@ -335,7 +335,7 @@
       <div class="queue-header">
         <div class="queue-title">
           <span class="material-icons">format_list_numbered</span>
-          Очередь на сегодня
+          {{ 'DASHBOARD.QUEUE_TODAY' | translate }}
         </div>
         <div class="queue-progress">
           <span class="queue-done">{{ queueCompleted }}</span>

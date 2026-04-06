@@ -1,15 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationsService } from '../../../core/services/notifications.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
@@ -24,7 +26,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     private sidebarService: SidebarService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public langService: LanguageService
   ) {}
 
   @HostListener('document:click')
@@ -67,16 +70,16 @@ export class HeaderComponent implements OnInit {
 
   getGreeting(): string {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Доброе утро';
-    if (hour < 17) return 'Добрый день';
-    return 'Добрый вечер';
+    if (hour < 12) return 'DASHBOARD.GREETING_MORNING';
+    if (hour < 17) return 'DASHBOARD.GREETING_DAY';
+    return 'DASHBOARD.GREETING_EVENING';
   }
 
   getRoleLabel(): string {
     const roles: Record<string, string> = {
-      doctor: 'Врач',
-      admin: 'Администратор',
-      receptionist: 'Регистратор',
+      doctor: 'STAFF.ROLE_DOCTOR',
+      admin: 'STAFF.ROLE_ADMIN',
+      receptionist: 'STAFF.ROLE_RECEPTIONIST',
       patient: 'Пациент'
     };
     return this.currentUser ? (roles[this.currentUser.role] || '') : '';

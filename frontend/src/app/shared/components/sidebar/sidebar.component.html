@@ -11,18 +11,18 @@
   <nav class="sidebar-nav">
     <ng-container *ngFor="let item of navItems">
       <a [routerLink]="item.route" routerLinkActive="active" class="nav-item"
-         [title]="item.label"
+         [title]="item.key | translate"
          (click)="sidebarService.close()">
         <span class="material-icons">{{ item.icon }}</span>
-        <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+        <span class="nav-label" *ngIf="!collapsed">{{ item.key | translate }}</span>
       </a>
     </ng-container>
   </nav>
 
   <div class="sidebar-footer">
-    <button class="nav-item logout-btn" title="Выйти" (click)="authService.logout(); sidebarService.close()">
+    <button class="nav-item logout-btn" [title]="'NAV.LOGOUT' | translate" (click)="authService.logout(); sidebarService.close()">
       <span class="material-icons">logout</span>
-      <span class="nav-label" *ngIf="!collapsed">Выйти</span>
+      <span class="nav-label" *ngIf="!collapsed">{{ 'NAV.LOGOUT' | translate }}</span>
     </button>
   </div>
 
