@@ -1,32 +1,33 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bottom-nav',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   template: `
     <nav class="bottom-nav" *ngIf="isMobile">
       <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-tab">
         <span class="nav-icon-wrap"><span class="material-icons">dashboard</span></span>
-        <span>Главная</span>
+        <span>{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
       <a routerLink="/patients" routerLinkActive="active" class="nav-tab">
         <span class="nav-icon-wrap"><span class="material-icons">people</span></span>
-        <span>Пациенты</span>
+        <span>{{ 'NAV.PATIENTS' | translate }}</span>
       </a>
       <a routerLink="/appointments" routerLinkActive="active" class="nav-tab">
         <span class="nav-icon-wrap"><span class="material-icons">event</span></span>
-        <span>Приёмы</span>
+        <span>{{ 'NAV.APPOINTMENTS' | translate }}</span>
       </a>
       <a routerLink="/notifications" routerLinkActive="active" class="nav-tab">
         <span class="nav-icon-wrap"><span class="material-icons">notifications</span></span>
-        <span>Уведомления</span>
+        <span>{{ 'NAV.NOTIFICATIONS' | translate }}</span>
       </a>
       <a routerLink="/profile" routerLinkActive="active" class="nav-tab">
         <span class="nav-icon-wrap"><span class="material-icons">person</span></span>
-        <span>Профиль</span>
+        <span>{{ 'NAV.PROFILE' | translate }}</span>
       </a>
     </nav>
   `,

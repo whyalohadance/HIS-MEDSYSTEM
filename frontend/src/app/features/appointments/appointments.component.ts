@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { Appointment, AppointmentStatus } from '../../core/models/appointment.model';
 import { AppointmentsService } from '../../core/services/appointments.service';
@@ -17,7 +18,7 @@ interface Room { id: number; name: string; number: string; }
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss']
 })
@@ -78,7 +79,8 @@ export class AppointmentsComponent implements OnInit {
     private api: ApiService,
     public authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -342,10 +344,12 @@ export class AppointmentsComponent implements OnInit {
   }
 
   getStatusLabel(status: AppointmentStatus): string {
-    const map: Record<AppointmentStatus, string> = {
-      scheduled: 'Запланирован', completed: 'Завершён', cancelled: 'Отменён'
+    const keys: Record<AppointmentStatus, string> = {
+      scheduled: 'APPOINTMENTS.STATUS_SCHEDULED',
+      completed: 'APPOINTMENTS.STATUS_COMPLETED',
+      cancelled: 'APPOINTMENTS.STATUS_CANCELLED'
     };
-    return map[status];
+    return this.translate.instant(keys[status]);
   }
 
   formatDate(date: string): string {

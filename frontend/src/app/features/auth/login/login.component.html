@@ -1,4 +1,17 @@
-<div class="login-page">
+<!-- SPLASH — логотип в центре -->
+<div class="login-splash"
+  [class.state-logo]="animState === 'logo'"
+  [class.state-form]="animState === 'form'">
+  <div class="splash-logo">
+    <span class="material-icons splash-icon">local_hospital</span>
+    <span class="splash-text">MedSystem</span>
+  </div>
+</div>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div class="login-page"
+  [class.state-logo]="animState === 'logo'"
+  [class.state-form]="animState === 'form'">
 
   <!-- Левая панель — брендинг -->
   <div class="login-left">
@@ -7,24 +20,24 @@
       <h1>MedSystem</h1>
     </div>
     <p class="brand-desc">
-      Система управления медицинскими данными для профессионального медицинского персонала
+      {{ 'AUTH.WELCOME' | translate }}
     </p>
     <div class="features-list">
       <div class="feature-item">
         <span class="material-icons">check_circle</span>
-        <span>Управление пациентами</span>
+        <span>{{ 'AUTH.PATIENTS_MGMT' | translate }}</span>
       </div>
       <div class="feature-item">
         <span class="material-icons">check_circle</span>
-        <span>Запись на приём</span>
+        <span>{{ 'AUTH.APPOINTMENTS_MGMT' | translate }}</span>
       </div>
       <div class="feature-item">
         <span class="material-icons">check_circle</span>
-        <span>Результаты и отчёты</span>
+        <span>{{ 'AUTH.RESULTS_REPORTS' | translate }}</span>
       </div>
       <div class="feature-item">
         <span class="material-icons">check_circle</span>
-        <span>Уведомления в реальном времени</span>
+        <span>{{ 'AUTH.REALTIME_NOTIF' | translate }}</span>
       </div>
     </div>
   </div>
@@ -34,31 +47,31 @@
     <div class="login-card">
 
       <div class="login-header">
-        <h2>Вход в систему</h2>
-        <p>Введите ваши данные для входа</p>
+        <h2>{{ 'AUTH.SYSTEM_TITLE' | translate }}</h2>
+        <p>{{ 'AUTH.SYSTEM_SUBTITLE' | translate }}</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <div class="field-group">
-          <label>Email</label>
+          <label>{{ 'AUTH.EMAIL' | translate }}</label>
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matPrefix>email</mat-icon>
             <input matInput formControlName="email" placeholder="doctor@hospital.com" type="email">
-            <mat-error *ngIf="form.get('email')?.hasError('required')">Email обязателен</mat-error>
-            <mat-error *ngIf="form.get('email')?.hasError('email')">Некорректный email</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('required')">{{ 'AUTH.EMAIL' | translate }}</mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">{{ 'AUTH.EMAIL' | translate }}</mat-error>
           </mat-form-field>
         </div>
 
         <div class="field-group">
-          <label>Пароль</label>
+          <label>{{ 'AUTH.PASSWORD' | translate }}</label>
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matPrefix>lock</mat-icon>
             <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="••••••••">
             <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            <mat-error *ngIf="form.get('password')?.hasError('required')">Пароль обязателен</mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('required')">{{ 'AUTH.PASSWORD' | translate }}</mat-error>
           </mat-form-field>
         </div>
 
@@ -72,15 +85,15 @@
           class="submit-btn"
           type="submit"
           [disabled]="isLoading">
-          <span *ngIf="!isLoading">Войти</span>
-          <span *ngIf="isLoading">Загрузка...</span>
+          <span *ngIf="!isLoading">{{ 'AUTH.LOGIN_BTN' | translate }}</span>
+          <span *ngIf="isLoading">{{ 'AUTH.LOADING' | translate }}</span>
         </button>
 
       </form>
 
       <div class="login-hint">
         <span class="material-icons">info</span>
-        Демо: doctor@med.com / password123
+        Demo: doctor@med.com / password123
       </div>
 
     </div>

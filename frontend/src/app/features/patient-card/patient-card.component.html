@@ -3,21 +3,21 @@
   <!-- Заголовок только для печати -->
   <div class="print-header">
     <div class="print-logo">HIS-MedSystem</div>
-    <div class="print-title">Карточка пациента</div>
-    <div class="print-date">Дата печати: {{ formatDate(today) }}</div>
+    <div class="print-title">{{ 'PATIENTS.PATIENT_CARD' | translate }}</div>
+    <div class="print-date">{{ 'PATIENT_CARD.PRINT_DATE' | translate }}: {{ formatDate(today) }}</div>
   </div>
 
   <!-- HEADER -->
   <div class="card-header">
     <button class="btn-back" (click)="goBack()">
-      <span class="material-icons">arrow_back</span> Назад
+      <span class="material-icons">arrow_back</span> {{ 'PATIENT_CARD.BACK' | translate }}
     </button>
     <div class="header-actions">
       <button class="btn-print" (click)="printCard()">
-        <span class="material-icons">print</span> Печать
+        <span class="material-icons">print</span> {{ 'PATIENT_CARD.PRINT' | translate }}
       </button>
       <button class="btn-book" (click)="bookAppointment()">
-        <span class="material-icons">event_available</span> Записать на приём
+        <span class="material-icons">event_available</span> {{ 'PATIENT_CARD.BOOK_APPOINTMENT' | translate }}
       </button>
     </div>
   </div>
@@ -30,15 +30,15 @@
         <div class="patient-fullname">{{ patient.lastName }} {{ patient.firstName }}</div>
         <div class="patient-id-badge">
           <span class="material-icons">badge</span>
-          ID: {{ patientCode }}
+          {{ 'PATIENT_CARD.PATIENT_ID' | translate }}: {{ patientCode }}
         </div>
         <div class="patient-meta" *ngIf="patient.dateOfBirth">
           <span class="material-icons">cake</span>
-          {{ formatDate(patient.dateOfBirth) }} · {{ age }} лет
+          {{ formatDate(patient.dateOfBirth) }} · {{ age }} {{ 'PATIENT_CARD.AGE' | translate }}
         </div>
         <div class="patient-meta">
           <span class="material-icons">{{ patient.gender === 'male' ? 'male' : 'female' }}</span>
-          {{ patient.gender === 'male' ? 'Мужской' : 'Женский' }}
+          {{ patient.gender === 'male' ? ('PATIENT_CARD.MALE_GENDER' | translate) : ('PATIENT_CARD.FEMALE_GENDER' | translate) }}
         </div>
       </div>
     </div>
@@ -48,25 +48,24 @@
         <div class="contact-item" *ngIf="patient.phone">
           <span class="material-icons">phone</span>
           <div>
-            <div class="contact-label">Телефон</div>
+            <div class="contact-label">{{ 'PATIENT_CARD.PHONE' | translate }}</div>
             <div class="contact-value">{{ patient.phone }}</div>
           </div>
         </div>
         <div class="contact-item" *ngIf="patient.email">
           <span class="material-icons">email</span>
           <div>
-            <div class="contact-label">Email</div>
+            <div class="contact-label">{{ 'PATIENT_CARD.EMAIL' | translate }}</div>
             <div class="contact-value">{{ patient.email }}</div>
           </div>
         </div>
         <div class="contact-item" *ngIf="patient.city || patient.country">
           <span class="material-icons">location_on</span>
           <div>
-            <div class="contact-label">Местоположение</div>
+            <div class="contact-label">{{ 'PATIENT_CARD.LOCATION' | translate }}</div>
             <div class="contact-value">{{ patient.city }}{{ patient.city && patient.country ? ', ' : '' }}{{ patient.country }}</div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -77,28 +76,28 @@
       <span class="material-icons">event</span>
       <div>
         <div class="stat-num">{{ appointments.length }}</div>
-        <div class="stat-lbl">Всего приёмов</div>
+        <div class="stat-lbl">{{ 'PATIENT_CARD.TOTAL_APPOINTMENTS' | translate }}</div>
       </div>
     </div>
     <div class="stat-pill green">
       <span class="material-icons">event_available</span>
       <div>
         <div class="stat-num">{{ completedAppointments }}</div>
-        <div class="stat-lbl">Завершённых</div>
+        <div class="stat-lbl">{{ 'PATIENT_CARD.COMPLETED' | translate }}</div>
       </div>
     </div>
     <div class="stat-pill purple">
       <span class="material-icons">assignment</span>
       <div>
         <div class="stat-num">{{ results.length }}</div>
-        <div class="stat-lbl">Результатов</div>
+        <div class="stat-lbl">{{ 'PATIENT_CARD.RESULTS' | translate }}</div>
       </div>
     </div>
     <div class="stat-pill orange">
       <span class="material-icons">payments</span>
       <div>
         <div class="stat-num">{{ totalSpent }}</div>
-        <div class="stat-lbl">Потрачено (MDL)</div>
+        <div class="stat-lbl">{{ 'PATIENT_CARD.SPENT' | translate }}</div>
       </div>
     </div>
   </div>
@@ -106,7 +105,7 @@
   <!-- ИСТОРИЯ ПРИЁМОВ -->
   <div class="section-title">
     <span class="material-icons">history</span>
-    История приёмов ({{ appointments.length }})
+    {{ 'PATIENT_CARD.APPOINTMENT_HISTORY' | translate }} ({{ appointments.length }})
   </div>
 
   <div class="appointments-history" *ngIf="appointments.length > 0">
@@ -131,13 +130,13 @@
 
   <div class="empty-state" *ngIf="appointments.length === 0">
     <span class="material-icons">event_busy</span>
-    <p>Приёмов нет</p>
+    <p>{{ 'PATIENT_CARD.NO_APPOINTMENTS' | translate }}</p>
   </div>
 
   <!-- РЕЗУЛЬТАТЫ -->
   <div class="section-title">
     <span class="material-icons">assignment</span>
-    Результаты и документы ({{ results.length }})
+    {{ 'PATIENT_CARD.RESULTS_DOCUMENTS' | translate }} ({{ results.length }})
   </div>
 
   <div class="results-list" *ngIf="results.length > 0">
@@ -146,18 +145,18 @@
         <span class="material-icons">description</span>
       </div>
       <div class="result-info">
-        <div class="result-title">{{ r.title || 'Результат #' + r.id }}</div>
+        <div class="result-title">{{ r.title || 'Result #' + r.id }}</div>
         <div class="result-date">{{ formatDate(r.createdAt) }}</div>
         <div class="result-desc" *ngIf="r.description">{{ r.description }}</div>
       </div>
       <div class="result-actions">
         <button class="btn-view" *ngIf="r.fileUrl" (click)="openResultViewer(r)">
           <span class="material-icons">visibility</span>
-          Просмотр
+          {{ 'COMMON.PREVIEW' | translate }}
         </button>
         <button class="btn-download" *ngIf="r.fileUrl" (click)="downloadResultPDF(r)">
           <span class="material-icons">download</span>
-          Скачать
+          {{ 'COMMON.DOWNLOAD' | translate }}
         </button>
       </div>
     </div>
@@ -165,7 +164,7 @@
 
   <div class="empty-state" *ngIf="results.length === 0">
     <span class="material-icons">assignment_late</span>
-    <p>Результатов нет</p>
+    <p>{{ 'PATIENT_CARD.NO_RESULTS' | translate }}</p>
   </div>
 
 </div>
@@ -181,10 +180,10 @@
       </div>
       <div class="viewer-actions">
         <button class="viewer-btn" (click)="downloadResultPDF(viewingResult)">
-          <span class="material-icons">download</span> Скачать
+          <span class="material-icons">download</span> {{ 'COMMON.DOWNLOAD' | translate }}
         </button>
         <button class="viewer-btn" (click)="printResult()">
-          <span class="material-icons">print</span> Печать
+          <span class="material-icons">print</span> {{ 'COMMON.PRINT' | translate }}
         </button>
         <button class="viewer-close" (click)="closeResultViewer()">
           <span class="material-icons">close</span>
@@ -196,7 +195,7 @@
       <!-- Загрузка -->
       <div class="loading-preview" *ngIf="previewType === 'loading'">
         <span class="material-icons spin">autorenew</span>
-        <p>Загрузка документа...</p>
+        <p>{{ 'PATIENT_CARD.LOADING_DOC' | translate }}</p>
       </div>
       <!-- DOCX в HTML -->
       <div *ngIf="previewType === 'html'" [innerHTML]="previewHtml" class="html-preview"></div>
@@ -209,9 +208,9 @@
       <!-- Недоступен или ошибка -->
       <div class="unsupported-file" *ngIf="previewType === 'unsupported' || previewType === ''">
         <span class="material-icons">insert_drive_file</span>
-        <p>Предпросмотр недоступен для этого типа файла</p>
+        <p>{{ 'PATIENT_CARD.UNSUPPORTED_PREVIEW' | translate }}</p>
         <button class="btn-download" (click)="downloadResultPDF(viewingResult)">
-          <span class="material-icons">download</span> Скачать файл
+          <span class="material-icons">download</span> {{ 'COMMON.DOWNLOAD' | translate }}
         </button>
       </div>
     </div>
@@ -220,10 +219,10 @@
 </div>
 
 <div class="loading" *ngIf="isLoading">
-  <span class="material-icons spin">autorenew</span> Загрузка...
+  <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
 </div>
 
 <div class="empty-state" *ngIf="!isLoading && !patient">
   <span class="material-icons">person_off</span>
-  <p>Пациент не найден</p>
+  <p>{{ 'PATIENT_CARD.NOT_FOUND' | translate }}</p>
 </div>

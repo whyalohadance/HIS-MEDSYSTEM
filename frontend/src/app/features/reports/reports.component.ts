@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../core/services/api.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface ReportSummary {
   month: number;
@@ -20,7 +21,7 @@ interface ReportSummary {
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
@@ -33,17 +34,17 @@ export class ReportsComponent implements OnInit {
   error: string | null = null;
 
   months = [
-    { value: 1, label: 'Январь' }, { value: 2, label: 'Февраль' },
-    { value: 3, label: 'Март' }, { value: 4, label: 'Апрель' },
-    { value: 5, label: 'Май' }, { value: 6, label: 'Июнь' },
-    { value: 7, label: 'Июль' }, { value: 8, label: 'Август' },
-    { value: 9, label: 'Сентябрь' }, { value: 10, label: 'Октябрь' },
-    { value: 11, label: 'Ноябрь' }, { value: 12, label: 'Декабрь' },
+    { value: 1, key: 'REPORTS.JAN' }, { value: 2, key: 'REPORTS.FEB' },
+    { value: 3, key: 'REPORTS.MAR' }, { value: 4, key: 'REPORTS.APR' },
+    { value: 5, key: 'REPORTS.MAY' }, { value: 6, key: 'REPORTS.JUN' },
+    { value: 7, key: 'REPORTS.JUL' }, { value: 8, key: 'REPORTS.AUG' },
+    { value: 9, key: 'REPORTS.SEP' }, { value: 10, key: 'REPORTS.OCT' },
+    { value: 11, key: 'REPORTS.NOV' }, { value: 12, key: 'REPORTS.DEC' },
   ];
 
   years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.loadSummary();
@@ -106,11 +107,17 @@ export class ReportsComponent implements OnInit {
   }
 
   getMonthName(): string {
-    return this.months.find(m => m.value === this.selectedMonth)?.label || '';
+    const key = this.months.find(m => m.value === this.selectedMonth)?.key || '';
+    return key ? this.translate.instant(key) : '';
   }
 
   getStatusLabel(status: string): string {
-    const map: Record<string, string> = { scheduled: 'Запланирован', completed: 'Завершён', cancelled: 'Отменён' };
-    return map[status] || status;
+    const keys: Record<string, string> = {
+      scheduled: 'APPOINTMENTS.STATUS_SCHEDULED',
+      completed: 'APPOINTMENTS.STATUS_COMPLETED',
+      cancelled: 'APPOINTMENTS.STATUS_CANCELLED'
+    };
+    const key = keys[status];
+    return key ? this.translate.instant(key) : status;
   }
 }

@@ -2,21 +2,21 @@
 
   <div class="page-header">
     <div>
-      <h1 class="page-title">Отчёты</h1>
-      <p class="page-sub">Месячные отчёты для бухгалтерии</p>
+      <h1 class="page-title">{{ 'REPORTS.TITLE' | translate }}</h1>
+      <p class="page-sub">{{ 'REPORTS.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
   <!-- Выбор периода -->
   <div class="period-selector">
     <div class="period-field">
-      <label>Месяц</label>
+      <label>{{ 'REPORTS.MONTH' | translate }}</label>
       <select [(ngModel)]="selectedMonth" (ngModelChange)="loadSummary()">
-        <option *ngFor="let m of months" [ngValue]="m.value">{{ m.label }}</option>
+        <option *ngFor="let m of months" [ngValue]="m.value">{{ m.key | translate }}</option>
       </select>
     </div>
     <div class="period-field">
-      <label>Год</label>
+      <label>{{ 'REPORTS.YEAR' | translate }}</label>
       <select [(ngModel)]="selectedYear" (ngModelChange)="loadSummary()">
         <option *ngFor="let y of years" [ngValue]="y">{{ y }}</option>
       </select>
@@ -24,17 +24,17 @@
     <div class="period-actions">
       <button class="btn-pdf" (click)="downloadPDF()" [disabled]="isDownloading">
         <span class="material-icons">picture_as_pdf</span>
-        {{ isDownloading ? 'Загрузка...' : 'Скачать PDF' }}
+        {{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_PDF' | translate) }}
       </button>
       <button class="btn-excel" (click)="downloadExcel()" [disabled]="isDownloading">
         <span class="material-icons">table_chart</span>
-        {{ isDownloading ? 'Загрузка...' : 'Скачать Excel' }}
+        {{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_EXCEL' | translate) }}
       </button>
     </div>
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Загрузка...
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
   </div>
 
   <div class="error-state" *ngIf="!isLoading && error">
@@ -45,53 +45,53 @@
   <ng-container *ngIf="!isLoading && summary">
 
     <!-- Сводка -->
-    <div class="section-title">Сводка за {{ getMonthName() }} {{ selectedYear }}</div>
+    <div class="section-title">{{ 'REPORTS.SUMMARY_FOR' | translate }} {{ getMonthName() }} {{ selectedYear }}</div>
     <div class="stats-grid">
       <div class="stat-card blue">
         <span class="material-icons">event</span>
         <div class="stat-value">{{ summary.totalAppointments }}</div>
-        <div class="stat-label">Всего приёмов</div>
+        <div class="stat-label">{{ 'REPORTS.TOTAL_APPOINTMENTS' | translate }}</div>
       </div>
       <div class="stat-card green">
         <span class="material-icons">event_available</span>
         <div class="stat-value">{{ summary.completedAppointments }}</div>
-        <div class="stat-label">Завершённых</div>
+        <div class="stat-label">{{ 'REPORTS.COMPLETED_APPOINTMENTS' | translate }}</div>
       </div>
       <div class="stat-card purple">
         <span class="material-icons">person_add</span>
         <div class="stat-value">{{ summary.newPatients }}</div>
-        <div class="stat-label">Новых пациентов</div>
+        <div class="stat-label">{{ 'REPORTS.NEW_PATIENTS' | translate }}</div>
       </div>
       <div class="stat-card orange">
         <span class="material-icons">payments</span>
         <div class="stat-value">{{ summary.totalRevenue | number:'1.2-2' }}</div>
-        <div class="stat-label">Выручка (MDL)</div>
+        <div class="stat-label">{{ 'REPORTS.TOTAL_REVENUE' | translate }}</div>
       </div>
       <div class="stat-card teal">
         <span class="material-icons">people</span>
         <div class="stat-value">{{ summary.patients.length }}</div>
-        <div class="stat-label">Всего пациентов</div>
+        <div class="stat-label">{{ 'REPORTS.TOTAL_PATIENTS' | translate }}</div>
       </div>
       <div class="stat-card gray">
         <span class="material-icons">badge</span>
         <div class="stat-value">{{ summary.staff.length }}</div>
-        <div class="stat-label">Сотрудников</div>
+        <div class="stat-label">{{ 'REPORTS.TOTAL_STAFF' | translate }}</div>
       </div>
     </div>
 
     <!-- Приёмы -->
-    <div class="section-title">Приёмы ({{ summary.appointments.length }})</div>
+    <div class="section-title">{{ 'REPORTS.APPOINTMENTS_SECTION' | translate }} ({{ summary.appointments.length }})</div>
     <div class="table-wrapper">
       <table class="report-table" *ngIf="summary.appointments.length > 0">
         <thead>
           <tr>
-            <th>№</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Пациент</th>
-            <th>Врач</th>
-            <th>Статус</th>
-            <th>Цена (MDL)</th>
+            <th>{{ 'REPORTS.TABLE_NUM' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_DATE' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_TIME' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_PATIENT' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_DOCTOR' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_STATUS' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_PRICE' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -108,16 +108,22 @@
       </table>
       <div class="empty-state" *ngIf="summary.appointments.length === 0">
         <span class="material-icons">event_busy</span>
-        <p>Приёмов за этот месяц нет</p>
+        <p>{{ 'REPORTS.NO_APPOINTMENTS_MONTH' | translate }}</p>
       </div>
     </div>
 
     <!-- Персонал -->
-    <div class="section-title">Персонал ({{ summary.staff.length }})</div>
+    <div class="section-title">{{ 'REPORTS.STAFF_SECTION' | translate }} ({{ summary.staff.length }})</div>
     <div class="table-wrapper">
       <table class="report-table">
         <thead>
-          <tr><th>№</th><th>Имя</th><th>Фамилия</th><th>Роль</th><th>Email</th></tr>
+          <tr>
+            <th>{{ 'REPORTS.TABLE_NUM' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_FIRSTNAME' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_LASTNAME' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_ROLE' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_EMAIL' | translate }}</th>
+          </tr>
         </thead>
         <tbody>
           <tr *ngFor="let s of summary.staff; let i = index">
@@ -132,11 +138,16 @@
     </div>
 
     <!-- Кабинеты -->
-    <div class="section-title">Кабинеты ({{ summary.rooms.length }})</div>
+    <div class="section-title">{{ 'REPORTS.ROOMS_SECTION' | translate }} ({{ summary.rooms.length }})</div>
     <div class="table-wrapper">
       <table class="report-table">
         <thead>
-          <tr><th>№</th><th>Название</th><th>Номер</th><th>Этаж</th></tr>
+          <tr>
+            <th>{{ 'REPORTS.TABLE_NUM' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_NAME' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_ROOM_NUM' | translate }}</th>
+            <th>{{ 'REPORTS.TABLE_FLOOR' | translate }}</th>
+          </tr>
         </thead>
         <tbody>
           <tr *ngFor="let r of summary.rooms; let i = index">

@@ -2,11 +2,11 @@
 
   <div class="page-header">
     <div>
-      <h1 class="page-title">Пациенты</h1>
-      <p class="page-sub">Поиск по имени, ID, телефону или email</p>
+      <h1 class="page-title">{{ 'PATIENTS.TITLE' | translate }}</h1>
+      <p class="page-sub">{{ 'PATIENTS.SEARCH_SUBTITLE' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="showForm = !showForm; resetForm()">
-      <span class="material-icons">person_add</span> Добавить пациента
+      <span class="material-icons">person_add</span> {{ 'PATIENTS.ADD_PATIENT' | translate }}
     </button>
   </div>
 
@@ -16,60 +16,60 @@
 
   <!-- Форма добавления -->
   <div class="form-card" *ngIf="showForm">
-    <h3>Новый пациент</h3>
+    <h3>{{ 'PATIENTS.NEW_PATIENT' | translate }}</h3>
     <div class="form-row">
       <div class="form-field" [class.has-error]="fieldError('firstName')">
-        <label>Имя *</label>
-        <input [(ngModel)]="form.firstName" placeholder="Иван" (blur)="formTouched = true">
+        <label>{{ 'PATIENTS.FIRST_NAME' | translate }} *</label>
+        <input [(ngModel)]="form.firstName" placeholder="Ivan" (blur)="formTouched = true">
         <span class="field-error" *ngIf="fieldError('firstName')">{{ fieldError('firstName') }}</span>
       </div>
       <div class="form-field" [class.has-error]="fieldError('lastName')">
-        <label>Фамилия *</label>
-        <input [(ngModel)]="form.lastName" placeholder="Иванов" (blur)="formTouched = true">
+        <label>{{ 'PATIENTS.LAST_NAME' | translate }} *</label>
+        <input [(ngModel)]="form.lastName" placeholder="Ivanov" (blur)="formTouched = true">
         <span class="field-error" *ngIf="fieldError('lastName')">{{ fieldError('lastName') }}</span>
       </div>
     </div>
     <div class="form-row">
       <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
-        <label>Дата рождения</label>
+        <label>{{ 'PATIENTS.DATE_OF_BIRTH' | translate }}</label>
         <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true">
         <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
       </div>
       <div class="form-field">
-        <label>Пол</label>
+        <label>{{ 'PATIENTS.GENDER' | translate }}</label>
         <select [(ngModel)]="form.gender">
-          <option value="male">Мужской</option>
-          <option value="female">Женский</option>
+          <option value="male">{{ 'PATIENTS.MALE' | translate }}</option>
+          <option value="female">{{ 'PATIENTS.FEMALE' | translate }}</option>
         </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-field" [class.has-error]="fieldError('phone')">
-        <label>Телефон</label>
+        <label>{{ 'PATIENTS.PHONE' | translate }}</label>
         <input [(ngModel)]="form.phone" placeholder="+373 69 000 000" (blur)="formTouched = true">
         <span class="field-error" *ngIf="fieldError('phone')">{{ fieldError('phone') }}</span>
       </div>
       <div class="form-field" [class.has-error]="fieldError('email')">
-        <label>Email</label>
+        <label>{{ 'PATIENTS.EMAIL' | translate }}</label>
         <input [(ngModel)]="form.email" placeholder="patient@mail.com" (blur)="formTouched = true">
         <span class="field-error" *ngIf="fieldError('email')">{{ fieldError('email') }}</span>
       </div>
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label>Город</label>
-        <input [(ngModel)]="form.city" placeholder="Кишинёв">
+        <label>{{ 'PATIENTS.CITY' | translate }}</label>
+        <input [(ngModel)]="form.city" placeholder="Chișinău">
       </div>
       <div class="form-field">
-        <label>Страна</label>
-        <input [(ngModel)]="form.country" placeholder="Молдова">
+        <label>{{ 'PATIENTS.COUNTRY' | translate }}</label>
+        <input [(ngModel)]="form.country" placeholder="Moldova">
       </div>
     </div>
     <div class="form-actions">
       <button class="btn-primary" (click)="saveNew()" [disabled]="isSaving">
-        {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+        {{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
       </button>
-      <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+      <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 
@@ -77,30 +77,30 @@
   <div class="search-box">
     <span class="material-icons search-icon">search</span>
     <input class="search-input" [(ngModel)]="searchQuery"
-      placeholder="Введите имя, фамилию, ID, телефон или email..."
+      [placeholder]="'PATIENTS.SEARCH_PLACEHOLDER' | translate"
       (keyup.enter)="search()">
     <button class="btn-clear" *ngIf="searchQuery" (click)="clearSearch()">
       <span class="material-icons">close</span>
     </button>
-    <button class="btn-search" (click)="search()" [disabled]="!searchQuery.trim()">Найти</button>
+    <button class="btn-search" (click)="search()" [disabled]="!searchQuery.trim()">{{ 'COMMON.SEARCH' | translate }}</button>
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Поиск...
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.SEARCHING' | translate }}
   </div>
 
   <div class="empty-state" *ngIf="!hasSearched && !isLoading">
     <span class="material-icons">search</span>
-    <p>Введите запрос для поиска пациентов</p>
+    <p>{{ 'PATIENTS.SEARCH_PROMPT' | translate }}</p>
   </div>
 
   <div class="empty-state" *ngIf="hasSearched && !isLoading && filteredPatients.length === 0">
     <span class="material-icons">person_search</span>
-    <p>Пациентов по запросу "{{ searchQuery }}" не найдено</p>
+    <p>{{ 'PATIENTS.NO_PATIENTS' | translate }}</p>
   </div>
 
   <div class="results-header" *ngIf="hasSearched && !isLoading && filteredPatients.length > 0">
-    Найдено: {{ filteredPatients.length }} пациентов
+    {{ 'PATIENTS.FOUND_COUNT' | translate }}: {{ filteredPatients.length }}
   </div>
 
   <div class="patients-list" *ngIf="!isLoading && filteredPatients.length > 0">
@@ -109,7 +109,7 @@
       <div class="patient-info">
         <div class="patient-name">{{ p.lastName }} {{ p.firstName }}</div>
         <div class="patient-details">
-          <span *ngIf="p.dateOfBirth">{{ getAge(p.dateOfBirth) }} лет</span>
+          <span *ngIf="p.dateOfBirth">{{ getAge(p.dateOfBirth) }} {{ 'COMMON.YEARS' | translate }}</span>
           <span *ngIf="p.phone"> · {{ p.phone }}</span>
           <span *ngIf="p.email"> · {{ p.email }}</span>
         </div>
@@ -118,19 +118,19 @@
         </div>
       </div>
       <span class="gender-badge" [class.male]="p.gender === 'male'" [class.female]="p.gender === 'female'">
-        {{ p.gender === 'male' ? 'Муж' : 'Жен' }}
+        {{ p.gender === 'male' ? ('PATIENTS.MALE_SHORT' | translate) : ('PATIENTS.FEMALE_SHORT' | translate) }}
       </span>
       <div class="patient-actions">
-        <button class="action-btn view" (click)="viewCard(p)" title="Карточка пациента">
+        <button class="action-btn view" (click)="viewCard(p)" [title]="'PATIENTS.PATIENT_CARD' | translate">
           <span class="material-icons">person</span>
         </button>
-        <button class="action-btn book" (click)="bookAppointment(p)" title="Записать на приём" *ngIf="authService.isReceptionist || authService.isAdmin">
+        <button class="action-btn book" (click)="bookAppointment(p)" [title]="'PATIENTS.BOOK_APPOINTMENT' | translate" *ngIf="authService.isReceptionist || authService.isAdmin">
           <span class="material-icons">event_available</span>
         </button>
-        <button class="action-btn edit" (click)="openEdit(p)" title="Редактировать">
+        <button class="action-btn edit" (click)="openEdit(p)" [title]="'COMMON.EDIT' | translate">
           <span class="material-icons">edit</span>
         </button>
-        <button class="action-btn delete" (click)="delete(p.id)" title="Удалить">
+        <button class="action-btn delete" (click)="delete(p.id)" [title]="'COMMON.DELETE' | translate">
           <span class="material-icons">delete</span>
         </button>
       </div>
@@ -142,7 +142,7 @@
     <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
       <span class="material-icons">chevron_left</span>
     </button>
-    <span class="page-info">Страница {{ currentPage }} из {{ totalPages }}</span>
+    <span class="page-info">{{ 'COMMON.PAGE' | translate }} {{ currentPage }} {{ 'COMMON.OF' | translate }} {{ totalPages }}</span>
     <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
       <span class="material-icons">chevron_right</span>
     </button>
@@ -152,7 +152,7 @@
   <div class="modal-overlay" *ngIf="showEditModal" (click)="showEditModal = false">
     <div class="modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>Редактировать пациента</h3>
+        <h3>{{ 'PATIENTS.EDIT_PATIENT' | translate }}</h3>
         <button class="btn-close" (click)="showEditModal = false">
           <span class="material-icons">close</span>
         </button>
@@ -160,57 +160,57 @@
       <div class="modal-body">
         <div class="form-row">
           <div class="form-field" [class.has-error]="fieldError('firstName')">
-            <label>Имя</label>
+            <label>{{ 'PATIENTS.FIRST_NAME' | translate }}</label>
             <input [(ngModel)]="form.firstName" (blur)="formTouched = true">
             <span class="field-error" *ngIf="fieldError('firstName')">{{ fieldError('firstName') }}</span>
           </div>
           <div class="form-field" [class.has-error]="fieldError('lastName')">
-            <label>Фамилия</label>
+            <label>{{ 'PATIENTS.LAST_NAME' | translate }}</label>
             <input [(ngModel)]="form.lastName" (blur)="formTouched = true">
             <span class="field-error" *ngIf="fieldError('lastName')">{{ fieldError('lastName') }}</span>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
-            <label>Дата рождения</label>
+            <label>{{ 'PATIENTS.DATE_OF_BIRTH' | translate }}</label>
             <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true">
             <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
           </div>
           <div class="form-field">
-            <label>Пол</label>
+            <label>{{ 'PATIENTS.GENDER' | translate }}</label>
             <select [(ngModel)]="form.gender">
-              <option value="male">Мужской</option>
-              <option value="female">Женский</option>
+              <option value="male">{{ 'PATIENTS.MALE' | translate }}</option>
+              <option value="female">{{ 'PATIENTS.FEMALE' | translate }}</option>
             </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field" [class.has-error]="fieldError('phone')">
-            <label>Телефон</label>
+            <label>{{ 'PATIENTS.PHONE' | translate }}</label>
             <input [(ngModel)]="form.phone" (blur)="formTouched = true">
             <span class="field-error" *ngIf="fieldError('phone')">{{ fieldError('phone') }}</span>
           </div>
           <div class="form-field" [class.has-error]="fieldError('email')">
-            <label>Email</label>
+            <label>{{ 'PATIENTS.EMAIL' | translate }}</label>
             <input [(ngModel)]="form.email" (blur)="formTouched = true">
             <span class="field-error" *ngIf="fieldError('email')">{{ fieldError('email') }}</span>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Город</label>
+            <label>{{ 'PATIENTS.CITY' | translate }}</label>
             <input [(ngModel)]="form.city">
           </div>
           <div class="form-field">
-            <label>Страна</label>
+            <label>{{ 'PATIENTS.COUNTRY' | translate }}</label>
             <input [(ngModel)]="form.country">
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Врач</label>
+            <label>{{ 'PATIENTS.DOCTOR' | translate }}</label>
             <select [(ngModel)]="form.doctorId">
-              <option [value]="0">Не назначен</option>
+              <option [value]="0">{{ 'COMMON.NOT_ASSIGNED' | translate }}</option>
               <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
             </select>
           </div>
@@ -218,9 +218,9 @@
       </div>
       <div class="modal-footer">
         <button class="btn-primary" (click)="saveEdit()" [disabled]="isSaving">
-          {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+          {{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
         </button>
-        <button class="btn-secondary" (click)="showEditModal = false">Отмена</button>
+        <button class="btn-secondary" (click)="showEditModal = false">{{ 'COMMON.CANCEL' | translate }}</button>
       </div>
     </div>
   </div>

@@ -2,26 +2,26 @@
 
   <div class="page-header">
     <div>
-      <h1 class="page-title">Уведомления</h1>
-      <p class="page-sub" *ngIf="unreadCount > 0">{{ unreadCount }} непрочитанных</p>
-      <p class="page-sub" *ngIf="unreadCount === 0">Все прочитаны</p>
+      <h1 class="page-title">{{ 'NOTIFICATIONS.TITLE' | translate }}</h1>
+      <p class="page-sub" *ngIf="unreadCount > 0">{{ unreadCount }} {{ 'NOTIFICATIONS.UNREAD' | translate }}</p>
+      <p class="page-sub" *ngIf="unreadCount === 0">{{ 'NOTIFICATIONS.ALL_READ' | translate }}</p>
     </div>
     <button class="btn-secondary" (click)="markAllRead()" *ngIf="unreadCount > 0">
       <span class="material-icons">done_all</span>
-      Прочитать все
+      {{ 'NOTIFICATIONS.MARK_ALL_READ' | translate }}
     </button>
   </div>
 
   <div class="loading" *ngIf="isLoading">
     <span class="material-icons spin">autorenew</span>
-    Загрузка...
+    {{ 'COMMON.LOADING' | translate }}
   </div>
 
   <div class="notifications-list" *ngIf="!isLoading">
 
     <div class="empty-state" *ngIf="notifications.length === 0">
       <span class="material-icons">notifications_none</span>
-      <p>Уведомлений нет</p>
+      <p>{{ 'NOTIFICATIONS.NO_NOTIFICATIONS' | translate }}</p>
     </div>
 
     <div

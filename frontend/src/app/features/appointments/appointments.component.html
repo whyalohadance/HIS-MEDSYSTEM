@@ -2,11 +2,11 @@
 
   <div class="page-header">
     <div>
-      <h1 class="page-title">Приёмы</h1>
-      <p class="page-sub">Записи пациентов на консультации</p>
+      <h1 class="page-title">{{ 'APPOINTMENTS.TITLE' | translate }}</h1>
+      <p class="page-sub">{{ 'APPOINTMENTS.SUBTITLE' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="openForm()" *ngIf="!authService.isDoctor">
-      <span class="material-icons">add</span> Новый приём
+      <span class="material-icons">add</span> {{ 'APPOINTMENTS.NEW_APPOINTMENT' | translate }}
     </button>
   </div>
 
@@ -16,15 +16,15 @@
 
   <!-- ФОРМА -->
   <div class="form-card" *ngIf="showForm">
-    <h3>Запись на приём</h3>
+    <h3>{{ 'APPOINTMENTS.FORM_TITLE' | translate }}</h3>
     <div class="form-row">
       <div class="form-field">
-        <label>Пациент *</label>
+        <label>{{ 'APPOINTMENTS.PATIENT' | translate }} *</label>
         <div class="autocomplete-wrapper">
           <div class="autocomplete-input-wrap">
             <input class="autocomplete-input" [(ngModel)]="patientSearch"
               (ngModelChange)="onPatientSearch()" (focus)="onPatientSearch()"
-              placeholder="Поиск по имени, телефону или дате рождения..."
+              [placeholder]="'APPOINTMENTS.SEARCH_PATIENT' | translate"
               [class.selected]="selectedPatient">
             <button class="ac-clear" *ngIf="patientSearch" (click)="clearPatient()">
               <span class="material-icons">close</span>
@@ -47,47 +47,47 @@
         </div>
       </div>
       <div class="form-field">
-        <label>Врач *</label>
+        <label>{{ 'APPOINTMENTS.DOCTOR' | translate }} *</label>
         <select [(ngModel)]="form.doctorId" [disabled]="authService.isDoctor">
-          <option [value]="0" disabled>Выберите врача</option>
+          <option [value]="0" disabled>{{ 'APPOINTMENTS.SELECT_DOCTOR' | translate }}</option>
           <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
         </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label>Дата *</label>
+        <label>{{ 'APPOINTMENTS.DATE' | translate }} *</label>
         <input type="date" [(ngModel)]="form.date" (ngModelChange)="loadRooms()">
       </div>
       <div class="form-field">
-        <label>Время *</label>
+        <label>{{ 'APPOINTMENTS.TIME' | translate }} *</label>
         <input type="time" [(ngModel)]="form.time" (ngModelChange)="loadRooms()">
       </div>
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label>Комната</label>
+        <label>{{ 'APPOINTMENTS.ROOM' | translate }}</label>
         <select [(ngModel)]="form.roomId">
-          <option [value]="0">Без комнаты</option>
+          <option [value]="0">{{ 'APPOINTMENTS.NO_ROOM' | translate }}</option>
           <option *ngFor="let r of rooms" [value]="r.id">{{ r.name }} (№{{ r.number }})</option>
         </select>
-        <small *ngIf="!form.date || !form.time" style="color:#888">Сначала выберите дату и время</small>
+        <small *ngIf="!form.date || !form.time" style="color:#888">{{ 'APPOINTMENTS.DATE_FIRST_HINT' | translate }}</small>
       </div>
       <div class="form-field">
-        <label>Цена (MDL)</label>
+        <label>{{ 'APPOINTMENTS.PRICE' | translate }}</label>
         <input type="number" [(ngModel)]="form.price" placeholder="0" min="0">
       </div>
     </div>
     <div class="form-field notes-field">
-      <label>Причина визита</label>
-      <input [(ngModel)]="form.notes" placeholder="Опишите причину обращения...">
+      <label>{{ 'APPOINTMENTS.NOTES' | translate }}</label>
+      <input [(ngModel)]="form.notes" [placeholder]="'APPOINTMENTS.NOTES' | translate">
     </div>
     <div class="form-actions">
       <button class="btn-primary" (click)="save()"
         [disabled]="isSaving || !form.patientId || !form.doctorId || !form.date || !form.time">
-        {{ isSaving ? 'Сохранение...' : 'Записать' }}
+        {{ isSaving ? ('COMMON.SAVING' | translate) : ('APPOINTMENTS.SAVE_BTN' | translate) }}
       </button>
-      <button class="btn-secondary" (click)="showForm = false; resetForm()">Отмена</button>
+      <button class="btn-secondary" (click)="showForm = false; resetForm()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 
@@ -95,36 +95,36 @@
   <div class="search-filter-bar">
     <div class="search-wrap">
       <span class="material-icons">search</span>
-      <input [(ngModel)]="searchQuery" placeholder="Поиск по пациенту, врачу...">
+      <input [(ngModel)]="searchQuery" [placeholder]="'APPOINTMENTS.SEARCH_PLACEHOLDER' | translate">
     </div>
-    <input type="date" [(ngModel)]="filterDate" class="filter-input" title="Фильтр по дате">
+    <input type="date" [(ngModel)]="filterDate" class="filter-input">
     <select [(ngModel)]="filterDoctor" class="filter-input">
-      <option [value]="0">Все врачи</option>
+      <option [value]="0">{{ 'APPOINTMENTS.ALL_DOCTORS' | translate }}</option>
       <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
     </select>
     <button class="btn-clear-filters" *ngIf="hasActiveFilters" (click)="clearFilters()">
-      <span class="material-icons">filter_alt_off</span> Сбросить
+      <span class="material-icons">filter_alt_off</span> {{ 'APPOINTMENTS.RESET' | translate }}
     </button>
   </div>
 
   <!-- ФИЛЬТРЫ ПО СТАТУСУ -->
   <div class="filters">
     <button class="filter-btn" [class.active]="filterStatus === 'all'" (click)="filterStatus = 'all'; currentPage = 1">
-      Все <span class="count">{{ appointments.length }}</span>
+      {{ 'APPOINTMENTS.STATUS_ALL' | translate }} <span class="count">{{ appointments.length }}</span>
     </button>
-    <button class="filter-btn scheduled" [class.active]="filterStatus === 'scheduled'" (click)="filterStatus = 'scheduled'; currentPage = 1">Запланированные</button>
-    <button class="filter-btn completed" [class.active]="filterStatus === 'completed'" (click)="filterStatus = 'completed'; currentPage = 1">Завершённые</button>
-    <button class="filter-btn cancelled" [class.active]="filterStatus === 'cancelled'" (click)="filterStatus = 'cancelled'; currentPage = 1">Отменённые</button>
-    <span class="results-count" *ngIf="hasActiveFilters">Найдено: {{ filtered.length }}</span>
+    <button class="filter-btn scheduled" [class.active]="filterStatus === 'scheduled'" (click)="filterStatus = 'scheduled'; currentPage = 1">{{ 'APPOINTMENTS.STATUS_SCHEDULED' | translate }}</button>
+    <button class="filter-btn completed" [class.active]="filterStatus === 'completed'" (click)="filterStatus = 'completed'; currentPage = 1">{{ 'APPOINTMENTS.STATUS_COMPLETED' | translate }}</button>
+    <button class="filter-btn cancelled" [class.active]="filterStatus === 'cancelled'" (click)="filterStatus = 'cancelled'; currentPage = 1">{{ 'APPOINTMENTS.STATUS_CANCELLED' | translate }}</button>
+    <span class="results-count" *ngIf="hasActiveFilters">{{ 'PATIENTS.FOUND_COUNT' | translate }}: {{ filtered.length }}</span>
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Загрузка...
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
   </div>
 
   <div class="empty-state" *ngIf="!isLoading && filtered.length === 0">
     <span class="material-icons">event_busy</span>
-    <p>Приёмов не найдено</p>
+    <p>{{ 'APPOINTMENTS.NO_APPOINTMENTS' | translate }}</p>
   </div>
 
   <div class="appointments-list" *ngIf="!isLoading && filtered.length > 0">
@@ -134,7 +134,7 @@
         <div class="avatar patient">{{ getInitials(apt.patientId, 'patient') }}</div>
         <div>
           <div class="name">{{ getPatientName(apt.patientId) }}</div>
-          <div class="sub">Пациент</div>
+          <div class="sub">{{ 'APPOINTMENTS.PATIENT' | translate }}</div>
         </div>
       </div>
       <div class="apt-divider">→</div>
@@ -142,13 +142,13 @@
         <div class="avatar doctor">{{ getInitials(apt.doctorId, 'doctor') }}</div>
         <div>
           <div class="name">{{ getDoctorName(apt.doctorId) }}</div>
-          <div class="sub">Врач</div>
+          <div class="sub">{{ 'APPOINTMENTS.DOCTOR' | translate }}</div>
         </div>
       </div>
       <div class="apt-datetime">
         <div class="date"><span class="material-icons">event</span> {{ formatDate(apt.date) }}</div>
         <div class="time"><span class="material-icons">schedule</span> {{ apt.time }}</div>
-        <div class="room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span> Комната #{{ apt.roomId }}</div>
+        <div class="room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span> {{ 'APPOINTMENTS.ROOM' | translate }} #{{ apt.roomId }}</div>
         <div class="price" *ngIf="apt.price"><span class="material-icons">payments</span> {{ apt.price }} MDL</div>
       </div>
       <div class="apt-notes" *ngIf="apt.notes">
@@ -162,10 +162,10 @@
         </div>
         <button class="btn-add-result" (click)="openResultModal(apt)"
           *ngIf="authService.isDoctor && (apt.status === 'completed' || apt.status === 'scheduled')"
-          title="Добавить результат">
+          [title]="'APPOINTMENTS.ADD_RESULT_TITLE' | translate">
           <span class="material-icons">assignment_add</span>
         </button>
-        <button class="btn-delete" (click)="delete(apt.id)" title="Удалить"><span class="material-icons">delete</span></button>
+        <button class="btn-delete" (click)="delete(apt.id)" [title]="'COMMON.DELETE' | translate"><span class="material-icons">delete</span></button>
       </div>
     </div>
   </div>
@@ -175,7 +175,7 @@
     <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
       <span class="material-icons">chevron_left</span>
     </button>
-    <span class="page-info">Страница {{ currentPage }} из {{ totalPages }}</span>
+    <span class="page-info">{{ 'COMMON.PAGE' | translate }} {{ currentPage }} {{ 'COMMON.OF' | translate }} {{ totalPages }}</span>
     <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
       <span class="material-icons">chevron_right</span>
     </button>
@@ -187,9 +187,9 @@
 <div class="modal-overlay" *ngIf="showResultModal" (click)="closeResultModal()">
   <div class="modal result-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Добавить результат</h3>
+      <h3>{{ 'APPOINTMENTS.ADD_RESULT_TITLE' | translate }}</h3>
       <div class="modal-subtitle" *ngIf="selectedAptForResult">
-        Пациент: {{ getPatientName(selectedAptForResult.patientId) }} · {{ selectedAptForResult.date }}
+        {{ 'APPOINTMENTS.PATIENT' | translate }}: {{ getPatientName(selectedAptForResult.patientId) }} · {{ selectedAptForResult.date }}
       </div>
       <button class="btn-close" (click)="closeResultModal()">
         <span class="material-icons">close</span>
@@ -197,25 +197,25 @@
     </div>
     <div class="modal-body">
       <div class="form-field">
-        <label>Название результата *</label>
-        <input [(ngModel)]="resultForm.title" placeholder="Например: Анализ крови, МРТ, ЭКГ...">
+        <label>{{ 'APPOINTMENTS.RESULT_NAME' | translate }}</label>
+        <input [(ngModel)]="resultForm.title" placeholder="e.g. Blood test, MRI, ECG...">
       </div>
       <div class="form-field">
-        <label>Описание</label>
-        <textarea [(ngModel)]="resultForm.description" placeholder="Описание результата или заключение..." rows="3"></textarea>
+        <label>{{ 'APPOINTMENTS.RESULT_DESC' | translate }}</label>
+        <textarea [(ngModel)]="resultForm.description" placeholder="..." rows="3"></textarea>
       </div>
       <div class="form-field">
-        <label>Прикрепить файл (PDF, Word, изображение)</label>
+        <label>{{ 'APPOINTMENTS.ATTACH_FILE' | translate }}</label>
         <input type="file" (change)="onResultFileChange($event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-        <small *ngIf="resultFile">Выбран: {{ resultFile.name }}</small>
+        <small *ngIf="resultFile">{{ resultFile.name }}</small>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" (click)="saveResult()" [disabled]="isSavingResult || !resultForm.title">
         <span class="material-icons">save</span>
-        {{ isSavingResult ? 'Сохранение...' : 'Сохранить результат' }}
+        {{ isSavingResult ? ('COMMON.SAVING' | translate) : ('APPOINTMENTS.SAVE_RESULT' | translate) }}
       </button>
-      <button class="btn-secondary" (click)="closeResultModal()">Отмена</button>
+      <button class="btn-secondary" (click)="closeResultModal()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 </div>

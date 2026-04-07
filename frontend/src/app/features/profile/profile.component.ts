@@ -6,13 +6,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { ApiService } from '../../core/services/api.service';
 import { User } from '../../core/models/user.model';
 import { map } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface ApiResponse<T> { success: boolean; data: T; }
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -31,7 +32,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private api: ApiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -98,11 +100,12 @@ export class ProfileComponent implements OnInit {
   }
 
   getDayLabel(day: string): string {
-    const map: Record<string, string> = {
-      monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда',
-      thursday: 'Четверг', friday: 'Пятница', saturday: 'Суббота', sunday: 'Воскресенье'
+    const keys: Record<string, string> = {
+      monday: 'SCHEDULE.MONDAY', tuesday: 'SCHEDULE.TUESDAY', wednesday: 'SCHEDULE.WEDNESDAY',
+      thursday: 'SCHEDULE.THURSDAY', friday: 'SCHEDULE.FRIDAY', saturday: 'SCHEDULE.SATURDAY', sunday: 'SCHEDULE.SUNDAY'
     };
-    return map[day] || day;
+    const key = keys[day];
+    return key ? this.translate.instant(key) : day;
   }
 
   getInitials(): string {
@@ -111,9 +114,11 @@ export class ProfileComponent implements OnInit {
   }
 
   getRoleLabel(): string {
-    const roles: Record<string, string> = {
-      doctor: 'Врач', admin: 'Администратор', patient: 'Пациент', receptionist: 'Регистратура'
+    const keys: Record<string, string> = {
+      doctor: 'STAFF.ROLE_DOCTOR', admin: 'STAFF.ROLE_ADMIN', patient: 'PATIENTS.TITLE', receptionist: 'STAFF.ROLE_RECEPTIONIST'
     };
-    return this.currentUser ? (roles[this.currentUser.role] || this.currentUser.role) : '';
+    if (!this.currentUser) return '';
+    const key = keys[this.currentUser.role];
+    return key ? this.translate.instant(key) : this.currentUser.role;
   }
 }

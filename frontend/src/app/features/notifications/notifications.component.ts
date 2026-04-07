@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { NotificationsService } from '../../core/services/notifications.service';
 import { Notification } from '../../core/models/notification.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, TranslateModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })

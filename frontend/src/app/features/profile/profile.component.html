@@ -1,7 +1,7 @@
 <div class="profile-page">
   <div class="page-header">
-    <h1 class="page-title">Профиль</h1>
-    <p class="page-sub">Управление личными данными</p>
+    <h1 class="page-title">{{ 'PROFILE.TITLE' | translate }}</h1>
+    <p class="page-sub">{{ 'PROFILE.SUBTITLE' | translate }}</p>
   </div>
 
   <div class="profile-grid">
@@ -22,7 +22,7 @@
         </div>
         <div class="meta-item">
           <span class="material-icons">calendar_today</span>
-          <span>С {{ currentUser?.createdAt | date:'dd.MM.yyyy' }}</span>
+          <span>{{ 'PROFILE.MEMBER_SINCE' | translate }} {{ currentUser?.createdAt | date:'dd.MM.yyyy' }}</span>
         </div>
       </div>
 
@@ -30,16 +30,16 @@
       <div class="room-card" *ngIf="authService.isDoctor">
         <div class="room-header">
           <span class="material-icons">meeting_room</span>
-          Мой кабинет
+          {{ 'PROFILE.MY_CABINET' | translate }}
         </div>
         <div class="room-body" *ngIf="myRoom">
-          <div class="room-number">Кабинет №{{ myRoom.number }}</div>
+          <div class="room-number">{{ 'PROFILE.CABINET_NO' | translate }}{{ myRoom.number }}</div>
           <div class="room-info" *ngIf="myRoom.name">{{ myRoom.name }}</div>
-          <div class="room-info" *ngIf="myRoom.floor">Этаж {{ myRoom.floor }}</div>
+          <div class="room-info" *ngIf="myRoom.floor">{{ 'PROFILE.FLOOR' | translate }} {{ myRoom.floor }}</div>
         </div>
         <div class="room-empty" *ngIf="!myRoom">
           <span class="material-icons">info</span>
-          Кабинет не назначен
+          {{ 'PROFILE.CABINET_NOT_ASSIGNED' | translate }}
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
     <div class="right-col">
       <!-- Форма редактирования -->
       <div class="edit-card">
-        <h3>Редактировать данные</h3>
+        <h3>{{ 'PROFILE.EDIT_DATA' | translate }}</h3>
         <div class="success-msg" *ngIf="successMessage">
           <span class="material-icons">check_circle</span> {{ successMessage }}
         </div>
@@ -56,38 +56,38 @@
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Имя</label>
-            <input [(ngModel)]="form.firstName" placeholder="Иван">
+            <label>{{ 'PATIENTS.FIRST_NAME' | translate }}</label>
+            <input [(ngModel)]="form.firstName" placeholder="Ivan">
           </div>
           <div class="form-field">
-            <label>Фамилия</label>
-            <input [(ngModel)]="form.lastName" placeholder="Иванов">
+            <label>{{ 'PATIENTS.LAST_NAME' | translate }}</label>
+            <input [(ngModel)]="form.lastName" placeholder="Ivanov">
           </div>
         </div>
         <div class="form-field">
-          <label>Email</label>
+          <label>{{ 'AUTH.EMAIL' | translate }}</label>
           <input [(ngModel)]="form.email" placeholder="doctor@med.com">
         </div>
         <div class="form-field">
-          <label>Телефон</label>
-          <input [(ngModel)]="form.phone" placeholder="+7 999 000 00 00">
+          <label>{{ 'PATIENTS.PHONE' | translate }}</label>
+          <input [(ngModel)]="form.phone" placeholder="+373 69 000 000">
         </div>
         <div class="form-field">
-          <label>Роль</label>
+          <label>{{ 'PROFILE.ROLE' | translate }}</label>
           <input [value]="getRoleLabel()" disabled class="disabled-input">
         </div>
         <button class="btn-primary" (click)="saveProfile()" [disabled]="isSaving">
           <span class="material-icons">save</span>
-          {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+          {{ isSaving ? ('COMMON.SAVING' | translate) : ('PROFILE.SAVE_BTN' | translate) }}
         </button>
       </div>
 
       <!-- Расписание врача -->
       <div class="schedule-card" *ngIf="authService.isDoctor">
-        <h3><span class="material-icons">calendar_month</span> Моё расписание</h3>
+        <h3><span class="material-icons">calendar_month</span> {{ 'PROFILE.MY_SCHEDULE' | translate }}</h3>
         <div class="schedule-empty" *ngIf="mySchedules.length === 0">
           <span class="material-icons">event_busy</span>
-          <p>Расписание не назначено</p>
+          <p>{{ 'PROFILE.NO_SCHEDULE' | translate }}</p>
         </div>
         <div class="schedule-list" *ngIf="mySchedules.length > 0">
           <div class="schedule-item" *ngFor="let s of mySchedules">
@@ -97,7 +97,7 @@
               {{ s.startTime }} — {{ s.endTime }}
             </div>
             <span class="schedule-badge" [class.active]="s.isActive">
-              {{ s.isActive ? 'Активно' : 'Неактивно' }}
+              {{ s.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}
             </span>
           </div>
         </div>

@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { map } from 'rxjs';
 
 @Component({
   selector: 'app-patient-card',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, TranslateModule],
   templateUrl: './patient-card.component.html',
   styleUrls: ['./patient-card.component.scss'],
   encapsulation: ViewEncapsulation.None
@@ -34,7 +35,8 @@ export class PatientCardComponent implements OnInit {
     private router: Router,
     private api: ApiService,
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -93,8 +95,13 @@ export class PatientCardComponent implements OnInit {
   }
 
   getStatusLabel(status: string): string {
-    const map: Record<string, string> = { scheduled: 'Запланирован', completed: 'Завершён', cancelled: 'Отменён' };
-    return map[status] || status;
+    const keys: Record<string, string> = {
+      scheduled: 'APPOINTMENTS.STATUS_SCHEDULED',
+      completed: 'APPOINTMENTS.STATUS_COMPLETED',
+      cancelled: 'APPOINTMENTS.STATUS_CANCELLED'
+    };
+    const key = keys[status];
+    return key ? this.translate.instant(key) : status;
   }
 
   formatDate(date: string): string {
