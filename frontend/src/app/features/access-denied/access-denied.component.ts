@@ -1,24 +1,25 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-access-denied',
   standalone: true,
-  imports: [RouterLink, MatIconModule],
+  imports: [RouterLink, MatIconModule, TranslateModule],
   template: `
     <div class="denied-page">
       <div class="denied-card">
         <div class="denied-icon">
           <span class="material-icons">lock</span>
         </div>
-        <h1>Доступ запрещён</h1>
-        <p>Этот раздел доступен только для <strong>администратора</strong>.</p>
-        <p class="sub">Если вам нужен доступ — обратитесь к администратору системы.</p>
+        <h1>{{ 'ACCESS_DENIED.TITLE' | translate }}</h1>
+        <p>{{ 'ACCESS_DENIED.MESSAGE' | translate }}</p>
+        <p class="sub">{{ 'ACCESS_DENIED.CONTACT' | translate }}</p>
         <a routerLink="/dashboard" class="btn-home">
           <span class="material-icons">home</span>
-          Вернуться на главную
+          {{ 'COMMON.BACK' | translate }}
         </a>
       </div>
     </div>

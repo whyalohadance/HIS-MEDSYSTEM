@@ -2,7 +2,7 @@
 
   <div class="page-header">
     <div>
-      <h1 class="page-title">Мой кабинет</h1>
+      <h1 class="page-title">{{ 'MY_CABINET.TITLE' | translate }}</h1>
       <p class="page-sub">Персональная рабочая область врача</p>
     </div>
   </div>
@@ -28,10 +28,10 @@
 
   <!-- СЕКЦИЯ 2: Приёмы на сегодня -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">today</span> Приёмы на сегодня</div>
+    <div class="section-title"><span class="material-icons">today</span> {{ 'MY_CABINET.APPOINTMENTS_TODAY' | translate }}</div>
     <div class="loading-row" *ngIf="isLoadingApts"><span class="material-icons spin">autorenew</span> Загрузка...</div>
     <div class="empty-row" *ngIf="!isLoadingApts && todayAppointments.length === 0">
-      <span class="material-icons">event_busy</span> Сегодня приёмов нет
+      <span class="material-icons">event_busy</span> {{ 'MY_CABINET.NO_APPOINTMENTS' | translate }}
     </div>
     <div class="apt-list" *ngIf="!isLoadingApts && todayAppointments.length > 0">
       <div class="apt-row" *ngFor="let apt of todayAppointments" [class]="apt.status">
@@ -40,7 +40,7 @@
         <div class="apt-room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span> {{ getRoomName(apt.roomId) }}</div>
         <span class="badge" [class]="apt.status">{{ getStatusLabel(apt.status) }}</span>
         <button class="btn-complete-apt" *ngIf="apt.status === 'scheduled'" (click)="completeAppointment(apt.id)">
-          <span class="material-icons">check</span> Завершить
+          <span class="material-icons">check</span> {{ 'MY_CABINET.COMPLETE' | translate }}
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
 
   <!-- СЕКЦИЯ 3: Мои пациенты -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">people</span> Мои пациенты</div>
+    <div class="section-title"><span class="material-icons">people</span> {{ 'MY_CABINET.MY_PATIENTS' | translate }}</div>
     <div class="search-wrap" *ngIf="!isLoadingPatients && myPatients.length > 0 || patientSearch">
       <span class="material-icons">search</span>
       <input [(ngModel)]="patientSearch" placeholder="Поиск по имени...">
@@ -99,7 +99,7 @@
 
   <!-- СЕКЦИЯ 5: Статистика -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">bar_chart</span> Моя статистика</div>
+    <div class="section-title"><span class="material-icons">bar_chart</span> {{ 'MY_CABINET.MY_STATS' | translate }}</div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-val">{{ stats.total }}</div>
@@ -122,7 +122,7 @@
 
   <!-- СЕКЦИЯ 6: Расписание -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">calendar_month</span> Моё расписание</div>
+    <div class="section-title"><span class="material-icons">calendar_month</span> {{ 'MY_CABINET.MY_SCHEDULE' | translate }}</div>
     <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span> Загрузка...</div>
     <div class="empty-row" *ngIf="!isLoadingSchedules && schedules.length === 0">
       <span class="material-icons">event_busy</span> Расписание не назначено

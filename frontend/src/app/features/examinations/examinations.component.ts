@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { map } from 'rxjs';
 
@@ -16,48 +17,48 @@ interface Examination {
 @Component({
   selector: 'app-examinations',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   template: `
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title">Обследования</h1>
-          <p class="page-sub">{{ examinations.length }} видов обследований</p>
+          <h1 class="page-title">{{ 'EXAMINATIONS.TITLE' | translate }}</h1>
+          <p class="page-sub">{{ examinations.length }} {{ 'EXAMINATIONS.TITLE' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="showForm = !showForm">
-          <span class="material-icons">add</span> Добавить
+          <span class="material-icons">add</span> {{ 'COMMON.ADD' | translate }}
         </button>
       </div>
 
       <div class="form-card" *ngIf="showForm">
-        <h3>Новое обследование</h3>
+        <h3>{{ 'EXAMINATIONS.ADD_EXAMINATION' | translate }}</h3>
         <div class="form-row">
           <div class="form-field">
-            <label>Название *</label>
+            <label>{{ 'EXAMINATIONS.NAME' | translate }} *</label>
             <input [(ngModel)]="form.name" placeholder="УЗИ брюшной полости">
           </div>
           <div class="form-field">
-            <label>Длительность (мин)</label>
+            <label>{{ 'EXAMINATIONS.DURATION' | translate }}</label>
             <input type="number" [(ngModel)]="form.duration" placeholder="30">
           </div>
         </div>
         <div class="form-field" style="margin-bottom:16px">
-          <label>Описание</label>
+          <label>{{ 'ROOMS.DESCRIPTION' | translate }}</label>
           <input [(ngModel)]="form.description" placeholder="Описание обследования...">
         </div>
         <div class="form-actions">
-          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</button>
-          <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</button>
+          <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
         </div>
       </div>
 
       <div class="loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && examinations.length === 0">
         <span class="material-icons">biotech</span>
-        <p>Обследований пока нет</p>
+        <p>{{ 'EXAMINATIONS.NO_EXAMINATIONS' | translate }}</p>
       </div>
 
       <div class="list" *ngIf="!isLoading && examinations.length > 0">
@@ -73,7 +74,7 @@ interface Examination {
             <span class="material-icons">schedule</span>
             {{ e.duration }} мин
           </div>
-          <span class="badge" [class.active]="e.isActive">{{ e.isActive ? 'Активно' : 'Неактивно' }}</span>
+          <span class="badge" [class.active]="e.isActive">{{ e.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}</span>
         </div>
       </div>
     </div>

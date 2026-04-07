@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { map } from 'rxjs';
 
@@ -17,54 +18,54 @@ interface Room {
 @Component({
   selector: 'app-rooms',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   template: `
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title">Кабинеты</h1>
-          <p class="page-sub">{{ rooms.length }} кабинетов</p>
+          <h1 class="page-title">{{ 'ROOMS.TITLE' | translate }}</h1>
+          <p class="page-sub">{{ rooms.length }} {{ 'ROOMS.TITLE' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="showForm = !showForm" *ngIf="canEdit">
-          <span class="material-icons">add</span> Добавить
+          <span class="material-icons">add</span> {{ 'COMMON.ADD' | translate }}
         </button>
       </div>
 
       <div class="form-card" *ngIf="showForm">
-        <h3>Новый кабинет</h3>
+        <h3>{{ 'ROOMS.ADD_ROOM' | translate }}</h3>
         <div class="form-row">
           <div class="form-field">
-            <label>Название *</label>
+            <label>{{ 'ROOMS.ROOM_NAME' | translate }} *</label>
             <input [(ngModel)]="form.name" placeholder="Кабинет терапевта">
           </div>
           <div class="form-field">
-            <label>Номер</label>
+            <label>{{ 'ROOMS.ROOM_NUMBER' | translate }}</label>
             <input [(ngModel)]="form.number" placeholder="101">
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Этаж</label>
+            <label>{{ 'ROOMS.FLOOR' | translate }}</label>
             <input type="number" [(ngModel)]="form.floor" placeholder="1">
           </div>
           <div class="form-field">
-            <label>Описание</label>
+            <label>{{ 'ROOMS.DESCRIPTION' | translate }}</label>
             <input [(ngModel)]="form.description" placeholder="Описание...">
           </div>
         </div>
         <div class="form-actions">
-          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</button>
-          <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</button>
+          <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
         </div>
       </div>
 
       <div class="loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && rooms.length === 0">
         <span class="material-icons">meeting_room</span>
-        <p>Кабинетов пока нет</p>
+        <p>{{ 'ROOMS.NO_ROOMS' | translate }}</p>
       </div>
 
       <div class="grid" *ngIf="!isLoading && rooms.length > 0">
@@ -78,7 +79,7 @@ interface Room {
               <div class="room-sub">Кабинет № {{ r.number || '—' }} · Этаж {{ r.floor || '—' }}</div>
             </div>
             <span class="badge" [class.active]="r.isActive" [class.inactive]="!r.isActive">
-              {{ r.isActive ? 'Активен' : 'Неактивен' }}
+              {{ r.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}
             </span>
           </div>
           <p class="room-desc" *ngIf="r.description">{{ r.description }}</p>

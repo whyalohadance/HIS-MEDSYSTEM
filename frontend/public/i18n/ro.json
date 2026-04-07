@@ -35,7 +35,13 @@
     "OF": "din",
     "FOUND": "Găsit",
     "YEARS": "ani",
-    "NOT_ASSIGNED": "Nealocat"
+    "NOT_ASSIGNED": "Nealocat",
+    "FREE": "Liber",
+    "BUSY": "Ocupat",
+    "TODAY": "Azi",
+    "WEEK": "Săptămână",
+    "MONTH": "Lună",
+    "YEAR": "An"
   },
   "AUTH": {
     "LOGIN": "Autentificare",
@@ -89,7 +95,13 @@
     "CARD": "Fișă",
     "MY_APPOINTMENTS": "Programările mele",
     "MY_CABINET": "Cabinetul meu",
-    "MY_PROFILE": "Profilul meu"
+    "MY_PROFILE": "Profilul meu",
+    "COMPLETED_COUNT": "finalizate",
+    "PATIENTS_TODAY": "Pacienți azi",
+    "FREE": "Liber",
+    "BUSY": "Ocupat",
+    "TODAY_QUEUE": "Coada de azi",
+    "BOOK": "Programează"
   },
   "PATIENTS": {
     "TITLE": "Pacienți",
@@ -148,7 +160,10 @@
     "RESULT_NAME": "Titlul rezultatului *",
     "RESULT_DESC": "Descriere",
     "ATTACH_FILE": "Atașează fișier (PDF, Word, imagine)",
-    "SAVE_RESULT": "Salvează rezultatul"
+    "SAVE_RESULT": "Salvează rezultatul",
+    "SELECT_DATE": "Selectează data",
+    "VISIT_REASON": "Motivul vizitei",
+    "VISIT_REASON_PLACEHOLDER": "Descrieți motivul vizitei..."
   },
   "STAFF": {
     "TITLE": "Personal",
@@ -232,7 +247,10 @@
     "UNREAD": "necitite",
     "ALL_READ": "Toate citite",
     "MARK_ALL_READ": "Marchează toate ca citite",
-    "NO_NOTIFICATIONS": "Nu există notificări"
+    "NO_NOTIFICATIONS": "Nu există notificări",
+    "APPOINTMENT_REMINDER": "Memento programare",
+    "APPOINTMENT_IN_2H": "Aveți o programare peste 2 ore",
+    "MONTHLY_REPORT": "Raportul lunar este disponibil"
   },
   "SCHEDULE": {
     "MONDAY": "Luni", "TUESDAY": "Marți", "WEDNESDAY": "Miercuri",
@@ -261,5 +279,56 @@
     "LOADING_DOC": "Se încarcă documentul...",
     "UNSUPPORTED_PREVIEW": "Previzualizarea nu este disponibilă pentru acest tip de fișier",
     "NOT_FOUND": "Pacientul nu a fost găsit"
+  },
+  "ROOMS": {
+    "TITLE": "Cabinete",
+    "ADD_ROOM": "Adaugă cabinet",
+    "ROOM_NAME": "Denumire cabinet",
+    "ROOM_NUMBER": "Număr",
+    "FLOOR": "Etaj",
+    "DESCRIPTION": "Descriere",
+    "IS_ACTIVE": "Activ",
+    "NO_ROOMS": "Nu există cabinete"
+  },
+  "SCHEDULES": {
+    "TITLE": "Orare",
+    "ADD_SCHEDULE": "Adaugă orar",
+    "DAY_OF_WEEK": "Ziua săptămânii",
+    "START_TIME": "Ora start",
+    "END_TIME": "Ora sfârșit",
+    "MONDAY": "Luni",
+    "TUESDAY": "Marți",
+    "WEDNESDAY": "Miercuri",
+    "THURSDAY": "Joi",
+    "FRIDAY": "Vineri",
+    "SATURDAY": "Sâmbătă",
+    "SUNDAY": "Duminică",
+    "NO_SCHEDULES": "Nu există orare"
+  },
+  "EXAMINATIONS": {
+    "TITLE": "Examinări",
+    "ADD_EXAMINATION": "Adaugă examinare",
+    "NAME": "Denumire",
+    "DURATION": "Durata (min)",
+    "PRICE": "Preț (MDL)",
+    "NO_EXAMINATIONS": "Nu există examinări"
+  },
+  "MY_CABINET": {
+    "TITLE": "Cabinetul meu",
+    "MY_PROFILE": "Profilul meu",
+    "APPOINTMENTS_TODAY": "Programările mele azi",
+    "MY_PATIENTS": "Pacienții mei",
+    "MY_RESULTS": "Rezultatele mele",
+    "MY_STATS": "Statisticile mele",
+    "MY_SCHEDULE": "Orarul meu",
+    "COMPLETE": "Finalizează",
+    "NO_APPOINTMENTS": "Nu există programări azi",
+    "TOTAL_MONTH": "Total luna aceasta",
+    "COMPLETED_MONTH": "Finalizate luna aceasta"
+  },
+  "ACCESS_DENIED": {
+    "TITLE": "Acces interzis",
+    "MESSAGE": "Această secțiune este disponibilă doar pentru administrator.",
+    "CONTACT": "Dacă aveți nevoie de acces — contactați administratorul sistemului."
   }
 }

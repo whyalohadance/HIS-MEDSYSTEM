@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { map, forkJoin } from 'rxjs';
 
@@ -12,74 +13,74 @@ interface Room { id: number; name: string; number: string; }
 @Component({
   selector: 'app-schedules',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
   template: `
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title">Графики работы</h1>
+          <h1 class="page-title">{{ 'SCHEDULES.TITLE' | translate }}</h1>
           <p class="page-sub">{{ schedules.length }} записей</p>
         </div>
         <button class="btn-primary" (click)="showForm = !showForm">
-          <span class="material-icons">add</span> Добавить
+          <span class="material-icons">add</span> {{ 'COMMON.ADD' | translate }}
         </button>
       </div>
 
       <div class="form-card" *ngIf="showForm">
-        <h3>Новый график</h3>
+        <h3>{{ 'SCHEDULES.ADD_SCHEDULE' | translate }}</h3>
         <div class="form-row">
           <div class="form-field">
-            <label>Врач *</label>
+            <label>{{ 'STAFF.ROLE_DOCTOR' | translate }} *</label>
             <select [(ngModel)]="form.doctorId">
-              <option [value]="0" disabled>Выберите врача</option>
+              <option [value]="0" disabled>{{ 'APPOINTMENTS.SELECT_DOCTOR' | translate }}</option>
               <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
             </select>
           </div>
           <div class="form-field">
-            <label>Кабинет *</label>
+            <label>{{ 'NAV.ROOMS' | translate }} *</label>
             <select [(ngModel)]="form.roomId">
-              <option [value]="0" disabled>Выберите кабинет</option>
+              <option [value]="0" disabled>{{ 'APPOINTMENTS.SELECT_DOCTOR' | translate }}</option>
               <option *ngFor="let r of rooms" [value]="r.id">{{ r.name }} (№{{ r.number }})</option>
             </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>День недели *</label>
+            <label>{{ 'SCHEDULES.DAY_OF_WEEK' | translate }} *</label>
             <select [(ngModel)]="form.dayOfWeek">
-              <option [value]="1">Понедельник</option>
-              <option [value]="2">Вторник</option>
-              <option [value]="3">Среда</option>
-              <option [value]="4">Четверг</option>
-              <option [value]="5">Пятница</option>
-              <option [value]="6">Суббота</option>
-              <option [value]="7">Воскресенье</option>
+              <option [value]="1">{{ 'SCHEDULES.MONDAY' | translate }}</option>
+              <option [value]="2">{{ 'SCHEDULES.TUESDAY' | translate }}</option>
+              <option [value]="3">{{ 'SCHEDULES.WEDNESDAY' | translate }}</option>
+              <option [value]="4">{{ 'SCHEDULES.THURSDAY' | translate }}</option>
+              <option [value]="5">{{ 'SCHEDULES.FRIDAY' | translate }}</option>
+              <option [value]="6">{{ 'SCHEDULES.SATURDAY' | translate }}</option>
+              <option [value]="7">{{ 'SCHEDULES.SUNDAY' | translate }}</option>
             </select>
           </div>
           <div class="form-field">
-            <label>Время начала</label>
+            <label>{{ 'SCHEDULES.START_TIME' | translate }}</label>
             <input type="time" [(ngModel)]="form.startTime">
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
-            <label>Время окончания</label>
+            <label>{{ 'SCHEDULES.END_TIME' | translate }}</label>
             <input type="time" [(ngModel)]="form.endTime">
           </div>
         </div>
         <div class="form-actions">
-          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</button>
-          <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+          <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</button>
+          <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
         </div>
       </div>
 
       <div class="loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && schedules.length === 0">
         <span class="material-icons">calendar_month</span>
-        <p>Графиков пока нет</p>
+        <p>{{ 'SCHEDULES.NO_SCHEDULES' | translate }}</p>
       </div>
 
       <div class="schedule-list" *ngIf="!isLoading && schedules.length > 0">

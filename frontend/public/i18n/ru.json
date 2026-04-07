@@ -35,7 +35,13 @@
     "OF": "из",
     "FOUND": "Найдено",
     "YEARS": "лет",
-    "NOT_ASSIGNED": "Не назначен"
+    "NOT_ASSIGNED": "Не назначен",
+    "FREE": "Свободен",
+    "BUSY": "Занят",
+    "TODAY": "Сегодня",
+    "WEEK": "Неделя",
+    "MONTH": "Месяц",
+    "YEAR": "Год"
   },
   "AUTH": {
     "LOGIN": "Вход",
@@ -89,7 +95,13 @@
     "CARD": "Карточка",
     "MY_APPOINTMENTS": "Мои приёмы",
     "MY_CABINET": "Мой кабинет",
-    "MY_PROFILE": "Мой профиль"
+    "MY_PROFILE": "Мой профиль",
+    "COMPLETED_COUNT": "завершено",
+    "PATIENTS_TODAY": "Пациенты сегодня",
+    "FREE": "Свободен",
+    "BUSY": "Занят",
+    "TODAY_QUEUE": "Очередь на сегодня",
+    "BOOK": "Записать"
   },
   "PATIENTS": {
     "TITLE": "Пациенты",
@@ -148,7 +160,10 @@
     "RESULT_NAME": "Название результата *",
     "RESULT_DESC": "Описание",
     "ATTACH_FILE": "Прикрепить файл (PDF, Word, изображение)",
-    "SAVE_RESULT": "Сохранить результат"
+    "SAVE_RESULT": "Сохранить результат",
+    "SELECT_DATE": "Выберите дату",
+    "VISIT_REASON": "Причина визита",
+    "VISIT_REASON_PLACEHOLDER": "Опишите причину визита..."
   },
   "STAFF": {
     "TITLE": "Персонал",
@@ -232,7 +247,10 @@
     "UNREAD": "непрочитанных",
     "ALL_READ": "Все прочитаны",
     "MARK_ALL_READ": "Прочитать все",
-    "NO_NOTIFICATIONS": "Уведомлений нет"
+    "NO_NOTIFICATIONS": "Уведомлений нет",
+    "APPOINTMENT_REMINDER": "Напоминание о приёме",
+    "APPOINTMENT_IN_2H": "У вас приём через 2 часа",
+    "MONTHLY_REPORT": "Ежемесячный отчёт готов"
   },
   "SCHEDULE": {
     "MONDAY": "Понедельник", "TUESDAY": "Вторник", "WEDNESDAY": "Среда",
@@ -261,5 +279,56 @@
     "LOADING_DOC": "Загрузка документа...",
     "UNSUPPORTED_PREVIEW": "Предпросмотр недоступен для этого типа файла",
     "NOT_FOUND": "Пациент не найден"
+  },
+  "ROOMS": {
+    "TITLE": "Кабинеты",
+    "ADD_ROOM": "Добавить кабинет",
+    "ROOM_NAME": "Название кабинета",
+    "ROOM_NUMBER": "Номер",
+    "FLOOR": "Этаж",
+    "DESCRIPTION": "Описание",
+    "IS_ACTIVE": "Активен",
+    "NO_ROOMS": "Кабинетов нет"
+  },
+  "SCHEDULES": {
+    "TITLE": "Расписание",
+    "ADD_SCHEDULE": "Добавить расписание",
+    "DAY_OF_WEEK": "День недели",
+    "START_TIME": "Начало",
+    "END_TIME": "Конец",
+    "MONDAY": "Понедельник",
+    "TUESDAY": "Вторник",
+    "WEDNESDAY": "Среда",
+    "THURSDAY": "Четверг",
+    "FRIDAY": "Пятница",
+    "SATURDAY": "Суббота",
+    "SUNDAY": "Воскресенье",
+    "NO_SCHEDULES": "Расписания нет"
+  },
+  "EXAMINATIONS": {
+    "TITLE": "Обследования",
+    "ADD_EXAMINATION": "Добавить обследование",
+    "NAME": "Название",
+    "DURATION": "Длительность (мин)",
+    "PRICE": "Цена (MDL)",
+    "NO_EXAMINATIONS": "Обследований нет"
+  },
+  "MY_CABINET": {
+    "TITLE": "Мой кабинет",
+    "MY_PROFILE": "Мой профиль",
+    "APPOINTMENTS_TODAY": "Мои приёмы сегодня",
+    "MY_PATIENTS": "Мои пациенты",
+    "MY_RESULTS": "Мои результаты",
+    "MY_STATS": "Моя статистика",
+    "MY_SCHEDULE": "Моё расписание",
+    "COMPLETE": "Завершить",
+    "NO_APPOINTMENTS": "Приёмов сегодня нет",
+    "TOTAL_MONTH": "Всего за месяц",
+    "COMPLETED_MONTH": "Завершено за месяц"
+  },
+  "ACCESS_DENIED": {
+    "TITLE": "Доступ запрещён",
+    "MESSAGE": "Этот раздел доступен только для администратора.",
+    "CONTACT": "Если вам нужен доступ — обратитесь к администратору системы."
   }
 }

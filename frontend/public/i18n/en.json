@@ -35,7 +35,13 @@
     "OF": "of",
     "FOUND": "Found",
     "YEARS": "years",
-    "NOT_ASSIGNED": "Not assigned"
+    "NOT_ASSIGNED": "Not assigned",
+    "FREE": "Free",
+    "BUSY": "Busy",
+    "TODAY": "Today",
+    "WEEK": "Week",
+    "MONTH": "Month",
+    "YEAR": "Year"
   },
   "AUTH": {
     "LOGIN": "Login",
@@ -89,7 +95,13 @@
     "CARD": "Card",
     "MY_APPOINTMENTS": "My appointments",
     "MY_CABINET": "My cabinet",
-    "MY_PROFILE": "My profile"
+    "MY_PROFILE": "My profile",
+    "COMPLETED_COUNT": "completed",
+    "PATIENTS_TODAY": "Patients today",
+    "FREE": "Free",
+    "BUSY": "Busy",
+    "TODAY_QUEUE": "Today queue",
+    "BOOK": "Book"
   },
   "PATIENTS": {
     "TITLE": "Patients",
@@ -148,7 +160,10 @@
     "RESULT_NAME": "Result title *",
     "RESULT_DESC": "Description",
     "ATTACH_FILE": "Attach file (PDF, Word, image)",
-    "SAVE_RESULT": "Save result"
+    "SAVE_RESULT": "Save result",
+    "SELECT_DATE": "Select date",
+    "VISIT_REASON": "Visit reason",
+    "VISIT_REASON_PLACEHOLDER": "Describe the reason for visit..."
   },
   "STAFF": {
     "TITLE": "Staff",
@@ -232,7 +247,10 @@
     "UNREAD": "unread",
     "ALL_READ": "All read",
     "MARK_ALL_READ": "Mark all as read",
-    "NO_NOTIFICATIONS": "No notifications"
+    "NO_NOTIFICATIONS": "No notifications",
+    "APPOINTMENT_REMINDER": "Appointment reminder",
+    "APPOINTMENT_IN_2H": "You have an appointment in 2 hours",
+    "MONTHLY_REPORT": "Monthly report is ready"
   },
   "SCHEDULE": {
     "MONDAY": "Monday", "TUESDAY": "Tuesday", "WEDNESDAY": "Wednesday",
@@ -261,5 +279,56 @@
     "LOADING_DOC": "Loading document...",
     "UNSUPPORTED_PREVIEW": "Preview not available for this file type",
     "NOT_FOUND": "Patient not found"
+  },
+  "ROOMS": {
+    "TITLE": "Rooms",
+    "ADD_ROOM": "Add room",
+    "ROOM_NAME": "Room name",
+    "ROOM_NUMBER": "Number",
+    "FLOOR": "Floor",
+    "DESCRIPTION": "Description",
+    "IS_ACTIVE": "Active",
+    "NO_ROOMS": "No rooms"
+  },
+  "SCHEDULES": {
+    "TITLE": "Schedules",
+    "ADD_SCHEDULE": "Add schedule",
+    "DAY_OF_WEEK": "Day of week",
+    "START_TIME": "Start time",
+    "END_TIME": "End time",
+    "MONDAY": "Monday",
+    "TUESDAY": "Tuesday",
+    "WEDNESDAY": "Wednesday",
+    "THURSDAY": "Thursday",
+    "FRIDAY": "Friday",
+    "SATURDAY": "Saturday",
+    "SUNDAY": "Sunday",
+    "NO_SCHEDULES": "No schedules"
+  },
+  "EXAMINATIONS": {
+    "TITLE": "Examinations",
+    "ADD_EXAMINATION": "Add examination",
+    "NAME": "Name",
+    "DURATION": "Duration (min)",
+    "PRICE": "Price (MDL)",
+    "NO_EXAMINATIONS": "No examinations"
+  },
+  "MY_CABINET": {
+    "TITLE": "My cabinet",
+    "MY_PROFILE": "My profile",
+    "APPOINTMENTS_TODAY": "My appointments today",
+    "MY_PATIENTS": "My patients",
+    "MY_RESULTS": "My results",
+    "MY_STATS": "My statistics",
+    "MY_SCHEDULE": "My schedule",
+    "COMPLETE": "Complete",
+    "NO_APPOINTMENTS": "No appointments today",
+    "TOTAL_MONTH": "Total this month",
+    "COMPLETED_MONTH": "Completed this month"
+  },
+  "ACCESS_DENIED": {
+    "TITLE": "Access denied",
+    "MESSAGE": "This section is only available for administrators.",
+    "CONTACT": "If you need access — contact the system administrator."
   }
 }

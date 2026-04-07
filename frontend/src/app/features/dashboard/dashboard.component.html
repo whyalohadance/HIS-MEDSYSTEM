@@ -113,13 +113,13 @@
           <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
             <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
             <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
-            <span class="today-badge" [class]="a.status">{{ a.status === 'scheduled' ? 'Ожидает' : a.status === 'completed' ? 'Завершён' : 'Отменён' }}</span>
+            <span class="today-badge" [class]="a.status">{{ a.status === 'scheduled' ? ('DASHBOARD.WAITING' | translate) : a.status === 'completed' ? ('DASHBOARD.COMPLETE' | translate) : ('DASHBOARD.CANCEL' | translate) }}</span>
             <div class="today-actions">
               <button class="btn-complete-sm" *ngIf="a.status === 'scheduled'" (click)="completeAppointment(a.id)">
-                <span class="material-icons">check</span> Завершить
+                <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
               </button>
               <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
-                <span class="material-icons">person</span> Карточка
+                <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
               </a>
             </div>
           </div>
@@ -131,7 +131,7 @@
           <div class="upcoming-item" *ngFor="let a of upcomingAppointments">
             <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
             <div class="upcoming-patient">{{ getPatientName(a.patientId) }}</div>
-            <span class="badge scheduled">Запланирован</span>
+            <span class="badge scheduled">{{ 'DASHBOARD.PLANNED' | translate }}</span>
           </div>
         </div>
 
@@ -153,7 +153,7 @@
         <div class="queue-section" style="margin-bottom:16px">
           <div class="queue-header">
             <div class="queue-title">
-              <span class="material-icons">people</span> Пациенты сегодня
+              <span class="material-icons">people</span> {{ 'DASHBOARD.PATIENTS_TODAY' | translate }}
             </div>
             <span class="queue-label" style="font-size:13px;color:#718096">{{ todayPatients.length }}</span>
           </div>
@@ -227,18 +227,18 @@
               <div class="rec-doctor"><span class="material-icons">medical_services</span>{{ a.doctorName }}</div>
             </div>
             <span class="today-badge" [class]="a.status">
-              {{ a.status === 'scheduled' ? 'Ожидает' : a.status === 'completed' ? 'Завершён' : 'Отменён' }}
+              {{ a.status === 'scheduled' ? ('DASHBOARD.WAITING' | translate) : a.status === 'completed' ? ('DASHBOARD.COMPLETE' | translate) : ('DASHBOARD.CANCEL' | translate) }}
             </span>
             <div class="today-actions" *ngIf="a.status === 'scheduled'">
               <button class="btn-complete-sm" (click)="updateAptStatus(a.id, 'completed')">
-                <span class="material-icons">check</span> Завершить
+                <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
               </button>
               <button class="btn-cancel-sm" (click)="updateAptStatus(a.id, 'cancelled')">
-                <span class="material-icons">close</span> Отменить
+                <span class="material-icons">close</span> {{ 'DASHBOARD.CANCEL' | translate }}
               </button>
             </div>
             <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
-              <span class="material-icons">person</span> Карточка
+              <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
             </a>
           </div>
         </div>
@@ -256,7 +256,7 @@
               </div>
             </div>
             <a class="btn-patient-sm" routerLink="/appointments">
-              <span class="material-icons">add</span> Записать
+              <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
             </a>
           </div>
         </div>
@@ -292,11 +292,11 @@
                 <div class="ds-name">{{ d.lastName }} {{ d.firstName }}</div>
                 <div class="ds-status">
                   <span class="status-dot" [class.busy]="d.isBusy"></span>
-                  {{ d.isBusy ? 'На приёме' : 'Доступен' }}
+                  {{ d.isBusy ? ('STAFF.STATUS_BUSY' | translate) : ('STAFF.STATUS_AVAILABLE' | translate) }}
                 </div>
               </div>
               <a *ngIf="!d.isBusy" class="btn-patient-sm" routerLink="/appointments">
-                <span class="material-icons">add</span> Записать
+                <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
               </a>
             </div>
           </div>
@@ -316,11 +316,11 @@
                 <div class="rs-name">{{ r.name }}</div>
                 <div class="rs-number">№{{ r.number }}</div>
               </div>
-              <span class="rs-badge" [class.busy]="r.isBusy">{{ r.isBusy ? 'Занят' : 'Свободен' }}</span>
+              <span class="rs-badge" [class.busy]="r.isBusy">{{ r.isBusy ? ('COMMON.BUSY' | translate) : ('COMMON.FREE' | translate) }}</span>
             </div>
             <div class="queue-empty" *ngIf="receptionRooms.length === 0">
               <span class="material-icons">meeting_room</span>
-              <p>Кабинеты не загружены</p>
+              <p>{{ 'DASHBOARD.ROOMS_STATUS' | translate }}</p>
             </div>
           </div>
         </div>
@@ -341,7 +341,7 @@
           <span class="queue-done">{{ queueCompleted }}</span>
           <span class="queue-sep">/</span>
           <span class="queue-all">{{ queueTotal }}</span>
-          <span class="queue-label">завершено</span>
+          <span class="queue-label">{{ 'DASHBOARD.COMPLETED_COUNT' | translate }}</span>
         </div>
       </div>
 
@@ -353,7 +353,7 @@
 
       <div class="queue-empty" *ngIf="queueItems.length === 0">
         <span class="material-icons">event_busy</span>
-        <p>Приёмов на сегодня нет</p>
+        <p>{{ 'DASHBOARD.NO_APPOINTMENTS_TODAY' | translate }}</p>
       </div>
 
       <div class="queue-list" *ngIf="queueItems.length > 0">
