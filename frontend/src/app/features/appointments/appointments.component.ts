@@ -343,6 +343,10 @@ export class AppointmentsComponent implements OnInit {
     }
   }
 
+  get currentLang(): string {
+    return this.translate.currentLang || localStorage.getItem('language') || 'en';
+  }
+
   getStatusLabel(status: AppointmentStatus): string {
     const keys: Record<AppointmentStatus, string> = {
       scheduled: 'APPOINTMENTS.STATUS_SCHEDULED',

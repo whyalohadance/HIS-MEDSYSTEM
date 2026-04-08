@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { PatientsService } from '../../core/services/patients.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -62,8 +62,13 @@ export class PatientsComponent implements OnInit {
     private patientsService: PatientsService,
     private api: ApiService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
+
+  get currentLang(): string {
+    return this.translate.currentLang || localStorage.getItem('language') || 'en';
+  }
 
   ngOnInit(): void {
     const endpoint = this.authService.isAdmin ? '/users' : '/users/doctors';
