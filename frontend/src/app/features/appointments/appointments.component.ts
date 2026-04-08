@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DatePickerComponent } from '../../shared/components/date-picker/date-picker.component';
 import { Router } from '@angular/router';
 import { Appointment, AppointmentStatus } from '../../core/models/appointment.model';
 import { AppointmentsService } from '../../core/services/appointments.service';
@@ -18,7 +19,7 @@ interface Room { id: number; name: string; number: string; }
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule, DatePickerComponent],
   templateUrl: './appointments.component.html',
   styleUrls: ['./appointments.component.scss']
 })

@@ -326,6 +326,11 @@
     "TOTAL_MONTH": "Total luna aceasta",
     "COMPLETED_MONTH": "Finalizate luna aceasta"
   },
+  "DATE": {
+    "DAY": "Zi",
+    "MONTH": "Lună",
+    "YEAR": "An"
+  },
   "ACCESS_DENIED": {
     "TITLE": "Acces interzis",
     "MESSAGE": "Această secțiune este disponibilă doar pentru administrator.",

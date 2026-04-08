@@ -32,7 +32,7 @@
     <div class="form-row">
       <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
         <label>{{ 'PATIENTS.DATE_OF_BIRTH' | translate }}</label>
-        <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true" [attr.lang]="currentLang">
+        <app-date-picker [value]="form.dateOfBirth" (valueChange)="form.dateOfBirth = $event; formTouched = true"></app-date-picker>
         <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
       </div>
       <div class="form-field">
@@ -173,7 +173,7 @@
         <div class="form-row">
           <div class="form-field" [class.has-error]="fieldError('dateOfBirth')">
             <label>{{ 'PATIENTS.DATE_OF_BIRTH' | translate }}</label>
-            <input type="date" [(ngModel)]="form.dateOfBirth" (blur)="formTouched = true" [attr.lang]="currentLang">
+            <app-date-picker [value]="form.dateOfBirth" (valueChange)="form.dateOfBirth = $event; formTouched = true"></app-date-picker>
             <span class="field-error" *ngIf="fieldError('dateOfBirth')">{{ fieldError('dateOfBirth') }}</span>
           </div>
           <div class="form-field">

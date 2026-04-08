@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DatePickerComponent } from '../../shared/components/date-picker/date-picker.component';
 import { Router } from '@angular/router';
 import { PatientsService } from '../../core/services/patients.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -15,7 +16,7 @@ interface Doctor { id: number; firstName: string; lastName: string; }
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule, DatePickerComponent],
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.scss']
 })

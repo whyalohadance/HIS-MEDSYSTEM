@@ -57,7 +57,7 @@
     <div class="form-row">
       <div class="form-field">
         <label>{{ 'APPOINTMENTS.DATE' | translate }} *</label>
-        <input type="date" [(ngModel)]="form.date" (ngModelChange)="loadRooms()" [attr.lang]="currentLang">
+        <app-date-picker [value]="form.date" (valueChange)="form.date = $event; loadRooms()"></app-date-picker>
       </div>
       <div class="form-field">
         <label>{{ 'APPOINTMENTS.TIME' | translate }} *</label>
@@ -97,7 +97,7 @@
       <span class="material-icons">search</span>
       <input [(ngModel)]="searchQuery" [placeholder]="'APPOINTMENTS.SEARCH_PLACEHOLDER' | translate">
     </div>
-    <input type="date" [(ngModel)]="filterDate" class="filter-input" [attr.lang]="currentLang">
+    <app-date-picker [(value)]="filterDate"></app-date-picker>
     <select [(ngModel)]="filterDoctor" class="filter-input">
       <option [value]="0">{{ 'APPOINTMENTS.ALL_DOCTORS' | translate }}</option>
       <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>

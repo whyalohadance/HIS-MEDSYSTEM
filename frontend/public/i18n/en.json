@@ -326,6 +326,11 @@
     "TOTAL_MONTH": "Total this month",
     "COMPLETED_MONTH": "Completed this month"
   },
+  "DATE": {
+    "DAY": "Day",
+    "MONTH": "Month",
+    "YEAR": "Year"
+  },
   "ACCESS_DENIED": {
     "TITLE": "Access denied",
     "MESSAGE": "This section is only available for administrators.",
