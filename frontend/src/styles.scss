@@ -41,6 +41,24 @@ body {
 @media (max-width: 768px)  { :root { --content-padding: 16px; --font-base: 13px; } }
 @media (max-width: 480px)  { :root { --content-padding: 12px; --card-radius: 10px; } }
 
+@keyframes langFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+
+@keyframes langFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lang-transition-out {
+  animation: langFadeOut 0.15s ease forwards;
+}
+
+.lang-transition-in {
+  animation: langFadeIn 0.2s ease forwards;
+}
+
 .page-container { padding: 24px; }
 
 .card {

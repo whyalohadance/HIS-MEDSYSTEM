@@ -18,8 +18,26 @@ export class LanguageService {
   }
 
   setLanguage(lang: string): void {
-    this.translate.use(lang);
-    localStorage.setItem(this.STORAGE_KEY, lang);
+    const mainContent = document.querySelector('.main-content') as HTMLElement;
+    const sidebar = document.querySelector('.sidebar') as HTMLElement;
+
+    const elements = [mainContent, sidebar].filter(Boolean) as HTMLElement[];
+
+    elements.forEach(el => el.classList.add('lang-transition-out'));
+
+    setTimeout(() => {
+      this.translate.use(lang);
+      localStorage.setItem(this.STORAGE_KEY, lang);
+
+      elements.forEach(el => {
+        el.classList.remove('lang-transition-out');
+        el.classList.add('lang-transition-in');
+      });
+
+      setTimeout(() => {
+        elements.forEach(el => el.classList.remove('lang-transition-in'));
+      }, 200);
+    }, 150);
   }
 
   getCurrentLanguage(): string {

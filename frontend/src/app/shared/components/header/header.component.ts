@@ -105,6 +105,13 @@ export class HeaderComponent implements OnInit {
     this.showUserDropdown = false;
   }
 
+  onLangChange(lang: string, event: MouseEvent): void {
+    const btn = event.currentTarget as HTMLElement;
+    btn.classList.add('lang-clicking');
+    setTimeout(() => btn.classList.remove('lang-clicking'), 300);
+    this.langService.setLanguage(lang);
+  }
+
   logout(): void {
     this.showUserDropdown = false;
     this.authService.logout();

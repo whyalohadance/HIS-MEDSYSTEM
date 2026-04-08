@@ -16,7 +16,7 @@
         *ngFor="let lang of langService.languages"
         class="lang-btn"
         [class.active]="langService.getCurrentLanguage() === lang.code"
-        (click)="langService.setLanguage(lang.code)"
+        (click)="onLangChange(lang.code, $event)"
         [title]="lang.label">
         {{ lang.flag }} {{ lang.label }}
       </button>
