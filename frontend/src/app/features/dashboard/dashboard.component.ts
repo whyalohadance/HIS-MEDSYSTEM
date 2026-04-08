@@ -11,6 +11,7 @@ import { PatientsService } from '../../core/services/patients.service';
 import { AppointmentsService } from '../../core/services/appointments.service';
 import { NotificationsService } from '../../core/services/notifications.service';
 import { ResultsService } from '../../core/services/results.service';
+import { TranslateService } from '@ngx-translate/core';
 import { map, forkJoin } from 'rxjs';
 
 interface QueueItem {
@@ -77,13 +78,27 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private appointmentsService: AppointmentsService,
     private notificationsService: NotificationsService,
     private resultsService: ResultsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     if (this.authService.isAdmin) this.loadAdminStats();
     else if (this.authService.isDoctor) this.loadDoctorStats();
     else if (this.authService.isReceptionist) this.loadReceptionStats();
+
+    this.translate.onLangChange.subscribe(() => {
+      if (this.chartsReady) {
+        this.statusChart?.destroy();
+        this.monthChart?.destroy();
+        this.doctorWeekChart?.destroy();
+        setTimeout(() => {
+          if (this.authService.isAdmin) this.drawCharts();
+          else if (this.authService.isDoctor) this.drawDoctorWeekChart();
+          this.cdr.detectChanges();
+        }, 50);
+      }
+    });
   }
 
   private themeObserver: MutationObserver | null = null;
@@ -277,11 +292,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const days: string[] = [];
     const counts: number[] = [];
-    const dayNames = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+    const lang = this.translate.currentLang || 'ru';
+    const localeMap: Record<string, string> = { ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' };
+    const locale = localeMap[lang] || 'ru-RU';
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      days.push(dayNames[d.getDay()]);
+      days.push(d.toLocaleDateString(locale, { weekday: 'short' }));
       const key = d.toISOString().split('T')[0];
       counts.push(this.doctorAllAppointments.filter(a => a.date === key).length);
     }
@@ -292,7 +309,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       data: {
         labels: days,
         datasets: [{
-          label: 'Приёмов',
+          label: this.translate.instant('DASHBOARD.TOTAL_APPOINTMENTS'),
           data: counts,
           backgroundColor: colors.barBg,
           borderColor: colors.barBorder,
@@ -347,7 +364,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.statusChart = new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: ['Завершённые', 'Запланированные', 'Отменённые'],
+        labels: [
+          this.translate.instant('DASHBOARD.COMPLETED'),
+          this.translate.instant('DASHBOARD.SCHEDULED'),
+          this.translate.instant('DASHBOARD.CANCELLED')
+        ],
         datasets: [{
           data: [completed, scheduled, cancelled],
           backgroundColor: ['#34a853', '#1a73e8', '#ea4335'],
@@ -387,8 +408,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       if (key && months[key] !== undefined) months[key]++;
     });
 
-    const monthNames = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
-    const labels = Object.keys(months).map(k => monthNames[parseInt(k.split('-')[1]) - 1]);
+    const lang = this.translate.currentLang || 'ru';
+    const localeMap: Record<string, string> = { ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' };
+    const locale = localeMap[lang] || 'ru-RU';
+    const labels = Object.keys(months).map(k => {
+      const d = new Date(parseInt(k.split('-')[0]), parseInt(k.split('-')[1]) - 1, 1);
+      return d.toLocaleDateString(locale, { month: 'short' });
+    });
     const values = Object.values(months);
 
     const colors = this.chartColors();
@@ -397,7 +423,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       data: {
         labels,
         datasets: [{
-          label: 'Приёмов',
+          label: this.translate.instant('DASHBOARD.TOTAL_APPOINTMENTS'),
           data: values,
           backgroundColor: colors.barBg,
           borderColor: colors.barBorder,
@@ -436,7 +462,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   formatDate(date: string): string {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('ru-RU', { day: '2-digit', month: 'long' });
+    const lang = this.translate.currentLang || 'ru';
+    const localeMap: Record<string, string> = { ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' };
+    return new Date(date).toLocaleDateString(localeMap[lang] || 'ru-RU', { day: '2-digit', month: 'long' });
   }
 
   getQueueStatusLabel(status: string): string {

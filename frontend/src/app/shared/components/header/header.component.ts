@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationsService } from '../../../core/services/notifications.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit {
     private notificationsService: NotificationsService,
     private sidebarService: SidebarService,
     private cdr: ChangeDetectorRef,
-    public langService: LanguageService
+    public langService: LanguageService,
+    private translate: TranslateService
   ) {}
 
   @HostListener('document:click')
@@ -52,6 +53,10 @@ export class HeaderComponent implements OnInit {
     setInterval(() => this.loadUnreadCount(), 30000);
     this.isDarkTheme = localStorage.getItem('darkTheme') === 'true';
     document.body.classList.toggle('dark-theme', this.isDarkTheme);
+
+    this.translate.onLangChange.subscribe(() => {
+      this.cdr.detectChanges();
+    });
   }
 
   loadUnreadCount(): void {
@@ -103,5 +108,12 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.showUserDropdown = false;
     this.authService.logout();
+  }
+
+  getFormattedDate(): string {
+    const lang = this.translate.currentLang || 'ru';
+    const localeMap: Record<string, string> = { ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' };
+    const locale = localeMap[lang] || 'ru-RU';
+    return new Date().toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 }
