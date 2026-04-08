@@ -1,11 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { map } from 'rxjs';
+import localeRo from '@angular/common/locales/ro';
+import localeRu from '@angular/common/locales/ru';
+import localeEn from '@angular/common/locales/en';
+
+registerLocaleData(localeRo, 'ro');
+registerLocaleData(localeRu, 'ru');
+registerLocaleData(localeEn, 'en');
 
 @Component({
   selector: 'app-patient-card',
@@ -23,6 +30,8 @@ export class PatientCardComponent implements OnInit {
   isLoading = true;
   patientId = 0;
 
+  currentLocale = 'ru';
+
   viewingResult: any = null;
   viewingFileUrl: SafeResourceUrl = '';
   viewingRawUrl = '';
@@ -37,9 +46,15 @@ export class PatientCardComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private translate: TranslateService
-  ) {}
+  ) {
+    this.translate.onLangChange.subscribe(event => {
+      this.currentLocale = event.lang;
+      this.cdr.detectChanges();
+    });
+  }
 
   ngOnInit(): void {
+    this.currentLocale = this.translate.currentLang || localStorage.getItem('language') || 'ru';
     this.patientId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadAll();
   }
@@ -106,7 +121,9 @@ export class PatientCardComponent implements OnInit {
 
   formatDate(date: string): string {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+    const localeMap: Record<string, string> = { ru: 'ru-RU', ro: 'ro-RO', en: 'en-US' };
+    const locale = localeMap[this.currentLocale] || 'ru-RU';
+    return new Date(date).toLocaleDateString(locale, { day: '2-digit', month: 'long', year: 'numeric' });
   }
 
   openResultViewer(result: any): void {
