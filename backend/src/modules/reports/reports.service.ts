@@ -9,7 +9,8 @@ import PDFDocument = require('pdfkit');
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 
-const FONT_PATH = path.join(__dirname, '../../../fonts/Arial.ttf');
+const FONT_PATH = path.join(__dirname, '../../../fonts/Roboto-Regular.ttf');
+const FONT_BOLD_PATH = path.join(__dirname, '../../../fonts/Roboto-Bold.ttf');
 
 export interface ReportData {
   month: number;
@@ -80,20 +81,21 @@ export class ReportsService {
       doc.on('end', () => resolve(Buffer.concat(buffers)));
       doc.on('error', reject);
 
-      // Кириллица: регистрируем Roboto и устанавливаем как шрифт по умолчанию
+      // Регистрируем Roboto с поддержкой кириллицы
       doc.registerFont('Roboto', FONT_PATH);
+      doc.registerFont('Roboto-Bold', FONT_BOLD_PATH);
       doc.font('Roboto');
 
       // Заголовок
-      doc.fontSize(20).text(`Отчёт за ${monthNames[month - 1]} ${year}`, { align: 'center' });
+      doc.font('Roboto-Bold').fontSize(20).text(`Отчёт за ${monthNames[month - 1]} ${year}`, { align: 'center' });
       doc.moveDown();
-      doc.fontSize(10).text(`Сформирован: ${new Date().toLocaleDateString('ru-RU')}`, { align: 'center' });
+      doc.font('Roboto').fontSize(10).text(`Сформирован: ${new Date().toLocaleDateString('ru-RU')}`, { align: 'center' });
       doc.moveDown(2);
 
       // Сводка
-      doc.fontSize(14).text('Сводка', { underline: true });
+      doc.font('Roboto-Bold').fontSize(14).text('Сводка', { underline: true });
       doc.moveDown(0.5);
-      doc.fontSize(10);
+      doc.font('Roboto').fontSize(10);
       doc.text(`Всего приёмов: ${data.totalAppointments}`);
       doc.text(`Завершённых приёмов: ${data.completedAppointments}`);
       doc.text(`Новых пациентов: ${data.newPatients}`);
@@ -104,9 +106,9 @@ export class ReportsService {
       doc.moveDown(2);
 
       // Приёмы
-      doc.fontSize(14).text('Приёмы за месяц', { underline: true });
+      doc.font('Roboto-Bold').fontSize(14).text('Приёмы за месяц', { underline: true });
       doc.moveDown(0.5);
-      doc.fontSize(9);
+      doc.font('Roboto').fontSize(9);
 
       data.appointments.forEach((a, i) => {
         const patientName = a.patient ? `${a.patient.lastName} ${a.patient.firstName}` : `#${a.patientId}`;
@@ -118,18 +120,18 @@ export class ReportsService {
       doc.moveDown(2);
 
       // Персонал
-      doc.fontSize(14).text('Персонал', { underline: true });
+      doc.font('Roboto-Bold').fontSize(14).text('Персонал', { underline: true });
       doc.moveDown(0.5);
-      doc.fontSize(9);
+      doc.font('Roboto').fontSize(9);
       data.staff.forEach((s, i) => {
         doc.text(`${i + 1}. ${s.lastName} ${s.firstName} | ${s.role} | ${s.email}`);
       });
       doc.moveDown(2);
 
       // Кабинеты
-      doc.fontSize(14).text('Кабинеты', { underline: true });
+      doc.font('Roboto-Bold').fontSize(14).text('Кабинеты', { underline: true });
       doc.moveDown(0.5);
-      doc.fontSize(9);
+      doc.font('Roboto').fontSize(9);
       data.rooms.forEach((r, i) => {
         doc.text(`${i + 1}. ${r.name} | №${r.number} | Этаж: ${r.floor || '—'}`);
       });

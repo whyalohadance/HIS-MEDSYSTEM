@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ExaminationsService } from './examinations.service';
 import { CreateExaminationDto } from './dto/create-examination.dto';
@@ -5,6 +6,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
 import { UserRole } from '../users/user.entity';
 
+@ApiTags('examinations')
 @Controller('examinations')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ExaminationsController {

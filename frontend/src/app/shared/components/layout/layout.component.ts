@@ -3,15 +3,19 @@ import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from '../header/header.component';
 import { BottomNavComponent } from '../bottom-nav/bottom-nav.component';
+import { ToastComponent } from '../toast/toast.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { filter } from 'rxjs';
 import { routeAnimations } from '../../../animations';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, HeaderComponent, BottomNavComponent],
+  imports: [RouterOutlet, SidebarComponent, HeaderComponent, BottomNavComponent, ToastComponent, ConfirmDialogComponent],
   animations: [routeAnimations],
   template: `
+    <app-toast></app-toast>
+    <app-confirm-dialog></app-confirm-dialog>
     <div class="app-layout">
       <app-sidebar></app-sidebar>
       <div class="main-wrapper">

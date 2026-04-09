@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import {
   Controller, Get, Post, Put, Delete,
   Body, Param, UseGuards, Request, ParseIntPipe
@@ -6,6 +7,7 @@ import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@ApiTags('patients')
 @Controller('patients')
 @UseGuards(JwtAuthGuard)
 export class PatientsController {

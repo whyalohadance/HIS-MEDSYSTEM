@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Delete, Body, Param, UseGuards, Request, ParseIntPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -5,6 +6,7 @@ import { extname } from 'path';
 import { ResultsService } from './results.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@ApiTags('results')
 @Controller('results')
 @UseGuards(JwtAuthGuard)
 export class ResultsController {

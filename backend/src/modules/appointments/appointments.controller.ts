@@ -1,8 +1,10 @@
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards, Request, ParseIntPipe } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AppointmentStatus } from './appointment.entity';
 
+@ApiTags('appointments')
 @Controller('appointments')
 @UseGuards(JwtAuthGuard)
 export class AppointmentsController {

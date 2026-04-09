@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Query, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import { ReportsService } from './reports.service';
@@ -18,6 +19,7 @@ function contentDisposition(ruName: string, asciiName: string, ext: string): str
   return `attachment; filename="report_${asciiName}.${ext}"; filename*=UTF-8''${encoded}`;
 }
 
+@ApiTags('reports')
 @Controller('reports')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
