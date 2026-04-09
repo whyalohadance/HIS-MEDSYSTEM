@@ -320,7 +320,11 @@
     "NAME": "Название",
     "DURATION": "Длительность (мин)",
     "PRICE": "Цена (MDL)",
-    "NO_EXAMINATIONS": "Обследований нет"
+    "NO_EXAMINATIONS": "Обследований нет",
+    "NAME_PLACEHOLDER": "УЗИ брюшной полости",
+    "DESCRIPTION_PLACEHOLDER": "Описание обследования...",
+    "COUNT": "обследований",
+    "MIN": "мин"
   },
   "MY_CABINET": {
     "TITLE": "Мой кабинет",

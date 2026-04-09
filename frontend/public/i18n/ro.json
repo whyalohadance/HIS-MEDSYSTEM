@@ -320,7 +320,11 @@
     "NAME": "Denumire",
     "DURATION": "Durata (min)",
     "PRICE": "Preț (MDL)",
-    "NO_EXAMINATIONS": "Nu există examinări"
+    "NO_EXAMINATIONS": "Nu există examinări",
+    "NAME_PLACEHOLDER": "Ecografie abdominală",
+    "DESCRIPTION_PLACEHOLDER": "Descrierea examinării...",
+    "COUNT": "examinări",
+    "MIN": "min"
   },
   "MY_CABINET": {
     "TITLE": "Cabinetul meu",

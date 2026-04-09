@@ -23,7 +23,7 @@ interface Examination {
       <div class="page-header">
         <div>
           <h1 class="page-title">{{ 'EXAMINATIONS.TITLE' | translate }}</h1>
-          <p class="page-sub">{{ examinations.length }} {{ 'EXAMINATIONS.TITLE' | translate }}</p>
+          <p class="page-sub">{{ examinations.length }} {{ 'EXAMINATIONS.COUNT' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="showForm = !showForm">
           <span class="material-icons">add</span> {{ 'COMMON.ADD' | translate }}
@@ -35,7 +35,7 @@ interface Examination {
         <div class="form-row">
           <div class="form-field">
             <label>{{ 'EXAMINATIONS.NAME' | translate }} *</label>
-            <input [(ngModel)]="form.name" placeholder="УЗИ брюшной полости">
+            <input [(ngModel)]="form.name" [placeholder]="'EXAMINATIONS.NAME_PLACEHOLDER' | translate">
           </div>
           <div class="form-field">
             <label>{{ 'EXAMINATIONS.DURATION' | translate }}</label>
@@ -43,8 +43,8 @@ interface Examination {
           </div>
         </div>
         <div class="form-field" style="margin-bottom:16px">
-          <label>{{ 'ROOMS.DESCRIPTION' | translate }}</label>
-          <input [(ngModel)]="form.description" placeholder="Описание обследования...">
+          <label>{{ 'EXAMINATIONS.DESCRIPTION' | translate }}</label>
+          <input [(ngModel)]="form.description" [placeholder]="'EXAMINATIONS.DESCRIPTION_PLACEHOLDER' | translate">
         </div>
         <div class="form-actions">
           <button class="btn-primary" (click)="save()" [disabled]="isSaving">{{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</button>
@@ -72,9 +72,9 @@ interface Examination {
           </div>
           <div class="exam-duration" *ngIf="e.duration">
             <span class="material-icons">schedule</span>
-            {{ e.duration }} мин
+            {{ e.duration }} {{ 'EXAMINATIONS.MIN' | translate }}
           </div>
-          <span class="badge" [class.active]="e.isActive">{{ e.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}</span>
+          <span class="badge" [class.active]="e.isActive">{{ e.isActive ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}</span>
         </div>
       </div>
     </div>
