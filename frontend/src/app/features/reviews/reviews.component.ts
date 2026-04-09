@@ -1,13 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { ReviewsService } from '../../core/services/reviews.service';
 import { Review } from '../../core/models/review.model';
 
 @Component({
   selector: 'app-reviews',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, TranslateModule],
   templateUrl: './reviews.component.html',
   styleUrls: ['./reviews.component.scss']
 })

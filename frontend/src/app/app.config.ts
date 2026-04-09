@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: LOCALE_ID, useValue: 'ru' },
-    provideTranslateService({ defaultLanguage: 'ru' }),
+    provideTranslateService({ fallbackLang: 'ru' }),
     ...provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' })
   ]
 };

@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ResultsService, Result } from '../../core/services/results.service';
 import { PatientsService } from '../../core/services/patients.service';
@@ -13,7 +14,7 @@ interface Patient { id: number; firstName: string; lastName: string; doctorId: n
 @Component({
   selector: 'app-results',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule, HttpClientModule],
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss']
 })

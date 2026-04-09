@@ -15,6 +15,7 @@ export class App {
     @Inject(DOCUMENT) private document: Document
   ) {
     const savedLang = localStorage.getItem('language') || 'ru';
+    this.translate.use(savedLang);
     this.document.documentElement.setAttribute('lang', savedLang);
 
     this.translate.onLangChange.subscribe(event => {

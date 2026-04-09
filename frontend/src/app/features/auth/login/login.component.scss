@@ -214,41 +214,54 @@
 
 // ===== MOBILE (≤768px) =====
 @media (max-width: 768px) {
-  // Skip splash on mobile
   .login-splash { display: none !important; }
 
   .login-page {
     flex-direction: column !important;
     min-height: 100vh;
+    background: #f4f6f9;
 
     &.state-logo { opacity: 1 !important; }
   }
 
-  // Top hero section (branding)
   .login-left {
     flex: none !important;
-    padding: 48px 24px 32px !important;
-    border-radius: 0 0 32px 32px !important;
+    padding: 40px 24px 32px !important;
+    border-radius: 0 0 28px 28px !important;
 
-    .brand h1 { font-size: 24px; }
-    .brand-desc { font-size: 13px; margin-bottom: 0; }
+    .brand {
+      justify-content: center;
+      margin-bottom: 8px;
+
+      h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+    }
+
+    .brand-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      font-size: 28px !important;
+    }
+
+    .brand-desc { font-size: 13px; margin-bottom: 0; text-align: center; }
     .features-list { display: none; }
   }
 
-  // Form section below
   .login-right {
     width: 100% !important;
     flex: 1 !important;
     padding: 28px 20px 32px !important;
-    background: white !important;
+    background: #f4f6f9 !important;
     align-items: flex-start !important;
   }
 
   .login-card {
     box-shadow: none !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
+    padding: 24px 20px !important;
+    border-radius: 16px !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+    background: white !important;
   }
 
   .login-header {
@@ -256,7 +269,7 @@
     h2 { font-size: 22px !important; }
   }
 
-  // Material form fields — make taller and more touch-friendly
+  // Material form fields — touch-friendly
   .mat-mdc-form-field { width: 100%; }
   .mat-mdc-text-field-wrapper { border-radius: 12px !important; }
   .mdc-text-field--outlined .mdc-notched-outline__leading { border-radius: 12px 0 0 12px !important; }
@@ -269,7 +282,17 @@
     font-size: 16px !important;
     font-weight: 700 !important;
     background: linear-gradient(135deg, #1a73e8, #0d47a1) !important;
+    box-shadow: 0 4px 12px rgba(26,115,232,0.3) !important;
+    margin-bottom: 16px;
   }
 
-  .login-hint { font-size: 11px; }
+  .field-group { margin-bottom: 16px; }
+
+  .login-hint {
+    font-size: 11px;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
 }
