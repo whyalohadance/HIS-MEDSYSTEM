@@ -321,6 +321,7 @@
     "DURATION": "Длительность (мин)",
     "PRICE": "Цена (MDL)",
     "NO_EXAMINATIONS": "Обследований нет",
+    "DESCRIPTION": "Описание",
     "NAME_PLACEHOLDER": "УЗИ брюшной полости",
     "DESCRIPTION_PLACEHOLDER": "Описание обследования...",
     "COUNT": "обследований",

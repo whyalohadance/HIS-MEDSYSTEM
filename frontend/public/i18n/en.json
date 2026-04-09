@@ -321,6 +321,7 @@
     "DURATION": "Duration (min)",
     "PRICE": "Price (MDL)",
     "NO_EXAMINATIONS": "No examinations",
+    "DESCRIPTION": "Description",
     "NAME_PLACEHOLDER": "Abdominal ultrasound",
     "DESCRIPTION_PLACEHOLDER": "Examination description...",
     "COUNT": "examinations",
