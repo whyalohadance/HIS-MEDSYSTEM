@@ -1335,3 +1335,113 @@ body.dark-theme .bottom-nav {
 body.dark-theme .nav-tab { color: #64748b !important; }
 body.dark-theme .nav-tab.active { color: #818cf8 !important; }
 body.dark-theme .nav-tab.active .nav-icon-wrap { background: rgba(129, 140, 248, 0.15) !important; }
+
+/* Part 11 — Global mobile foundation */
+@media (max-width: 768px) {
+  * { box-sizing: border-box; }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 16px !important;
+    padding-bottom: 80px !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  app-sidebar { display: none !important; }
+
+  .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .page-title { font-size: 22px !important; }
+
+  .page-header > button,
+  .page-header .btn-primary {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 48px !important;
+  }
+
+  /* Modal — slide from bottom */
+  .modal-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    margin: 0 !important;
+  }
+
+  .modal-header {
+    padding: 16px 20px !important;
+    position: sticky !important;
+    top: 0 !important;
+    background: white !important;
+    z-index: 1 !important;
+    border-radius: 20px 20px 0 0 !important;
+  }
+
+  .modal-body { padding: 16px 20px !important; }
+
+  .modal-footer {
+    padding: 12px 20px 20px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    position: sticky !important;
+    bottom: 0 !important;
+    background: white !important;
+  }
+
+  .modal-footer button {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+  }
+
+  .file-viewer-modal {
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Form rows — single column */
+  .form-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  .form-card { padding: 16px !important; border-radius: 14px !important; margin-bottom: 16px !important; }
+
+  .form-field input,
+  .form-field select { height: 48px !important; font-size: 16px !important; }
+
+  .form-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .form-actions button {
+    width: 100% !important;
+    height: 48px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Reception apt items */
+  .reception-apt-item {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .reception-apt-item.scheduled { border-left-color: #1a73e8 !important; }
+  .reception-apt-item.completed { border-left-color: #34a853 !important; }
+  .reception-apt-item.cancelled { border-left-color: #ea4335 !important; }
+}

@@ -440,3 +440,144 @@
   letter-spacing: 0.5px;
   margin-bottom: 16px;
 }
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  /* Stats grids */
+  .stats-grid-4, .doctor-stats, .reception-stats {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .stat-card {
+    padding: 14px 12px !important;
+    border-radius: 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    min-height: 90px !important;
+  }
+
+  .stat-value { font-size: 28px !important; line-height: 1 !important; }
+  .stat-label { font-size: 11px !important; }
+  .stat-icon { display: none !important; }
+
+  /* Layout */
+  .dashboard-layout { flex-direction: column !important; gap: 16px !important; }
+  .dashboard-main { width: 100% !important; }
+  .dashboard-sidebar { width: 100% !important; }
+
+  /* Charts */
+  .charts-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+  .chart-card {
+    padding: 14px !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+  }
+
+  .chart-card canvas { max-height: 200px !important; }
+
+  /* Quick actions */
+  .actions-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+
+  .action-card {
+    padding: 12px 6px !important;
+    font-size: 10px !important;
+    border-radius: 12px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 6px !important;
+    min-height: 72px !important;
+    justify-content: center !important;
+  }
+
+  .action-card .material-icons { font-size: 22px !important; }
+
+  /* Queue section */
+  .queue-section { border-radius: 14px !important; padding: 14px !important; }
+  .queue-header { font-size: 13px !important; margin-bottom: 10px !important; }
+
+  .queue-item {
+    padding: 10px !important;
+    border-radius: 10px !important;
+    gap: 10px !important;
+  }
+
+  .queue-num {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .queue-patient { font-size: 13px !important; font-weight: 600 !important; }
+  .queue-doctor { font-size: 11px !important; }
+  .queue-time { font-size: 11px !important; white-space: nowrap !important; }
+
+  /* Doctor dashboard */
+  .today-appointments-section {
+    border-radius: 14px !important;
+    padding: 14px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .section-header { font-size: 11px !important; margin-bottom: 10px !important; }
+
+  .apt-today-item {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    border-left: 3px solid #1a73e8 !important;
+  }
+
+  .apt-today-time { font-size: 20px !important; font-weight: 700 !important; color: #1a73e8 !important; }
+  .apt-today-patient { font-size: 14px !important; font-weight: 600 !important; }
+  .apt-today-room { font-size: 12px !important; color: #718096 !important; }
+
+  .apt-today-actions { display: flex !important; gap: 8px !important; width: 100% !important; }
+  .apt-today-actions button { flex: 1 !important; height: 38px !important; font-size: 12px !important; border-radius: 8px !important; }
+
+  .my-patients-section { border-radius: 14px !important; padding: 14px !important; margin-bottom: 12px !important; }
+
+  .patient-mini-card { padding: 10px !important; border-radius: 10px !important; display: flex !important; align-items: center !important; gap: 10px !important; }
+  .patient-mini-avatar { width: 40px !important; height: 40px !important; border-radius: 10px !important; font-size: 14px !important; flex-shrink: 0 !important; }
+
+  .quick-actions-doctor { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin-bottom: 12px !important; }
+  .quick-action-btn { height: 56px !important; border-radius: 12px !important; font-size: 13px !important; font-weight: 600 !important; display: flex !important; align-items: center !important; gap: 8px !important; padding: 0 14px !important; }
+
+  /* Reception dashboard */
+  .today-full-list { border-radius: 14px !important; padding: 14px !important; margin-bottom: 12px !important; }
+
+  .apt-queue-num { font-size: 11px !important; font-weight: 700 !important; color: #718096 !important; margin-bottom: 4px !important; }
+  .apt-main-info { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-bottom: 6px !important; }
+  .apt-patient-name { font-size: 14px !important; font-weight: 600 !important; }
+  .apt-time { font-size: 13px !important; color: #1a73e8 !important; font-weight: 700 !important; }
+  .apt-doctor-name { font-size: 12px !important; color: #718096 !important; }
+
+  .apt-actions-row { display: flex !important; gap: 6px !important; margin-top: 8px !important; }
+  .apt-actions-row button { flex: 1 !important; height: 34px !important; font-size: 11px !important; border-radius: 8px !important; }
+
+  /* Doctors & rooms status */
+  .doctors-status-section, .rooms-status-section { border-radius: 14px !important; padding: 14px !important; margin-bottom: 12px !important; }
+
+  .doctor-status-card { display: flex !important; align-items: center !important; gap: 10px !important; padding: 10px !important; border-radius: 10px !important; margin-bottom: 8px !important; }
+  .doctor-avatar-sm { width: 40px !important; height: 40px !important; border-radius: 10px !important; flex-shrink: 0 !important; }
+  .doctor-info { flex: 1 !important; }
+  .doctor-name-sm { font-size: 13px !important; font-weight: 600 !important; }
+  .doctor-status-badge { font-size: 11px !important; }
+
+  .room-status-item { display: flex !important; align-items: center !important; justify-content: space-between !important; padding: 10px !important; border-radius: 10px !important; margin-bottom: 6px !important; background: #f8fafc !important; }
+  .room-name-sm { font-size: 13px !important; font-weight: 600 !important; }
+  .room-number-sm { font-size: 11px !important; color: #718096 !important; }
+
+  /* Sidebar items on mobile (collapse to flat list) */
+  .today-patient-item { padding: 10px !important; border-radius: 10px !important; }
+  .tp-avatar { width: 36px !important; height: 36px !important; font-size: 13px !important; }
+  .tp-name { font-size: 13px !important; }
+}

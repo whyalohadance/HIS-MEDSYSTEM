@@ -41,13 +41,13 @@ import { TranslateModule } from '@ngx-translate/core';
         bottom: 0;
         left: 0;
         right: 0;
-        height: 72px;
-        background: rgba(255, 255, 255, 0.95);
+        height: 64px;
+        background: rgba(255, 255, 255, 0.97);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         border-top: 1px solid #e2e8f0;
-        z-index: 1000;
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+        z-index: 999;
+        box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
         padding-bottom: env(safe-area-inset-bottom, 0px);
       }
       .nav-tab {

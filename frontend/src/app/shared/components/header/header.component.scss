@@ -340,11 +340,15 @@
   .header {
     height: 56px;
     padding: 0 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
 
     &::before {
       content: '✚ MedSystem';
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       color: #0f2d52;
       font-family: 'Inter', sans-serif;
@@ -356,13 +360,16 @@
   .hamburger-btn { display: none !important; }
   .hide-mobile { display: none !important; }
   .greeting { display: none !important; }
+  .date-text { display: none !important; }
   .user-info { display: none !important; }
+  .user-name { display: none !important; }
   .chevron { display: none !important; }
+  .lang-switcher { display: none !important; }
 
-  .theme-btn { width: 36px; height: 36px; }
-  .avatar { width: 34px; height: 34px; font-size: 12px; }
-  .header-right { gap: 10px; }
-  .lang-switcher { display: none; }
+  .header-right { gap: 8px !important; }
+  .theme-btn { width: 36px !important; height: 36px !important; border-radius: 10px !important; }
+  .notif-btn { width: 36px !important; height: 36px !important; border-radius: 10px !important; }
+  .avatar { width: 36px !important; height: 36px !important; font-size: 13px !important; border-radius: 10px !important; }
 
   .user-dropdown {
     right: -8px;
@@ -372,7 +379,8 @@
 
 @media (max-width: 480px) {
   .header { padding: 0 12px; }
-  .header-right { gap: 8px; }
-  .notif-btn { width: 36px; height: 36px; }
-  .theme-btn { width: 34px; height: 34px; }
+  .header-right { gap: 6px !important; }
+  .notif-btn { width: 34px !important; height: 34px !important; }
+  .theme-btn { width: 34px !important; height: 34px !important; }
+  .avatar { width: 34px !important; height: 34px !important; }
 }

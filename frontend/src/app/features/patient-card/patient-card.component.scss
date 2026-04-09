@@ -359,6 +359,30 @@
 /* ===== PRINT HEADER (скрыт на экране) ===== */
 .print-header { display: none; }
 
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .card-header { flex-wrap: wrap !important; gap: 10px !important; margin-bottom: 16px !important; }
+  .btn-back { flex: none !important; }
+
+  .card-header-actions { width: 100% !important; display: flex !important; gap: 8px !important; }
+  .btn-print, .btn-book { flex: 1 !important; height: 44px !important; font-size: 13px !important; justify-content: center !important; border-radius: 10px !important; }
+
+  .profile-section { grid-template-columns: 1fr !important; padding: 16px !important; border-radius: 14px !important; gap: 16px !important; }
+  .profile-left { flex-direction: row !important; align-items: center !important; gap: 14px !important; text-align: left !important; }
+  .patient-avatar-big { width: 64px !important; height: 64px !important; font-size: 22px !important; border-radius: 16px !important; flex-shrink: 0 !important; }
+
+  .contact-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .stats-row { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .stat-pill { padding: 12px !important; border-radius: 12px !important; }
+
+  .history-item { flex-direction: column !important; gap: 8px !important; padding: 12px !important; border-radius: 10px !important; }
+  .history-date { display: flex !important; gap: 12px !important; align-items: center !important; }
+
+  .result-item { flex-wrap: wrap !important; gap: 8px !important; padding: 12px !important; }
+  .result-actions { width: 100% !important; display: flex !important; gap: 8px !important; }
+  .result-actions button, .btn-view, .btn-download { flex: 1 !important; height: 38px !important; font-size: 12px !important; border-radius: 8px !important; }
+}
+
 /* ===== @MEDIA PRINT ===== */
 @media print {
   @page {
