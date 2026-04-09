@@ -38,6 +38,8 @@
     "NOT_ASSIGNED": "Не назначен",
     "FREE": "Свободен",
     "BUSY": "Занят",
+    "ACTIVE": "Активен",
+    "INACTIVE": "Неактивен",
     "TODAY": "Сегодня",
     "WEEK": "Неделя",
     "MONTH": "Месяц",
@@ -288,7 +290,14 @@
     "FLOOR": "Этаж",
     "DESCRIPTION": "Описание",
     "IS_ACTIVE": "Активен",
-    "NO_ROOMS": "Кабинетов нет"
+    "NO_ROOMS": "Кабинетов нет",
+    "ROOM_NAME_PLACEHOLDER": "Кабинет терапевта",
+    "DESCRIPTION_PLACEHOLDER": "Описание...",
+    "ROOM_NUMBER_SHORT": "Кабинет №",
+    "FLOOR_SHORT": "Этаж",
+    "COUNT": "кабинетов",
+    "ACTIVE": "Активен",
+    "INACTIVE": "Неактивен"
   },
   "SCHEDULES": {
     "TITLE": "Расписание",

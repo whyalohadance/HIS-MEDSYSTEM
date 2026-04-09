@@ -24,7 +24,7 @@ interface Room {
       <div class="page-header">
         <div>
           <h1 class="page-title">{{ 'ROOMS.TITLE' | translate }}</h1>
-          <p class="page-sub">{{ rooms.length }} {{ 'ROOMS.TITLE' | translate }}</p>
+          <p class="page-sub">{{ rooms.length }} {{ 'ROOMS.COUNT' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="showForm = !showForm" *ngIf="canEdit">
           <span class="material-icons">add</span> {{ 'COMMON.ADD' | translate }}
@@ -36,7 +36,7 @@ interface Room {
         <div class="form-row">
           <div class="form-field">
             <label>{{ 'ROOMS.ROOM_NAME' | translate }} *</label>
-            <input [(ngModel)]="form.name" placeholder="Кабинет терапевта">
+            <input [(ngModel)]="form.name" [placeholder]="'ROOMS.ROOM_NAME_PLACEHOLDER' | translate">
           </div>
           <div class="form-field">
             <label>{{ 'ROOMS.ROOM_NUMBER' | translate }}</label>
@@ -50,7 +50,7 @@ interface Room {
           </div>
           <div class="form-field">
             <label>{{ 'ROOMS.DESCRIPTION' | translate }}</label>
-            <input [(ngModel)]="form.description" placeholder="Описание...">
+            <input [(ngModel)]="form.description" [placeholder]="'ROOMS.DESCRIPTION_PLACEHOLDER' | translate">
           </div>
         </div>
         <div class="form-actions">
@@ -76,10 +76,10 @@ interface Room {
             </div>
             <div class="room-info">
               <div class="room-name">{{ r.name }}</div>
-              <div class="room-sub">Кабинет № {{ r.number || '—' }} · Этаж {{ r.floor || '—' }}</div>
+              <div class="room-sub">{{ 'ROOMS.ROOM_NUMBER_SHORT' | translate }} {{ r.number || '—' }} · {{ 'ROOMS.FLOOR_SHORT' | translate }} {{ r.floor || '—' }}</div>
             </div>
             <span class="badge" [class.active]="r.isActive" [class.inactive]="!r.isActive">
-              {{ r.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}
+              {{ r.isActive ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
             </span>
           </div>
           <p class="room-desc" *ngIf="r.description">{{ r.description }}</p>

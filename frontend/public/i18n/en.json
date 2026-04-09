@@ -38,6 +38,8 @@
     "NOT_ASSIGNED": "Not assigned",
     "FREE": "Free",
     "BUSY": "Busy",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
     "TODAY": "Today",
     "WEEK": "Week",
     "MONTH": "Month",
@@ -288,7 +290,14 @@
     "FLOOR": "Floor",
     "DESCRIPTION": "Description",
     "IS_ACTIVE": "Active",
-    "NO_ROOMS": "No rooms"
+    "NO_ROOMS": "No rooms",
+    "ROOM_NAME_PLACEHOLDER": "Therapist room",
+    "DESCRIPTION_PLACEHOLDER": "Description...",
+    "ROOM_NUMBER_SHORT": "Room №",
+    "FLOOR_SHORT": "Floor",
+    "COUNT": "rooms",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive"
   },
   "SCHEDULES": {
     "TITLE": "Schedules",

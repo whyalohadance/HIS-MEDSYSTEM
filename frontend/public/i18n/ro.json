@@ -38,6 +38,8 @@
     "NOT_ASSIGNED": "Nealocat",
     "FREE": "Liber",
     "BUSY": "Ocupat",
+    "ACTIVE": "Activ",
+    "INACTIVE": "Inactiv",
     "TODAY": "Azi",
     "WEEK": "Săptămână",
     "MONTH": "Lună",
@@ -288,7 +290,14 @@
     "FLOOR": "Etaj",
     "DESCRIPTION": "Descriere",
     "IS_ACTIVE": "Activ",
-    "NO_ROOMS": "Nu există cabinete"
+    "NO_ROOMS": "Nu există cabinete",
+    "ROOM_NAME_PLACEHOLDER": "Cabinetul terapeutului",
+    "DESCRIPTION_PLACEHOLDER": "Descriere...",
+    "ROOM_NUMBER_SHORT": "Cabinet №",
+    "FLOOR_SHORT": "Etaj",
+    "COUNT": "cabinete",
+    "ACTIVE": "Activ",
+    "INACTIVE": "Inactiv"
   },
   "SCHEDULES": {
     "TITLE": "Orare",
