@@ -250,9 +250,17 @@
     "ALL_READ": "All read",
     "MARK_ALL_READ": "Mark all as read",
     "NO_NOTIFICATIONS": "No notifications",
-    "APPOINTMENT_REMINDER": "Appointment reminder",
-    "APPOINTMENT_IN_2H": "You have an appointment in 2 hours",
-    "MONTHLY_REPORT": "Monthly report is ready"
+    "APPOINTMENT_REMINDER": "Reminder: appointment with {{ patientName }} at {{ time }}",
+    "APPOINTMENT_IN_2H": "You have an appointment with {{ patientName }} in 2 hours at {{ time }}",
+    "APPOINTMENT_COMPLETED": "Appointment with {{ patientName }} completed",
+    "APPOINTMENT_CANCELLED": "Appointment with {{ patientName }} cancelled",
+    "APPOINTMENT_CREATED": "New appointment created for {{ patientName }} on {{ date }} at {{ time }}",
+    "APPOINTMENT_SOON": "Appointment in 2 hours: {{ patientName }} at {{ time }} room {{ room }}",
+    "MONTHLY_REPORT": "Monthly report is ready",
+    "MONTHLY_REPORT_TITLE": "Monthly report ready",
+    "MONTHLY_REPORT_READY": "Monthly report for {{ month }}/{{ year }} is ready for download",
+    "WELCOME": "Welcome to HIS-MedSystem, {{ name }}!",
+    "NEW_PATIENT": "New patient registered: {{ patientName }}"
   },
   "SCHEDULE": {
     "MONDAY": "Monday", "TUESDAY": "Tuesday", "WEDNESDAY": "Wednesday",

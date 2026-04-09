@@ -250,9 +250,17 @@
     "ALL_READ": "Toate citite",
     "MARK_ALL_READ": "Marchează toate ca citite",
     "NO_NOTIFICATIONS": "Nu există notificări",
-    "APPOINTMENT_REMINDER": "Memento programare",
-    "APPOINTMENT_IN_2H": "Aveți o programare peste 2 ore",
-    "MONTHLY_REPORT": "Raportul lunar este disponibil"
+    "APPOINTMENT_REMINDER": "Memento: programare cu {{ patientName }} la {{ time }}",
+    "APPOINTMENT_IN_2H": "Aveți o programare cu {{ patientName }} peste 2 ore la {{ time }}",
+    "APPOINTMENT_COMPLETED": "Programarea cu {{ patientName }} a fost finalizată",
+    "APPOINTMENT_CANCELLED": "Programarea cu {{ patientName }} a fost anulată",
+    "APPOINTMENT_CREATED": "Programare nouă creată pentru {{ patientName }} la {{ date }} {{ time }}",
+    "APPOINTMENT_SOON": "Programare în 2 ore: {{ patientName }} la {{ time }} în cabinetul {{ room }}",
+    "MONTHLY_REPORT": "Raportul lunar este disponibil",
+    "MONTHLY_REPORT_TITLE": "Raport lunar disponibil",
+    "MONTHLY_REPORT_READY": "Raportul pentru {{ month }}/{{ year }} este disponibil pentru descărcare",
+    "WELCOME": "Bun venit în HIS-MedSystem, {{ name }}!",
+    "NEW_PATIENT": "Pacient nou înregistrat: {{ patientName }}"
   },
   "SCHEDULE": {
     "MONDAY": "Luni", "TUESDAY": "Marți", "WEDNESDAY": "Miercuri",

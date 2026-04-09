@@ -25,16 +25,13 @@ export class ReportsCronService {
     const prevMonth = now.getMonth() === 0 ? 12 : now.getMonth();
     const prevYear = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
 
-    const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь',
-      'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-
     const admins = await this.usersRepo.find({ where: { role: UserRole.ADMIN } });
 
     for (const admin of admins) {
       await this.notificationsService.create({
         userId: admin.id,
-        title: '📊 Месячный отчёт готов',
-        message: `Отчёт за ${monthNames[prevMonth - 1]} ${prevYear} готов к скачиванию. Не забудьте отправить его в бухгалтерию!`,
+        title: 'KEY:MONTHLY_REPORT_TITLE',
+        message: `KEY:MONTHLY_REPORT_READY|month:${prevMonth}|year:${prevYear}`,
       });
     }
 

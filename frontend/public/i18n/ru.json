@@ -250,9 +250,17 @@
     "ALL_READ": "Все прочитаны",
     "MARK_ALL_READ": "Прочитать все",
     "NO_NOTIFICATIONS": "Уведомлений нет",
-    "APPOINTMENT_REMINDER": "Напоминание о приёме",
-    "APPOINTMENT_IN_2H": "У вас приём через 2 часа",
-    "MONTHLY_REPORT": "Ежемесячный отчёт готов"
+    "APPOINTMENT_REMINDER": "Напоминание: приём с {{ patientName }} в {{ time }}",
+    "APPOINTMENT_IN_2H": "У вас приём с {{ patientName }} через 2 часа в {{ time }}",
+    "APPOINTMENT_COMPLETED": "Приём с {{ patientName }} завершён",
+    "APPOINTMENT_CANCELLED": "Приём с {{ patientName }} отменён",
+    "APPOINTMENT_CREATED": "Создан новый приём для {{ patientName }} на {{ date }} в {{ time }}",
+    "APPOINTMENT_SOON": "Приём через 2 часа: {{ patientName }} в {{ time }} кабинет {{ room }}",
+    "MONTHLY_REPORT": "Ежемесячный отчёт готов",
+    "MONTHLY_REPORT_TITLE": "Месячный отчёт готов",
+    "MONTHLY_REPORT_READY": "Отчёт за {{ month }}/{{ year }} готов к скачиванию",
+    "WELCOME": "Добро пожаловать в HIS-MedSystem, {{ name }}!",
+    "NEW_PATIENT": "Зарегистрирован новый пациент: {{ patientName }}"
   },
   "SCHEDULE": {
     "MONDAY": "Понедельник", "TUESDAY": "Вторник", "WEDNESDAY": "Среда",

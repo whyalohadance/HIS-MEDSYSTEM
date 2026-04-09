@@ -33,8 +33,8 @@
         <span class="material-icons">{{ getIcon(n.title) }}</span>
       </div>
       <div class="notif-body">
-        <div class="notif-title">{{ n.title }}</div>
-        <div class="notif-message">{{ n.message }}</div>
+        <div class="notif-title">{{ parseMessage(n.title) }}</div>
+        <div class="notif-message">{{ parseMessage(n.message) }}</div>
         <div class="notif-time">{{ n.createdAt | date:'dd.MM.yyyy HH:mm' }}</div>
       </div>
       <div class="unread-dot" *ngIf="!n.isRead"></div>
