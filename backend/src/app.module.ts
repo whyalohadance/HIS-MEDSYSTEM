@@ -28,6 +28,9 @@ import { ExaminationsModule } from './modules/examinations/examinations.module';
 import { SchedulesModule } from './modules/schedules/schedules.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { StudiesModule } from './modules/studies/studies.module';
+import { Study } from './modules/studies/study.entity';
+import { Modality } from './modules/studies/modality.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -44,7 +47,7 @@ import { AppService } from './app.service';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
-        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule],
+        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality],
         synchronize: true,
         logging: false,
       }),
@@ -70,6 +73,7 @@ import { AppService } from './app.service';
     SchedulesModule,
     UploadModule,
     ReportsModule,
+    StudiesModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],
