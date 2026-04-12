@@ -43,7 +43,9 @@
     "TODAY": "Azi",
     "WEEK": "Săptămână",
     "MONTH": "Lună",
-    "YEAR": "An"
+    "YEAR": "An",
+    "ALL": "Toate",
+    "TYPE": "Tip"
   },
   "AUTH": {
     "LOGIN": "Autentificare",
@@ -165,7 +167,8 @@
     "SAVE_RESULT": "Salvează rezultatul",
     "SELECT_DATE": "Selectează data",
     "VISIT_REASON": "Motivul vizitei",
-    "VISIT_REASON_PLACEHOLDER": "Descrieți motivul vizitei..."
+    "VISIT_REASON_PLACEHOLDER": "Descrieți motivul vizitei...",
+    "PRIORITY": "Prioritate"
   },
   "STAFF": {
     "TITLE": "Personal",
@@ -224,9 +227,18 @@
     "TABLE_LASTNAME": "Nume",
     "TABLE_ROLE": "Rol",
     "TABLE_EMAIL": "Email",
-    "JAN": "Ianuarie", "FEB": "Februarie", "MAR": "Martie", "APR": "Aprilie",
-    "MAY": "Mai", "JUN": "Iunie", "JUL": "Iulie", "AUG": "August",
-    "SEP": "Septembrie", "OCT": "Octombrie", "NOV": "Noiembrie", "DEC": "Decembrie"
+    "JAN": "Ianuarie",
+    "FEB": "Februarie",
+    "MAR": "Martie",
+    "APR": "Aprilie",
+    "MAY": "Mai",
+    "JUN": "Iunie",
+    "JUL": "Iulie",
+    "AUG": "August",
+    "SEP": "Septembrie",
+    "OCT": "Octombrie",
+    "NOV": "Noiembrie",
+    "DEC": "Decembrie"
   },
   "PROFILE": {
     "TITLE": "Profil",
@@ -263,8 +275,13 @@
     "NEW_PATIENT": "Pacient nou înregistrat: {{ patientName }}"
   },
   "SCHEDULE": {
-    "MONDAY": "Luni", "TUESDAY": "Marți", "WEDNESDAY": "Miercuri",
-    "THURSDAY": "Joi", "FRIDAY": "Vineri", "SATURDAY": "Sâmbătă", "SUNDAY": "Duminică"
+    "MONDAY": "Luni",
+    "TUESDAY": "Marți",
+    "WEDNESDAY": "Miercuri",
+    "THURSDAY": "Joi",
+    "FRIDAY": "Vineri",
+    "SATURDAY": "Sâmbătă",
+    "SUNDAY": "Duminică"
   },
   "PATIENT_CARD": {
     "BACK": "Înapoi",
@@ -357,5 +374,32 @@
     "TITLE": "Acces interzis",
     "MESSAGE": "Această secțiune este disponibilă doar pentru administrator.",
     "CONTACT": "Dacă aveți nevoie de acces — contactați administratorul sistemului."
+  },
+  "STUDIES": {
+    "TITLE": "Investigații radiologice (RIS)",
+    "WORKLIST": "Lista de lucru",
+    "ADD_STUDY": "Adaugă investigație",
+    "TYPE_MRI": "RMN",
+    "TYPE_CT": "CT",
+    "TYPE_XRAY": "Radiografie",
+    "TYPE_ULTRASOUND": "Ecografie",
+    "TYPE_PET": "PET",
+    "TYPE_MAMMOGRAPHY": "Mamografie",
+    "STATUS_PENDING": "În așteptare",
+    "STATUS_SCHEDULED": "Programat",
+    "STATUS_IN_PROGRESS": "În desfășurare",
+    "STATUS_COMPLETED": "Finalizat",
+    "STATUS_CANCELLED": "Anulat",
+    "PRIORITY_ROUTINE": "Planificat",
+    "PRIORITY_URGENT": "Urgent",
+    "PRIORITY_STAT": "Critic",
+    "BODY_PART": "Parte a corpului",
+    "DESCRIPTION": "Descriere",
+    "CLINICAL_INFO": "Informații clinice",
+    "FINDINGS": "Constatări",
+    "CONCLUSION": "Concluzie",
+    "MODALITY": "Echipament",
+    "SCHEDULED_DATE": "Data programată",
+    "NO_STUDIES": "Nu există investigații"
   }
 }

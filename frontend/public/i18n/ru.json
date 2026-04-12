@@ -43,7 +43,9 @@
     "TODAY": "Сегодня",
     "WEEK": "Неделя",
     "MONTH": "Месяц",
-    "YEAR": "Год"
+    "YEAR": "Год",
+    "ALL": "Все",
+    "TYPE": "Тип"
   },
   "AUTH": {
     "LOGIN": "Вход",
@@ -165,7 +167,8 @@
     "SAVE_RESULT": "Сохранить результат",
     "SELECT_DATE": "Выберите дату",
     "VISIT_REASON": "Причина визита",
-    "VISIT_REASON_PLACEHOLDER": "Опишите причину визита..."
+    "VISIT_REASON_PLACEHOLDER": "Опишите причину визита...",
+    "PRIORITY": "Приоритет"
   },
   "STAFF": {
     "TITLE": "Персонал",
@@ -224,9 +227,18 @@
     "TABLE_LASTNAME": "Фамилия",
     "TABLE_ROLE": "Роль",
     "TABLE_EMAIL": "Email",
-    "JAN": "Январь", "FEB": "Февраль", "MAR": "Март", "APR": "Апрель",
-    "MAY": "Май", "JUN": "Июнь", "JUL": "Июль", "AUG": "Август",
-    "SEP": "Сентябрь", "OCT": "Октябрь", "NOV": "Ноябрь", "DEC": "Декабрь"
+    "JAN": "Январь",
+    "FEB": "Февраль",
+    "MAR": "Март",
+    "APR": "Апрель",
+    "MAY": "Май",
+    "JUN": "Июнь",
+    "JUL": "Июль",
+    "AUG": "Август",
+    "SEP": "Сентябрь",
+    "OCT": "Октябрь",
+    "NOV": "Ноябрь",
+    "DEC": "Декабрь"
   },
   "PROFILE": {
     "TITLE": "Профиль",
@@ -263,8 +275,13 @@
     "NEW_PATIENT": "Зарегистрирован новый пациент: {{ patientName }}"
   },
   "SCHEDULE": {
-    "MONDAY": "Понедельник", "TUESDAY": "Вторник", "WEDNESDAY": "Среда",
-    "THURSDAY": "Четверг", "FRIDAY": "Пятница", "SATURDAY": "Суббота", "SUNDAY": "Воскресенье"
+    "MONDAY": "Понедельник",
+    "TUESDAY": "Вторник",
+    "WEDNESDAY": "Среда",
+    "THURSDAY": "Четверг",
+    "FRIDAY": "Пятница",
+    "SATURDAY": "Суббота",
+    "SUNDAY": "Воскресенье"
   },
   "PATIENT_CARD": {
     "BACK": "Назад",
@@ -357,5 +374,32 @@
     "TITLE": "Доступ запрещён",
     "MESSAGE": "Этот раздел доступен только для администратора.",
     "CONTACT": "Если вам нужен доступ — обратитесь к администратору системы."
+  },
+  "STUDIES": {
+    "TITLE": "Радиологические исследования (RIS)",
+    "WORKLIST": "Список работ",
+    "ADD_STUDY": "Добавить исследование",
+    "TYPE_MRI": "МРТ",
+    "TYPE_CT": "КТ",
+    "TYPE_XRAY": "Рентген",
+    "TYPE_ULTRASOUND": "УЗИ",
+    "TYPE_PET": "ПЭТ",
+    "TYPE_MAMMOGRAPHY": "Маммография",
+    "STATUS_PENDING": "Ожидает",
+    "STATUS_SCHEDULED": "Запланировано",
+    "STATUS_IN_PROGRESS": "В процессе",
+    "STATUS_COMPLETED": "Завершено",
+    "STATUS_CANCELLED": "Отменено",
+    "PRIORITY_ROUTINE": "Плановый",
+    "PRIORITY_URGENT": "Срочный",
+    "PRIORITY_STAT": "Критический",
+    "BODY_PART": "Часть тела",
+    "DESCRIPTION": "Описание",
+    "CLINICAL_INFO": "Клиническая информация",
+    "FINDINGS": "Заключение",
+    "CONCLUSION": "Вывод",
+    "MODALITY": "Оборудование",
+    "SCHEDULED_DATE": "Дата исследования",
+    "NO_STUDIES": "Исследований нет"
   }
 }

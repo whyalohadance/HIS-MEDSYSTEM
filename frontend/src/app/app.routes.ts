@@ -21,6 +21,8 @@ export const routes: Routes = [
       { path: 'patients/:id', loadComponent: () => import('./features/patient-card/patient-card.component').then(m => m.PatientCardComponent) },
       { path: 'appointments', loadComponent: () => import('./features/appointments/appointments.component').then(m => m.AppointmentsComponent) },
       { path: 'results', redirectTo: '/patients', pathMatch: 'full' },
+      { path: 'studies', loadComponent: () => import('./features/studies/studies.component').then(m => m.StudiesComponent) },
+      { path: 'worklist', loadComponent: () => import('./features/studies/worklist.component').then(m => m.WorklistComponent) },
       { path: 'my-room', loadComponent: () => import('./features/my-room/my-room.component').then(m => m.MyRoomComponent) },
       { path: 'my-cabinet', loadComponent: () => import('./features/my-cabinet/my-cabinet.component').then(m => m.MyCabinetComponent) },
 

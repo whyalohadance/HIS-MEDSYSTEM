@@ -1,0 +1,211 @@
+<div class="studies-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <span class="material-icons">biotech</span>
+      <h1>{{ 'STUDIES.TITLE' | translate }}</h1>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/worklist" class="btn-secondary">
+        <span class="material-icons">list_alt</span>
+        {{ 'STUDIES.WORKLIST' | translate }}
+      </a>
+      <button class="btn-primary" (click)="openForm()">
+        <span class="material-icons">add</span>
+        {{ 'STUDIES.ADD_STUDY' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success-toast" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span> {{ successMessage }}
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <select [(ngModel)]="filterType" (ngModelChange)="onFilterChange()" class="filter-select">
+      <option value="">{{ 'COMMON.ALL' | translate }} {{ 'STUDIES.TITLE' | translate }}</option>
+      <option *ngFor="let t of studyTypes" [value]="t.value">{{ t.labelKey | translate }}</option>
+    </select>
+    <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()" class="filter-select">
+      <option value="">{{ 'COMMON.ALL' | translate }}</option>
+      <option *ngFor="let s of studyStatuses" [value]="s.value">{{ s.labelKey | translate }}</option>
+    </select>
+    <select [(ngModel)]="filterPriority" (ngModelChange)="onFilterChange()" class="filter-select">
+      <option value="">{{ 'COMMON.ALL' | translate }}</option>
+      <option *ngFor="let p of priorities" [value]="p.value">{{ p.labelKey | translate }}</option>
+    </select>
+    <button class="btn-clear" *ngIf="filterType || filterStatus || filterPriority" (click)="clearFilters()">
+      <span class="material-icons">clear</span>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+  </div>
+
+  <!-- Studies List -->
+  <div class="studies-list" *ngIf="!isLoading">
+    <div class="study-card" *ngFor="let study of filteredStudies" [class]="'priority-' + study.priority">
+      <div class="study-card-header">
+        <div class="study-id-group">
+          <span class="study-id">{{ study.studyId }}</span>
+          <span class="type-badge" [class]="'type-' + study.type">{{ getTypeLabel(study.type) }}</span>
+          <span class="priority-badge" [class]="'prio-' + study.priority">{{ getPriorityLabel(study.priority) }}</span>
+        </div>
+        <span class="status-badge" [class]="'status-' + study.status">{{ getStatusLabel(study.status) }}</span>
+      </div>
+
+      <div class="study-card-body">
+        <div class="study-row">
+          <span class="material-icons">person</span>
+          <span>{{ getPatientName(study.patientId) }}</span>
+        </div>
+        <div class="study-row" *ngIf="study.bodyPart">
+          <span class="material-icons">accessibility</span>
+          <span>{{ study.bodyPart }}</span>
+        </div>
+        <div class="study-row" *ngIf="study.description">
+          <span class="material-icons">description</span>
+          <span>{{ study.description }}</span>
+        </div>
+        <div class="study-row" *ngIf="study.scheduledAt">
+          <span class="material-icons">event</span>
+          <span>{{ study.scheduledAt }} {{ study.scheduledTime }}</span>
+        </div>
+        <div class="study-row" *ngIf="study.price">
+          <span class="material-icons">payments</span>
+          <span>{{ study.price }} MDL</span>
+        </div>
+      </div>
+
+      <div class="study-card-footer">
+        <button class="btn-conclusion"
+          *ngIf="study.status === 'completed' || study.status === 'in_progress'"
+          (click)="openConclusionModal(study)">
+          <span class="material-icons">rate_review</span>
+          {{ 'STUDIES.FINDINGS' | translate }}
+        </button>
+        <button class="btn-status in-progress"
+          *ngIf="study.status === 'pending' || study.status === 'scheduled'"
+          (click)="updateStatus(study, 'in_progress')">
+          <span class="material-icons">play_arrow</span>
+        </button>
+        <button class="btn-status complete"
+          *ngIf="study.status === 'in_progress'"
+          (click)="openConclusionModal(study)">
+          <span class="material-icons">check</span>
+        </button>
+        <button class="btn-status cancel"
+          *ngIf="study.status !== 'completed' && study.status !== 'cancelled'"
+          (click)="updateStatus(study, 'cancelled')">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredStudies.length === 0">
+      <span class="material-icons">biotech</span>
+      <p>{{ 'STUDIES.NO_STUDIES' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Create Form Modal -->
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'STUDIES.ADD_STUDY' | translate }}</h2>
+        <button class="btn-close" (click)="closeForm()"><span class="material-icons">close</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>{{ 'PATIENTS.PATIENT' | translate }} *</label>
+          <select [(ngModel)]="form.patientId" class="form-control">
+            <option [value]="null">—</option>
+            <option *ngFor="let p of patients" [value]="p.id">{{ p.lastName }} {{ p.firstName }}</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-row">
+            <label>{{ 'COMMON.TYPE' | translate }} *</label>
+            <select [(ngModel)]="form.type" class="form-control">
+              <option value="">—</option>
+              <option *ngFor="let t of studyTypes" [value]="t.value">{{ t.labelKey | translate }}</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>{{ 'APPOINTMENTS.PRIORITY' | translate }}</label>
+            <select [(ngModel)]="form.priority" class="form-control">
+              <option *ngFor="let p of priorities" [value]="p.value">{{ p.labelKey | translate }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.BODY_PART' | translate }}</label>
+          <input [(ngModel)]="form.bodyPart" class="form-control" type="text">
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.DESCRIPTION' | translate }}</label>
+          <input [(ngModel)]="form.description" class="form-control" type="text">
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.CLINICAL_INFO' | translate }}</label>
+          <textarea [(ngModel)]="form.clinicalInfo" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.MODALITY' | translate }}</label>
+          <select [(ngModel)]="form.modalityId" class="form-control">
+            <option [value]="null">—</option>
+            <option *ngFor="let m of modalities" [value]="m.id">{{ m.name }}</option>
+          </select>
+        </div>
+        <div class="form-row-2">
+          <div class="form-row">
+            <label>{{ 'STUDIES.SCHEDULED_DATE' | translate }}</label>
+            <input [(ngModel)]="form.scheduledAt" class="form-control" type="date">
+          </div>
+          <div class="form-row">
+            <label>{{ 'APPOINTMENTS.TIME' | translate }}</label>
+            <input [(ngModel)]="form.scheduledTime" class="form-control" type="time">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>{{ 'APPOINTMENTS.PRICE' | translate }} (MDL)</label>
+          <input [(ngModel)]="form.price" class="form-control" type="number">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeForm()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="btn-primary" (click)="submitForm()">{{ 'COMMON.SAVE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conclusion Modal -->
+  <div class="modal-overlay" *ngIf="showConclusionModal" (click)="closeConclusionModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'STUDIES.FINDINGS' | translate }} — {{ selectedStudy?.studyId }}</h2>
+        <button class="btn-close" (click)="closeConclusionModal()"><span class="material-icons">close</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>{{ 'STUDIES.FINDINGS' | translate }}</label>
+          <textarea [(ngModel)]="conclusionForm.findings" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.CONCLUSION' | translate }}</label>
+          <textarea [(ngModel)]="conclusionForm.conclusion" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeConclusionModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="btn-primary" (click)="submitConclusion()">{{ 'COMMON.SAVE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+</div>

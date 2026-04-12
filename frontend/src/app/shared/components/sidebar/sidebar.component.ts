@@ -33,6 +33,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.ROOMS',        icon: 'meeting_room',    route: '/rooms' },
     { key: 'NAV.SCHEDULES',    icon: 'calendar_month',  route: '/schedules' },
     { key: 'NAV.EXAMINATIONS', icon: 'biotech',         route: '/examinations' },
+    { key: 'STUDIES.TITLE',    icon: 'radiology',       route: '/studies' },
+    { key: 'STUDIES.WORKLIST', icon: 'list_alt',        route: '/worklist' },
     { key: 'NAV.NOTIFICATIONS',icon: 'notifications',   route: '/notifications' },
     { key: 'NAV.REPORTS',      icon: 'assessment',      route: '/reports' },
     { key: 'NAV.PROFILE',      icon: 'person',          route: '/profile' },
@@ -43,6 +45,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
     { key: 'NAV.APPOINTMENTS', icon: 'event',         route: '/appointments' },
     { key: 'NAV.MY_CABINET',   icon: 'meeting_room',  route: '/my-cabinet' },
+    { key: 'STUDIES.TITLE',    icon: 'radiology',     route: '/studies' },
+    { key: 'STUDIES.WORKLIST', icon: 'list_alt',      route: '/worklist' },
     { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
     { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
   ];

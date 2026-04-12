@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   chartsReady = false;
 
   adminStats: any = null;
+  risStats: any = null;
   allAppointments: any[] = [];
 
   doctorPatients = 0;
@@ -139,10 +140,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       stats: this.api.get<any>('/admin/stats').pipe(map(r => r.data)),
       appointments: this.appointmentsService.getAll(),
       patients: this.patientsService.getAll(),
-      doctors: this.api.get<any>('/users/doctors').pipe(map(r => r.data))
+      doctors: this.api.get<any>('/users/doctors').pipe(map(r => r.data)),
+      risStats: this.api.get<any>('/studies/stats').pipe(map(r => r.data))
     }).subscribe({
-      next: ({ stats, appointments, patients, doctors }) => {
+      next: ({ stats, appointments, patients, doctors, risStats }) => {
         this.adminStats = stats;
+        this.risStats = risStats;
         this.allPatients = patients;
         this.allDoctors = doctors;
         this.allAppointments = appointments;

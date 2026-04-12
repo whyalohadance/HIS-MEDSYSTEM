@@ -43,7 +43,9 @@
     "TODAY": "Today",
     "WEEK": "Week",
     "MONTH": "Month",
-    "YEAR": "Year"
+    "YEAR": "Year",
+    "ALL": "All",
+    "TYPE": "Type"
   },
   "AUTH": {
     "LOGIN": "Login",
@@ -165,7 +167,8 @@
     "SAVE_RESULT": "Save result",
     "SELECT_DATE": "Select date",
     "VISIT_REASON": "Visit reason",
-    "VISIT_REASON_PLACEHOLDER": "Describe the reason for visit..."
+    "VISIT_REASON_PLACEHOLDER": "Describe the reason for visit...",
+    "PRIORITY": "Priority"
   },
   "STAFF": {
     "TITLE": "Staff",
@@ -224,9 +227,18 @@
     "TABLE_LASTNAME": "Last name",
     "TABLE_ROLE": "Role",
     "TABLE_EMAIL": "Email",
-    "JAN": "January", "FEB": "February", "MAR": "March", "APR": "April",
-    "MAY": "May", "JUN": "June", "JUL": "July", "AUG": "August",
-    "SEP": "September", "OCT": "October", "NOV": "November", "DEC": "December"
+    "JAN": "January",
+    "FEB": "February",
+    "MAR": "March",
+    "APR": "April",
+    "MAY": "May",
+    "JUN": "June",
+    "JUL": "July",
+    "AUG": "August",
+    "SEP": "September",
+    "OCT": "October",
+    "NOV": "November",
+    "DEC": "December"
   },
   "PROFILE": {
     "TITLE": "Profile",
@@ -263,8 +275,13 @@
     "NEW_PATIENT": "New patient registered: {{ patientName }}"
   },
   "SCHEDULE": {
-    "MONDAY": "Monday", "TUESDAY": "Tuesday", "WEDNESDAY": "Wednesday",
-    "THURSDAY": "Thursday", "FRIDAY": "Friday", "SATURDAY": "Saturday", "SUNDAY": "Sunday"
+    "MONDAY": "Monday",
+    "TUESDAY": "Tuesday",
+    "WEDNESDAY": "Wednesday",
+    "THURSDAY": "Thursday",
+    "FRIDAY": "Friday",
+    "SATURDAY": "Saturday",
+    "SUNDAY": "Sunday"
   },
   "PATIENT_CARD": {
     "BACK": "Back",
@@ -357,5 +374,32 @@
     "TITLE": "Access denied",
     "MESSAGE": "This section is only available for administrators.",
     "CONTACT": "If you need access — contact the system administrator."
+  },
+  "STUDIES": {
+    "TITLE": "Radiology Studies (RIS)",
+    "WORKLIST": "Worklist",
+    "ADD_STUDY": "Add study",
+    "TYPE_MRI": "MRI",
+    "TYPE_CT": "CT",
+    "TYPE_XRAY": "X-Ray",
+    "TYPE_ULTRASOUND": "Ultrasound",
+    "TYPE_PET": "PET",
+    "TYPE_MAMMOGRAPHY": "Mammography",
+    "STATUS_PENDING": "Pending",
+    "STATUS_SCHEDULED": "Scheduled",
+    "STATUS_IN_PROGRESS": "In Progress",
+    "STATUS_COMPLETED": "Completed",
+    "STATUS_CANCELLED": "Cancelled",
+    "PRIORITY_ROUTINE": "Routine",
+    "PRIORITY_URGENT": "Urgent",
+    "PRIORITY_STAT": "STAT",
+    "BODY_PART": "Body part",
+    "DESCRIPTION": "Description",
+    "CLINICAL_INFO": "Clinical info",
+    "FINDINGS": "Findings",
+    "CONCLUSION": "Conclusion",
+    "MODALITY": "Modality",
+    "SCHEDULED_DATE": "Scheduled date",
+    "NO_STUDIES": "No studies found"
   }
 }

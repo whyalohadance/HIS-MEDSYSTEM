@@ -26,6 +26,7 @@ export class PatientCardComponent implements OnInit {
   patient: any = null;
   appointments: any[] = [];
   results: any[] = [];
+  studies: any[] = [];
   doctors: any[] = [];
   isLoading = true;
   patientId = 0;
@@ -88,6 +89,11 @@ export class PatientCardComponent implements OnInit {
       },
       error: () => { this.isLoading = false; this.cdr.detectChanges(); }
     });
+
+    this.api.get<any>(`/studies/patient/${this.patientId}`).pipe(map(r => r.data)).subscribe({
+      next: studies => { this.studies = studies; this.cdr.detectChanges(); },
+      error: () => {}
+    });
   }
 
   get patientCode(): string {
@@ -107,6 +113,23 @@ export class PatientCardComponent implements OnInit {
   getDoctorName(id: number): string {
     const d = this.doctors.find(d => d.id === id);
     return d ? `${d.lastName} ${d.firstName}` : `Врач #${id}`;
+  }
+
+  getStudyTypeLabel(type: string): string {
+    const map: Record<string, string> = {
+      mri: 'STUDIES.TYPE_MRI', ct: 'STUDIES.TYPE_CT', xray: 'STUDIES.TYPE_XRAY',
+      ultrasound: 'STUDIES.TYPE_ULTRASOUND', pet: 'STUDIES.TYPE_PET', mammography: 'STUDIES.TYPE_MAMMOGRAPHY'
+    };
+    return map[type] ? this.translate.instant(map[type]) : type;
+  }
+
+  getStudyStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      pending: 'STUDIES.STATUS_PENDING', scheduled: 'STUDIES.STATUS_SCHEDULED',
+      in_progress: 'STUDIES.STATUS_IN_PROGRESS', completed: 'STUDIES.STATUS_COMPLETED',
+      cancelled: 'STUDIES.STATUS_CANCELLED'
+    };
+    return map[status] ? this.translate.instant(map[status]) : status;
   }
 
   getStatusLabel(status: string): string {

@@ -167,6 +167,29 @@
     <p>{{ 'PATIENT_CARD.NO_RESULTS' | translate }}</p>
   </div>
 
+  <!-- ИССЛЕДОВАНИЯ RIS -->
+  <div class="section-title" *ngIf="studies.length > 0">
+    <span class="material-icons">biotech</span>
+    {{ 'STUDIES.TITLE' | translate }} ({{ studies.length }})
+  </div>
+
+  <div class="results-list" *ngIf="studies.length > 0">
+    <div class="result-item" *ngFor="let s of studies">
+      <div class="result-icon">
+        <span class="material-icons">biotech</span>
+      </div>
+      <div class="result-info">
+        <div class="result-title">{{ getStudyTypeLabel(s.type) }} — {{ s.studyId }}</div>
+        <div class="result-date">{{ s.scheduledAt || formatDate(s.createdAt) }}</div>
+        <div class="result-desc" *ngIf="s.bodyPart">{{ s.bodyPart }}</div>
+        <div class="result-desc" *ngIf="s.conclusion">{{ s.conclusion }}</div>
+      </div>
+      <div class="result-actions">
+        <span class="badge" [class]="s.status">{{ getStudyStatusLabel(s.status) }}</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- МОДАЛЬНЫЙ ПРОСМОТР ФАЙЛА -->

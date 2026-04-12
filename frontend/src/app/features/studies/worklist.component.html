@@ -1,0 +1,105 @@
+<div class="worklist-page">
+
+  <div class="page-header">
+    <div class="page-title">
+      <span class="material-icons">list_alt</span>
+      <h1>{{ 'STUDIES.WORKLIST' | translate }}</h1>
+      <span class="count-badge">{{ studies.length }}</span>
+    </div>
+    <a routerLink="/studies" class="btn-secondary">
+      <span class="material-icons">biotech</span>
+      {{ 'STUDIES.TITLE' | translate }}
+    </a>
+  </div>
+
+  <div class="success-toast" *ngIf="successMessage">
+    <span class="material-icons">check_circle</span> {{ successMessage }}
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+  </div>
+
+  <div class="worklist-table" *ngIf="!isLoading && studies.length > 0">
+    <div class="worklist-item" *ngFor="let study of studies; let i = index"
+      [class]="'prio-' + study.priority">
+      <div class="item-num">{{ i + 1 }}</div>
+
+      <div class="item-main">
+        <div class="item-top">
+          <span class="study-id">{{ study.studyId }}</span>
+          <span class="type-chip" [class]="'t-' + study.type">{{ getTypeLabel(study.type) }}</span>
+          <span class="prio-chip" [class]="'p-' + study.priority">
+            {{ study.priority | uppercase }}
+          </span>
+        </div>
+        <div class="item-patient">
+          <span class="material-icons">person</span>
+          {{ getPatientName(study.patientId) }}
+        </div>
+        <div class="item-details">
+          <span *ngIf="study.bodyPart">
+            <span class="material-icons">accessibility</span>{{ study.bodyPart }}
+          </span>
+          <span *ngIf="study.scheduledAt">
+            <span class="material-icons">event</span>{{ study.scheduledAt }} {{ study.scheduledTime }}
+          </span>
+        </div>
+      </div>
+
+      <div class="item-status">
+        <span class="status-badge" [class]="'s-' + study.status">{{ getStatusLabel(study.status) }}</span>
+      </div>
+
+      <div class="item-actions">
+        <button class="action-btn start"
+          *ngIf="study.status === 'pending' || study.status === 'scheduled'"
+          (click)="start(study)" title="Начать">
+          <span class="material-icons">play_arrow</span>
+        </button>
+        <button class="action-btn finish"
+          *ngIf="study.status === 'in_progress'"
+          (click)="complete(study)" title="Завершить">
+          <span class="material-icons">check_circle</span>
+        </button>
+        <button class="action-btn cancel-btn"
+          *ngIf="study.status !== 'completed' && study.status !== 'cancelled'"
+          (click)="cancel(study)" title="Отменить">
+          <span class="material-icons">cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && studies.length === 0">
+    <span class="material-icons">done_all</span>
+    <p>{{ 'STUDIES.NO_STUDIES' | translate }}</p>
+  </div>
+
+  <!-- Conclusion Modal -->
+  <div class="modal-overlay" *ngIf="showConclusionModal" (click)="closeConclusionModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'STUDIES.FINDINGS' | translate }} — {{ selectedStudy?.studyId }}</h2>
+        <button class="btn-close" (click)="closeConclusionModal()">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label>{{ 'STUDIES.FINDINGS' | translate }}</label>
+          <textarea [(ngModel)]="conclusionForm.findings" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="form-row">
+          <label>{{ 'STUDIES.CONCLUSION' | translate }}</label>
+          <textarea [(ngModel)]="conclusionForm.conclusion" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeConclusionModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="btn-primary" (click)="submitConclusion()">{{ 'COMMON.SAVE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+</div>

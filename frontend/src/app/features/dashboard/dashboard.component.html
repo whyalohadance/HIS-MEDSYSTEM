@@ -29,6 +29,23 @@
           </div>
         </div>
 
+        <!-- RIS Stats -->
+        <div class="section-title" *ngIf="risStats">{{ 'STUDIES.TITLE' | translate }}</div>
+        <div class="stats-grid-3" *ngIf="risStats">
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">biotech</span></div>
+            <div class="stat-info"><div class="stat-value">{{ risStats.total }}</div><div class="stat-label">{{ 'STUDIES.TITLE' | translate }}</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><span class="material-icons">pending</span></div>
+            <div class="stat-info"><div class="stat-value">{{ risStats.pending }}</div><div class="stat-label">{{ 'STUDIES.STATUS_PENDING' | translate }}</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">check_circle</span></div>
+            <div class="stat-info"><div class="stat-value">{{ risStats.completed }}</div><div class="stat-label">{{ 'STUDIES.STATUS_COMPLETED' | translate }}</div></div>
+          </div>
+        </div>
+
         <div class="section-title">{{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</div>
         <div class="stats-grid-3">
           <div class="stat-card green">
