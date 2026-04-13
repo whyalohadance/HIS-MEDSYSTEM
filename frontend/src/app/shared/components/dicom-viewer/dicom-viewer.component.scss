@@ -1,11 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .dicom-viewer-container {
   background: #0a0a0a;
-  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 600px;
-  border: 1px solid #1e293b;
+  height: 100%;
+  width: 100%;
+  border-radius: 0;
+  border: none;
 }
 
 // ===== TOOLBAR =====

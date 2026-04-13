@@ -1,0 +1,143 @@
+<div class="dicom-page">
+
+  <!-- Header -->
+  <div class="dicom-page-header">
+    <div class="header-left">
+      <a routerLink="/studies" class="btn-back">
+        <span class="material-icons">arrow_back</span>
+        Назад
+      </a>
+      <div class="header-info">
+        <h1 class="dicom-title">
+          <span class="material-icons">biotech</span>
+          DICOM Viewer
+        </h1>
+        <div class="study-meta" *ngIf="study">
+          <span class="meta-badge" [class]="'type-' + study.type">{{ getTypeLabel(study.type) }}</span>
+          <span class="meta-item">
+            <span class="material-icons">tag</span>{{ study.studyId }}
+          </span>
+          <span class="meta-item" *ngIf="study.bodyPart">
+            <span class="material-icons">accessibility</span>{{ study.bodyPart }}
+          </span>
+          <span class="meta-item" *ngIf="study.scheduledAt">
+            <span class="material-icons">calendar_today</span>{{ study.scheduledAt }}
+          </span>
+        </div>
+        <div class="study-meta" *ngIf="!study">
+          <span class="meta-item"><span class="material-icons">info</span>Загрузите DICOM файл для просмотра</span>
+        </div>
+      </div>
+    </div>
+    <span class="status-badge" *ngIf="study" [class]="'status-' + study.status">
+      {{ getStatusLabel(study.status) }}
+    </span>
+  </div>
+
+  <!-- Content -->
+  <div class="dicom-content">
+
+    <!-- Left: Viewer -->
+    <div class="viewer-section">
+      <app-dicom-viewer [studyId]="study?.studyId || ''"></app-dicom-viewer>
+    </div>
+
+    <!-- Right: Info Panel -->
+    <div class="study-info-section">
+
+      <!-- Study Info -->
+      <div class="info-card" *ngIf="study">
+        <h3 class="info-card-title">
+          <span class="material-icons">info</span>
+          Информация
+        </h3>
+        <div class="info-row" *ngIf="study.description">
+          <span class="info-label">Описание</span>
+          <span class="info-value">{{ study.description }}</span>
+        </div>
+        <div class="info-row" *ngIf="study.clinicalInfo">
+          <span class="info-label">Клин. инфо</span>
+          <span class="info-value">{{ study.clinicalInfo }}</span>
+        </div>
+        <div class="info-row" *ngIf="study.priority">
+          <span class="info-label">Приоритет</span>
+          <span class="priority-badge" [class]="'prio-' + study.priority">{{ getPriorityLabel(study.priority) }}</span>
+        </div>
+        <div class="info-row" *ngIf="study.price">
+          <span class="info-label">Цена</span>
+          <span class="info-value price">{{ study.price }} MDL</span>
+        </div>
+      </div>
+
+      <!-- Conclusion Card -->
+      <div class="info-card" *ngIf="study && (study.findings || study.conclusion || isRadiologistOrAdmin)">
+        <h3 class="info-card-title">
+          <span class="material-icons">description</span>
+          Заключение
+        </h3>
+
+        <div *ngIf="!isEditing">
+          <div class="findings-block" *ngIf="study.findings">
+            <div class="findings-label">Находки</div>
+            <p class="findings-text">{{ study.findings }}</p>
+          </div>
+          <div class="findings-block" *ngIf="study.conclusion">
+            <div class="findings-label">Вывод</div>
+            <p class="findings-text">{{ study.conclusion }}</p>
+          </div>
+          <div class="no-findings" *ngIf="!study.findings && !study.conclusion">
+            <span class="material-icons">pending</span>
+            Заключение не добавлено
+          </div>
+          <button class="btn-edit-findings" *ngIf="isRadiologistOrAdmin" (click)="isEditing = true">
+            <span class="material-icons">edit</span>
+            {{ study.findings ? 'Редактировать' : 'Добавить заключение' }}
+          </button>
+        </div>
+
+        <div class="findings-form" *ngIf="isEditing">
+          <div class="form-field">
+            <label>Находки / Findings</label>
+            <textarea [(ngModel)]="editFindings" rows="4" placeholder="Опишите находки на снимке..."></textarea>
+          </div>
+          <div class="form-field">
+            <label>Вывод / Conclusion</label>
+            <textarea [(ngModel)]="editConclusion" rows="3" placeholder="Клинический вывод..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn-save" (click)="saveFindings()" [disabled]="isSaving">
+              <span class="material-icons">save</span>
+              {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+            </button>
+            <button class="btn-cancel" (click)="isEditing = false">Отмена</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls hint -->
+      <div class="info-card instructions-card">
+        <h3 class="info-card-title">
+          <span class="material-icons">mouse</span>
+          Управление
+        </h3>
+        <div class="instruction-item">
+          <span class="instruction-key">ЛКМ + drag</span>
+          <span class="instruction-desc">Перемещение</span>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-key">ПКМ + drag</span>
+          <span class="instruction-desc">Яркость / Контраст</span>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-key">Колёсико</span>
+          <span class="instruction-desc">Масштаб</span>
+        </div>
+        <div class="instruction-item">
+          <span class="instruction-key">Слайдеры</span>
+          <span class="instruction-desc">Точная настройка</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

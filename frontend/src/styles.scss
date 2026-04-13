@@ -469,6 +469,15 @@ body.dark-theme {
 /* Layout */
 body.dark-theme .main-content { background: var(--dark-bg) !important; }
 
+/* DICOM Fullscreen */
+body.dicom-fullscreen .main-content {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+body.dicom-fullscreen app-bottom-nav {
+  display: none !important;
+}
+
 /* Header */
 body.dark-theme .header {
   background: var(--dark-card) !important;
