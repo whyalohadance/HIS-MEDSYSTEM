@@ -107,6 +107,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
+  pointer-events: all;
   transition: background 0.2s;
 
   &.drag-over {
@@ -186,6 +188,7 @@ label.btn-upload {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 }
 
 .loading-content {
@@ -210,8 +213,14 @@ label.btn-upload {
 .canvas-container {
   position: absolute; inset: 0;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s;
-  &.visible { opacity: 1; }
+  z-index: 1;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
 }
 
 .dicom-canvas {

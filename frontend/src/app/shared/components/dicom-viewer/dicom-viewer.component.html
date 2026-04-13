@@ -42,11 +42,16 @@
         <span class="material-icons upload-icon">upload_file</span>
         <h3>Загрузить DICOM файл</h3>
         <p>Перетащите .dcm файл или нажмите для выбора</p>
-        <label class="btn-upload" for="dicomFileInput">
+        <label class="btn-upload" for="dicomFileInput" style="cursor:pointer;z-index:20;position:relative">
           <span class="material-icons">folder_open</span>
           Выбрать файл
         </label>
-        <input id="dicomFileInput" type="file" accept=".dcm,.DCM,application/dicom" (change)="onFileSelected($event)" style="position:absolute;opacity:0;width:0;height:0;overflow:hidden">
+        <input
+          id="dicomFileInput"
+          type="file"
+          accept=".dcm,.DCM,application/dicom"
+          (change)="onFileSelected($event)"
+          style="position:fixed;left:-9999px;opacity:0;width:1px;height:1px">
         <div class="demo-btn-wrap">
           <button class="btn-demo" (click)="loadDemoImage()">
             <span class="material-icons">image</span>
