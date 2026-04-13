@@ -11,7 +11,13 @@
     "NOTIFICATIONS": "Notifications",
     "PROFILE": "Profile",
     "MY_CABINET": "My Cabinet",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "STUDIES": "Studies RIS",
+    "WORKLIST": "Worklist",
+    "SECTION_MAIN": "Main",
+    "SECTION_MANAGEMENT": "Management",
+    "SECTION_RIS": "RIS",
+    "SECTION_SYSTEM": "System"
   },
   "COMMON": {
     "SAVE": "Save",

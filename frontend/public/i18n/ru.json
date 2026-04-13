@@ -11,7 +11,13 @@
     "NOTIFICATIONS": "Уведомления",
     "PROFILE": "Профиль",
     "MY_CABINET": "Мой кабинет",
-    "LOGOUT": "Выйти"
+    "LOGOUT": "Выйти",
+    "STUDIES": "Исследования RIS",
+    "WORKLIST": "Worklist",
+    "SECTION_MAIN": "Главное",
+    "SECTION_MANAGEMENT": "Управление",
+    "SECTION_RIS": "RIS",
+    "SECTION_SYSTEM": "Система"
   },
   "COMMON": {
     "SAVE": "Сохранить",

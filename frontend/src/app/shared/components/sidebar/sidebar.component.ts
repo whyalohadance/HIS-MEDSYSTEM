@@ -6,10 +6,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { Subscription } from 'rxjs';
 
-interface NavItem {
+export interface NavItem {
   key: string;
-  icon: string;
-  route: string;
+  icon?: string;
+  route?: string;
+  divider?: boolean;
+  sectionKey?: string;
 }
 
 @Component({
@@ -26,48 +28,60 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   private adminNav: NavItem[] = [
-    { key: 'NAV.DASHBOARD',    icon: 'dashboard',      route: '/dashboard' },
-    { key: 'NAV.STAFF',        icon: 'badge',           route: '/staff' },
-    { key: 'NAV.PATIENTS',     icon: 'people',          route: '/patients' },
-    { key: 'NAV.APPOINTMENTS', icon: 'event',           route: '/appointments' },
-    { key: 'NAV.ROOMS',        icon: 'meeting_room',    route: '/rooms' },
-    { key: 'NAV.SCHEDULES',    icon: 'calendar_month',  route: '/schedules' },
-    { key: 'NAV.EXAMINATIONS', icon: 'biotech',         route: '/examinations' },
-    { key: 'STUDIES.TITLE',    icon: 'radiology',       route: '/studies' },
-    { key: 'STUDIES.WORKLIST', icon: 'list_alt',        route: '/worklist' },
-    { key: 'NAV.NOTIFICATIONS',icon: 'notifications',   route: '/notifications' },
-    { key: 'NAV.REPORTS',      icon: 'assessment',      route: '/reports' },
-    { key: 'NAV.PROFILE',      icon: 'person',          route: '/profile' },
+    { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.STAFF',           icon: 'badge',         route: '/staff' },
+    { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
+    { key: 'NAV.APPOINTMENTS',    icon: 'event',         route: '/appointments' },
+    { key: 'section-mgmt',        divider: true, sectionKey: 'NAV.SECTION_MANAGEMENT' },
+    { key: 'NAV.ROOMS',           icon: 'meeting_room',  route: '/rooms' },
+    { key: 'NAV.SCHEDULES',       icon: 'calendar_month',route: '/schedules' },
+    { key: 'NAV.EXAMINATIONS',    icon: 'science',       route: '/examinations' },
+    { key: 'section-ris',         divider: true, sectionKey: 'NAV.SECTION_RIS' },
+    { key: 'NAV.STUDIES',         icon: 'biotech',       route: '/studies' },
+    { key: 'NAV.WORKLIST',        icon: 'fact_check',    route: '/worklist' },
+    { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
+    { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.REPORTS',         icon: 'assessment',    route: '/reports' },
+    { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
   private doctorNav: NavItem[] = [
-    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
-    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
-    { key: 'NAV.APPOINTMENTS', icon: 'event',         route: '/appointments' },
-    { key: 'NAV.MY_CABINET',   icon: 'meeting_room',  route: '/my-cabinet' },
-    { key: 'STUDIES.TITLE',    icon: 'radiology',     route: '/studies' },
-    { key: 'STUDIES.WORKLIST', icon: 'list_alt',      route: '/worklist' },
-    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
-    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
+    { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
+    { key: 'NAV.APPOINTMENTS',    icon: 'event',         route: '/appointments' },
+    { key: 'NAV.MY_CABINET',      icon: 'meeting_room',  route: '/my-cabinet' },
+    { key: 'section-ris',         divider: true, sectionKey: 'NAV.SECTION_RIS' },
+    { key: 'NAV.STUDIES',         icon: 'biotech',       route: '/studies' },
+    { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
+    { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
   private receptionistNav: NavItem[] = [
-    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
-    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
-    { key: 'NAV.APPOINTMENTS', icon: 'edit_calendar', route: '/appointments' },
-    { key: 'NAV.ROOMS',        icon: 'meeting_room',  route: '/rooms' },
-    { key: 'NAV.EXAMINATIONS', icon: 'biotech',       route: '/examinations' },
-    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
-    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
+    { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
+    { key: 'NAV.APPOINTMENTS',    icon: 'edit_calendar', route: '/appointments' },
+    { key: 'section-mgmt',        divider: true, sectionKey: 'NAV.SECTION_MANAGEMENT' },
+    { key: 'NAV.ROOMS',           icon: 'meeting_room',  route: '/rooms' },
+    { key: 'NAV.EXAMINATIONS',    icon: 'science',       route: '/examinations' },
+    { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
+    { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
   private radiologistNav: NavItem[] = [
-    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
-    { key: 'STUDIES.TITLE',    icon: 'radiology',     route: '/studies' },
-    { key: 'STUDIES.WORKLIST', icon: 'list_alt',      route: '/worklist' },
-    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
-    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
-    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
+    { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
+    { key: 'section-ris',         divider: true, sectionKey: 'NAV.SECTION_RIS' },
+    { key: 'NAV.STUDIES',         icon: 'biotech',       route: '/studies' },
+    { key: 'NAV.WORKLIST',        icon: 'fact_check',    route: '/worklist' },
+    { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
+    { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
   constructor(

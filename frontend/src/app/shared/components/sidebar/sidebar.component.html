@@ -10,12 +10,23 @@
 
   <nav class="sidebar-nav">
     <ng-container *ngFor="let item of navItems">
-      <a [routerLink]="item.route" routerLinkActive="active" class="nav-item"
+
+      <!-- Section Divider -->
+      <div class="sidebar-section-divider" *ngIf="item.divider && !collapsed">
+        <span class="sidebar-section-label">{{ item.sectionKey | translate }}</span>
+      </div>
+
+      <!-- Nav Item -->
+      <a *ngIf="!item.divider"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="nav-item"
          [title]="item.key | translate"
          (click)="sidebarService.close()">
         <span class="material-icons">{{ item.icon }}</span>
         <span class="nav-label" *ngIf="!collapsed">{{ item.key | translate }}</span>
       </a>
+
     </ng-container>
   </nav>
 

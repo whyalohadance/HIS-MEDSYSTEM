@@ -11,7 +11,13 @@
     "NOTIFICATIONS": "Notificări",
     "PROFILE": "Profil",
     "MY_CABINET": "Cabinetul meu",
-    "LOGOUT": "Deconectare"
+    "LOGOUT": "Deconectare",
+    "STUDIES": "Investigații RIS",
+    "WORKLIST": "Worklist",
+    "SECTION_MAIN": "Principal",
+    "SECTION_MANAGEMENT": "Management",
+    "SECTION_RIS": "RIS",
+    "SECTION_SYSTEM": "Sistem"
   },
   "COMMON": {
     "SAVE": "Salvează",
