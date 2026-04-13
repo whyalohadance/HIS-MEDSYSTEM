@@ -59,6 +59,7 @@ interface StaffMember {
             <select [(ngModel)]="form.role">
               <option value="doctor">{{ 'STAFF.ROLE_DOCTOR' | translate }}</option>
               <option value="receptionist">{{ 'STAFF.ROLE_RECEPTIONIST' | translate }}</option>
+              <option value="radiologist">{{ 'STAFF.ROLE_RADIOLOGIST' | translate }}</option>
               <option value="admin">{{ 'STAFF.ROLE_ADMIN' | translate }}</option>
             </select>
           </div>
@@ -87,6 +88,7 @@ interface StaffMember {
         <button class="filter-btn" [class.active]="filter === 'all'" (click)="filter = 'all'">{{ 'STAFF.ALL' | translate }}</button>
         <button class="filter-btn" [class.active]="filter === 'doctor'" (click)="filter = 'doctor'">{{ 'STAFF.DOCTORS' | translate }}</button>
         <button class="filter-btn" [class.active]="filter === 'receptionist'" (click)="filter = 'receptionist'">{{ 'STAFF.RECEPTIONISTS' | translate }}</button>
+        <button class="filter-btn" [class.active]="filter === 'radiologist'" (click)="filter = 'radiologist'">{{ 'STAFF.ROLE_RADIOLOGIST' | translate }}</button>
         <button class="filter-btn" [class.active]="filter === 'admin'" (click)="filter = 'admin'">{{ 'STAFF.ADMINS' | translate }}</button>
       </div>
 
@@ -162,6 +164,7 @@ interface StaffMember {
     .staff-avatar.doctor { background: #e8f0fe; color: #1a73e8; }
     .staff-avatar.receptionist { background: #e6f4ea; color: #34a853; }
     .staff-avatar.admin { background: #f3e8fd; color: #9334e6; }
+    .staff-avatar.radiologist { background: #ede9fe; color: #7c3aed; }
     .status-dot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid white; }
     .status-dot.available { background: #34a853; }
     .status-dot.busy { background: #f9ab00; }
@@ -175,6 +178,7 @@ interface StaffMember {
     .role-badge.doctor { background: #e8f0fe; color: #1a73e8; }
     .role-badge.receptionist { background: #e6f4ea; color: #34a853; }
     .role-badge.admin { background: #f3e8fd; color: #9334e6; }
+    .role-badge.radiologist { background: #ede9fe; color: #7c3aed; }
     .status-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
     .status-badge.available { background: #e6f4ea; color: #34a853; }
     .status-badge.busy { background: #fef7e0; color: #f9ab00; }
@@ -286,7 +290,8 @@ export class StaffComponent implements OnInit {
 
   getRoleLabel(role: string): string {
     const keys: Record<string, string> = {
-      doctor: 'STAFF.ROLE_DOCTOR', receptionist: 'STAFF.ROLE_RECEPTIONIST', admin: 'STAFF.ROLE_ADMIN'
+      doctor: 'STAFF.ROLE_DOCTOR', receptionist: 'STAFF.ROLE_RECEPTIONIST',
+      admin: 'STAFF.ROLE_ADMIN', radiologist: 'STAFF.ROLE_RADIOLOGIST'
     };
     const key = keys[role];
     return key ? this.translate.instant(key) : role;

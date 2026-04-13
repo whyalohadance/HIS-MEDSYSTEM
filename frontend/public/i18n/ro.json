@@ -192,7 +192,8 @@
     "DOCTORS": "Medici",
     "RECEPTIONISTS": "Recepționiști",
     "ADMINS": "Administratori",
-    "NO_STAFF": "Nu există angajați"
+    "NO_STAFF": "Nu există angajați",
+    "ROLE_RADIOLOGIST": "Radiolog"
   },
   "REPORTS": {
     "TITLE": "Rapoarte",

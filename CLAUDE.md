@@ -21,11 +21,13 @@ Host: localhost:5432 | JWT Secret: medical_super_secret_key_2024
 Admin: admin@med.com / password123
 Doctor: doctor@med.com / password123
 Receptionist: reception@med.com / password123
+Radiologist: radiolog@med.com / password123
 
 ## Роли и доступ
 - admin — полный доступ ко всему
-- doctor — свои пациенты, результаты, приёмы
+- doctor — свои пациенты, результаты, приёмы, просмотр исследований
 - receptionist — пациенты, приёмы, кабинеты
+- radiologist — радиологические исследования, worklist, заключения
 
 ## Технологии Backend
 NestJS, TypeORM (synchronize: true), JWT + bcryptjs + Passport,

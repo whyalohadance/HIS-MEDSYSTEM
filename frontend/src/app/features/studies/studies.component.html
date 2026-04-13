@@ -5,6 +5,7 @@
     <div class="page-title">
       <span class="material-icons">biotech</span>
       <h1>{{ 'STUDIES.TITLE' | translate }}</h1>
+      <span class="ris-badge">RIS</span>
     </div>
     <div class="header-actions">
       <a routerLink="/worklist" class="btn-secondary">
@@ -26,15 +27,15 @@
   <!-- Filters -->
   <div class="filters-bar">
     <select [(ngModel)]="filterType" (ngModelChange)="onFilterChange()" class="filter-select">
-      <option value="">{{ 'COMMON.ALL' | translate }} {{ 'STUDIES.TITLE' | translate }}</option>
+      <option value="">{{ 'COMMON.ALL' | translate }} — {{ 'COMMON.TYPE' | translate }}</option>
       <option *ngFor="let t of studyTypes" [value]="t.value">{{ t.labelKey | translate }}</option>
     </select>
     <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()" class="filter-select">
-      <option value="">{{ 'COMMON.ALL' | translate }}</option>
+      <option value="">{{ 'COMMON.ALL' | translate }} — Статус</option>
       <option *ngFor="let s of studyStatuses" [value]="s.value">{{ s.labelKey | translate }}</option>
     </select>
     <select [(ngModel)]="filterPriority" (ngModelChange)="onFilterChange()" class="filter-select">
-      <option value="">{{ 'COMMON.ALL' | translate }}</option>
+      <option value="">{{ 'COMMON.ALL' | translate }} — {{ 'APPOINTMENTS.PRIORITY' | translate }}</option>
       <option *ngFor="let p of priorities" [value]="p.value">{{ p.labelKey | translate }}</option>
     </select>
     <button class="btn-clear" *ngIf="filterType || filterStatus || filterPriority" (click)="clearFilters()">
@@ -49,20 +50,22 @@
 
   <!-- Studies List -->
   <div class="studies-list" *ngIf="!isLoading">
-    <div class="study-card" *ngFor="let study of filteredStudies" [class]="'priority-' + study.priority">
+    <div class="study-card" *ngFor="let study of filteredStudies"
+      [class]="'priority-' + study.priority">
+
       <div class="study-card-header">
         <div class="study-id-group">
           <span class="study-id">{{ study.studyId }}</span>
           <span class="type-badge" [class]="'type-' + study.type">{{ getTypeLabel(study.type) }}</span>
-          <span class="priority-badge" [class]="'prio-' + study.priority">{{ getPriorityLabel(study.priority) }}</span>
+          <span class="priority-badge" [class]="'prio-' + study.priority">{{ study.priority | uppercase }}</span>
         </div>
         <span class="status-badge" [class]="'status-' + study.status">{{ getStatusLabel(study.status) }}</span>
       </div>
 
       <div class="study-card-body">
-        <div class="study-row">
-          <span class="material-icons">person</span>
-          <span>{{ getPatientName(study.patientId) }}</span>
+        <div class="study-patient-name">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle;color:#a0aec0;margin-right:4px">person</span>
+          {{ getPatientName(study.patientId) }}
         </div>
         <div class="study-row" *ngIf="study.bodyPart">
           <span class="material-icons">accessibility</span>
@@ -74,36 +77,38 @@
         </div>
         <div class="study-row" *ngIf="study.scheduledAt">
           <span class="material-icons">event</span>
-          <span>{{ study.scheduledAt }} {{ study.scheduledTime }}</span>
-        </div>
-        <div class="study-row" *ngIf="study.price">
-          <span class="material-icons">payments</span>
-          <span>{{ study.price }} MDL</span>
+          <span>{{ study.scheduledAt }}{{ study.scheduledTime ? ' ' + study.scheduledTime : '' }}</span>
         </div>
       </div>
 
       <div class="study-card-footer">
-        <button class="btn-conclusion"
-          *ngIf="study.status === 'completed' || study.status === 'in_progress'"
-          (click)="openConclusionModal(study)">
-          <span class="material-icons">rate_review</span>
-          {{ 'STUDIES.FINDINGS' | translate }}
-        </button>
-        <button class="btn-status in-progress"
-          *ngIf="study.status === 'pending' || study.status === 'scheduled'"
-          (click)="updateStatus(study, 'in_progress')">
-          <span class="material-icons">play_arrow</span>
-        </button>
-        <button class="btn-status complete"
-          *ngIf="study.status === 'in_progress'"
-          (click)="openConclusionModal(study)">
-          <span class="material-icons">check</span>
-        </button>
-        <button class="btn-status cancel"
-          *ngIf="study.status !== 'completed' && study.status !== 'cancelled'"
-          (click)="updateStatus(study, 'cancelled')">
-          <span class="material-icons">close</span>
-        </button>
+        <div class="footer-left">
+          <button class="btn-conclusion"
+            *ngIf="study.status === 'completed' || study.status === 'in_progress'"
+            (click)="openConclusionModal(study)">
+            <span class="material-icons">rate_review</span>
+            {{ 'STUDIES.FINDINGS' | translate }}
+          </button>
+          <button class="btn-status in-progress"
+            *ngIf="study.status === 'pending' || study.status === 'scheduled'"
+            (click)="updateStatus(study, 'in_progress')"
+            title="Начать">
+            <span class="material-icons">play_arrow</span>
+          </button>
+          <button class="btn-status complete"
+            *ngIf="study.status === 'in_progress'"
+            (click)="openConclusionModal(study)"
+            title="Завершить">
+            <span class="material-icons">check</span>
+          </button>
+          <button class="btn-status cancel"
+            *ngIf="study.status !== 'completed' && study.status !== 'cancelled'"
+            (click)="updateStatus(study, 'cancelled')"
+            title="Отменить">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <span class="study-price" *ngIf="study.price">{{ study.price }} MDL</span>
       </div>
     </div>
 

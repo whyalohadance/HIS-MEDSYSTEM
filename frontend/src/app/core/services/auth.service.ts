@@ -35,6 +35,7 @@ export class AuthService {
   get isDoctor(): boolean { return this.role === 'doctor'; }
   get isPatient(): boolean { return this.role === 'patient'; }
   get isReceptionist(): boolean { return this.role === 'receptionist'; }
+  get isRadiologist(): boolean { return this.role === 'radiologist'; }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password }).pipe(

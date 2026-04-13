@@ -61,6 +61,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
   ];
 
+  private radiologistNav: NavItem[] = [
+    { key: 'NAV.DASHBOARD',    icon: 'dashboard',     route: '/dashboard' },
+    { key: 'STUDIES.TITLE',    icon: 'radiology',     route: '/studies' },
+    { key: 'STUDIES.WORKLIST', icon: 'list_alt',      route: '/worklist' },
+    { key: 'NAV.PATIENTS',     icon: 'people',        route: '/patients' },
+    { key: 'NAV.NOTIFICATIONS',icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',      icon: 'person',        route: '/profile' },
+  ];
+
   constructor(
     public authService: AuthService,
     public sidebarService: SidebarService
@@ -90,6 +99,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           case 'admin':        this.navItems = this.adminNav; break;
           case 'doctor':       this.navItems = this.doctorNav; break;
           case 'receptionist': this.navItems = this.receptionistNav; break;
+          case 'radiologist':  this.navItems = this.radiologistNav; break;
           default:             this.navItems = this.doctorNav;
         }
       })

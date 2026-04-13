@@ -192,7 +192,8 @@
     "DOCTORS": "Doctors",
     "RECEPTIONISTS": "Receptionists",
     "ADMINS": "Administrators",
-    "NO_STAFF": "No staff found"
+    "NO_STAFF": "No staff found",
+    "ROLE_RADIOLOGIST": "Radiologist"
   },
   "REPORTS": {
     "TITLE": "Reports",
