@@ -1,10 +1,24 @@
 <div class="login-page" [class.animate]="animState === 'form'">
 
-  <!-- Background elements -->
-  <div class="bg-gradient"></div>
-  <div class="bg-blur-1"></div>
-  <div class="bg-blur-2"></div>
-  <div class="bg-blur-3"></div>
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+
+  <!-- Dot grid -->
+  <div class="dot-grid"></div>
+
+  <!-- Particles -->
+  <div class="particle"
+    *ngFor="let p of particles"
+    [style.left.%]="p.x"
+    [style.top.%]="p.y"
+    [style.animationDelay]="p.delay"
+    [style.animationDuration]="p.duration"
+    [style.width.px]="p.size"
+    [style.height.px]="p.size">
+  </div>
 
   <!-- Login card -->
   <div class="login-card" [class.visible]="animState === 'form'">

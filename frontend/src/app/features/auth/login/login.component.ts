@@ -22,6 +22,14 @@ export class LoginComponent implements OnInit {
   passwordFocused = false;
   showPassword = false;
 
+  particles = Array.from({ length: 15 }, () => ({
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 5 + 's',
+    duration: (Math.random() * 6 + 6) + 's',
+    size: Math.random() * 4 + 2
+  }));
+
   constructor(
     private authService: AuthService,
     private router: Router,
