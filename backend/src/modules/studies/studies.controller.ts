@@ -10,7 +10,7 @@ import { UpdateStudyDto } from './dto/update-study.dto';
 @ApiTags('studies')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.ADMIN, UserRole.RADIOLOGIST, UserRole.DOCTOR)
+@Roles(UserRole.ADMIN, UserRole.RADIOLOGIST)
 @Controller('studies')
 export class StudiesController {
   constructor(private readonly studiesService: StudiesService) {}
@@ -74,7 +74,7 @@ export class StudiesController {
   }
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.RADIOLOGIST, UserRole.DOCTOR)
+  @Roles(UserRole.ADMIN, UserRole.RADIOLOGIST)
   async create(@Body() dto: CreateStudyDto) {
     const data = await this.studiesService.create(dto);
     return { success: true, data };
