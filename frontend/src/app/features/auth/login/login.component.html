@@ -1,7 +1,17 @@
 <div class="login-page">
 
+  <!-- Logo overlay splash -->
+  <div class="logo-overlay" [class.hidden]="animState !== 'logo' && animState !== 'split'">
+    <div class="logo-center" [class.move-left]="logoMoved">
+      <div class="logo-center-icon">
+        <span class="material-icons">local_hospital</span>
+      </div>
+      <span class="logo-center-text">MedSystem</span>
+    </div>
+  </div>
+
   <!-- Left panel -->
-  <div class="left-panel">
+  <div class="left-panel" [class.visible]="animState === 'split' || animState === 'form'">
     <div class="deco-circle deco-circle-1"></div>
     <div class="deco-circle deco-circle-2"></div>
 
@@ -45,8 +55,8 @@
   </div>
 
   <!-- Right panel -->
-  <div class="right-panel">
-    <div class="form-container" [class.visible]="animState === 'form'">
+  <div class="right-panel" [class.visible]="animState === 'split' || animState === 'form'">
+    <div class="form-container" [class.visible]="formVisible">
 
       <div class="form-header">
         <h2 class="form-title">{{ 'AUTH.LOGIN' | translate }}</h2>
