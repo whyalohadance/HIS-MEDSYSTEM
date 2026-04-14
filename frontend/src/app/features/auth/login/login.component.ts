@@ -1,77 +1,61 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { AuthService } from '../../../core/services/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    TranslateModule
-  ],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
+  form = { email: '', password: '' };
   isLoading = false;
-  hidePassword = true;
-  errorMessage = '';
+  error = '';
   animState: 'logo' | 'form' = 'logo';
+  emailFocused = false;
+  passwordFocused = false;
+  showPassword = false;
 
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.form = this.fb.group({
-      email: ['doctor@med.com', [Validators.required, Validators.email]],
-      password: ['password123', [Validators.required, Validators.minLength(6)]]
-    });
-  }
-
-  get isMobile(): boolean { return window.innerWidth <= 768; }
+    private cdr: ChangeDetectorRef,
+    public langService: LanguageService
+  ) {}
 
   ngOnInit(): void {
-    if (this.isMobile) {
+    const isMobile = window.innerWidth <= 768;
+    setTimeout(() => {
       this.animState = 'form';
       this.cdr.detectChanges();
-    } else {
-      setTimeout(() => {
-        this.animState = 'form';
-        this.cdr.detectChanges();
-      }, 1800);
-    }
+    }, isMobile ? 100 : 300);
   }
 
-  onSubmit(): void {
-    if (this.form.invalid) return;
+  fillDemo(email: string): void {
+    this.form.email = email;
+    this.form.password = 'password123';
+  }
+
+  login(): void {
+    if (!this.form.email || !this.form.password) return;
     this.isLoading = true;
-    this.errorMessage = '';
+    this.error = '';
 
-    const { email, password } = this.form.value;
-
-    this.authService.login(email, password).subscribe({
+    this.authService.login(this.form.email, this.form.password).subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
       error: () => {
         this.isLoading = false;
-        this.errorMessage = 'Неверный email или пароль';
+        this.error = 'Неверный email или пароль';
+        this.cdr.detectChanges();
       }
     });
   }
