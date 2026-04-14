@@ -1,105 +1,139 @@
-<div class="login-page" [class.animate]="animState === 'form'">
+<div class="login-page">
 
-  <!-- Orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="orb orb-4"></div>
+  <!-- Left panel -->
+  <div class="left-panel">
+    <div class="deco-circle deco-circle-1"></div>
+    <div class="deco-circle deco-circle-2"></div>
 
-  <!-- Dot grid -->
-  <div class="dot-grid"></div>
-
-  <!-- Particles -->
-  <div class="particle"
-    *ngFor="let p of particles"
-    [style.left.%]="p.x"
-    [style.top.%]="p.y"
-    [style.animationDelay]="p.delay"
-    [style.animationDuration]="p.duration"
-    [style.width.px]="p.size"
-    [style.height.px]="p.size">
-  </div>
-
-  <!-- Login card -->
-  <div class="login-card" [class.visible]="animState === 'form'">
-
-    <!-- Logo -->
-    <div class="logo-section">
-      <div class="logo-icon">
+    <div class="left-logo">
+      <div class="left-logo-icon">
         <span class="material-icons">local_hospital</span>
       </div>
-      <h1 class="logo-title">MedSystem</h1>
-      <p class="logo-subtitle">{{ 'AUTH.SUBTITLE' | translate }}</p>
+      <span class="left-logo-text">MedSystem</span>
     </div>
 
-    <!-- Form -->
-    <form class="login-form" (ngSubmit)="login()">
+    <div class="left-content">
+      <h1 class="left-title">
+        Sistem<br>
+        <span>Informațional</span><br>
+        Spitalicesc
+      </h1>
+      <p class="left-subtitle">
+        Gestionați pacienții, programările și rapoartele într-o singură platformă modernă.
+      </p>
+      <div class="left-features">
+        <div class="feature-item">
+          <div class="feature-icon"><span class="material-icons">people</span></div>
+          <span class="feature-text">Gestionarea pacienților</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><span class="material-icons">event</span></div>
+          <span class="feature-text">Programări medicale</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><span class="material-icons">biotech</span></div>
+          <span class="feature-text">Sistem RIS cu DICOM Viewer</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><span class="material-icons">assessment</span></div>
+          <span class="feature-text">Rapoarte PDF și Excel</span>
+        </div>
+      </div>
+    </div>
 
-      <div class="form-group" [class.focused]="emailFocused" [class.has-value]="form.email">
-        <input
-          type="email"
-          [(ngModel)]="form.email"
-          name="email"
-          (focus)="emailFocused = true"
-          (blur)="emailFocused = false"
-          autocomplete="email"
-          required>
-        <label>{{ 'AUTH.EMAIL' | translate }}</label>
+    <div class="left-footer">© 2026 HIS-MedSystem · CUTM</div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div class="form-container" [class.visible]="animState === 'form'">
+
+      <div class="form-header">
+        <h2 class="form-title">{{ 'AUTH.LOGIN' | translate }}</h2>
+        <p class="form-subtitle">{{ 'AUTH.SUBTITLE' | translate }}</p>
       </div>
 
-      <div class="form-group" [class.focused]="passwordFocused" [class.has-value]="form.password">
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          [(ngModel)]="form.password"
-          name="password"
-          (focus)="passwordFocused = true"
-          (blur)="passwordFocused = false"
-          autocomplete="current-password"
-          required>
-        <label>{{ 'AUTH.PASSWORD' | translate }}</label>
-        <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
-          <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+      <form class="login-form" (ngSubmit)="login()">
+
+        <div class="form-group">
+          <label>{{ 'AUTH.EMAIL' | translate }}</label>
+          <div class="input-wrapper">
+            <span class="material-icons input-icon">mail_outline</span>
+            <input
+              type="email"
+              [(ngModel)]="form.email"
+              name="email"
+              autocomplete="email"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{ 'AUTH.PASSWORD' | translate }}</label>
+          <div class="input-wrapper">
+            <span class="material-icons input-icon">lock_outline</span>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="form.password"
+              name="password"
+              autocomplete="current-password"
+              required>
+            <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+              <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="error">
+          <span class="material-icons">error_outline</span>
+          {{ error }}
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{ 'AUTH.LOGIN_BTN' | translate }}</span>
+          <div class="btn-spinner" *ngIf="isLoading"></div>
+        </button>
+
+      </form>
+
+      <!-- Demo accounts -->
+      <div class="demo-section">
+        <div class="demo-label">Demo accounts</div>
+        <div class="demo-buttons">
+          <button class="demo-btn" (click)="fillDemo('admin@med.com', 'Admin')">
+            <span class="material-icons">admin_panel_settings</span>
+            <span class="demo-btn-name">Admin</span>
+            <span class="demo-btn-role">Full access</span>
+          </button>
+          <button class="demo-btn" (click)="fillDemo('doctor@med.com', 'Doctor')">
+            <span class="material-icons">medical_services</span>
+            <span class="demo-btn-name">Doctor</span>
+            <span class="demo-btn-role">Medical</span>
+          </button>
+          <button class="demo-btn" (click)="fillDemo('reception@med.com', 'Reception')">
+            <span class="material-icons">support_agent</span>
+            <span class="demo-btn-name">Reception</span>
+            <span class="demo-btn-role">Booking</span>
+          </button>
+          <button class="demo-btn" (click)="fillDemo('radiolog@med.com', 'Radiolog')">
+            <span class="material-icons">biotech</span>
+            <span class="demo-btn-name">Radiolog</span>
+            <span class="demo-btn-role">RIS</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Language -->
+      <div class="lang-section">
+        <button *ngFor="let lang of langService.languages"
+          class="lang-btn"
+          [class.active]="langService.getCurrentLanguage() === lang.code"
+          (click)="langService.setLanguage(lang.code)">
+          {{ lang.flag }} {{ lang.label }}
         </button>
       </div>
 
-      <div class="error-message" *ngIf="error">
-        <span class="material-icons">error_outline</span>
-        {{ error }}
-      </div>
-
-      <button type="submit" class="btn-login" [class.loading]="isLoading" [disabled]="isLoading">
-        <span class="btn-text" *ngIf="!isLoading">{{ 'AUTH.LOGIN_BTN' | translate }}</span>
-        <div class="btn-spinner" *ngIf="isLoading"></div>
-      </button>
-
-    </form>
-
-    <!-- Demo hint -->
-    <div class="demo-hint">
-      <span class="material-icons">info</span>
-      <div class="demo-accounts">
-        <span (click)="fillDemo('admin@med.com')">Admin</span>
-        <span class="separator">·</span>
-        <span (click)="fillDemo('doctor@med.com')">Doctor</span>
-        <span class="separator">·</span>
-        <span (click)="fillDemo('reception@med.com')">Reception</span>
-        <span class="separator">·</span>
-        <span (click)="fillDemo('radiolog@med.com')">Radiolog</span>
-      </div>
     </div>
-
-    <!-- Language switcher -->
-    <div class="lang-switcher">
-      <button *ngFor="let lang of langService.languages"
-        [class.active]="langService.getCurrentLanguage() === lang.code"
-        (click)="langService.setLanguage(lang.code)">
-        {{ lang.flag }} {{ lang.label }}
-      </button>
-    </div>
-
   </div>
-
-  <!-- Copyright -->
-  <div class="copyright">© 2026 HIS-MedSystem · CUTM</div>
 
 </div>

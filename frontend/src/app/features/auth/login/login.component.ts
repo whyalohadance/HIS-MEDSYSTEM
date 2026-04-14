@@ -22,13 +22,6 @@ export class LoginComponent implements OnInit {
   passwordFocused = false;
   showPassword = false;
 
-  particles = Array.from({ length: 15 }, () => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 5 + 's',
-    duration: (Math.random() * 6 + 6) + 's',
-    size: Math.random() * 4 + 2
-  }));
 
   constructor(
     private authService: AuthService,
@@ -45,7 +38,7 @@ export class LoginComponent implements OnInit {
     }, isMobile ? 100 : 300);
   }
 
-  fillDemo(email: string): void {
+  fillDemo(email: string, role: string = ''): void {
     this.form.email = email;
     this.form.password = 'password123';
   }
