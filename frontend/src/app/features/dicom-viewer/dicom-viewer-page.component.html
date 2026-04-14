@@ -5,12 +5,12 @@
     <div class="header-left">
       <a routerLink="/studies" class="btn-back">
         <span class="material-icons">arrow_back</span>
-        Назад
+        {{ 'DICOM.BACK' | translate }}
       </a>
       <div class="header-info">
         <h1 class="dicom-title">
           <span class="material-icons">biotech</span>
-          DICOM Viewer
+          {{ 'DICOM.TITLE' | translate }}
         </h1>
         <div class="study-meta" *ngIf="study">
           <span class="meta-badge" [class]="'type-' + study.type">{{ getTypeLabel(study.type) }}</span>
@@ -25,7 +25,7 @@
           </span>
         </div>
         <div class="study-meta" *ngIf="!study">
-          <span class="meta-item"><span class="material-icons">info</span>Загрузите DICOM файл для просмотра</span>
+          <span class="meta-item"><span class="material-icons">info</span>{{ 'DICOM.UPLOAD_SUBTITLE' | translate }}</span>
         </div>
       </div>
     </div>
@@ -49,22 +49,22 @@
       <div class="info-card" *ngIf="study">
         <h3 class="info-card-title">
           <span class="material-icons">info</span>
-          Информация
+          {{ 'DICOM.STUDY_INFO' | translate }}
         </h3>
         <div class="info-row" *ngIf="study.description">
-          <span class="info-label">Описание</span>
+          <span class="info-label">{{ 'DICOM.DESCRIPTION' | translate }}</span>
           <span class="info-value">{{ study.description }}</span>
         </div>
         <div class="info-row" *ngIf="study.clinicalInfo">
-          <span class="info-label">Клин. инфо</span>
+          <span class="info-label">{{ 'DICOM.CLINICAL_INFO' | translate }}</span>
           <span class="info-value">{{ study.clinicalInfo }}</span>
         </div>
         <div class="info-row" *ngIf="study.priority">
-          <span class="info-label">Приоритет</span>
+          <span class="info-label">{{ 'DICOM.PRIORITY' | translate }}</span>
           <span class="priority-badge" [class]="'prio-' + study.priority">{{ getPriorityLabel(study.priority) }}</span>
         </div>
         <div class="info-row" *ngIf="study.price">
-          <span class="info-label">Цена</span>
+          <span class="info-label">{{ 'DICOM.PRICE' | translate }}</span>
           <span class="info-value price">{{ study.price }} MDL</span>
         </div>
       </div>
@@ -73,43 +73,43 @@
       <div class="info-card" *ngIf="study && (study.findings || study.conclusion || isRadiologistOrAdmin)">
         <h3 class="info-card-title">
           <span class="material-icons">description</span>
-          Заключение
+          {{ 'DICOM.RADIOLOGIST_REPORT' | translate }}
         </h3>
 
         <div *ngIf="!isEditing">
           <div class="findings-block" *ngIf="study.findings">
-            <div class="findings-label">Находки</div>
+            <div class="findings-label">{{ 'DICOM.FINDINGS' | translate }}</div>
             <p class="findings-text">{{ study.findings }}</p>
           </div>
           <div class="findings-block" *ngIf="study.conclusion">
-            <div class="findings-label">Вывод</div>
+            <div class="findings-label">{{ 'DICOM.CONCLUSION' | translate }}</div>
             <p class="findings-text">{{ study.conclusion }}</p>
           </div>
           <div class="no-findings" *ngIf="!study.findings && !study.conclusion">
             <span class="material-icons">pending</span>
-            Заключение не добавлено
+            {{ 'DICOM.NO_REPORT' | translate }}
           </div>
           <button class="btn-edit-findings" *ngIf="isRadiologistOrAdmin" (click)="isEditing = true">
             <span class="material-icons">edit</span>
-            {{ study.findings ? 'Редактировать' : 'Добавить заключение' }}
+            {{ (study.findings ? 'DICOM.EDIT_REPORT' : 'DICOM.ADD_REPORT') | translate }}
           </button>
         </div>
 
         <div class="findings-form" *ngIf="isEditing">
           <div class="form-field">
-            <label>Находки / Findings</label>
-            <textarea [(ngModel)]="editFindings" rows="4" placeholder="Опишите находки на снимке..."></textarea>
+            <label>{{ 'DICOM.FINDINGS' | translate }}</label>
+            <textarea [(ngModel)]="editFindings" rows="4" [placeholder]="'DICOM.FINDINGS_PLACEHOLDER' | translate"></textarea>
           </div>
           <div class="form-field">
-            <label>Вывод / Conclusion</label>
-            <textarea [(ngModel)]="editConclusion" rows="3" placeholder="Клинический вывод..."></textarea>
+            <label>{{ 'DICOM.CONCLUSION' | translate }}</label>
+            <textarea [(ngModel)]="editConclusion" rows="3" [placeholder]="'DICOM.CONCLUSION_PLACEHOLDER' | translate"></textarea>
           </div>
           <div class="form-actions">
             <button class="btn-save" (click)="saveFindings()" [disabled]="isSaving">
               <span class="material-icons">save</span>
-              {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+              {{ isSaving ? ('COMMON.SAVING' | translate) : ('DICOM.SAVE_REPORT' | translate) }}
             </button>
-            <button class="btn-cancel" (click)="isEditing = false">Отмена</button>
+            <button class="btn-cancel" (click)="isEditing = false">{{ 'COMMON.CANCEL' | translate }}</button>
           </div>
         </div>
       </div>
@@ -118,23 +118,23 @@
       <div class="info-card instructions-card">
         <h3 class="info-card-title">
           <span class="material-icons">mouse</span>
-          Управление
+          {{ 'DICOM.CONTROLS_TITLE' | translate }}
         </h3>
         <div class="instruction-item">
-          <span class="instruction-key">ЛКМ + drag</span>
-          <span class="instruction-desc">Перемещение</span>
+          <span class="instruction-key">{{ 'DICOM.CONTROL_LMB' | translate }}</span>
+          <span class="instruction-desc">{{ 'DICOM.CONTROL_LMB_DESC' | translate }}</span>
         </div>
         <div class="instruction-item">
-          <span class="instruction-key">ПКМ + drag</span>
-          <span class="instruction-desc">Яркость / Контраст</span>
+          <span class="instruction-key">{{ 'DICOM.CONTROL_RMB' | translate }}</span>
+          <span class="instruction-desc">{{ 'DICOM.CONTROL_RMB_DESC' | translate }}</span>
         </div>
         <div class="instruction-item">
-          <span class="instruction-key">Колёсико</span>
-          <span class="instruction-desc">Масштаб</span>
+          <span class="instruction-key">{{ 'DICOM.CONTROL_SCROLL' | translate }}</span>
+          <span class="instruction-desc">{{ 'DICOM.CONTROL_SCROLL_DESC' | translate }}</span>
         </div>
         <div class="instruction-item">
-          <span class="instruction-key">Слайдеры</span>
-          <span class="instruction-desc">Точная настройка</span>
+          <span class="instruction-key">{{ 'DICOM.CONTROL_SLIDERS' | translate }}</span>
+          <span class="instruction-desc">{{ 'DICOM.CONTROL_SLIDERS_DESC' | translate }}</span>
         </div>
       </div>
 

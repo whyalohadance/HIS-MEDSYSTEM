@@ -4,26 +4,26 @@
   <div class="viewer-toolbar">
     <div class="toolbar-left">
       <span class="material-icons viewer-icon">biotech</span>
-      <span class="viewer-title">DICOM Viewer</span>
+      <span class="viewer-title">{{ 'DICOM.TITLE' | translate }}</span>
       <span class="study-id-badge" *ngIf="studyId">{{ studyId }}</span>
     </div>
     <div class="toolbar-controls">
       <div class="control-group" *ngIf="imageLoaded">
-        <span class="material-icons control-icon" title="Масштаб">zoom_in</span>
+        <span class="material-icons control-icon" [title]="'DICOM.ZOOM' | translate">zoom_in</span>
         <input type="range" min="0.1" max="5" step="0.1" [(ngModel)]="zoom" (input)="applyZoom()" class="control-slider">
         <span class="control-value">{{ zoom }}x</span>
       </div>
       <div class="control-group" *ngIf="imageLoaded">
-        <span class="material-icons control-icon" title="Яркость">brightness_6</span>
+        <span class="material-icons control-icon" [title]="'DICOM.BRIGHTNESS' | translate">brightness_6</span>
         <input type="range" min="-20" max="20" step="1" [(ngModel)]="brightness" (input)="applyViewport()" class="control-slider">
       </div>
-      <button class="toolbar-btn" (click)="resetViewport()" title="Сброс" [disabled]="!imageLoaded">
+      <button class="toolbar-btn" (click)="resetViewport()" [title]="'DICOM.RESET' | translate" [disabled]="!imageLoaded">
         <span class="material-icons">refresh</span>
       </button>
-      <button class="toolbar-btn" (click)="invertImage()" title="Инвертировать" [class.active]="inverted" [disabled]="!imageLoaded">
+      <button class="toolbar-btn" (click)="invertImage()" [title]="'DICOM.INVERT' | translate" [class.active]="inverted" [disabled]="!imageLoaded">
         <span class="material-icons">invert_colors</span>
       </button>
-      <button class="toolbar-btn" (click)="toggleFullscreen()" title="Полный экран">
+      <button class="toolbar-btn" (click)="toggleFullscreen()" [title]="'DICOM.FULLSCREEN' | translate">
         <span class="material-icons">fullscreen</span>
       </button>
     </div>
@@ -40,11 +40,11 @@
          [class.drag-over]="isDragOver">
       <div class="upload-content">
         <span class="material-icons upload-icon">upload_file</span>
-        <h3>Загрузить DICOM файл</h3>
-        <p>Перетащите .dcm файл или нажмите для выбора</p>
+        <h3>{{ 'DICOM.UPLOAD_TITLE' | translate }}</h3>
+        <p>{{ 'DICOM.UPLOAD_SUBTITLE' | translate }}</p>
         <label class="btn-upload" for="dicomFileInput" style="cursor:pointer;z-index:20;position:relative">
           <span class="material-icons">folder_open</span>
-          Выбрать файл
+          {{ 'DICOM.SELECT_FILE' | translate }}
         </label>
         <input
           id="dicomFileInput"
@@ -55,7 +55,7 @@
         <div class="demo-btn-wrap">
           <button class="btn-demo" (click)="loadDemoImage()">
             <span class="material-icons">image</span>
-            Загрузить демо снимок
+            {{ 'DICOM.LOAD_DEMO' | translate }}
           </button>
         </div>
       </div>
@@ -65,7 +65,7 @@
     <div class="loading-zone" *ngIf="isLoading">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <p>Загрузка DICOM файла...</p>
+        <p>{{ 'DICOM.LOADING' | translate }}</p>
       </div>
     </div>
 
@@ -92,7 +92,7 @@
         </div>
         <div class="info-bottom-left">
           <div>W: {{ windowWidth | number:'1.0-0' }} / L: {{ windowCenter | number:'1.0-0' }}</div>
-          <div>Zoom: {{ zoom }}x</div>
+          <div>{{ 'DICOM.ZOOM' | translate }}: {{ zoom }}x</div>
         </div>
       </div>
     </div>
@@ -103,11 +103,11 @@
   <div class="viewer-footer" *ngIf="imageLoaded">
     <div class="footer-info">
       <span class="material-icons" style="font-size:14px;color:#34a853">check_circle</span>
-      DICOM загружен успешно
+      {{ 'DICOM.LOADED_SUCCESS' | translate }}
     </div>
     <label class="btn-footer" for="dicomFileInput2">
       <span class="material-icons">upload</span>
-      Загрузить другой
+      {{ 'DICOM.LOAD_OTHER' | translate }}
     </label>
     <input id="dicomFileInput2" type="file" accept=".dcm,.DCM,application/dicom" (change)="onFileSelected($event)" style="position:absolute;opacity:0;width:0;height:0;overflow:hidden">
   </div>

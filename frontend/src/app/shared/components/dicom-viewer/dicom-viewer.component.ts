@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 declare let cornerstone: any;
 declare let cornerstoneWADOImageLoader: any;
@@ -9,7 +10,7 @@ declare let dicomParser: any;
 @Component({
   selector: 'app-dicom-viewer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './dicom-viewer.component.html',
   styleUrls: ['./dicom-viewer.component.scss']
 })
@@ -33,7 +34,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastY = 0;
   private cornerstoneReady = false;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.loadScripts();
@@ -143,7 +144,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('DICOM load error:', err);
       this.isLoading = false;
       this.cdr.detectChanges();
-      alert('Не удалось загрузить файл. Убедитесь что файл в формате DICOM (.dcm).');
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
     });
   }
 
@@ -170,7 +171,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('Demo DICOM load error:', err);
       this.isLoading = false;
       this.cdr.detectChanges();
-      alert('Не удалось загрузить демо снимок. Проверьте интернет-соединение.');
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
     });
   }
 
