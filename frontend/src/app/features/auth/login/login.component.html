@@ -1,8 +1,8 @@
 <div class="login-page" [ngClass]="animState">
   <div class="bg-overlay"></div>
 
-  <!-- Логотип вне левой панели — прямой дочерний элемент login-page -->
-  <div class="logo-wrap">
+  <!-- Логотип 1: В центре экрана во время анимации -->
+  <div class="logo-center" [class.hidden]="animState !== 'logo'">
     <div class="logo-icon-wrap">
       <span class="material-icons">local_hospital</span>
     </div>
@@ -12,8 +12,20 @@
     </div>
   </div>
 
-  <!-- Левая панель БЕЗ логотипа -->
+  <!-- Левая панель с логотипом 2 сверху -->
   <div class="left-panel">
+    <!-- Логотип 2: В левой панели сверху -->
+    <div class="logo-in-panel" [class.visible]="animState === 'moving' || animState === 'form'">
+      <div class="logo-icon-sm">
+        <span class="material-icons">local_hospital</span>
+      </div>
+      <div>
+        <span class="logo-name-sm">MedSystem</span>
+        <span class="logo-tagline-sm">Hospital Information System</span>
+      </div>
+    </div>
+
+    <!-- Контент -->
     <div class="left-content">
       <h1 class="left-title">
         {{ 'AUTH.LEFT_TITLE_1' | translate }}<br>

@@ -40,39 +40,24 @@
 .login-page.moving .left-panel { width: 55vw; }
 .login-page.form .left-panel { width: 55vw; }
 
-/* ===== ЛОГОТИП ===== */
-.logo-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+/* ===== ЛОГОТИП 1: ЦЕНТР ЭКРАНА ===== */
+.logo-center {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 300;
-  transition: top 0.85s cubic-bezier(0.4, 0, 0.2, 1),
-              left 0.85s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.85s cubic-bezier(0.4, 0, 0.2, 1),
-              gap 0.85s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.login-page.moving .logo-wrap {
-  top: 60px;
-  left: 50%;
-  transform: translateX(-27.5vw);
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-}
-
-.login-page.form .logo-wrap {
-  top: 60px;
-  left: 50%;
-  transform: translateX(-27.5vw);
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+.logo-center.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  pointer-events: none;
 }
 
 .logo-icon-wrap {
@@ -94,11 +79,7 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.logo-icon-wrap .material-icons {
-  font-size: 44px;
-  color: white;
-  transition: font-size 0.85s ease;
-}
+.logo-icon-wrap .material-icons { font-size: 44px; color: white; }
 
 .logo-text-wrap {
   display: flex;
@@ -119,50 +100,61 @@
   color: white;
   letter-spacing: -0.5px;
   white-space: nowrap;
-  transition: font-size 0.85s ease;
 }
 
 .logo-tagline {
   font-size: 16px;
   color: rgba(255,255,255,0.55);
   white-space: nowrap;
-  transition: font-size 0.85s ease;
 }
 
-.login-page.moving .logo-icon-wrap,
-.login-page.form .logo-icon-wrap {
+/* ===== ЛОГОТИП 2: В ЛЕВОЙ ПАНЕЛИ ===== */
+.logo-in-panel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+}
+
+.logo-in-panel.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.logo-icon-sm {
   width: 50px;
   height: 50px;
+  background: rgba(255,255,255,0.15);
   border-radius: 14px;
-  box-shadow: none;
-  animation: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
 }
 
-.login-page.moving .logo-icon-wrap .material-icons,
-.login-page.form .logo-icon-wrap .material-icons {
-  font-size: 26px;
-}
+.logo-icon-sm .material-icons { font-size: 26px; color: white; }
 
-.login-page.moving .logo-text-wrap,
-.login-page.form .logo-text-wrap {
-  align-items: flex-start;
-  gap: 2px;
-  animation: none;
-}
-
-.login-page.moving .logo-name,
-.login-page.form .logo-name {
+.logo-name-sm {
+  display: block;
   font-size: 22px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.3px;
 }
 
-.login-page.moving .logo-tagline,
-.login-page.form .logo-tagline {
+.logo-tagline-sm {
+  display: block;
   font-size: 11px;
+  color: rgba(255,255,255,0.5);
 }
 
 /* ===== КОНТЕНТ ЛЕВОЙ ПАНЕЛИ ===== */
 .left-content {
-  padding-top: 140px;
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s ease, transform 0.6s ease;
