@@ -28,11 +28,19 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   windowCenter = 40;
   imageInfo: any = null;
 
+  // Multi-frame
+  files: File[] = [];
+  currentSlice = 0;
+  totalSlices = 0;
+  isMultiFrame = false;
+  imageIds: string[] = [];
+
   isDragOver = false;
   private isDragging = false;
   private lastX = 0;
   private lastY = 0;
   private cornerstoneReady = false;
+  private keyDownHandler!: (e: KeyboardEvent) => void;
 
   constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
@@ -40,9 +48,13 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadScripts();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.keyDownHandler = this.onKeyDown.bind(this);
+    document.addEventListener('keydown', this.keyDownHandler);
+  }
 
   ngOnDestroy(): void {
+    document.removeEventListener('keydown', this.keyDownHandler);
     if (this.cornerstoneReady && this.dicomElement?.nativeElement) {
       try { cornerstone.disable(this.dicomElement.nativeElement); } catch (_) {}
     }
@@ -104,22 +116,124 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     event.stopPropagation();
     this.isDragOver = false;
     const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
+    if (!files || files.length === 0) return;
+    if (files.length === 1) {
+      this.isMultiFrame = false;
       this.loadDicomFile(files[0]);
+    } else {
+      this.handleMultipleFiles(Array.from(files) as File[]);
     }
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    if (file) this.loadDicomFile(file);
+    if (file) { this.isMultiFrame = false; this.loadDicomFile(file); }
     input.value = '';
+  }
+
+  onFilesSelected(event: any): void {
+    const selectedFiles = Array.from(event.target.files) as File[];
+    if (!selectedFiles.length) return;
+
+    const maxSizeMB = 100;
+    for (const file of selectedFiles) {
+      if (file.size / (1024 * 1024) > maxSizeMB) {
+        alert(`Файл ${file.name} слишком большой. Максимум ${maxSizeMB} MB.`);
+        return;
+      }
+    }
+
+    if (selectedFiles.length === 1) {
+      this.isMultiFrame = false;
+      this.loadDicomFile(selectedFiles[0]);
+    } else {
+      this.handleMultipleFiles(selectedFiles);
+    }
+    event.target.value = '';
+  }
+
+  private handleMultipleFiles(selectedFiles: File[]): void {
+    this.isMultiFrame = true;
+    this.files = selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
+    this.totalSlices = this.files.length;
+    this.currentSlice = 0;
+    this.cdr.detectChanges();
+    this.loadMultipleFiles(this.files);
+  }
+
+  loadMultipleFiles(files: File[]): void {
+    if (!this.cornerstoneReady) { setTimeout(() => this.loadMultipleFiles(files), 800); return; }
+    this.isLoading = true;
+    this.imageLoaded = false;
+    this.imageIds = [];
+    this.cdr.detectChanges();
+
+    if (this.dicomElement?.nativeElement) {
+      try { cornerstone.enable(this.dicomElement.nativeElement); } catch (_) {}
+    }
+
+    this.imageIds = files.map(file =>
+      cornerstoneWADOImageLoader.wadouri.fileManager.add(file)
+    );
+
+    cornerstone.loadImage(this.imageIds[0]).then((image: any) => {
+      cornerstone.displayImage(this.dicomElement.nativeElement, image);
+      const vp = cornerstone.getDefaultViewportForImage(this.dicomElement.nativeElement, image);
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+      this.windowWidth = vp?.voi?.windowWidth ?? 400;
+      this.windowCenter = vp?.voi?.windowCenter ?? 40;
+      this.extractMetadata(image);
+      this.isLoading = false;
+      this.imageLoaded = true;
+      this.currentSlice = 0;
+      this.zoom = 1;
+      this.inverted = false;
+      this.cdr.detectChanges();
+    }).catch(() => {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
+    });
+  }
+
+  goToSlice(index: number): void {
+    if (!this.imageLoaded || !this.isMultiFrame) return;
+    if (index < 0 || index >= this.totalSlices) return;
+
+    this.currentSlice = index;
+    this.cdr.detectChanges();
+
+    cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
+      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
+      cornerstone.displayImage(this.dicomElement.nativeElement, image);
+      if (vp) cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+    }).catch((_: any) => {});
+  }
+
+  nextSlice(): void { this.goToSlice(this.currentSlice + 1); }
+  prevSlice(): void { this.goToSlice(this.currentSlice - 1); }
+
+  onSliceSlider(event: any): void {
+    this.goToSlice(Number(event.target.value));
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.imageLoaded || !this.isMultiFrame) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextSlice();
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevSlice();
+    }
   }
 
   loadDicomFile(file: File): void {
     if (!this.cornerstoneReady) { setTimeout(() => this.loadDicomFile(file), 800); return; }
     this.isLoading = true;
     this.imageLoaded = false;
+    this.isMultiFrame = false;
     this.cdr.detectChanges();
 
     if (this.dicomElement?.nativeElement) {
@@ -152,6 +266,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.cornerstoneReady) { setTimeout(() => this.loadDemoImage(), 800); return; }
     this.isLoading = true;
     this.imageLoaded = false;
+    this.isMultiFrame = false;
     this.cdr.detectChanges();
 
     if (this.dicomElement?.nativeElement) {
@@ -239,9 +354,18 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   onWheel(event: WheelEvent): void {
     event.preventDefault();
     if (!this.imageLoaded) return;
-    const delta = event.deltaY > 0 ? -0.1 : 0.1;
-    this.zoom = Math.round(Math.max(0.1, Math.min(5, this.zoom + delta)) * 10) / 10;
-    this.applyZoom();
+
+    if (this.isMultiFrame) {
+      if (event.deltaY > 0) {
+        this.nextSlice();
+      } else {
+        this.prevSlice();
+      }
+    } else {
+      const delta = event.deltaY > 0 ? -0.1 : 0.1;
+      this.zoom = Math.round(Math.max(0.1, Math.min(5, this.zoom + delta)) * 10) / 10;
+      this.applyZoom();
+    }
   }
 
   onMouseDown(event: MouseEvent): void {

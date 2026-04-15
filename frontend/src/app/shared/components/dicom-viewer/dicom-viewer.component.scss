@@ -295,3 +295,103 @@ label.btn-footer {
   .control-value { display: none; }
   .viewer-title { font-size: 13px; }
 }
+
+// ===== MULTI-FRAME / SLICE NAVIGATOR =====
+.multiframe-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(124,58,237,0.2);
+  border: 1px solid rgba(124,58,237,0.4);
+  color: #a78bfa;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.slice-navigator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.slice-btn {
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+  .material-icons { font-size: 18px; }
+}
+
+.slice-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 60px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slice-current { color: #60a5fa; font-size: 15px; }
+.slice-separator { color: rgba(255,255,255,0.4); }
+.slice-total { color: rgba(255,255,255,0.6); }
+
+.slice-slider {
+  flex: 1;
+  accent-color: #7c3aed;
+  cursor: pointer;
+  height: 4px;
+}
+
+.slice-overlay-info {
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+.multiframe-tips {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 5;
+
+  .tip-item {
+    background: rgba(0,0,0,0.5);
+    color: rgba(255,255,255,0.7);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+}
+
+.loading-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+}

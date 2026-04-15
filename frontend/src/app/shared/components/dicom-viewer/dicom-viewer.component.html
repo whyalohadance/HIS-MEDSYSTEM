@@ -6,9 +6,13 @@
       <span class="material-icons viewer-icon">biotech</span>
       <span class="viewer-title">{{ 'DICOM.TITLE' | translate }}</span>
       <span class="study-id-badge" *ngIf="studyId">{{ studyId }}</span>
+      <span class="multiframe-badge" *ngIf="isMultiFrame && imageLoaded">
+        <span class="material-icons" style="font-size:13px">layers</span>
+        {{ totalSlices }} {{ 'DICOM.SLICES' | translate }}
+      </span>
     </div>
     <div class="toolbar-controls">
-      <div class="control-group" *ngIf="imageLoaded">
+      <div class="control-group" *ngIf="imageLoaded && !isMultiFrame">
         <span class="material-icons control-icon" [title]="'DICOM.ZOOM' | translate">zoom_in</span>
         <input type="range" min="0.1" max="5" step="0.1" [(ngModel)]="zoom" (input)="applyZoom()" class="control-slider">
         <span class="control-value">{{ zoom }}x</span>
@@ -41,16 +45,17 @@
       <div class="upload-content">
         <span class="material-icons upload-icon">upload_file</span>
         <h3>{{ 'DICOM.UPLOAD_TITLE' | translate }}</h3>
-        <p>{{ 'DICOM.UPLOAD_SUBTITLE' | translate }}</p>
+        <p>Выберите один .dcm файл или несколько файлов серии (МРТ/КТ срезы)</p>
         <label class="btn-upload" for="dicomFileInput" style="cursor:pointer;z-index:20;position:relative">
           <span class="material-icons">folder_open</span>
-          {{ 'DICOM.SELECT_FILE' | translate }}
+          Выбрать файлы (серия)
         </label>
         <input
           id="dicomFileInput"
           type="file"
           accept=".dcm,.DCM,application/dicom"
-          (change)="onFileSelected($event)"
+          multiple
+          (change)="onFilesSelected($event)"
           style="position:fixed;left:-9999px;opacity:0;width:1px;height:1px">
         <div class="demo-btn-wrap">
           <button class="btn-demo" (click)="loadDemoImage()">
@@ -66,6 +71,7 @@
       <div class="loading-content">
         <div class="loading-spinner"></div>
         <p>{{ 'DICOM.LOADING' | translate }}</p>
+        <p class="loading-sub" *ngIf="isMultiFrame && totalSlices > 0">{{ totalSlices }} файлов серии...</p>
       </div>
     </div>
 
@@ -92,8 +98,39 @@
         </div>
         <div class="info-bottom-left">
           <div>W: {{ windowWidth | number:'1.0-0' }} / L: {{ windowCenter | number:'1.0-0' }}</div>
-          <div>{{ 'DICOM.ZOOM' | translate }}: {{ zoom }}x</div>
+          <div *ngIf="!isMultiFrame">{{ 'DICOM.ZOOM' | translate }}: {{ zoom }}x</div>
+          <div *ngIf="isMultiFrame" class="slice-overlay-info">
+            Срез {{ currentSlice + 1 }} / {{ totalSlices }}
+          </div>
         </div>
+      </div>
+
+      <!-- Multi-frame tips -->
+      <div class="multiframe-tips" *ngIf="imageLoaded && isMultiFrame">
+        <span class="tip-item">🖱️ Колёсико — листать срезы</span>
+        <span class="tip-item">⌨️ ← → — навигация</span>
+      </div>
+
+      <!-- Slice navigator -->
+      <div class="slice-navigator" *ngIf="imageLoaded && isMultiFrame">
+        <button class="slice-btn" (click)="prevSlice()" [disabled]="currentSlice === 0">
+          <span class="material-icons">chevron_left</span>
+        </button>
+        <div class="slice-info">
+          <span class="slice-current">{{ currentSlice + 1 }}</span>
+          <span class="slice-separator">/</span>
+          <span class="slice-total">{{ totalSlices }}</span>
+        </div>
+        <input
+          type="range"
+          class="slice-slider"
+          [min]="0"
+          [max]="totalSlices - 1"
+          [value]="currentSlice"
+          (input)="onSliceSlider($event)">
+        <button class="slice-btn" (click)="nextSlice()" [disabled]="currentSlice === totalSlices - 1">
+          <span class="material-icons">chevron_right</span>
+        </button>
       </div>
     </div>
 
@@ -104,12 +141,13 @@
     <div class="footer-info">
       <span class="material-icons" style="font-size:14px;color:#34a853">check_circle</span>
       {{ 'DICOM.LOADED_SUCCESS' | translate }}
+      <span *ngIf="isMultiFrame"> — {{ totalSlices }} срезов</span>
     </div>
     <label class="btn-footer" for="dicomFileInput2">
       <span class="material-icons">upload</span>
       {{ 'DICOM.LOAD_OTHER' | translate }}
     </label>
-    <input id="dicomFileInput2" type="file" accept=".dcm,.DCM,application/dicom" (change)="onFileSelected($event)" style="position:absolute;opacity:0;width:0;height:0;overflow:hidden">
+    <input id="dicomFileInput2" type="file" accept=".dcm,.DCM,application/dicom" multiple (change)="onFilesSelected($event)" style="position:absolute;opacity:0;width:0;height:0;overflow:hidden">
   </div>
 
 </div>
