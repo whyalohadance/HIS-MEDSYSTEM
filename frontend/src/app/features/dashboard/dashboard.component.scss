@@ -581,3 +581,66 @@
   .tp-avatar { width: 36px !important; height: 36px !important; font-size: 13px !important; }
   .tp-name { font-size: 13px !important; }
 }
+
+/* ===== АНИМАЦИИ DASHBOARD ===== */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Заголовок страницы */
+.page-header {
+  animation: fadeSlideDown 0.4s ease both;
+}
+
+/* Stat карточки с задержкой */
+.stat-card:nth-child(1) { animation: fadeSlideUp 0.4s ease 0.05s both; }
+.stat-card:nth-child(2) { animation: fadeSlideUp 0.4s ease 0.1s both; }
+.stat-card:nth-child(3) { animation: fadeSlideUp 0.4s ease 0.15s both; }
+.stat-card:nth-child(4) { animation: fadeSlideUp 0.4s ease 0.2s both; }
+
+/* Быстрые действия */
+.action-card:nth-child(1) { animation: fadeSlideUp 0.4s ease 0.1s both; }
+.action-card:nth-child(2) { animation: fadeSlideUp 0.4s ease 0.15s both; }
+.action-card:nth-child(3) { animation: fadeSlideUp 0.4s ease 0.2s both; }
+.action-card:nth-child(4) { animation: fadeSlideUp 0.4s ease 0.25s both; }
+.action-card:nth-child(5) { animation: fadeSlideUp 0.4s ease 0.3s both; }
+.action-card:nth-child(6) { animation: fadeSlideUp 0.4s ease 0.35s both; }
+
+/* Секции */
+.queue-section { animation: fadeSlideUp 0.5s ease 0.2s both; }
+.chart-card { animation: fadeSlideUp 0.5s ease 0.25s both; }
+.chart-card:nth-child(2) { animation-delay: 0.35s; }
+.today-appointments-section { animation: fadeSlideUp 0.5s ease 0.2s both; }
+.my-patients-section { animation: fadeSlideUp 0.5s ease 0.3s both; }
+.reception-apt-section { animation: fadeSlideUp 0.5s ease 0.2s both; }
+.doctors-status-section { animation: fadeSlideUp 0.5s ease 0.3s both; }
+.rooms-status-section { animation: fadeSlideUp 0.5s ease 0.4s both; }
+
+/* Dashboard sidebar */
+.dashboard-sidebar { animation: fadeSlideUp 0.5s ease 0.3s both; }
+.dashboard-main { animation: fadeIn 0.4s ease 0.1s both; }
+
+/* Карточки в списках */
+.apt-today-item { animation: fadeSlideUp 0.3s ease both; }
+.apt-today-item:nth-child(1) { animation-delay: 0.3s; }
+.apt-today-item:nth-child(2) { animation-delay: 0.35s; }
+.apt-today-item:nth-child(3) { animation-delay: 0.4s; }
+.apt-today-item:nth-child(4) { animation-delay: 0.45s; }
+.apt-today-item:nth-child(5) { animation-delay: 0.5s; }
+
+.queue-item:nth-child(1) { animation: fadeSlideUp 0.3s ease 0.35s both; }
+.queue-item:nth-child(2) { animation: fadeSlideUp 0.3s ease 0.4s both; }
+.queue-item:nth-child(3) { animation: fadeSlideUp 0.3s ease 0.45s both; }
+.queue-item:nth-child(4) { animation: fadeSlideUp 0.3s ease 0.5s both; }
+.queue-item:nth-child(5) { animation: fadeSlideUp 0.3s ease 0.55s both; }
