@@ -14,7 +14,7 @@
   position: fixed;
   inset: 0;
   background: linear-gradient(160deg, #0f2d52 0%, #1a4a8a 40%, #1a73e8 100%);
-  z-index: 50;
+  z-index: 100;
   transition: opacity 0.8s ease 0.3s;
   pointer-events: none;
 }
@@ -50,12 +50,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 300;
   transition: top 0.85s cubic-bezier(0.4, 0, 0.2, 1),
               left 0.85s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.85s cubic-bezier(0.4, 0, 0.2, 1),
-              flex-direction 0.85s ease,
               gap 0.85s ease;
-  z-index: 200;
 }
 
 .login-page.moving .logo-wrap {
@@ -63,7 +62,6 @@
   left: 44px;
   transform: translate(0, 0);
   flex-direction: row;
-  align-items: center;
   gap: 12px;
 }
 
@@ -72,7 +70,6 @@
   left: 44px;
   transform: translate(0, 0);
   flex-direction: row;
-  align-items: center;
   gap: 12px;
 }
 
