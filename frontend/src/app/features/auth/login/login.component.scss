@@ -113,8 +113,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 16px;
+  margin-bottom: 48px;
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
@@ -126,31 +126,37 @@
 }
 
 .logo-icon-sm {
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
   background: rgba(255,255,255,0.15);
-  border-radius: 14px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   flex-shrink: 0;
 }
 
-.logo-icon-sm .material-icons { font-size: 26px; color: white; }
+.logo-icon-sm .material-icons {
+  font-size: 34px;
+  color: white;
+}
 
 .logo-name-sm {
   display: block;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   color: white;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
 }
 
 .logo-tagline-sm {
   display: block;
-  font-size: 11px;
+  font-size: 13px;
   color: rgba(255,255,255,0.5);
+  margin-top: 3px;
 }
 
 /* ===== КОНТЕНТ ЛЕВОЙ ПАНЕЛИ ===== */
