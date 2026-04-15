@@ -83,29 +83,30 @@
   justify-content: center;
   border: 1px solid rgba(255,255,255,0.2);
   box-shadow: 0 0 0 8px rgba(255,255,255,0.04), 0 20px 60px rgba(0,0,0,0.25);
-  transition: all 0.85s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  animation: iconAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: 0.2s;
+  opacity: 0;
+  animation: iconAppear 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
 }
 
 @keyframes iconAppear {
-  from { opacity: 0; transform: scale(0.5); }
+  from { opacity: 0; transform: scale(0.6); }
   to { opacity: 1; transform: scale(1); }
 }
 
 .login-page.moving .logo-icon-wrap,
 .login-page.form .logo-icon-wrap {
+  opacity: 1;
+  animation: none;
   width: 50px;
   height: 50px;
   border-radius: 14px;
   box-shadow: none;
+  transition: all 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo-icon-wrap .material-icons {
   font-size: 44px;
   color: white;
-  transition: font-size 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .login-page.moving .logo-icon-wrap .material-icons,
@@ -118,20 +119,22 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  transition: all 0.85s ease;
-  animation: textAppear 0.6s ease both;
-  animation-delay: 0.6s;
+  opacity: 0;
+  animation: textAppear 0.5s ease 0.5s forwards;
 }
 
 @keyframes textAppear {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .login-page.moving .logo-text-wrap,
 .login-page.form .logo-text-wrap {
+  opacity: 1;
+  animation: none;
   align-items: flex-start;
   gap: 2px;
+  transition: all 0.85s ease;
 }
 
 .logo-name {
@@ -139,7 +142,6 @@
   font-weight: 700;
   color: white;
   letter-spacing: -0.5px;
-  transition: font-size 0.85s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
@@ -151,8 +153,12 @@
 .logo-tagline {
   font-size: 16px;
   color: rgba(255,255,255,0.55);
-  transition: all 0.85s ease;
   white-space: nowrap;
+}
+
+.login-page.moving .logo-tagline,
+.login-page.form .logo-tagline {
+  font-size: 11px;
 }
 
 .login-page.moving .logo-tagline,
