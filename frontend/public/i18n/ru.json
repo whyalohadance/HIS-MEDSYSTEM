@@ -67,7 +67,15 @@
     "PATIENTS_MGMT": "Управление пациентами",
     "APPOINTMENTS_MGMT": "Запись на приём",
     "RESULTS_REPORTS": "Результаты и отчёты",
-    "REALTIME_NOTIF": "Уведомления в реальном времени"
+    "REALTIME_NOTIF": "Уведомления в реальном времени",
+    "LEFT_TITLE_1": "Медицинская",
+    "LEFT_TITLE_2": "Информационная",
+    "LEFT_TITLE_3": "Система",
+    "LEFT_SUBTITLE": "Управляйте пациентами, приёмами и отчётами в одной современной платформе.",
+    "FEATURE_1": "Управление пациентами",
+    "FEATURE_2": "Медицинские приёмы",
+    "FEATURE_3": "Система RIS с DICOM Viewer",
+    "FEATURE_4": "Отчёты PDF и Excel"
   },
   "DASHBOARD": {
     "TITLE": "Дашборд",

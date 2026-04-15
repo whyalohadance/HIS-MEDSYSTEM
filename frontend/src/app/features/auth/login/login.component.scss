@@ -58,9 +58,9 @@
 
 .login-page.moving .logo-wrap,
 .login-page.form .logo-wrap {
-  top: 48px;
-  left: 60px;
-  transform: translate(0, 0);
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
   flex-direction: row;
   align-items: center;
   gap: 14px;

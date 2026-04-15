@@ -67,7 +67,15 @@
     "PATIENTS_MGMT": "Patient management",
     "APPOINTMENTS_MGMT": "Appointment scheduling",
     "RESULTS_REPORTS": "Results and reports",
-    "REALTIME_NOTIF": "Real-time notifications"
+    "REALTIME_NOTIF": "Real-time notifications",
+    "LEFT_TITLE_1": "Hospital",
+    "LEFT_TITLE_2": "Information",
+    "LEFT_TITLE_3": "System",
+    "LEFT_SUBTITLE": "Manage patients, appointments and reports in one modern platform.",
+    "FEATURE_1": "Patient management",
+    "FEATURE_2": "Medical appointments",
+    "FEATURE_3": "RIS System with DICOM Viewer",
+    "FEATURE_4": "PDF and Excel reports"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",

@@ -67,7 +67,15 @@
     "PATIENTS_MGMT": "Gestionarea pacienților",
     "APPOINTMENTS_MGMT": "Programarea consultațiilor",
     "RESULTS_REPORTS": "Rezultate și rapoarte",
-    "REALTIME_NOTIF": "Notificări în timp real"
+    "REALTIME_NOTIF": "Notificări în timp real",
+    "LEFT_TITLE_1": "Sistem",
+    "LEFT_TITLE_2": "Informațional",
+    "LEFT_TITLE_3": "Spitalicesc",
+    "LEFT_SUBTITLE": "Gestionați pacienții, programările și rapoartele într-o singură platformă modernă.",
+    "FEATURE_1": "Gestionarea pacienților",
+    "FEATURE_2": "Programări medicale",
+    "FEATURE_3": "Sistem RIS cu DICOM Viewer",
+    "FEATURE_4": "Rapoarte PDF și Excel"
   },
   "DASHBOARD": {
     "TITLE": "Panou de control",
