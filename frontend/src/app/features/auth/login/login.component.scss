@@ -56,14 +56,22 @@
   z-index: 20;
 }
 
-.login-page.moving .logo-wrap,
-.login-page.form .logo-wrap {
-  top: 52px;
-  left: 50%;
-  transform: translateX(-50%);
+.login-page.moving .logo-wrap {
+  top: 44px;
+  left: 44px;
+  transform: translate(0, 0);
   flex-direction: row;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+}
+
+.login-page.form .logo-wrap {
+  top: 44px;
+  left: 44px;
+  transform: translate(0, 0);
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 
 .logo-icon-wrap {
