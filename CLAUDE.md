@@ -1,127 +1,140 @@
-# HIS-MedSystem — Project Brain
+# HIS-MedSystem — Project Brain for Claude Code
 
-## Описание проекта
-Hospital Information System — полноценная медицинская система для управления пациентами, приёмами, персоналом и отчётами.
+## Что это за проект
+HIS-MedSystem (Hospital Information System) — полноценная медицинская веб-система.
+Разработана студентом Ceban Devid, CUTM (Colegiul Universității Tehnice a Moldovei), специальность AAW.
+GitHub: https://github.com/whyalohadance/HIS-MEDSYSTEM
 
 ## Структура проекта
-- Backend: ./backend/ — NestJS + PostgreSQL 16 + TypeORM (порт 3000)
-- Frontend: ./frontend/ — Angular 19 Standalone Components (порт 4200)
-- GitHub: github.com/whyalohadance/HIS-MEDSYSTEM
+- Backend: ~/Documents/GitHub/HIS-MEDSYSTEM/backend (NestJS, порт 3000)
+- Frontend: ~/Documents/GitHub/HIS-MEDSYSTEM/frontend (Angular 19, порт 4200)
+- База данных: PostgreSQL 16, medical_db
 
 ## Как запустить
-Terminal 1 — Backend: cd backend && npm run start:dev
-Terminal 2 — Frontend: cd frontend && ng serve
-База данных: pg_isready -h localhost -p 5432
+Terminal 1: cd ~/Documents/GitHub/HIS-MEDSYSTEM/backend && npm run start:dev
+Terminal 2: cd ~/Documents/GitHub/HIS-MEDSYSTEM/frontend && ng serve
+Docker: cd ~/Documents/GitHub/HIS-MEDSYSTEM && make up
 
 ## База данных
+Host: localhost:5432
 DB: medical_db | User: medical_user | Password: medical123
-Host: localhost:5432 | JWT Secret: medical_super_secret_key_2024
+JWT Secret: medical_super_secret_key_2024
 
 ## Тестовые аккаунты
-Admin: admin@med.com / password123
-Doctor: doctor@med.com / password123
-Receptionist: reception@med.com / password123
-Radiologist: radiolog@med.com / password123
+admin@med.com / password123 — полный доступ
+doctor@med.com / password123 — медицинский доступ
+reception@med.com / password123 — запись пациентов
+radiolog@med.com / password123 — RIS + DICOM Viewer
 
 ## Роли и доступ
-- admin — полный доступ ко всему
-- doctor — свои пациенты, результаты, приёмы, просмотр исследований
-- receptionist — пациенты, приёмы, кабинеты
-- radiologist — радиологические исследования, worklist, заключения
+- admin: всё
+- doctor: пациенты, приёмы, результаты, My Cabinet
+- receptionist: пациенты, приёмы, кабинеты
+- radiologist: RIS исследования, Worklist, DICOM Viewer
 
 ## Технологии Backend
-NestJS, TypeORM (synchronize: true), JWT + bcryptjs + Passport,
-PDFKit (PDF отчёты), ExcelJS (Excel отчёты), Multer (загрузка файлов),
-Mammoth (конвертация .docx в HTML), @nestjs/schedule (cron jobs)
+NestJS 10, TypeORM (synchronize: true), PostgreSQL 16
+JWT + bcryptjs + Passport, Multer (upload), Mammoth (docx→HTML)
+PDFKit + шрифт Roboto (кириллица!), ExcelJS, @nestjs/schedule (cron)
+Swagger UI на /api/docs
 
 ## Технологии Frontend
-Angular 19 Standalone Components, Chart.js (графики),
-SCSS с CSS переменными, тёмная тема через class dark-theme на body,
-Bottom navigation на мобильных до 768px
+Angular 19 Standalone Components, SCSS + CSS Variables
+@ngx-translate/core — 3 языка: RO/RU/EN
+Chart.js — графики на dashboard
+Cornerstone.js — DICOM Viewer
+i18n файлы: frontend/public/i18n/ro.json, ru.json, en.json
 
-## Правила — ВСЕГДА делай
-- После изменений frontend: npx ng build --configuration=development
-- После изменений backend: npm run build
-- Каждую задачу завершай git commit с понятным сообщением
-- Используй существующие ApiService и AuthService
-- Токен JWT в localStorage под ключом 'token'
+## Структура Frontend
+src/app/features/ — страницы:
+  auth/login/ — страница логина с анимацией (2 файла: .html + .scss отдельно!)
+  dashboard/ — дашборд (разный для каждой роли)
+  patients/ — список пациентов
+  patient-card/ — карточка пациента
+  appointments/ — приёмы
+  staff/ — персонал
+  rooms/ — кабинеты
+  reports/ — отчёты PDF/Excel
+  studies/ — RIS исследования
+  worklist/ — список работ радиолога
+  dicom-viewer/ — DICOM Viewer
+  my-cabinet/ — кабинет доктора
+  not-found/ — страница 404
 
-## Правила — НИКОГДА не делай
-- Не меняй порты (backend: 3000, frontend: 4200)
-- Не удаляй существующие модули NestJS без причины
-- Не меняй структуру БД напрямую — только через entities
-- Не добавляй npm пакеты без необходимости
+src/app/shared/components/ — компоненты:
+  sidebar/ — боковое меню (role-based)
+  header/ — шапка (язык RO/RU/EN, темная тема, уведомления)
+  bottom-nav/ — нижняя навигация на мобильных
+  toast/ — всплывающие уведомления
+  confirm-dialog/ — диалог подтверждения
+  dicom-viewer/ — компонент просмотра DICOM
+  date-picker/ — кастомный выбор даты
+
+src/app/core/services/ — сервисы:
+  auth.service.ts — авторизация
+  api.service.ts — HTTP запросы (добавляет JWT автоматически)
+  language.service.ts — переключение языков
+  toast.service.ts — toast уведомления
+  confirm.service.ts — confirm диалог
+
+## Важные детали
+- Токен JWT хранится в localStorage под ключом 'token'
+- Пользователь хранится в localStorage под ключом 'user'
+- Темная тема: class 'dark-theme' на body
+- Bottom nav показывается только до 768px
+- Sidebar скрыт на мобильных (до 768px)
+- Страница логина: login.component.html и login.component.scss ОТДЕЛЬНЫЕ ФАЙЛЫ
+- Анимация логина: animState = 'logo' → 'moving' → 'form'
+- Логотип в центре (фаза logo), потом в левой панели (фаза form)
 
 ## Цветовая палитра
-primary: #1a73e8 | dark: #0f2d52 | success: #34a853
-danger: #ea4335 | warning: #f9ab00 | bg-light: #f4f6f9
-bg-dark (тёмная тема): #0f172a | card-dark: #1e293b
+primary: #1a73e8 (синий)
+dark: #0f2d52 (тёмно-синий)
+success: #34a853 (зелёный)
+danger: #ea4335 (красный)
+warning: #f9ab00 (жёлтый)
+bg-light: #f4f6f9
+bg-dark: #0f172a
+card-dark: #1e293b
 
-## Breakpoints мобильная адаптация
-xs: 0-480px — маленькие телефоны
-sm: 480-768px — телефоны (bottom nav вместо sidebar)
-md: 768-1024px — планшеты
-lg: 1024-1440px — ноутбуки
-xl: 1440px+ — десктопы
+## Breakpoints
+xs: 0-480px | sm: 480-768px | md: 768-1024px | lg: 1024-1440px | xl: 1440px+
 
-## Частые проблемы и решения
+## Частые проблемы
 Порт занят: kill -9 $(lsof -ti:3000) или kill -9 $(lsof -ti:4200)
-Enum ошибка PostgreSQL: ALTER TYPE users_role_enum OWNER TO medical_user;
-CORS uploads: файлы доступны без токена по http://localhost:3000/uploads/filename
+CORS: проверь main.ts — app.enableCors({origin: ['http://localhost:4200']})
+JSON невалидный: python3 -c "import json; json.load(open('файл.json'))"
 
-## Модули Backend
-- auth — JWT login/register
-- users — CRUD пользователей, /users/doctors
-- patients — CRUD пациентов
-- appointments — приёмы + cron автозавершение 35 мин
-- results — результаты + mammoth preview + upload
-- rooms — кабинеты + /rooms/available
-- notifications — уведомления + cron за 2 часа
-- reports — PDF + Excel + cron 1го числа
-- schedules — расписание врачей
-- examinations — типы обследований
-- upload — multer загрузка файлов
+## Backend модули (src/modules/)
+auth, users, patients, appointments, results, rooms, reports,
+notifications, schedules, examinations, upload, studies (RIS)
 
-## Страницы Frontend
-- /auth/login — вход с анимацией (на мобильных без анимации)
-- /dashboard — Chart.js графики + очередь на сегодня
-- /patients — список + поиск + пагинация (10 на страницу)
-- /patients/:id — карточка пациента + история + результаты + mammoth просмотр
-- /appointments — фильтры + autocomplete поиск пациента + цена MDL
-- /staff — персонал + статус в реальном времени (зелёный/жёлтый)
-- /rooms — кабинеты + доступность по дате/времени (только admin)
-- /results — результаты + upload файлов
-- /reports — PDF/Excel отчёты + сводка (только admin)
-- /notifications — уведомления
-- /profile — профиль пользователя
-- /schedules — расписание (только admin)
-- /examinations — обследования (только admin)
+## Правила работы — ВСЕГДА
+- После изменений frontend: npx ng build --configuration=development
+- После изменений backend: npm run build
+- Каждую задачу завершай: git add . && git commit -m "..." && git push origin main
+- Используй ApiService для HTTP запросов (не fetch напрямую)
+- Добавляй TranslateModule в imports каждого нового компонента
+- Проверяй валидность JSON: python3 -c "import json; json.load(open(...))"
 
-## Мобильная версия
-На экранах до 768px:
-- Sidebar скрыт, вместо него Bottom Navigation Bar внизу экрана
-- 5 вкладок: Главная, Пациенты, Приёмы, Уведомления, Профиль
-- Все формы в одну колонку
-- Статистика 2x2 грид
-- Минимальная высота кнопок 48px
-- font-size для input: 16px (предотвращает zoom на iOS)
-- Safe area для iPhone notch: env(safe-area-inset-bottom)
+## Правила работы — НИКОГДА
+- Не меняй порты (3000 и 4200)
+- Не удаляй существующие модули без причины
+- Не хардкодируй тексты — используй translate pipe
+- Не забывай про dark theme при добавлении новых стилей
+- Не используй display:none для скрытия логотипа — используй opacity
 
-## Стиль работы Claude Code
-- Будь краток — только необходимый код без объяснений
-- Не спрашивай подтверждения на мелкие правки — просто делай
-- После каждого изменения сразу проверяй билд
-- Используй && для цепочки команд
-- Если задача ясна — выполняй немедленно
-- Всегда завершай задачу git commit && git push
-- При ошибке — сам диагностируй и исправляй без вопросов
+## Docker
+docker-compose.yml — продакшен (3 контейнера)
+docker-compose.dev.yml — только PostgreSQL
+make up — запустить всё
+make down — остановить
+make logs — логи
 
-## Приоритеты при разработке
-1. Сначала backend (проверь npm run build)
-2. Потом frontend (проверь ng build)
-3. Потом git commit && git push
-
-## Быстрые команды
-- Перезапуск backend: kill -9 $(lsof -ti:3000) && cd backend && npm run start:dev
-- Перезапуск frontend: kill -9 $(lsof -ti:4200) && cd frontend && ng serve
-- Проверка БД: psql postgresql://medical_user:medical123@localhost:5432/medical_db -c "SELECT NOW();"
+## RIS модуль (Radiology Information System)
+Study entity: studyId (STU-YYYYMMDD-XXXX), type (mri/ct/xray/ultrasound/pet),
+status (pending/scheduled/in_progress/completed/cancelled),
+priority (routine/urgent/stat), findings, conclusion
+Modality entity: оборудование (МРТ Siemens 3T, КТ GE Revolution, etc.)
+Доступ: только admin и radiologist
+DICOM Viewer: Cornerstone.js, маршрут /dicom и /dicom/:id
