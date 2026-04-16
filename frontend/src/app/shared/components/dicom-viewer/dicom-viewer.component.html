@@ -45,7 +45,22 @@
       <div class="upload-content">
         <span class="material-icons upload-icon">upload_file</span>
         <h3>{{ 'DICOM.UPLOAD_TITLE' | translate }}</h3>
-        <p>Выберите один .dcm файл или несколько файлов серии (МРТ/КТ срезы)</p>
+        <p>Загрузите .dcm файл — поддерживаются одиночные и multi-frame снимки</p>
+
+        <div class="upload-tips-list">
+          <div class="upload-tip">
+            <span class="material-icons">image</span>
+            <span>Один .dcm — обычный снимок</span>
+          </div>
+          <div class="upload-tip">
+            <span class="material-icons">burst_mode</span>
+            <span>Один .dcm с кадрами — МРТ/КТ серия</span>
+          </div>
+          <div class="upload-tip">
+            <span class="material-icons">photo_library</span>
+            <span>Несколько .dcm — серия срезов</span>
+          </div>
+        </div>
         <label class="btn-upload" for="dicomFileInput" style="cursor:pointer;z-index:20;position:relative">
           <span class="material-icons">folder_open</span>
           Выбрать файлы (серия)
@@ -97,10 +112,10 @@
           <div>{{ imageInfo.institution }}</div>
         </div>
         <div class="info-bottom-left">
-          <div>W: {{ windowWidth | number:'1.0-0' }} / L: {{ windowCenter | number:'1.0-0' }}</div>
-          <div *ngIf="!isMultiFrame">{{ 'DICOM.ZOOM' | translate }}: {{ zoom }}x</div>
-          <div *ngIf="isMultiFrame" class="slice-overlay-info">
-            Срез {{ currentSlice + 1 }} / {{ totalSlices }}
+          <div>W: {{ windowWidth | number:'1.0-0' }} L: {{ windowCenter | number:'1.0-0' }}</div>
+          <div>Zoom: {{ zoom }}x</div>
+          <div *ngIf="isMultiFrame && totalSlices > 1" style="color:#60a5fa;font-weight:700">
+            Кадр: {{ currentSlice + 1 }} / {{ totalSlices }}
           </div>
         </div>
       </div>

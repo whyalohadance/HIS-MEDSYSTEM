@@ -136,19 +136,26 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     const selectedFiles = Array.from(event.target.files) as File[];
     if (!selectedFiles.length) return;
 
-    const maxSizeMB = 100;
     for (const file of selectedFiles) {
-      if (file.size / (1024 * 1024) > maxSizeMB) {
-        alert(`Файл ${file.name} слишком большой. Максимум ${maxSizeMB} MB.`);
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > 100) {
+        alert(`Файл ${file.name} слишком большой: ${sizeMB.toFixed(1)} MB. Максимум 100 MB.`);
+        event.target.value = '';
         return;
       }
     }
 
     if (selectedFiles.length === 1) {
-      this.isMultiFrame = false;
+      // Один файл — может быть multi-frame внутри
       this.loadDicomFile(selectedFiles[0]);
     } else {
-      this.handleMultipleFiles(selectedFiles);
+      // Несколько файлов — серия
+      this.isMultiFrame = true;
+      this.files = selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
+      this.totalSlices = this.files.length;
+      this.currentSlice = 0;
+      this.cdr.detectChanges();
+      this.loadMultipleFiles(this.files);
     }
     event.target.value = '';
   }
@@ -198,17 +205,21 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToSlice(index: number): void {
-    if (!this.imageLoaded || !this.isMultiFrame) return;
+    if (!this.imageLoaded) return;
     if (index < 0 || index >= this.totalSlices) return;
 
     this.currentSlice = index;
     this.cdr.detectChanges();
 
-    cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
-      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
-      cornerstone.displayImage(this.dicomElement.nativeElement, image);
-      if (vp) cornerstone.setViewport(this.dicomElement.nativeElement, vp);
-    }).catch((_: any) => {});
+    if (this.isMultiFrame && this.imageIds.length > 1) {
+      cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        cornerstone.displayImage(this.dicomElement.nativeElement, image);
+        if (viewport) cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+      }).catch((err: any) => {
+        console.error('Frame load error:', err);
+      });
+    }
   }
 
   nextSlice(): void { this.goToSlice(this.currentSlice + 1); }
@@ -248,7 +259,42 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       cornerstone.setViewport(this.dicomElement.nativeElement, vp);
       this.windowWidth = vp?.voi?.windowWidth ?? 400;
       this.windowCenter = vp?.voi?.windowCenter ?? 40;
-      this.extractMetadata(image);
+
+      // Проверяем количество кадров в файле
+      try {
+        const dataSet = image.data;
+        const numberOfFrames = dataSet?.intString('x00280008');
+
+        if (numberOfFrames && numberOfFrames > 1) {
+          this.isMultiFrame = true;
+          this.totalSlices = numberOfFrames;
+          this.currentSlice = 0;
+          this.imageIds = Array.from(
+            { length: numberOfFrames },
+            (_, i) => `${imageId}?frame=${i}`
+          );
+        } else {
+          this.isMultiFrame = false;
+          this.totalSlices = 1;
+          this.imageIds = [imageId];
+        }
+      } catch (e) {
+        this.isMultiFrame = false;
+        this.totalSlices = 1;
+      }
+
+      // Метаданные
+      try {
+        const dataSet = image.data;
+        this.imageInfo = {
+          patientName: dataSet?.string('x00100010') || 'Anonymous',
+          studyDate:   dataSet?.string('x00080020') || '',
+          modality:    dataSet?.string('x00080060') || '',
+          institution: dataSet?.string('x00080080') || '',
+          frames: this.totalSlices
+        };
+      } catch (e) { this.imageInfo = {}; }
+
       this.isLoading = false;
       this.imageLoaded = true;
       this.zoom = 1;
@@ -355,15 +401,18 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     event.preventDefault();
     if (!this.imageLoaded) return;
 
-    if (this.isMultiFrame) {
+    if (this.isMultiFrame && this.totalSlices > 1) {
+      // Листаем кадры
       if (event.deltaY > 0) {
         this.nextSlice();
       } else {
         this.prevSlice();
       }
     } else {
+      // Зум
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
-      this.zoom = Math.round(Math.max(0.1, Math.min(5, this.zoom + delta)) * 10) / 10;
+      this.zoom = Math.max(0.1, Math.min(5, this.zoom + delta));
+      this.zoom = Math.round(this.zoom * 10) / 10;
       this.applyZoom();
     }
   }
