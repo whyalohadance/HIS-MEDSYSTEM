@@ -5,7 +5,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 declare let cornerstone: any;
 declare let cornerstoneWADOImageLoader: any;
+declare let cornerstoneTools: any;
 declare let dicomParser: any;
+declare let Hammer: any;
 
 @Component({
   selector: 'app-dicom-viewer',
@@ -35,6 +37,10 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   isMultiFrame = false;
   imageIds: string[] = [];
 
+  // Tools
+  activeTool: 'pan' | 'zoom' | 'length' | 'angle' | 'ellipse' | 'wwwc' = 'pan';
+  cornerstoneToolsLoaded = false;
+
   isDragOver = false;
   private isDragging = false;
   private lastX = 0;
@@ -58,10 +64,20 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private touchStartSlice = 0;
   private readonly TOUCH_SENSITIVITY = 6;
 
+  readonly toolIcons: Record<string, string> = {
+    pan: 'pan_tool', zoom: 'zoom_in', wwwc: 'brightness_6',
+    length: 'straighten', angle: 'architecture', ellipse: 'radio_button_unchecked'
+  };
+
+  readonly toolLabels: Record<string, string> = {
+    pan: 'Pan', zoom: 'Zoom', wwwc: 'W/L',
+    length: 'Длина', angle: 'Угол', ellipse: 'ROI'
+  };
+
   constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
   ngOnInit(): void {
-    this.loadScripts();
+    this.loadCornerstoneScripts();
   }
 
   ngAfterViewInit(): void {
@@ -76,46 +92,169 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private loadScripts(): void {
+  private loadCornerstoneScripts(): void {
     const scripts = [
-      'https://unpkg.com/cornerstone-core@2.6.1/dist/cornerstone.js',
-      'https://unpkg.com/dicom-parser@1.8.21/dist/dicomParser.js',
-      'https://unpkg.com/cornerstone-wado-image-loader@4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js'
+      { src: 'https://unpkg.com/cornerstone-core@2.6.1/dist/cornerstone.js', id: 'cs-core' },
+      { src: 'https://unpkg.com/dicom-parser@1.8.21/dist/dicomParser.js', id: 'cs-dicom-parser' },
+      { src: 'https://unpkg.com/hammerjs@2.0.8/hammer.min.js', id: 'cs-hammer' },
+      { src: 'https://unpkg.com/cornerstone-tools@4.22.1/dist/cornerstoneTools.js', id: 'cs-tools' },
+      { src: 'https://unpkg.com/cornerstone-wado-image-loader@4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js', id: 'cs-wado' }
     ];
 
-    let loaded = 0;
-    const total = scripts.length;
-
-    const tryInit = () => {
-      loaded++;
-      if (loaded === total) setTimeout(() => this.initCornerstone(), 400);
-    };
-
-    scripts.forEach(src => {
-      if (document.querySelector(`script[src="${src}"]`)) { tryInit(); return; }
+    const loadNext = (index: number) => {
+      if (index >= scripts.length) {
+        setTimeout(() => this.initCornerstone(), 400);
+        return;
+      }
+      const { src, id } = scripts[index];
+      if (document.getElementById(id)) { loadNext(index + 1); return; }
       const s = document.createElement('script');
       s.src = src;
-      s.onload = tryInit;
-      s.onerror = tryInit;
+      s.id = id;
+      s.onload = () => loadNext(index + 1);
+      s.onerror = () => loadNext(index + 1);
       document.head.appendChild(s);
-    });
+    };
+
+    loadNext(0);
   }
 
   private initCornerstone(): void {
     try {
-      if (typeof cornerstone === 'undefined' || typeof cornerstoneWADOImageLoader === 'undefined') return;
-      cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-      if (typeof dicomParser !== 'undefined') {
-        cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
-      }
+      const cs = (window as any).cornerstone;
+      const csTools = (window as any).cornerstoneTools;
+      const csWADO = (window as any).cornerstoneWADOImageLoader;
+      const dcmParser = (window as any).dicomParser;
+      const HammerLib = (window as any).Hammer;
+
+      if (!cs) { console.error('cornerstone not loaded'); return; }
+      if (!csWADO) { console.error('cornerstoneWADOImageLoader not loaded'); return; }
+      if (!csTools) { console.error('cornerstoneTools not loaded'); return; }
+
+      // ВАЖНО: порядок установки externals критичен!
+      csWADO.external.cornerstone = cs;
+      if (dcmParser) csWADO.external.dicomParser = dcmParser;
+      csTools.external.cornerstone = cs;
+      if (HammerLib) csTools.external.Hammer = HammerLib;
+
+      // Инициализируем Tools ДО enable элемента
+      csTools.init({
+        mouseEnabled: true,
+        touchEnabled: true,
+        globalToolSyncEnabled: false,
+        showSVGCursors: true
+      });
+
+      csTools.addTool(csTools.PanTool);
+      csTools.addTool(csTools.ZoomTool);
+      csTools.addTool(csTools.WwwcTool);
+      csTools.addTool(csTools.LengthTool);
+      csTools.addTool(csTools.AngleTool);
+      csTools.addTool(csTools.EllipticalRoiTool);
+      csTools.addTool(csTools.EraserTool);
+
       this.cornerstoneReady = true;
+      this.cornerstoneToolsLoaded = true;
+
+      // Enable элемента ПОСЛЕ инициализации Tools
       if (this.dicomElement?.nativeElement) {
-        cornerstone.enable(this.dicomElement.nativeElement);
+        cs.enable(this.dicomElement.nativeElement);
+        // Активируем Pan по умолчанию
+        csTools.setToolActive('Pan', { mouseButtonMask: 1 });
       }
+
+      console.log('Cornerstone + Tools initialized OK');
     } catch (e) {
       console.error('Cornerstone init error:', e);
     }
   }
+
+  private activateDefaultTool(): void {
+    if (!this.cornerstoneToolsLoaded || !this.dicomElement?.nativeElement) return;
+    const csTools = (window as any).cornerstoneTools;
+    if (!csTools) return;
+    try {
+      csTools.setToolActive('Pan', { mouseButtonMask: 1 });
+      csTools.setToolActive('Wwwc', { mouseButtonMask: 2 });
+      this.activeTool = 'pan';
+      console.log('Default tools activated after image load');
+    } catch (e) {
+      console.error('activateDefaultTool error:', e);
+    }
+    this.cdr.detectChanges();
+  }
+
+  setActiveTool(tool: string): void {
+    console.log('setActiveTool called:', tool);
+    console.log('cornerstoneToolsLoaded:', this.cornerstoneToolsLoaded);
+    console.log('element:', this.dicomElement?.nativeElement);
+
+    if (!this.cornerstoneToolsLoaded) {
+      console.error('cornerstoneTools not loaded yet!');
+      this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+    if (!this.dicomElement?.nativeElement) {
+      console.error('element not found!');
+      this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const csTools = (window as any).cornerstoneTools;
+    if (!csTools) {
+      console.error('cornerstoneTools not on window!');
+      this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const toolMap: Record<string, string> = {
+      pan: 'Pan', zoom: 'Zoom', wwwc: 'Wwwc',
+      length: 'Length', angle: 'Angle', ellipse: 'EllipticalRoi',
+      eraser: 'Eraser'
+    };
+
+    try {
+      Object.values(toolMap).forEach((name: string) => {
+        try { csTools.setToolPassive(name); } catch (_) {}
+      });
+
+      const toolName = toolMap[tool];
+      if (toolName) {
+        csTools.setToolActive(toolName, { mouseButtonMask: 1 });
+        this.activeTool = tool as any;
+        console.log('Tool activated:', toolName);
+      }
+      // W/L всегда на правой кнопке, кроме случая когда сам wwwc активен
+      if (tool !== 'wwwc') {
+        try { csTools.setToolActive('Wwwc', { mouseButtonMask: 2 }); } catch (_) {}
+      }
+    } catch (e) {
+      console.error('setActiveTool error:', e);
+    }
+    this.cdr.detectChanges();
+  }
+
+  clearMeasurements(): void {
+    if (!this.cornerstoneToolsLoaded || !this.dicomElement?.nativeElement) return;
+    const csTools = (window as any).cornerstoneTools;
+    const cs = (window as any).cornerstone;
+    if (!csTools || !cs) return;
+    try {
+      ['Length', 'Angle', 'EllipticalRoi'].forEach(toolName => {
+        try { csTools.clearToolState(this.dicomElement.nativeElement, toolName); } catch (_) {}
+      });
+      cs.updateImage(this.dicomElement.nativeElement);
+      console.log('Measurements cleared');
+    } catch (e) {
+      console.error('clearMeasurements error:', e);
+    }
+  }
+
+  getToolIcon(tool: string): string { return this.toolIcons[tool] || 'pan_tool'; }
+  getToolLabel(tool: string): string { return this.toolLabels[tool] || tool; }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -155,19 +294,17 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     for (const file of selectedFiles) {
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > 100) {
-        alert(`Файл ${file.name} слишком большой: ${sizeMB.toFixed(1)} MB. Максимум 100 MB.`);
+        alert(`Файл ${(file as File).name} слишком большой: ${sizeMB.toFixed(1)} MB. Максимум 100 MB.`);
         event.target.value = '';
         return;
       }
     }
 
     if (selectedFiles.length === 1) {
-      // Один файл — может быть multi-frame внутри
-      this.loadDicomFile(selectedFiles[0]);
+      this.loadDicomFile(selectedFiles[0] as File);
     } else {
-      // Несколько файлов — серия
       this.isMultiFrame = true;
-      this.files = selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
+      this.files = selectedFiles.sort((a, b) => (a as File).name.localeCompare((b as File).name)) as File[];
       this.totalSlices = this.files.length;
       this.currentSlice = 0;
       this.cdr.detectChanges();
@@ -213,6 +350,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.zoom = 1;
       this.inverted = false;
       this.cdr.detectChanges();
+      this.activateDefaultTool();
     }).catch(() => {
       this.isLoading = false;
       this.cdr.detectChanges();
@@ -283,7 +421,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.windowWidth = vp?.voi?.windowWidth ?? 400;
       this.windowCenter = vp?.voi?.windowCenter ?? 40;
 
-      // Проверяем количество кадров в файле
       try {
         const dataSet = image.data;
         const numberOfFrames = dataSet?.intString('x00280008');
@@ -306,7 +443,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.totalSlices = 1;
       }
 
-      // Метаданные
       try {
         const dataSet = image.data;
         this.imageInfo = {
@@ -323,6 +459,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.zoom = 1;
       this.inverted = false;
       this.cdr.detectChanges();
+      this.activateDefaultTool();
     }).catch((err: any) => {
       console.error('DICOM load error:', err);
       this.isLoading = false;
@@ -351,6 +488,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.imageLoaded = true;
       this.zoom = 1;
       this.cdr.detectChanges();
+      this.activateDefaultTool();
     }).catch((err: any) => {
       console.error('Demo DICOM load error:', err);
       this.isLoading = false;
@@ -424,7 +562,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     event.preventDefault();
     if (!this.imageLoaded) return;
 
-    // Ctrl + Scroll = зум всегда
     if (event.ctrlKey) {
       this.wheelAccumulator = 0;
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
@@ -434,7 +571,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.isMultiFrame && this.totalSlices > 1) {
-      // Multi-frame — листаем срезы с накоплением delta
       this.wheelAccumulator += event.deltaY;
       const steps = Math.floor(Math.abs(this.wheelAccumulator) / this.WHEEL_THRESHOLD);
       if (steps > 0) {
@@ -444,7 +580,8 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.wheelAccumulator -= direction * steps * this.WHEEL_THRESHOLD;
       }
     } else {
-      // Одиночный кадр — зум
+      // When using measurement/zoom tools, let cornerstoneTools handle via its event system
+      if (this.cornerstoneToolsLoaded && (this.activeTool === 'zoom')) return;
       this.wheelAccumulator = 0;
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
       this.zoom = Math.max(0.1, Math.min(5, Math.round((this.zoom + delta) * 10) / 10));
@@ -458,7 +595,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lastY = event.clientY;
 
     if (this.isMultiFrame && this.totalSlices > 1 && event.button === 1) {
-      // Средняя кнопка мыши — drag по срезам
       this.isDraggingSlice = true;
       this.dragStartX = event.clientX;
       this.dragStartSlice = this.currentSlice;
@@ -475,7 +611,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       if (this.isDraggingSlice && this.isMultiFrame) {
-        // Drag средней кнопкой — листание срезов
         const totalDeltaX = event.clientX - this.dragStartX;
         const sliceOffset = Math.round(totalDeltaX / this.DRAG_SENSITIVITY);
         const targetSlice = Math.max(0, Math.min(
@@ -485,14 +620,18 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
         if (targetSlice !== this.currentSlice) {
           this.goToSlice(targetSlice);
         }
-      } else if (event.buttons === 1 && !this.isDraggingSlice) {
-        // Левая кнопка — перемещение снимка
+        return;
+      }
+
+      // When cornerstone-tools is loaded, it handles pan/WL via its own event system
+      if (this.cornerstoneToolsLoaded) return;
+
+      if (event.buttons === 1 && !this.isDraggingSlice) {
         const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
         viewport.translation.x += deltaX;
         viewport.translation.y += deltaY;
         cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
       } else if (event.buttons === 2) {
-        // Правая кнопка — яркость/контраст
         const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
         viewport.voi.windowWidth  += deltaX * 2;
         viewport.voi.windowCenter += deltaY * 2;
@@ -525,7 +664,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     const deltaY = currentY - this.touchStartY;
 
     if (this.isMultiFrame && this.totalSlices > 1) {
-      // Вертикальный и горизонтальный свайп — листание срезов
       const dominantDelta = Math.abs(deltaY) >= Math.abs(deltaX) ? -deltaY : -deltaX;
       const sliceOffset = Math.round(dominantDelta / this.TOUCH_SENSITIVITY);
       const targetSlice = Math.max(0, Math.min(
@@ -535,8 +673,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       if (targetSlice !== this.currentSlice) {
         this.goToSlice(targetSlice);
       }
-    } else {
-      // Перемещение снимка
+    } else if (!this.cornerstoneToolsLoaded) {
       try {
         const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
         viewport.translation.x += deltaX * 0.5;
