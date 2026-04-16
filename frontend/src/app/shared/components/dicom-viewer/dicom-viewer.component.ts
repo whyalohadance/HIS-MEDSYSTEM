@@ -223,17 +223,24 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   goToSlice(index: number): void {
     if (!this.imageLoaded) return;
     if (index < 0 || index >= this.totalSlices) return;
+    if (index === this.currentSlice) return;
 
     this.currentSlice = index;
     this.cdr.detectChanges();
 
     if (this.isMultiFrame && this.imageIds.length > 1) {
-      cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
-        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
-        cornerstone.displayImage(this.dicomElement.nativeElement, image);
-        if (viewport) cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+      const imageId = this.imageIds[index];
+      cornerstone.loadImage(imageId).then((image: any) => {
+        if (!this.dicomElement?.nativeElement) return;
+        try {
+          const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+          cornerstone.displayImage(this.dicomElement.nativeElement, image);
+          if (viewport) cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+        } catch (_) {
+          cornerstone.displayImage(this.dicomElement.nativeElement, image);
+        }
       }).catch((err: any) => {
-        console.error('Frame load error:', err);
+        console.warn('Frame load error:', err);
       });
     }
   }
@@ -417,10 +424,18 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     event.preventDefault();
     if (!this.imageLoaded) return;
 
-    if (this.isMultiFrame && this.totalSlices > 1) {
-      // Накапливаем delta для плавности
-      this.wheelAccumulator += event.deltaY;
+    // Ctrl + Scroll = зум всегда
+    if (event.ctrlKey) {
+      this.wheelAccumulator = 0;
+      const delta = event.deltaY > 0 ? -0.1 : 0.1;
+      this.zoom = Math.max(0.1, Math.min(5, Math.round((this.zoom + delta) * 10) / 10));
+      this.applyZoom();
+      return;
+    }
 
+    if (this.isMultiFrame && this.totalSlices > 1) {
+      // Multi-frame — листаем срезы с накоплением delta
+      this.wheelAccumulator += event.deltaY;
       const steps = Math.floor(Math.abs(this.wheelAccumulator) / this.WHEEL_THRESHOLD);
       if (steps > 0) {
         const direction = this.wheelAccumulator > 0 ? 1 : -1;
@@ -429,9 +444,10 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.wheelAccumulator -= direction * steps * this.WHEEL_THRESHOLD;
       }
     } else {
+      // Одиночный кадр — зум
+      this.wheelAccumulator = 0;
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
-      this.zoom = Math.max(0.1, Math.min(5, this.zoom + delta));
-      this.zoom = Math.round(this.zoom * 10) / 10;
+      this.zoom = Math.max(0.1, Math.min(5, Math.round((this.zoom + delta) * 10) / 10));
       this.applyZoom();
     }
   }

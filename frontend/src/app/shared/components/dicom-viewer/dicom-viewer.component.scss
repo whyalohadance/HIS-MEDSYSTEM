@@ -54,7 +54,7 @@
 .toolbar-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -62,6 +62,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .control-icon {
@@ -70,7 +74,7 @@
 }
 
 .control-slider {
-  width: 80px;
+  width: 70px;
   accent-color: #7c3aed;
   cursor: pointer;
 }
@@ -78,8 +82,15 @@
 .control-value {
   color: #e2e8f0;
   font-size: 11px;
-  min-width: 32px;
+  min-width: 28px;
   text-align: right;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 4px;
 }
 
 .toolbar-btn {
@@ -315,55 +326,55 @@ label.btn-footer {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(8px);
-  padding: 10px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  padding: 20px 16px 12px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   z-index: 10;
 }
 
 .slice-btn {
-  width: 32px;
-  height: 32px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  width: 30px;
+  height: 30px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 8px;
   color: white;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.15s;
   flex-shrink: 0;
 
-  &:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
-  &:disabled { opacity: 0.3; cursor: not-allowed; }
-  .material-icons { font-size: 18px; }
+  &:hover:not(:disabled) { background: rgba(124,58,237,0.3); border-color: #7c3aed; }
+  &:disabled { opacity: 0.25; cursor: not-allowed; }
+  .material-icons { font-size: 16px; }
 }
 
 .slice-info {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  min-width: 60px;
+  gap: 2px;
+  background: rgba(0,0,0,0.5);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  min-width: 70px;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.slice-current { color: #60a5fa; font-size: 15px; }
-.slice-separator { color: rgba(255,255,255,0.4); }
-.slice-total { color: rgba(255,255,255,0.6); }
+.slice-current { color: #7c3aed; font-size: 14px; font-weight: 700; }
+.slice-separator { color: rgba(255,255,255,0.3); font-size: 12px; }
+.slice-total { color: rgba(255,255,255,0.5); font-size: 12px; }
 
 .slice-slider {
   flex: 1;
   accent-color: #7c3aed;
   cursor: pointer;
-  height: 4px;
+  height: 3px;
 }
 
 .slice-overlay-info {
