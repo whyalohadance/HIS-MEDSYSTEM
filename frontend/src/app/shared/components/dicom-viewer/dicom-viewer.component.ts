@@ -42,6 +42,22 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private cornerstoneReady = false;
   private keyDownHandler!: (e: KeyboardEvent) => void;
 
+  // Wheel accumulator
+  private wheelAccumulator = 0;
+  private readonly WHEEL_THRESHOLD = 80;
+
+  // Drag-to-slice (middle mouse button)
+  private isDraggingSlice = false;
+  private dragStartX = 0;
+  private dragStartSlice = 0;
+  private readonly DRAG_SENSITIVITY = 8;
+
+  // Touch
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private touchStartSlice = 0;
+  private readonly TOUCH_SENSITIVITY = 6;
+
   constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
   ngOnInit(): void {
@@ -402,14 +418,17 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.imageLoaded) return;
 
     if (this.isMultiFrame && this.totalSlices > 1) {
-      // Листаем кадры
-      if (event.deltaY > 0) {
-        this.nextSlice();
-      } else {
-        this.prevSlice();
+      // Накапливаем delta для плавности
+      this.wheelAccumulator += event.deltaY;
+
+      const steps = Math.floor(Math.abs(this.wheelAccumulator) / this.WHEEL_THRESHOLD);
+      if (steps > 0) {
+        const direction = this.wheelAccumulator > 0 ? 1 : -1;
+        const jump = Math.min(steps, 5);
+        this.goToSlice(this.currentSlice + direction * jump);
+        this.wheelAccumulator -= direction * steps * this.WHEEL_THRESHOLD;
       }
     } else {
-      // Зум
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
       this.zoom = Math.max(0.1, Math.min(5, this.zoom + delta));
       this.zoom = Math.round(this.zoom * 10) / 10;
@@ -421,30 +440,99 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isDragging = true;
     this.lastX = event.clientX;
     this.lastY = event.clientY;
+
+    if (this.isMultiFrame && this.totalSlices > 1 && event.button === 1) {
+      // Средняя кнопка мыши — drag по срезам
+      this.isDraggingSlice = true;
+      this.dragStartX = event.clientX;
+      this.dragStartSlice = this.currentSlice;
+    }
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (!this.isDragging || !this.imageLoaded || !this.dicomElement?.nativeElement) return;
-    const dx = event.clientX - this.lastX;
-    const dy = event.clientY - this.lastY;
+    if (!this.isDragging || !this.imageLoaded) return;
+
+    const deltaX = event.clientX - this.lastX;
+    const deltaY = event.clientY - this.lastY;
     this.lastX = event.clientX;
     this.lastY = event.clientY;
+
     try {
-      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
-      if (event.buttons === 1) {
-        vp.translation.x += dx;
-        vp.translation.y += dy;
+      if (this.isDraggingSlice && this.isMultiFrame) {
+        // Drag средней кнопкой — листание срезов
+        const totalDeltaX = event.clientX - this.dragStartX;
+        const sliceOffset = Math.round(totalDeltaX / this.DRAG_SENSITIVITY);
+        const targetSlice = Math.max(0, Math.min(
+          this.totalSlices - 1,
+          this.dragStartSlice - sliceOffset
+        ));
+        if (targetSlice !== this.currentSlice) {
+          this.goToSlice(targetSlice);
+        }
+      } else if (event.buttons === 1 && !this.isDraggingSlice) {
+        // Левая кнопка — перемещение снимка
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.translation.x += deltaX;
+        viewport.translation.y += deltaY;
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
       } else if (event.buttons === 2) {
-        vp.voi.windowWidth  += dx * 2;
-        vp.voi.windowCenter += dy * 2;
-        this.windowWidth  = Math.round(vp.voi.windowWidth);
-        this.windowCenter = Math.round(vp.voi.windowCenter);
+        // Правая кнопка — яркость/контраст
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.voi.windowWidth  += deltaX * 2;
+        viewport.voi.windowCenter += deltaY * 2;
+        this.windowWidth  = Math.round(viewport.voi.windowWidth);
+        this.windowCenter = Math.round(viewport.voi.windowCenter);
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
       }
-      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
     } catch (_) {}
   }
 
-  onMouseUp(): void {
+  onMouseUp(event?: MouseEvent): void {
     this.isDragging = false;
+    this.isDraggingSlice = false;
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (!this.imageLoaded) return;
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.touchStartSlice = this.currentSlice;
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (!this.imageLoaded) return;
+    event.preventDefault();
+
+    const currentX = event.touches[0].clientX;
+    const currentY = event.touches[0].clientY;
+    const deltaX = currentX - this.touchStartX;
+    const deltaY = currentY - this.touchStartY;
+
+    if (this.isMultiFrame && this.totalSlices > 1) {
+      // Вертикальный и горизонтальный свайп — листание срезов
+      const dominantDelta = Math.abs(deltaY) >= Math.abs(deltaX) ? -deltaY : -deltaX;
+      const sliceOffset = Math.round(dominantDelta / this.TOUCH_SENSITIVITY);
+      const targetSlice = Math.max(0, Math.min(
+        this.totalSlices - 1,
+        this.touchStartSlice + sliceOffset
+      ));
+      if (targetSlice !== this.currentSlice) {
+        this.goToSlice(targetSlice);
+      }
+    } else {
+      // Перемещение снимка
+      try {
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.translation.x += deltaX * 0.5;
+        viewport.translation.y += deltaY * 0.5;
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+        this.touchStartX = currentX;
+        this.touchStartY = currentY;
+      } catch (_) {}
+    }
+  }
+
+  onTouchEnd(): void {
+    this.touchStartSlice = this.currentSlice;
   }
 }

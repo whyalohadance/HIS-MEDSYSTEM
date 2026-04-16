@@ -95,10 +95,14 @@
       <div #dicomElement class="dicom-canvas"
            (mousedown)="onMouseDown($event)"
            (mousemove)="onMouseMove($event)"
-           (mouseup)="onMouseUp()"
-           (mouseleave)="onMouseUp()"
+           (mouseup)="onMouseUp($event)"
+           (mouseleave)="onMouseUp($event)"
            (wheel)="onWheel($event)"
-           (contextmenu)="$event.preventDefault()">
+           (touchstart)="onTouchStart($event)"
+           (touchmove)="onTouchMove($event)"
+           (touchend)="onTouchEnd()"
+           (contextmenu)="$event.preventDefault()"
+           [style.cursor]="isMultiFrame && totalSlices > 1 ? 'ns-resize' : 'crosshair'">
       </div>
 
       <!-- Overlay info -->
@@ -146,6 +150,13 @@
         <button class="slice-btn" (click)="nextSlice()" [disabled]="currentSlice === totalSlices - 1">
           <span class="material-icons">chevron_right</span>
         </button>
+        <div class="slice-speed" *ngIf="totalSlices > 1">
+          <span class="material-icons" style="font-size:14px;color:#7c3aed">speed</span>
+          <span style="font-size:11px;color:rgba(255,255,255,0.5)">
+            {{ currentSlice + 1 }}/{{ totalSlices }}
+            ({{ (((currentSlice + 1) / totalSlices) * 100) | number:'1.0-0' }}%)
+          </span>
+        </div>
       </div>
     </div>
 
