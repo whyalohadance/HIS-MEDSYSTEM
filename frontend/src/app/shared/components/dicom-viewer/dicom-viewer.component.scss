@@ -269,10 +269,12 @@ label.btn-upload {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(0,0,0,0.4);
-  padding: 6px 10px;
+  background: rgba(0,0,0,0.45);
+  padding: 4px 8px;
   border-radius: 6px;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 10px;
+  max-width: 180px;
 }
 
 .info-top-right {
@@ -280,20 +282,23 @@ label.btn-upload {
   top: 12px;
   right: 12px;
   text-align: right;
-  background: rgba(0,0,0,0.4);
-  padding: 6px 10px;
+  background: rgba(0,0,0,0.45);
+  padding: 4px 8px;
   border-radius: 6px;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 10px;
+  max-width: 160px;
 }
 
 .info-bottom-left {
   position: absolute;
   bottom: 56px;
   left: 12px;
-  background: rgba(0,0,0,0.4);
-  padding: 6px 10px;
+  background: rgba(0,0,0,0.45);
+  padding: 4px 8px;
   border-radius: 6px;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 10px;
 }
 
 // ===== FOOTER =====

@@ -277,31 +277,39 @@
   &:hover { color: white; }
 }
 
-.instructions-card { opacity: 0.7; }
-
-.instruction-item {
+// ===== INSTRUCTIONS BAR =====
+.instructions-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(51,65,85,0.3);
-  gap: 8px;
-
-  &:last-child { border-bottom: none; }
+  gap: 16px;
+  padding: 8px 20px;
+  background: #111827;
+  border-top: 1px solid #1e293b;
+  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
-.instruction-key {
+.inst-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inst-key {
   font-size: 10px;
   color: #7c3aed;
-  font-weight: 600;
+  font-weight: 700;
   background: rgba(124,58,237,0.1);
   padding: 2px 6px;
   border-radius: 4px;
+  border: 1px solid rgba(124,58,237,0.2);
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
-.instruction-desc { font-size: 11px; color: #475569; text-align: right; }
+.inst-desc {
+  font-size: 11px;
+  color: #475569;
+}
 
 // ===== RESPONSIVE =====
 @media (max-width: 1024px) {
