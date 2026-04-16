@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Study, StudyStatus } from './study.entity';
 import { Modality } from './modality.entity';
+import { Series } from './series.entity';
+import { DicomImage } from './dicom-image.entity';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 
@@ -12,7 +14,11 @@ export class StudiesService {
     @InjectRepository(Study)
     private studyRepo: Repository<Study>,
     @InjectRepository(Modality)
-    private modalityRepo: Repository<Modality>
+    private modalityRepo: Repository<Modality>,
+    @InjectRepository(Series)
+    private seriesRepo: Repository<Series>,
+    @InjectRepository(DicomImage)
+    private dicomImageRepo: Repository<DicomImage>
   ) {}
 
   private generateStudyId(): string {
@@ -120,5 +126,19 @@ export class StudiesService {
 
   async removeModality(id: number): Promise<void> {
     await this.modalityRepo.delete(id);
+  }
+
+  async findSeriesByStudy(studyId: number): Promise<Series[]> {
+    return this.seriesRepo.find({
+      where: { studyId },
+      order: { seriesNumber: 'ASC' }
+    });
+  }
+
+  async findImagesBySeries(seriesId: number): Promise<DicomImage[]> {
+    return this.dicomImageRepo.find({
+      where: { seriesId },
+      order: { instanceNumber: 'ASC' }
+    });
   }
 }

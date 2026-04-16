@@ -67,6 +67,29 @@ export class StudiesController {
     return { success: true, data };
   }
 
+  @Get(':id/hierarchy')
+  async getHierarchy(@Param('id') id: string) {
+    const study = await this.studiesService.findOne(+id);
+    const series = await this.studiesService.findSeriesByStudy(+id);
+    const seriesWithImages = await Promise.all(
+      series.map(async s => ({
+        ...s,
+        images: await this.studiesService.findImagesBySeries(s.id)
+      }))
+    );
+    return {
+      success: true,
+      data: {
+        study,
+        series: seriesWithImages,
+        stats: {
+          totalSeries: series.length,
+          totalImages: seriesWithImages.reduce((acc, s) => acc + s.images.length, 0)
+        }
+      }
+    };
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.studiesService.findOne(+id);

@@ -277,6 +277,54 @@
   &:hover { color: white; }
 }
 
+// ===== DICOM HIERARCHY =====
+.hierarchy-panel {
+  background: #1e293b;
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid #334155;
+}
+
+.hierarchy-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #334155;
+
+  .material-icons { font-size: 14px; color: #7c3aed; }
+}
+
+.hier-patient, .hier-study, .hier-series {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.hier-patient { background: rgba(26,115,232,0.08); }
+.hier-study   { margin-left: 12px; background: rgba(124,58,237,0.08); }
+.hier-series  { margin-left: 24px; background: rgba(255,255,255,0.03); cursor: pointer; }
+.hier-series:hover { background: rgba(124,58,237,0.1); }
+.hier-series.active { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3); }
+
+.hier-icon { font-size: 16px !important; color: #475569; margin-top: 2px; flex-shrink: 0; }
+.hier-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hier-label { font-size: 9px; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+.hier-value { font-size: 12px; color: #e2e8f0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hier-sub   { font-size: 10px; color: #64748b; }
+
+.hier-series-list { margin-top: 4px; }
+
 // ===== INSTRUCTIONS BAR =====
 .instructions-bar {
   display: flex;

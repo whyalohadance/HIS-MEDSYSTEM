@@ -45,6 +45,44 @@
     <!-- Right: Info Panel -->
     <div class="study-info-section">
 
+      <!-- DICOM Hierarchy -->
+      <div class="hierarchy-panel" *ngIf="hierarchy">
+        <div class="hierarchy-title">
+          <span class="material-icons">account_tree</span>
+          Иерархия DICOM
+        </div>
+        <div class="hier-patient">
+          <span class="material-icons hier-icon">person</span>
+          <div class="hier-info">
+            <span class="hier-label">Пациент</span>
+            <span class="hier-value">{{ study?.patientId }}</span>
+          </div>
+        </div>
+        <div class="hier-study">
+          <span class="material-icons hier-icon">folder</span>
+          <div class="hier-info">
+            <span class="hier-label">Исследование</span>
+            <span class="hier-value">{{ study?.studyId }}</span>
+            <span class="hier-sub">{{ study?.type | uppercase }}</span>
+          </div>
+        </div>
+        <div class="hier-series-list">
+          <div *ngIf="seriesList.length === 0" style="font-size:11px;color:#334155;padding:6px 8px 2px 24px">
+            Серии не загружены
+          </div>
+          <div class="hier-series" *ngFor="let s of seriesList; let i = index"
+               [class.active]="selectedSeries === i"
+               (click)="selectSeries(i)">
+            <span class="material-icons hier-icon">perm_media</span>
+            <div class="hier-info">
+              <span class="hier-label">Серия {{ i + 1 }}</span>
+              <span class="hier-value">{{ s.seriesDescription || s.modality || '—' }}</span>
+              <span class="hier-sub">{{ s.numberOfImages }} изображений</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Study Info -->
       <div class="info-card" *ngIf="study">
         <h3 class="info-card-title">

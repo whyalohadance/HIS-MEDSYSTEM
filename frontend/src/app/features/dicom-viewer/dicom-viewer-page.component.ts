@@ -22,6 +22,10 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
   editConclusion = '';
   isSaving = false;
 
+  hierarchy: any = null;
+  seriesList: any[] = [];
+  selectedSeries = 0;
+
   readonly typeLabels: Record<string, string> = {
     mri: 'МРТ', ct: 'КТ', xray: 'Рентген',
     ultrasound: 'УЗИ', pet: 'ПЭТ', mammography: 'Маммография'
@@ -59,6 +63,7 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
           this.editFindings = study.findings || '';
           this.editConclusion = study.conclusion || '';
           this.cdr.detectChanges();
+          this.loadHierarchy();
         }
       });
     }
@@ -84,6 +89,21 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
       },
       error: () => { this.isSaving = false; this.cdr.detectChanges(); }
     });
+  }
+
+  loadHierarchy(): void {
+    if (!this.study?.id) return;
+    this.api.get<any>(`/studies/${this.study.id}/hierarchy`).pipe(map(r => r.data)).subscribe({
+      next: data => {
+        this.hierarchy = data;
+        this.seriesList = data.series || [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  selectSeries(index: number): void {
+    this.selectedSeries = index;
   }
 
   getTypeLabel(type: string): string { return this.typeLabels[type] || type; }

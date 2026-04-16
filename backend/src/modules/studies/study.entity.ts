@@ -88,6 +88,28 @@ export class Study {
   @Column({ nullable: true })
   fileUrl: string;
 
+  // DICOM study-level identifiers
+  @Column({ nullable: true })
+  studyInstanceUID: string;
+
+  @Column({ nullable: true })
+  studyDate: string;
+
+  @Column({ nullable: true })
+  studyTime: string;
+
+  @Column({ nullable: true })
+  accessionNumber: string;
+
+  @Column({ nullable: true })
+  referringPhysician: string;
+
+  @Column({ default: 0 })
+  numberOfSeries: number;
+
+  @Column({ default: 0 })
+  numberOfImages: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
