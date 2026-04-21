@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
@@ -108,6 +108,32 @@ export class StudiesController {
   async update(@Param('id') id: string, @Body() dto: UpdateStudyDto) {
     const data = await this.studiesService.update(+id, dto);
     return { success: true, data };
+  }
+
+  // ===== MEASUREMENTS — fixed paths before :id =====
+  @Get(':id/measurements')
+  async getMeasurements(@Param('id') id: string) {
+    const data = await this.studiesService.findMeasurements(+id);
+    return { success: true, data };
+  }
+
+  @Post(':id/measurements')
+  async addMeasurement(@Param('id') id: string, @Body() dto: any, @Request() req: any) {
+    const userId = req.user?.userId || req.user?.sub;
+    const data = await this.studiesService.createMeasurement(+id, userId, dto);
+    return { success: true, data };
+  }
+
+  @Delete('measurements/:measurementId')
+  async removeMeasurement(@Param('measurementId') measurementId: string) {
+    await this.studiesService.deleteMeasurement(+measurementId);
+    return { success: true };
+  }
+
+  @Delete(':id/measurements')
+  async removeAllMeasurements(@Param('id') id: string) {
+    await this.studiesService.deleteAllMeasurements(+id);
+    return { success: true };
   }
 
   @Delete(':id')

@@ -524,6 +524,16 @@ label.btn-footer {
   &:hover { color: white; border-color: rgba(255,255,255,0.15); }
 }
 
+/* Export button */
+.export-btn {
+  color: #6ee7b7;
+
+  &:hover:not(:disabled) {
+    background: rgba(52,168,83,0.12);
+    color: #34d399;
+  }
+}
+
 /* ===== SVG MEASUREMENT OVERLAY ===== */
 .measure-svg {
   position: absolute;

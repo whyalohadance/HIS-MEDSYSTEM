@@ -39,7 +39,10 @@
 
     <!-- Left: Viewer -->
     <div class="viewer-section">
-      <app-dicom-viewer [studyId]="study?.studyId || ''"></app-dicom-viewer>
+      <app-dicom-viewer
+        [studyId]="study?.studyId || ''"
+        [studyNumericId]="study?.id || null">
+      </app-dicom-viewer>
     </div>
 
     <!-- Right: Info Panel -->
@@ -104,6 +107,23 @@
         <div class="info-row" *ngIf="study.price">
           <span class="info-label">{{ 'DICOM.PRICE' | translate }}</span>
           <span class="info-value price">{{ study.price }} MDL</span>
+        </div>
+      </div>
+
+      <!-- Measurements Card -->
+      <div class="info-card" *ngIf="measurements && measurements.length > 0">
+        <h3 class="info-card-title">
+          <span class="material-icons">straighten</span>
+          Измерения ({{ measurements.length }})
+        </h3>
+        <div class="measurements-list">
+          <div class="measurement-row" *ngFor="let m of measurements; let i = index">
+            <span class="measurement-num">{{ i + 1 }}</span>
+            <span class="measurement-dist">{{ m.distance }}</span>
+            <button class="measurement-delete" (click)="deleteMeasurement(m, i)" title="Удалить">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
         </div>
       </div>
 

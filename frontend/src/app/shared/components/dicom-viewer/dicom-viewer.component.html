@@ -38,6 +38,9 @@
       <button class="tool-btn" (click)="toggleFullscreen()" title="{{ 'DICOM.FULLSCREEN' | translate }}">
         <span class="material-icons">fullscreen</span>
       </button>
+      <button class="tool-btn export-btn" (click)="exportSnapshot()" title="Экспорт снимка PNG" *ngIf="imageLoaded">
+        <span class="material-icons">download</span>
+      </button>
 
       <div class="toolbar-divider"></div>
 

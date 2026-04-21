@@ -5,6 +5,7 @@ import { Study, StudyStatus } from './study.entity';
 import { Modality } from './modality.entity';
 import { Series } from './series.entity';
 import { DicomImage } from './dicom-image.entity';
+import { Measurement } from './measurement.entity';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 
@@ -18,7 +19,9 @@ export class StudiesService {
     @InjectRepository(Series)
     private seriesRepo: Repository<Series>,
     @InjectRepository(DicomImage)
-    private dicomImageRepo: Repository<DicomImage>
+    private dicomImageRepo: Repository<DicomImage>,
+    @InjectRepository(Measurement)
+    private measurementRepo: Repository<Measurement>
   ) {}
 
   private generateStudyId(): string {
@@ -140,5 +143,37 @@ export class StudiesService {
       where: { seriesId },
       order: { instanceNumber: 'ASC' }
     });
+  }
+
+  // ===== MEASUREMENTS =====
+  async findMeasurements(studyId: number): Promise<Measurement[]> {
+    return this.measurementRepo.find({
+      where: { studyId },
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async createMeasurement(studyId: number, userId: number, dto: any): Promise<Measurement> {
+    const m = this.measurementRepo.create({
+      studyId,
+      userId,
+      type: dto.type || 'length',
+      x1: dto.x1,
+      y1: dto.y1,
+      x2: dto.x2,
+      y2: dto.y2,
+      distance: dto.distance,
+      sliceIndex: dto.sliceIndex,
+      note: dto.note
+    });
+    return this.measurementRepo.save(m);
+  }
+
+  async deleteMeasurement(id: number): Promise<void> {
+    await this.measurementRepo.delete(id);
+  }
+
+  async deleteAllMeasurements(studyId: number): Promise<void> {
+    await this.measurementRepo.delete({ studyId });
   }
 }
