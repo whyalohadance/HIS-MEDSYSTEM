@@ -524,6 +524,48 @@ label.btn-footer {
   &:hover { color: white; border-color: rgba(255,255,255,0.15); }
 }
 
+/* ===== SVG MEASUREMENT OVERLAY ===== */
+.measure-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  cursor: crosshair;
+  pointer-events: all;
+  user-select: none;
+}
+
+.measure-svg line,
+.measure-svg circle,
+.measure-svg rect,
+.measure-svg text {
+  pointer-events: none;
+}
+
+/* Measure hint bar */
+.measure-hint {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fbbf24;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  pointer-events: none;
+  border: 1px solid rgba(251,191,36,0.3);
+  backdrop-filter: blur(8px);
+  white-space: nowrap;
+
+  .material-icons { font-size: 14px !important; }
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .viewer-toolbar {
