@@ -1,332 +1,691 @@
 import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+declare let cornerstone: any;
+declare let cornerstoneWADOImageLoader: any;
+declare let cornerstoneTools: any;
+declare let dicomParser: any;
+declare let Hammer: any;
 
 @Component({
   selector: 'app-dicom-viewer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
-    <div class="dicom-viewer-container">
-      <div class="viewer-toolbar">
-        <div class="toolbar-left">
-          <span class="material-icons viewer-icon">biotech</span>
-          <span class="viewer-title">DICOM Viewer</span>
-        </div>
-        <div class="toolbar-controls">
-          <button class="tool-btn" [class.active]="activeTool === 'pan'" (click)="setTool('pan')" title="Перемещение">
-            <span class="material-icons">pan_tool</span>
-          </button>
-          <button class="tool-btn" [class.active]="activeTool === 'zoom'" (click)="setTool('zoom')" title="Зум">
-            <span class="material-icons">zoom_in</span>
-          </button>
-          <button class="tool-btn" [class.active]="activeTool === 'wwwc'" (click)="setTool('wwwc')" title="Яркость">
-            <span class="material-icons">brightness_6</span>
-          </button>
-          <div class="toolbar-divider"></div>
-          <button class="tool-btn measure" [class.active]="activeTool === 'length'" (click)="setTool('length')" title="Линейка">
-            <span class="material-icons">straighten</span>
-          </button>
-          <button class="tool-btn measure" [class.active]="activeTool === 'angle'" (click)="setTool('angle')" title="Угол">
-            <span class="material-icons">architecture</span>
-          </button>
-          <button class="tool-btn measure" [class.active]="activeTool === 'ellipse'" (click)="setTool('ellipse')" title="Эллипс">
-            <span class="material-icons">radio_button_unchecked</span>
-          </button>
-          <div class="toolbar-divider"></div>
-          <button class="tool-btn" (click)="clearAll()" title="Очистить измерения">
-            <span class="material-icons">delete_sweep</span>
-          </button>
-          <button class="tool-btn" (click)="reset()" title="Сброс">
-            <span class="material-icons">refresh</span>
-          </button>
-          <button class="tool-btn" (click)="toggleInvert()" [class.active]="inverted" title="Инверсия">
-            <span class="material-icons">invert_colors</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="viewer-main">
-        <div class="upload-zone" *ngIf="!imageLoaded && !isLoading">
-          <div class="upload-content">
-            <span class="material-icons upload-icon">upload_file</span>
-            <h3>Загрузить DICOM файл</h3>
-            <p>Выберите .dcm файл или серию файлов</p>
-            <label class="btn-upload" for="dcmInput">
-              <span class="material-icons">folder_open</span>
-              Выбрать файлы
-            </label>
-            <input id="dcmInput" type="file" accept=".dcm,.DCM" multiple (change)="onFiles($event)" style="position:fixed;left:-9999px">
-            <button class="btn-demo" (click)="loadDemo()">
-              <span class="material-icons">image</span>
-              Демо снимок
-            </button>
-          </div>
-        </div>
-
-        <div class="loading-zone" *ngIf="isLoading">
-          <div class="spinner"></div>
-          <p>Загрузка...</p>
-        </div>
-
-        <div class="tool-badge" *ngIf="imageLoaded">
-          <span class="material-icons">{{ getToolIcon() }}</span>
-          {{ getToolName() }}
-        </div>
-
-        <div #viewerElement class="dicom-canvas" oncontextmenu="return false"></div>
-
-        <div class="overlay-info" *ngIf="imageLoaded && imageInfo">
-          <div class="info-block info-tl">
-            <div>{{ imageInfo.patientName }}</div>
-            <div style="color:#a78bfa">{{ imageInfo.modality }}</div>
-          </div>
-          <div class="info-block info-bl">
-            <div *ngIf="totalSlices > 1" style="color:#a78bfa">Кадр: {{ currentSlice + 1 }}/{{ totalSlices }}</div>
-          </div>
-        </div>
-
-        <div class="slice-nav" *ngIf="imageLoaded && totalSlices > 1">
-          <button class="slice-btn" (click)="prevSlice()" [disabled]="currentSlice === 0">
-            <span class="material-icons">chevron_left</span>
-          </button>
-          <input type="range" class="slice-slider" [min]="0" [max]="totalSlices - 1" [value]="currentSlice" (input)="onSliceSlider($event)">
-          <button class="slice-btn" (click)="nextSlice()" [disabled]="currentSlice === totalSlices - 1">
-            <span class="material-icons">chevron_right</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  `,
+  imports: [CommonModule, FormsModule, TranslateModule],
+  templateUrl: './dicom-viewer.component.html',
   styleUrls: ['./dicom-viewer.component.scss']
 })
 export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() studyId = '';
-  @ViewChild('viewerElement') viewerElement!: ElementRef;
+  @Input() studyId: string = '';
+  @ViewChild('dicomElement') dicomElement!: ElementRef;
 
   imageLoaded = false;
   isLoading = false;
   inverted = false;
-  activeTool: 'pan' | 'zoom' | 'wwwc' | 'length' | 'angle' | 'ellipse' = 'wwwc';
-
-  imageIds: string[] = [];
-  currentSlice = 0;
-  totalSlices = 0;
+  zoom = 1;
+  brightness = 0;
+  contrast = 1;
+  windowWidth = 400;
+  windowCenter = 40;
   imageInfo: any = null;
 
-  private cs: any;
-  private csTools: any;
-  private csWADO: any;
-  private dcmParser: any;
-  private loaded = false;
+  // Multi-frame
+  files: File[] = [];
+  currentSlice = 0;
+  totalSlices = 0;
+  isMultiFrame = false;
+  imageIds: string[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  // Tools
+  activeTool: 'pan' | 'zoom' | 'length' | 'angle' | 'ellipse' | 'wwwc' = 'pan';
+  cornerstoneToolsLoaded = false;
 
-  ngOnInit(): void {}
-  ngAfterViewInit(): void {}
+  isDragOver = false;
+  private isDragging = false;
+  private lastX = 0;
+  private lastY = 0;
+  private cornerstoneReady = false;
+  private keyDownHandler!: (e: KeyboardEvent) => void;
+
+  // Wheel accumulator
+  private wheelAccumulator = 0;
+  private readonly WHEEL_THRESHOLD = 80;
+
+  // Drag-to-slice (middle mouse button)
+  private isDraggingSlice = false;
+  private dragStartX = 0;
+  private dragStartSlice = 0;
+  private readonly DRAG_SENSITIVITY = 8;
+
+  // Touch
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private touchStartSlice = 0;
+  private readonly TOUCH_SENSITIVITY = 6;
+
+  readonly toolIcons: Record<string, string> = {
+    pan: 'pan_tool', zoom: 'zoom_in', wwwc: 'brightness_6',
+    length: 'straighten', angle: 'architecture', ellipse: 'radio_button_unchecked'
+  };
+
+  readonly toolLabels: Record<string, string> = {
+    pan: 'Pan', zoom: 'Zoom', wwwc: 'W/L',
+    length: 'Длина', angle: 'Угол', ellipse: 'ROI'
+  };
+
+  constructor(private cdr: ChangeDetectorRef, private translate: TranslateService) {}
+
+  ngOnInit(): void {
+    this.loadCornerstoneScripts();
+  }
+
+  ngAfterViewInit(): void {
+    this.keyDownHandler = this.onKeyDown.bind(this);
+    document.addEventListener('keydown', this.keyDownHandler);
+  }
 
   ngOnDestroy(): void {
-    try {
-      if (this.loaded && this.viewerElement?.nativeElement) {
-        this.cs.disable(this.viewerElement.nativeElement);
-      }
-    } catch(e) {}
+    document.removeEventListener('keydown', this.keyDownHandler);
+    if (this.cornerstoneReady && this.dicomElement?.nativeElement) {
+      try { cornerstone.disable(this.dicomElement.nativeElement); } catch (_) {}
+    }
   }
 
-  async loadLibraries(): Promise<void> {
-    if (this.loaded) return;
-
+  private loadCornerstoneScripts(): void {
     const scripts = [
-      'https://unpkg.com/cornerstone-core@2.6.1/dist/cornerstone.min.js',
-      'https://unpkg.com/dicom-parser@1.8.21/dist/dicomParser.min.js',
-      'https://unpkg.com/hammerjs@2.0.8/hammer.min.js',
-      'https://unpkg.com/cornerstone-math@0.1.10/dist/cornerstoneMath.min.js',
-      'https://unpkg.com/cornerstone-tools@6.0.10/dist/cornerstoneTools.min.js',
-      'https://unpkg.com/cornerstone-wado-image-loader@4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js'
+      { src: 'https://unpkg.com/cornerstone-core@2.6.1/dist/cornerstone.js', id: 'cs-core' },
+      { src: 'https://unpkg.com/dicom-parser@1.8.21/dist/dicomParser.js', id: 'cs-dicom-parser' },
+      { src: 'https://unpkg.com/hammerjs@2.0.8/hammer.min.js', id: 'cs-hammer' },
+      { src: 'https://unpkg.com/cornerstone-tools@4.22.1/dist/cornerstoneTools.js', id: 'cs-tools' },
+      { src: 'https://unpkg.com/cornerstone-wado-image-loader@4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js', id: 'cs-wado' }
     ];
 
-    for (const src of scripts) {
-      await this.loadScript(src);
-    }
-
-    await new Promise(r => setTimeout(r, 300));
-
-    this.cs = (window as any).cornerstone;
-    this.csTools = (window as any).cornerstoneTools;
-    this.csWADO = (window as any).cornerstoneWADOImageLoader;
-    this.dcmParser = (window as any).dicomParser;
-
-    if (!this.cs || !this.csTools || !this.csWADO) {
-      throw new Error('Libraries not loaded');
-    }
-
-    this.csWADO.external.cornerstone = this.cs;
-    this.csWADO.external.dicomParser = this.dcmParser;
-    this.csTools.external.cornerstone = this.cs;
-    this.csTools.external.Hammer = (window as any).Hammer;
-    this.csTools.external.cornerstoneMath = (window as any).cornerstoneMath;
-
-    this.csTools.init({ showSVGCursors: true });
-
-    this.csTools.addTool(this.csTools.PanTool);
-    this.csTools.addTool(this.csTools.ZoomTool);
-    this.csTools.addTool(this.csTools.WwwcTool);
-    this.csTools.addTool(this.csTools.LengthTool);
-    this.csTools.addTool(this.csTools.AngleTool);
-    this.csTools.addTool(this.csTools.EllipticalRoiTool);
-    this.csTools.addTool(this.csTools.StackScrollMouseWheelTool);
-
-    this.loaded = true;
-  }
-
-  loadScript(src: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const loadNext = (index: number) => {
+      if (index >= scripts.length) {
+        setTimeout(() => this.initCornerstone(), 400);
+        return;
+      }
+      const { src, id } = scripts[index];
+      if (document.getElementById(id)) { loadNext(index + 1); return; }
       const s = document.createElement('script');
       s.src = src;
-      s.onload = () => resolve();
-      s.onerror = () => reject();
+      s.id = id;
+      s.onload = () => loadNext(index + 1);
+      s.onerror = () => loadNext(index + 1);
       document.head.appendChild(s);
-    });
+    };
+
+    loadNext(0);
   }
 
-  async onFiles(event: any): Promise<void> {
-    const files: File[] = Array.from(event.target.files || []);
-    if (!files.length) return;
-
-    this.isLoading = true;
-    this.cdr.detectChanges();
-
+  private initCornerstone(): void {
     try {
-      await this.loadLibraries();
+      const cs = (window as any).cornerstone;
+      const csTools = (window as any).cornerstoneTools;
+      const csWADO = (window as any).cornerstoneWADOImageLoader;
+      const dcmParser = (window as any).dicomParser;
+      const HammerLib = (window as any).Hammer;
 
-      const element = this.viewerElement.nativeElement;
-      this.cs.enable(element);
+      if (!cs) { console.error('cornerstone not loaded'); return; }
+      if (!csWADO) { console.error('cornerstoneWADOImageLoader not loaded'); return; }
+      if (!csTools) { console.error('cornerstoneTools not loaded'); return; }
 
-      this.imageIds = files.map((f: File) => this.csWADO.wadouri.fileManager.add(f));
-      this.totalSlices = this.imageIds.length;
-      this.currentSlice = 0;
+      // ВАЖНО: порядок установки externals критичен!
+      csWADO.external.cornerstone = cs;
+      if (dcmParser) csWADO.external.dicomParser = dcmParser;
+      csTools.external.cornerstone = cs;
+      if (HammerLib) csTools.external.Hammer = HammerLib;
 
-      const image = await this.cs.loadAndCacheImage(this.imageIds[0]);
-      this.cs.displayImage(element, image);
+      // Инициализируем Tools ДО enable элемента
+      csTools.init({
+        mouseEnabled: true,
+        touchEnabled: true,
+        globalToolSyncEnabled: false,
+        showSVGCursors: true
+      });
 
-      const stack = {
-        currentImageIdIndex: 0,
-        imageIds: this.imageIds
-      };
-      this.csTools.addStackStateManager(element, ['stack']);
-      this.csTools.addToolState(element, 'stack', stack);
+      csTools.addTool(csTools.PanTool);
+      csTools.addTool(csTools.ZoomTool);
+      csTools.addTool(csTools.WwwcTool);
+      csTools.addTool(csTools.LengthTool);
+      csTools.addTool(csTools.AngleTool);
+      csTools.addTool(csTools.EllipticalRoiTool);
+      csTools.addTool(csTools.EraserTool);
 
-      this.csTools.setToolActive('Wwwc', { mouseButtonMask: 1 });
-      this.csTools.setToolActive('StackScrollMouseWheel', {});
+      this.cornerstoneReady = true;
+      this.cornerstoneToolsLoaded = true;
 
-      this.extractInfo(image);
-      this.isLoading = false;
-      this.imageLoaded = true;
-      this.activeTool = 'wwwc';
-      this.cdr.detectChanges();
-    } catch(e) {
-      console.error('Load error:', e);
-      this.isLoading = false;
-      alert('Ошибка загрузки DICOM');
-      this.cdr.detectChanges();
+      // Enable элемента ПОСЛЕ инициализации Tools
+      if (this.dicomElement?.nativeElement) {
+        cs.enable(this.dicomElement.nativeElement);
+        // Активируем Pan по умолчанию
+        csTools.setToolActive('Pan', { mouseButtonMask: 1 });
+      }
+
+      console.log('Cornerstone + Tools initialized OK');
+    } catch (e) {
+      console.error('Cornerstone init error:', e);
     }
   }
 
-  async loadDemo(): Promise<void> {
-    this.isLoading = true;
-    this.cdr.detectChanges();
+  private activateDefaultTool(): void {
+    if (!this.cornerstoneToolsLoaded || !this.dicomElement?.nativeElement) return;
+    const csTools = (window as any).cornerstoneTools;
+    if (!csTools) return;
     try {
-      await this.loadLibraries();
-      const element = this.viewerElement.nativeElement;
-      this.cs.enable(element);
-      const imageId = 'wadouri:https://rawgit.com/cornerstonejs/cornerstoneWADOImageLoader/master/testImages/CT_SMALL.dcm';
-      const image = await this.cs.loadAndCacheImage(imageId);
-      this.cs.displayImage(element, image);
-      this.csTools.setToolActive('Wwwc', { mouseButtonMask: 1 });
-      this.imageInfo = { patientName: 'Demo', modality: 'CT' };
-      this.isLoading = false;
-      this.imageLoaded = true;
-      this.totalSlices = 1;
-      this.activeTool = 'wwwc';
-      this.cdr.detectChanges();
-    } catch(e) {
-      console.error(e);
-      this.isLoading = false;
-      this.cdr.detectChanges();
+      csTools.setToolActive('Pan', { mouseButtonMask: 1 });
+      csTools.setToolActive('Wwwc', { mouseButtonMask: 2 });
+      this.activeTool = 'pan';
+      console.log('Default tools activated after image load');
+    } catch (e) {
+      console.error('activateDefaultTool error:', e);
     }
+    this.cdr.detectChanges();
   }
 
-  extractInfo(image: any): void {
-    try {
-      const d = image.data;
-      this.imageInfo = {
-        patientName: d?.string('x00100010') || 'Anonymous',
-        modality: d?.string('x00080060') || 'Unknown',
-        studyDate: d?.string('x00080020') || ''
-      };
-    } catch(e) { this.imageInfo = {}; }
-  }
+  setActiveTool(tool: string): void {
+    console.log('setActiveTool called:', tool);
+    console.log('cornerstoneToolsLoaded:', this.cornerstoneToolsLoaded);
+    console.log('element:', this.dicomElement?.nativeElement);
 
-  setTool(tool: string): void {
-    if (!this.loaded) return;
-    const map: any = { pan: 'Pan', zoom: 'Zoom', wwwc: 'Wwwc', length: 'Length', angle: 'Angle', ellipse: 'EllipticalRoi' };
-
-    Object.values(map).forEach((n: any) => {
-      try { this.csTools.setToolPassive(n); } catch(e) {}
-    });
-
-    const name = map[tool];
-    if (name) {
-      this.csTools.setToolActive(name, { mouseButtonMask: 1 });
+    if (!this.cornerstoneToolsLoaded) {
+      console.error('cornerstoneTools not loaded yet!');
       this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+    if (!this.dicomElement?.nativeElement) {
+      console.error('element not found!');
+      this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const csTools = (window as any).cornerstoneTools;
+    if (!csTools) {
+      console.error('cornerstoneTools not on window!');
+      this.activeTool = tool as any;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const toolMap: Record<string, string> = {
+      pan: 'Pan', zoom: 'Zoom', wwwc: 'Wwwc',
+      length: 'Length', angle: 'Angle', ellipse: 'EllipticalRoi',
+      eraser: 'Eraser'
+    };
+
+    try {
+      Object.values(toolMap).forEach((name: string) => {
+        try { csTools.setToolPassive(name); } catch (_) {}
+      });
+
+      const toolName = toolMap[tool];
+      if (toolName) {
+        csTools.setToolActive(toolName, { mouseButtonMask: 1 });
+        this.activeTool = tool as any;
+        console.log('Tool activated:', toolName);
+      }
+      // W/L всегда на правой кнопке, кроме случая когда сам wwwc активен
+      if (tool !== 'wwwc') {
+        try { csTools.setToolActive('Wwwc', { mouseButtonMask: 2 }); } catch (_) {}
+      }
+    } catch (e) {
+      console.error('setActiveTool error:', e);
+    }
+    this.cdr.detectChanges();
+  }
+
+  clearMeasurements(): void {
+    if (!this.cornerstoneToolsLoaded || !this.dicomElement?.nativeElement) return;
+    const csTools = (window as any).cornerstoneTools;
+    const cs = (window as any).cornerstone;
+    if (!csTools || !cs) return;
+    try {
+      ['Length', 'Angle', 'EllipticalRoi'].forEach(toolName => {
+        try { csTools.clearToolState(this.dicomElement.nativeElement, toolName); } catch (_) {}
+      });
+      cs.updateImage(this.dicomElement.nativeElement);
+      console.log('Measurements cleared');
+    } catch (e) {
+      console.error('clearMeasurements error:', e);
     }
   }
 
-  clearAll(): void {
-    if (!this.loaded) return;
-    const el = this.viewerElement.nativeElement;
-    ['Length', 'Angle', 'EllipticalRoi'].forEach(t => {
-      try { this.csTools.clearToolState(el, t); } catch(e) {}
+  getToolIcon(tool: string): string { return this.toolIcons[tool] || 'pan_tool'; }
+  getToolLabel(tool: string): string { return this.toolLabels[tool] || tool; }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragOver = false;
+    const files = event.dataTransfer?.files;
+    if (!files || files.length === 0) return;
+    if (files.length === 1) {
+      this.isMultiFrame = false;
+      this.loadDicomFile(files[0]);
+    } else {
+      this.handleMultipleFiles(Array.from(files) as File[]);
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) { this.isMultiFrame = false; this.loadDicomFile(file); }
+    input.value = '';
+  }
+
+  onFilesSelected(event: any): void {
+    const selectedFiles = Array.from(event.target.files) as File[];
+    if (!selectedFiles.length) return;
+
+    for (const file of selectedFiles) {
+      const sizeMB = file.size / (1024 * 1024);
+      if (sizeMB > 100) {
+        alert(`Файл ${(file as File).name} слишком большой: ${sizeMB.toFixed(1)} MB. Максимум 100 MB.`);
+        event.target.value = '';
+        return;
+      }
+    }
+
+    if (selectedFiles.length === 1) {
+      this.loadDicomFile(selectedFiles[0] as File);
+    } else {
+      this.isMultiFrame = true;
+      this.files = selectedFiles.sort((a, b) => (a as File).name.localeCompare((b as File).name)) as File[];
+      this.totalSlices = this.files.length;
+      this.currentSlice = 0;
+      this.cdr.detectChanges();
+      this.loadMultipleFiles(this.files);
+    }
+    event.target.value = '';
+  }
+
+  private handleMultipleFiles(selectedFiles: File[]): void {
+    this.isMultiFrame = true;
+    this.files = selectedFiles.sort((a, b) => a.name.localeCompare(b.name));
+    this.totalSlices = this.files.length;
+    this.currentSlice = 0;
+    this.cdr.detectChanges();
+    this.loadMultipleFiles(this.files);
+  }
+
+  loadMultipleFiles(files: File[]): void {
+    if (!this.cornerstoneReady) { setTimeout(() => this.loadMultipleFiles(files), 800); return; }
+    this.isLoading = true;
+    this.imageLoaded = false;
+    this.imageIds = [];
+    this.cdr.detectChanges();
+
+    if (this.dicomElement?.nativeElement) {
+      try { cornerstone.enable(this.dicomElement.nativeElement); } catch (_) {}
+    }
+
+    this.imageIds = files.map(file =>
+      cornerstoneWADOImageLoader.wadouri.fileManager.add(file)
+    );
+
+    cornerstone.loadImage(this.imageIds[0]).then((image: any) => {
+      cornerstone.displayImage(this.dicomElement.nativeElement, image);
+      const vp = cornerstone.getDefaultViewportForImage(this.dicomElement.nativeElement, image);
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+      this.windowWidth = vp?.voi?.windowWidth ?? 400;
+      this.windowCenter = vp?.voi?.windowCenter ?? 40;
+      this.extractMetadata(image);
+      this.isLoading = false;
+      this.imageLoaded = true;
+      this.currentSlice = 0;
+      this.zoom = 1;
+      this.inverted = false;
+      this.cdr.detectChanges();
+      this.activateDefaultTool();
+    }).catch(() => {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
     });
-    this.cs.updateImage(el);
   }
 
-  reset(): void {
-    if (!this.loaded) return;
-    this.cs.reset(this.viewerElement.nativeElement);
-  }
+  goToSlice(index: number): void {
+    if (!this.imageLoaded) return;
+    if (index < 0 || index >= this.totalSlices) return;
+    if (index === this.currentSlice) return;
 
-  toggleInvert(): void {
-    if (!this.loaded) return;
-    const el = this.viewerElement.nativeElement;
-    const vp = this.cs.getViewport(el);
-    vp.invert = !vp.invert;
-    this.inverted = vp.invert;
-    this.cs.setViewport(el, vp);
+    this.currentSlice = index;
+    this.cdr.detectChanges();
+
+    if (this.isMultiFrame && this.imageIds.length > 1) {
+      const imageId = this.imageIds[index];
+      cornerstone.loadImage(imageId).then((image: any) => {
+        if (!this.dicomElement?.nativeElement) return;
+        try {
+          const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+          cornerstone.displayImage(this.dicomElement.nativeElement, image);
+          if (viewport) cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+        } catch (_) {
+          cornerstone.displayImage(this.dicomElement.nativeElement, image);
+        }
+      }).catch((err: any) => {
+        console.warn('Frame load error:', err);
+      });
+    }
   }
 
   nextSlice(): void { this.goToSlice(this.currentSlice + 1); }
   prevSlice(): void { this.goToSlice(this.currentSlice - 1); }
-  onSliceSlider(e: any): void { this.goToSlice(+e.target.value); }
 
-  async goToSlice(i: number): Promise<void> {
-    if (i < 0 || i >= this.totalSlices) return;
-    this.currentSlice = i;
-    const el = this.viewerElement.nativeElement;
-    const image = await this.cs.loadAndCacheImage(this.imageIds[i]);
-    const vp = this.cs.getViewport(el);
-    this.cs.displayImage(el, image);
-    this.cs.setViewport(el, vp);
+  onSliceSlider(event: any): void {
+    this.goToSlice(Number(event.target.value));
   }
 
-  getToolIcon(): string {
-    const m: any = { pan: 'pan_tool', zoom: 'zoom_in', wwwc: 'brightness_6', length: 'straighten', angle: 'architecture', ellipse: 'radio_button_unchecked' };
-    return m[this.activeTool] || 'pan_tool';
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.imageLoaded || !this.isMultiFrame) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextSlice();
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevSlice();
+    }
   }
 
-  getToolName(): string {
-    const m: any = { pan: 'Перемещение', zoom: 'Зум', wwwc: 'Яркость/Контраст', length: 'Линейка', angle: 'Угол', ellipse: 'Эллипс ROI' };
-    return m[this.activeTool] || '';
+  loadDicomFile(file: File): void {
+    if (!this.cornerstoneReady) { setTimeout(() => this.loadDicomFile(file), 800); return; }
+    this.isLoading = true;
+    this.imageLoaded = false;
+    this.isMultiFrame = false;
+    this.cdr.detectChanges();
+
+    if (this.dicomElement?.nativeElement) {
+      try { cornerstone.enable(this.dicomElement.nativeElement); } catch (_) {}
+    }
+
+    const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
+
+    cornerstone.loadImage(imageId).then((image: any) => {
+      cornerstone.displayImage(this.dicomElement.nativeElement, image);
+      const vp = cornerstone.getDefaultViewportForImage(this.dicomElement.nativeElement, image);
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+      this.windowWidth = vp?.voi?.windowWidth ?? 400;
+      this.windowCenter = vp?.voi?.windowCenter ?? 40;
+
+      try {
+        const dataSet = image.data;
+        const numberOfFrames = dataSet?.intString('x00280008');
+
+        if (numberOfFrames && numberOfFrames > 1) {
+          this.isMultiFrame = true;
+          this.totalSlices = numberOfFrames;
+          this.currentSlice = 0;
+          this.imageIds = Array.from(
+            { length: numberOfFrames },
+            (_, i) => `${imageId}?frame=${i}`
+          );
+        } else {
+          this.isMultiFrame = false;
+          this.totalSlices = 1;
+          this.imageIds = [imageId];
+        }
+      } catch (e) {
+        this.isMultiFrame = false;
+        this.totalSlices = 1;
+      }
+
+      try {
+        const dataSet = image.data;
+        this.imageInfo = {
+          patientName: dataSet?.string('x00100010') || 'Anonymous',
+          studyDate:   dataSet?.string('x00080020') || '',
+          modality:    dataSet?.string('x00080060') || '',
+          institution: dataSet?.string('x00080080') || '',
+          frames: this.totalSlices
+        };
+      } catch (e) { this.imageInfo = {}; }
+
+      this.isLoading = false;
+      this.imageLoaded = true;
+      this.zoom = 1;
+      this.inverted = false;
+      this.cdr.detectChanges();
+      this.activateDefaultTool();
+    }).catch((err: any) => {
+      console.error('DICOM load error:', err);
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
+    });
+  }
+
+  loadDemoImage(): void {
+    if (!this.cornerstoneReady) { setTimeout(() => this.loadDemoImage(), 800); return; }
+    this.isLoading = true;
+    this.imageLoaded = false;
+    this.isMultiFrame = false;
+    this.cdr.detectChanges();
+
+    if (this.dicomElement?.nativeElement) {
+      try { cornerstone.enable(this.dicomElement.nativeElement); } catch (_) {}
+    }
+
+    const imageId = 'wadouri:https://rawgit.com/cornerstonejs/cornerstoneWADOImageLoader/master/testImages/CT_SMALL.dcm';
+
+    cornerstone.loadAndCacheImage(imageId).then((image: any) => {
+      cornerstone.displayImage(this.dicomElement.nativeElement, image);
+      this.imageInfo = { patientName: 'Demo Patient', modality: 'CT', studyDate: '2026-04-13', institution: 'HIS-MedSystem Demo' };
+      this.isLoading = false;
+      this.imageLoaded = true;
+      this.zoom = 1;
+      this.cdr.detectChanges();
+      this.activateDefaultTool();
+    }).catch((err: any) => {
+      console.error('Demo DICOM load error:', err);
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      alert(this.translate.instant('DICOM.LOAD_ERROR'));
+    });
+  }
+
+  private extractMetadata(image: any): void {
+    try {
+      const ds = image.data;
+      this.imageInfo = {
+        patientName: ds?.string('x00100010') || 'Anonymous',
+        studyDate:   ds?.string('x00080020') || '',
+        modality:    ds?.string('x00080060') || '',
+        institution: ds?.string('x00080080') || ''
+      };
+    } catch (_) {
+      this.imageInfo = {};
+    }
+  }
+
+  applyZoom(): void {
+    if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
+    try {
+      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
+      vp.scale = this.zoom;
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+    } catch (_) {}
+  }
+
+  applyViewport(): void {
+    if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
+    try {
+      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
+      vp.voi.windowWidth  = this.windowWidth  + this.brightness * 10;
+      vp.voi.windowCenter = this.windowCenter + this.brightness * 5;
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+    } catch (_) {}
+  }
+
+  resetViewport(): void {
+    if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
+    try {
+      this.zoom = 1; this.brightness = 0; this.contrast = 1; this.inverted = false;
+      cornerstone.reset(this.dicomElement.nativeElement);
+    } catch (_) {}
+  }
+
+  invertImage(): void {
+    if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
+    try {
+      const vp = cornerstone.getViewport(this.dicomElement.nativeElement);
+      vp.invert = !vp.invert;
+      this.inverted = vp.invert;
+      cornerstone.setViewport(this.dicomElement.nativeElement, vp);
+    } catch (_) {}
+  }
+
+  toggleFullscreen(): void {
+    const container = this.dicomElement?.nativeElement?.closest('.dicom-viewer-container');
+    if (!container) return;
+    if (!document.fullscreenElement) {
+      container.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
+
+  onWheel(event: WheelEvent): void {
+    event.preventDefault();
+    if (!this.imageLoaded) return;
+
+    if (event.ctrlKey) {
+      this.wheelAccumulator = 0;
+      const delta = event.deltaY > 0 ? -0.1 : 0.1;
+      this.zoom = Math.max(0.1, Math.min(5, Math.round((this.zoom + delta) * 10) / 10));
+      this.applyZoom();
+      return;
+    }
+
+    if (this.isMultiFrame && this.totalSlices > 1) {
+      this.wheelAccumulator += event.deltaY;
+      const steps = Math.floor(Math.abs(this.wheelAccumulator) / this.WHEEL_THRESHOLD);
+      if (steps > 0) {
+        const direction = this.wheelAccumulator > 0 ? 1 : -1;
+        const jump = Math.min(steps, 5);
+        this.goToSlice(this.currentSlice + direction * jump);
+        this.wheelAccumulator -= direction * steps * this.WHEEL_THRESHOLD;
+      }
+    } else {
+      // When using measurement/zoom tools, let cornerstoneTools handle via its event system
+      if (this.cornerstoneToolsLoaded && (this.activeTool === 'zoom')) return;
+      this.wheelAccumulator = 0;
+      const delta = event.deltaY > 0 ? -0.1 : 0.1;
+      this.zoom = Math.max(0.1, Math.min(5, Math.round((this.zoom + delta) * 10) / 10));
+      this.applyZoom();
+    }
+  }
+
+  onMouseDown(event: MouseEvent): void {
+    this.isDragging = true;
+    this.lastX = event.clientX;
+    this.lastY = event.clientY;
+
+    if (this.isMultiFrame && this.totalSlices > 1 && event.button === 1) {
+      this.isDraggingSlice = true;
+      this.dragStartX = event.clientX;
+      this.dragStartSlice = this.currentSlice;
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!this.isDragging || !this.imageLoaded) return;
+
+    const deltaX = event.clientX - this.lastX;
+    const deltaY = event.clientY - this.lastY;
+    this.lastX = event.clientX;
+    this.lastY = event.clientY;
+
+    try {
+      if (this.isDraggingSlice && this.isMultiFrame) {
+        const totalDeltaX = event.clientX - this.dragStartX;
+        const sliceOffset = Math.round(totalDeltaX / this.DRAG_SENSITIVITY);
+        const targetSlice = Math.max(0, Math.min(
+          this.totalSlices - 1,
+          this.dragStartSlice - sliceOffset
+        ));
+        if (targetSlice !== this.currentSlice) {
+          this.goToSlice(targetSlice);
+        }
+        return;
+      }
+
+      // When cornerstone-tools is loaded, it handles pan/WL via its own event system
+      if (this.cornerstoneToolsLoaded) return;
+
+      if (event.buttons === 1 && !this.isDraggingSlice) {
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.translation.x += deltaX;
+        viewport.translation.y += deltaY;
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+      } else if (event.buttons === 2) {
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.voi.windowWidth  += deltaX * 2;
+        viewport.voi.windowCenter += deltaY * 2;
+        this.windowWidth  = Math.round(viewport.voi.windowWidth);
+        this.windowCenter = Math.round(viewport.voi.windowCenter);
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+      }
+    } catch (_) {}
+  }
+
+  onMouseUp(event?: MouseEvent): void {
+    this.isDragging = false;
+    this.isDraggingSlice = false;
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (!this.imageLoaded) return;
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+    this.touchStartSlice = this.currentSlice;
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (!this.imageLoaded) return;
+    event.preventDefault();
+
+    const currentX = event.touches[0].clientX;
+    const currentY = event.touches[0].clientY;
+    const deltaX = currentX - this.touchStartX;
+    const deltaY = currentY - this.touchStartY;
+
+    if (this.isMultiFrame && this.totalSlices > 1) {
+      const dominantDelta = Math.abs(deltaY) >= Math.abs(deltaX) ? -deltaY : -deltaX;
+      const sliceOffset = Math.round(dominantDelta / this.TOUCH_SENSITIVITY);
+      const targetSlice = Math.max(0, Math.min(
+        this.totalSlices - 1,
+        this.touchStartSlice + sliceOffset
+      ));
+      if (targetSlice !== this.currentSlice) {
+        this.goToSlice(targetSlice);
+      }
+    } else if (!this.cornerstoneToolsLoaded) {
+      try {
+        const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
+        viewport.translation.x += deltaX * 0.5;
+        viewport.translation.y += deltaY * 0.5;
+        cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
+        this.touchStartX = currentX;
+        this.touchStartY = currentY;
+      } catch (_) {}
+    }
+  }
+
+  onTouchEnd(): void {
+    this.touchStartSlice = this.currentSlice;
   }
 }

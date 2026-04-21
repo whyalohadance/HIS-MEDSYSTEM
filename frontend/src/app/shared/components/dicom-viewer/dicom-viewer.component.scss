@@ -112,48 +112,6 @@
   &:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
-.tool-group {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: rgba(255,255,255,0.04);
-  padding: 3px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.07);
-}
-
-.tool-btn {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 7px;
-  color: #64748b;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-
-  .material-icons { font-size: 17px !important; }
-
-  &:hover:not(:disabled) { background: rgba(255,255,255,0.08); color: #cbd5e1; }
-
-  &.active {
-    background: rgba(59,130,246,0.18);
-    border-color: rgba(59,130,246,0.35);
-    color: #60a5fa;
-  }
-
-  &.tool-measure.active {
-    background: rgba(124,58,237,0.2);
-    border-color: rgba(124,58,237,0.4);
-    color: #a78bfa;
-  }
-
-  &:disabled { opacity: 0.35; cursor: not-allowed; }
-}
-
 // ===== MAIN =====
 .viewer-main {
   flex: 1;
@@ -476,29 +434,6 @@ label.btn-footer {
   margin-top: 4px;
 }
 
-// ===== ACTIVE TOOL LABEL =====
-.active-tool-label {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.6);
-  color: #e2e8f0;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 14px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  pointer-events: none;
-  z-index: 5;
-  border: 1px solid rgba(255,255,255,0.1);
-  white-space: nowrap;
-
-  .material-icons { font-size: 13px !important; color: #7c3aed; }
-}
-
 // ===== UPLOAD TIPS =====
 .upload-tips-list {
   display: flex;
@@ -519,89 +454,4 @@ label.btn-footer {
   color: rgba(255,255,255,0.3);
 
   .material-icons { font-size: 14px; color: #7c3aed; }
-}
-
-// ===== NEW TEMPLATE CLASSES =====
-
-// Generic spinner (alias for loading-spinner)
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid #1e293b;
-  border-top-color: #7c3aed;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 16px;
-}
-
-.loading-zone {
-  color: #64748b;
-  p { font-size: 14px; margin: 0; text-align: center; }
-}
-
-// Tool badge — active tool label (inline template version)
-.tool-badge {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.6);
-  color: #e2e8f0;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 14px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  pointer-events: none;
-  z-index: 5;
-  border: 1px solid rgba(255,255,255,0.1);
-  white-space: nowrap;
-
-  .material-icons { font-size: 13px !important; color: #7c3aed; }
-}
-
-// Overlay wrapper for inline template
-.overlay-info {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.info-block {
-  position: absolute;
-  background: rgba(0,0,0,0.45);
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-family: monospace;
-  color: #ffd700;
-  line-height: 1.7;
-  max-width: 180px;
-}
-
-.info-tl { top: 12px; left: 12px; }
-.info-bl { bottom: 56px; left: 12px; }
-
-// Slice nav — bottom nav for inline template
-.slice-nav {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-  padding: 20px 16px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10;
-}
-
-// tool-btn.measure active state (inline template)
-.tool-btn.measure.active {
-  background: rgba(124,58,237,0.2);
-  border-color: rgba(124,58,237,0.4);
-  color: #a78bfa;
 }
