@@ -22,8 +22,12 @@
         (click)="setTool('length')" title="Линейка — кликни и тяни">
         <span class="material-icons">straighten</span>
       </button>
-      <button class="tool-btn" *ngIf="measurements.length > 0"
-        (click)="clearMeasurements()" title="Очистить измерения">
+      <button class="tool-btn" [class.active]="activeTool === 'annotation'"
+        (click)="setTool('annotation')" title="Аннотация — кликни, чтобы добавить замечание">
+        <span class="material-icons">label_important</span>
+      </button>
+      <button class="tool-btn" *ngIf="measurements.length > 0 || annotations.length > 0"
+        (click)="clearMeasurements()" title="Очистить измерения и аннотации">
         <span class="material-icons">delete_sweep</span>
       </button>
 
@@ -117,8 +121,8 @@
       <div #dicomElement class="dicom-canvas"
            (mousedown)="onMouseDown($event)"
            (mousemove)="onMouseMove($event)"
-           (mouseup)="onMouseUp($event)"
-           (mouseleave)="onMouseUp($event)"
+           (mouseup)="onMouseUp()"
+           (mouseleave)="onMouseUp()"
            (wheel)="onWheel($event)"
            (touchstart)="onTouchStart($event)"
            (touchmove)="onTouchMove($event)"
@@ -158,6 +162,45 @@
         </g>
       </svg>
 
+      <!-- Annotation SVG overlay -->
+      <svg class="annotation-svg"
+           *ngIf="imageLoaded && activeTool === 'annotation'"
+           (mousedown)="startAnnotation($event)">
+        <!-- Saved annotations -->
+        <g *ngFor="let a of annotations; let i = index">
+          <circle [attr.cx]="a.x" [attr.cy]="a.y" r="7"
+                  fill="rgba(239,68,68,0.2)" stroke="#ef4444" stroke-width="2"/>
+          <text [attr.x]="a.x" [attr.y]="a.y + 4"
+                text-anchor="middle" fill="#fff" font-size="9" font-weight="700">{{ i + 1 }}</text>
+          <line [attr.x1]="a.x" [attr.y1]="a.y"
+                [attr.x2]="a.labelX" [attr.y2]="a.labelY"
+                stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <rect [attr.x]="a.labelX - 4" [attr.y]="a.labelY - 13"
+                [attr.width]="a.text.length * 7 + 16" height="20" rx="4"
+                fill="rgba(0,0,0,0.85)" stroke="#ef4444" stroke-width="1"/>
+          <text [attr.x]="a.labelX + 4" [attr.y]="a.labelY + 2"
+                fill="#fca5a5" font-size="11" font-family="ui-monospace, monospace">{{ a.text }}</text>
+        </g>
+      </svg>
+
+      <!-- Annotation input popup -->
+      <div class="annotation-input-wrapper" *ngIf="showAnnotationInput"
+           [style.left.px]="annotationInputX" [style.top.px]="annotationInputY">
+        <input #annInput id="annotationInput" class="annotation-input" [(ngModel)]="annotationText"
+               placeholder="Введите замечание..."
+               maxlength="60"
+               (keydown)="onAnnotationKeydown($event)"
+               autofocus>
+        <div class="ann-actions">
+          <button class="ann-btn ann-save" (click)="saveAnnotation()" title="Сохранить (Enter)">
+            <span class="material-icons">check</span>
+          </button>
+          <button class="ann-btn ann-cancel" (click)="cancelAnnotation()" title="Отмена (Esc)">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Overlay info -->
       <div class="viewer-overlay-info" *ngIf="imageLoaded && imageInfo">
         <div class="info-top-left">
@@ -176,8 +219,15 @@
 
       <!-- Active tool label -->
       <div class="active-tool-label" *ngIf="imageLoaded">
-        <span class="material-icons">{{ activeTool === 'pan' ? 'pan_tool' : 'straighten' }}</span>
-        {{ activeTool === 'pan' ? 'Перемещение' : 'Линейка' }}
+        <span class="material-icons">{{ activeTool === 'pan' ? 'pan_tool' : activeTool === 'length' ? 'straighten' : 'label_important' }}</span>
+        {{ activeTool === 'pan' ? 'Перемещение' : activeTool === 'length' ? 'Линейка' : 'Аннотация' }}
+      </div>
+
+      <!-- Annotation hint -->
+      <div class="measure-hint annotation-hint" *ngIf="imageLoaded && activeTool === 'annotation'">
+        <span class="material-icons">label_important</span>
+        <span>Кликни на снимке — добавь замечание</span>
+        <span *ngIf="annotations.length > 0" style="color:#fca5a5"> · {{ annotations.length }} аннотаций</span>
       </div>
 
       <!-- Measure hint -->

@@ -136,6 +136,32 @@ export class StudiesController {
     return { success: true };
   }
 
+  // ===== ANNOTATIONS — fixed paths before :id =====
+  @Get(':id/annotations')
+  async getAnnotations(@Param('id') id: string) {
+    const data = await this.studiesService.findAnnotations(+id);
+    return { success: true, data };
+  }
+
+  @Post(':id/annotations')
+  async addAnnotation(@Param('id') id: string, @Body() dto: any, @Request() req: any) {
+    const userId = req.user?.userId || req.user?.sub;
+    const data = await this.studiesService.createAnnotation(+id, userId, dto);
+    return { success: true, data };
+  }
+
+  @Delete('annotations/:annotationId')
+  async removeAnnotation(@Param('annotationId') annotationId: string) {
+    await this.studiesService.deleteAnnotation(+annotationId);
+    return { success: true };
+  }
+
+  @Delete(':id/annotations')
+  async removeAllAnnotations(@Param('id') id: string) {
+    await this.studiesService.deleteAllAnnotations(+id);
+    return { success: true };
+  }
+
   @Delete(':id')
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {

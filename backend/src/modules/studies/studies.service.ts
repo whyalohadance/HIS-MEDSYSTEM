@@ -6,6 +6,7 @@ import { Modality } from './modality.entity';
 import { Series } from './series.entity';
 import { DicomImage } from './dicom-image.entity';
 import { Measurement } from './measurement.entity';
+import { Annotation } from './annotation.entity';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
 
@@ -21,7 +22,9 @@ export class StudiesService {
     @InjectRepository(DicomImage)
     private dicomImageRepo: Repository<DicomImage>,
     @InjectRepository(Measurement)
-    private measurementRepo: Repository<Measurement>
+    private measurementRepo: Repository<Measurement>,
+    @InjectRepository(Annotation)
+    private annotationRepo: Repository<Annotation>
   ) {}
 
   private generateStudyId(): string {
@@ -175,5 +178,36 @@ export class StudiesService {
 
   async deleteAllMeasurements(studyId: number): Promise<void> {
     await this.measurementRepo.delete({ studyId });
+  }
+
+  // ===== ANNOTATIONS =====
+  async findAnnotations(studyId: number): Promise<Annotation[]> {
+    return this.annotationRepo.find({
+      where: { studyId },
+      order: { createdAt: 'ASC' }
+    });
+  }
+
+  async createAnnotation(studyId: number, userId: number, dto: any): Promise<Annotation> {
+    const a = this.annotationRepo.create({
+      studyId,
+      userId,
+      x: dto.x,
+      y: dto.y,
+      labelX: dto.labelX,
+      labelY: dto.labelY,
+      text: dto.text,
+      color: dto.color || '#ef4444',
+      sliceIndex: dto.sliceIndex
+    });
+    return this.annotationRepo.save(a);
+  }
+
+  async deleteAnnotation(id: number): Promise<void> {
+    await this.annotationRepo.delete(id);
+  }
+
+  async deleteAllAnnotations(studyId: number): Promise<void> {
+    await this.annotationRepo.delete({ studyId });
   }
 }

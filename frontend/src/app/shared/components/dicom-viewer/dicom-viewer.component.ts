@@ -38,7 +38,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   imageIds: string[] = [];
 
   // Active tool
-  activeTool: 'pan' | 'length' = 'pan';
+  activeTool: 'pan' | 'length' | 'annotation' = 'pan';
 
   // SVG measurements
   measurements: Array<{id?: number; x1:number; y1:number; x2:number; y2:number; distance:string; sliceIndex?: number}> = [];
@@ -46,6 +46,16 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   drawStart: {x:number; y:number} | null = null;
   tempEnd: {x:number; y:number} | null = null;
   pixelSpacing: number | null = null;
+
+  // Annotations
+  annotations: Array<{id?: number; x:number; y:number; labelX:number; labelY:number; text:string; color:string}> = [];
+  isAddingAnnotation = false;
+  editingAnnotationIndex = -1;
+  annotationText = '';
+  showAnnotationInput = false;
+  annotationInputX = 0;
+  annotationInputY = 0;
+  pendingAnnotation: {x:number; y:number} | null = null;
 
   isDragOver = false;
   private isDragging = false;
@@ -58,7 +68,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private wheelAccumulator = 0;
   private readonly WHEEL_THRESHOLD = 80;
 
-  // Drag-to-slice (middle mouse button)
+  // Drag-to-slice
   private isDraggingSlice = false;
   private dragStartX = 0;
   private dragStartSlice = 0;
@@ -107,8 +117,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       const { src, id } = scripts[index];
       if (document.getElementById(id)) { loadNext(index + 1); return; }
       const s = document.createElement('script');
-      s.src = src;
-      s.id = id;
+      s.src = src; s.id = id;
       s.onload = () => loadNext(index + 1);
       s.onerror = () => loadNext(index + 1);
       document.head.appendChild(s);
@@ -122,31 +131,24 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       const cs = (window as any).cornerstone;
       const csWADO = (window as any).cornerstoneWADOImageLoader;
       const dcmParser = (window as any).dicomParser;
-
-      if (!cs) { console.error('cornerstone not loaded'); return; }
-      if (!csWADO) { console.error('cornerstoneWADOImageLoader not loaded'); return; }
-
+      if (!cs || !csWADO) { console.error('Cornerstone not loaded'); return; }
       csWADO.external.cornerstone = cs;
       if (dcmParser) csWADO.external.dicomParser = dcmParser;
-
       this.cornerstoneReady = true;
-
-      if (this.dicomElement?.nativeElement) {
-        cs.enable(this.dicomElement.nativeElement);
-      }
+      if (this.dicomElement?.nativeElement) cs.enable(this.dicomElement.nativeElement);
     } catch (e) {
       console.error('Cornerstone init error:', e);
     }
   }
 
   // ===== TOOL SELECTION =====
-  setTool(tool: 'pan' | 'length'): void {
+  setTool(tool: 'pan' | 'length' | 'annotation'): void {
     this.activeTool = tool;
-    if (tool === 'pan') {
-      this.isDrawing = false;
-      this.drawStart = null;
-      this.tempEnd = null;
-    }
+    this.isDrawing = false;
+    this.drawStart = null;
+    this.tempEnd = null;
+    this.showAnnotationInput = false;
+    this.pendingAnnotation = null;
   }
 
   // ===== SVG MEASUREMENTS =====
@@ -195,18 +197,14 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     const measurement = {
       x1: this.drawStart.x, y1: this.drawStart.y,
       x2: this.tempEnd.x,   y2: this.tempEnd.y,
-      distance,
-      sliceIndex: this.currentSlice
+      distance, sliceIndex: this.currentSlice
     };
 
-    // Добавляем локально сразу
     this.measurements.push(measurement);
 
-    // Сохраняем в БД если есть studyNumericId
     if (this.studyNumericId) {
       this.api.post<any>(`/studies/${this.studyNumericId}/measurements`, {
-        type: 'length',
-        ...measurement
+        type: 'length', ...measurement
       }).subscribe({
         next: (res) => {
           const idx = this.measurements.length - 1;
@@ -226,20 +224,116 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   clearMeasurements(): void {
     if (this.studyNumericId) {
       this.api.delete(`/studies/${this.studyNumericId}/measurements`).subscribe();
+      this.api.delete(`/studies/${this.studyNumericId}/annotations`).subscribe();
     }
     this.measurements = [];
+    this.annotations = [];
   }
 
+  // ===== ANNOTATIONS =====
+  startAnnotation(event: MouseEvent): void {
+    if (this.activeTool !== 'annotation' || !this.imageLoaded) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const svg = event.currentTarget as SVGElement;
+    const rect = svg.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    this.pendingAnnotation = { x, y };
+    this.annotationInputX = Math.min(x, rect.width - 260);
+    this.annotationInputY = y + 20;
+    this.annotationText = '';
+    this.showAnnotationInput = true;
+    setTimeout(() => {
+      const input = document.getElementById('annotationInput') as HTMLInputElement;
+      if (input) input.focus();
+    }, 50);
+  }
+
+  saveAnnotation(): void {
+    if (!this.pendingAnnotation || !this.annotationText.trim()) {
+      this.cancelAnnotation();
+      return;
+    }
+
+    const annotation = {
+      x: this.pendingAnnotation.x,
+      y: this.pendingAnnotation.y,
+      labelX: this.pendingAnnotation.x + 40,
+      labelY: this.pendingAnnotation.y - 30,
+      text: this.annotationText.trim(),
+      color: '#ef4444'
+    };
+
+    this.annotations.push(annotation);
+
+    if (this.studyNumericId) {
+      this.api.post<any>(`/studies/${this.studyNumericId}/annotations`, {
+        ...annotation,
+        sliceIndex: this.currentSlice
+      }).subscribe({
+        next: (res) => {
+          if (res.data?.id) {
+            const idx = this.annotations.length - 1;
+            if (this.annotations[idx]) this.annotations[idx].id = res.data.id;
+          }
+        },
+        error: () => console.warn('Не удалось сохранить аннотацию')
+      });
+    }
+
+    this.cancelAnnotation();
+  }
+
+  cancelAnnotation(): void {
+    this.pendingAnnotation = null;
+    this.showAnnotationInput = false;
+    this.annotationText = '';
+  }
+
+  deleteAnnotation(index: number): void {
+    const a = this.annotations[index];
+    if (a.id && this.studyNumericId) {
+      this.api.delete(`/studies/annotations/${a.id}`).subscribe();
+    }
+    this.annotations.splice(index, 1);
+  }
+
+  onAnnotationKeydown(event: KeyboardEvent): void {
+    event.stopPropagation();
+    if (event.key === 'Enter') this.saveAnnotation();
+    else if (event.key === 'Escape') this.cancelAnnotation();
+  }
+
+  clearAllAnnotations(): void {
+    if (this.studyNumericId) {
+      this.api.delete(`/studies/${this.studyNumericId}/annotations`).subscribe();
+    }
+    this.annotations = [];
+  }
+
+  // ===== LOAD MEASUREMENTS + ANNOTATIONS =====
   loadMeasurements(): void {
     if (!this.studyNumericId) return;
+
     this.api.get<any>(`/studies/${this.studyNumericId}/measurements`).subscribe({
       next: (res) => {
         this.measurements = (res.data || []).map((m: any) => ({
-          id: m.id,
-          x1: m.x1, y1: m.y1,
-          x2: m.x2, y2: m.y2,
-          distance: m.distance,
-          sliceIndex: m.sliceIndex
+          id: m.id, x1: m.x1, y1: m.y1, x2: m.x2, y2: m.y2,
+          distance: m.distance, sliceIndex: m.sliceIndex
+        }));
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
+
+    this.api.get<any>(`/studies/${this.studyNumericId}/annotations`).subscribe({
+      next: (res) => {
+        this.annotations = (res.data || []).map((a: any) => ({
+          id: a.id, x: a.x, y: a.y,
+          labelX: a.labelX ?? (a.x + 40),
+          labelY: a.labelY ?? (a.y - 30),
+          text: a.text, color: a.color || '#ef4444'
         }));
         this.cdr.detectChanges();
       },
@@ -250,7 +344,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   // ===== EXPORT SNAPSHOT =====
   exportSnapshot(): void {
     if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
-
     const canvas = this.dicomElement.nativeElement.querySelector('canvas') as HTMLCanvasElement;
     if (!canvas) { alert('Canvas не найден'); return; }
 
@@ -260,39 +353,60 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     const ctx = exportCanvas.getContext('2d');
     if (!ctx) return;
 
-    // DICOM снимок
     ctx.drawImage(canvas, 0, 0);
 
-    // Масштаб SVG → canvas
     const rect = this.dicomElement.nativeElement.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
-    // Рисуем измерения
+    // Измерения
     ctx.lineWidth = 2;
     ctx.font = '14px monospace';
-
     this.measurements.forEach(m => {
       const x1 = m.x1 * scaleX, y1 = m.y1 * scaleY;
       const x2 = m.x2 * scaleX, y2 = m.y2 * scaleY;
-      const midX = (x1 + x2) / 2;
-      const midY = (y1 + y2) / 2;
+      const midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
 
       ctx.strokeStyle = '#fbbf24';
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
       ctx.fillStyle = '#fbbf24';
       ctx.beginPath(); ctx.arc(x1, y1, 5, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(x2, y2, 5, 0, Math.PI * 2); ctx.fill();
-
       ctx.fillStyle = 'rgba(0,0,0,0.85)';
       ctx.fillRect(midX - 40, midY - 14, 80, 24);
       ctx.fillStyle = '#fbbf24';
       ctx.textAlign = 'center';
       ctx.fillText(m.distance, midX, midY + 4);
+    });
+
+    // Аннотации
+    this.annotations.forEach((a, i) => {
+      const x = a.x * scaleX, y = a.y * scaleY;
+      const lx = a.labelX * scaleX, ly = a.labelY * scaleY;
+
+      ctx.fillStyle = a.color;
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(lx, ly); ctx.stroke();
+
+      ctx.font = '14px monospace';
+      const textWidth = ctx.measureText(a.text).width;
+      ctx.fillStyle = 'rgba(0,0,0,0.9)';
+      ctx.fillRect(lx - 4, ly - 14, textWidth + 12, 24);
+      ctx.strokeStyle = a.color;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(lx - 4, ly - 14, textWidth + 12, 24);
+      ctx.fillStyle = a.color;
+      ctx.textAlign = 'left';
+      ctx.fillText(a.text, lx + 2, ly + 2);
+
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 11px system-ui';
+      ctx.fillText(String(i + 1), x, y + 4);
+      ctx.font = '14px monospace';
     });
 
     // Пациент — левый верхний угол
@@ -307,7 +421,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       ctx.fillText(`Study: ${this.studyId || ''}`, 18, 66);
     }
 
-    // Штамп — правый нижний угол
+    // Штамп
     const now = new Date().toISOString().split('T')[0];
     ctx.fillStyle = 'rgba(0,0,0,0.7)';
     ctx.fillRect(canvas.width - 210, canvas.height - 30, 200, 24);
@@ -331,27 +445,16 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ===== DRAG / DROP =====
   onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragOver = true;
+    event.preventDefault(); event.stopPropagation(); this.isDragOver = true;
   }
-
-  onDragLeave(event: DragEvent): void {
-    this.isDragOver = false;
-  }
+  onDragLeave(event: DragEvent): void { this.isDragOver = false; }
 
   onDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragOver = false;
+    event.preventDefault(); event.stopPropagation(); this.isDragOver = false;
     const files = event.dataTransfer?.files;
     if (!files || files.length === 0) return;
-    if (files.length === 1) {
-      this.isMultiFrame = false;
-      this.loadDicomFile(files[0]);
-    } else {
-      this.handleMultipleFiles(Array.from(files) as File[]);
-    }
+    if (files.length === 1) { this.isMultiFrame = false; this.loadDicomFile(files[0]); }
+    else { this.handleMultipleFiles(Array.from(files) as File[]); }
   }
 
   onFileSelected(event: Event): void {
@@ -364,16 +467,14 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   onFilesSelected(event: any): void {
     const selectedFiles = Array.from(event.target.files) as File[];
     if (!selectedFiles.length) return;
-
     for (const file of selectedFiles) {
       const sizeMB = file.size / (1024 * 1024);
       if (sizeMB > 100) {
-        alert(`Файл ${(file as File).name} слишком большой: ${sizeMB.toFixed(1)} MB. Максимум 100 MB.`);
+        alert(`Файл ${(file as File).name} слишком большой: ${sizeMB.toFixed(1)} MB.`);
         event.target.value = '';
         return;
       }
     }
-
     if (selectedFiles.length === 1) {
       this.loadDicomFile(selectedFiles[0] as File);
     } else {
@@ -402,15 +503,14 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.imageLoaded = false;
     this.imageIds = [];
     this.measurements = [];
+    this.annotations = [];
     this.cdr.detectChanges();
 
     if (this.dicomElement?.nativeElement) {
       try { cornerstone.enable(this.dicomElement.nativeElement); } catch (_) {}
     }
 
-    this.imageIds = files.map(file =>
-      cornerstoneWADOImageLoader.wadouri.fileManager.add(file)
-    );
+    this.imageIds = files.map(file => cornerstoneWADOImageLoader.wadouri.fileManager.add(file));
 
     cornerstone.loadImage(this.imageIds[0]).then((image: any) => {
       cornerstone.displayImage(this.dicomElement.nativeElement, image);
@@ -435,46 +535,29 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToSlice(index: number): void {
-    if (!this.imageLoaded) return;
-    if (index < 0 || index >= this.totalSlices) return;
-    if (index === this.currentSlice) return;
-
+    if (!this.imageLoaded || index < 0 || index >= this.totalSlices || index === this.currentSlice) return;
     this.currentSlice = index;
     this.cdr.detectChanges();
-
     if (this.isMultiFrame && this.imageIds.length > 1) {
-      const imageId = this.imageIds[index];
-      cornerstone.loadImage(imageId).then((image: any) => {
+      cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
         if (!this.dicomElement?.nativeElement) return;
         try {
           const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
           cornerstone.displayImage(this.dicomElement.nativeElement, image);
           if (viewport) cornerstone.setViewport(this.dicomElement.nativeElement, viewport);
-        } catch (_) {
-          cornerstone.displayImage(this.dicomElement.nativeElement, image);
-        }
-      }).catch((err: any) => {
-        console.warn('Frame load error:', err);
-      });
+        } catch (_) { cornerstone.displayImage(this.dicomElement.nativeElement, image); }
+      }).catch((err: any) => console.warn('Frame load error:', err));
     }
   }
 
   nextSlice(): void { this.goToSlice(this.currentSlice + 1); }
   prevSlice(): void { this.goToSlice(this.currentSlice - 1); }
-
-  onSliceSlider(event: any): void {
-    this.goToSlice(Number(event.target.value));
-  }
+  onSliceSlider(event: any): void { this.goToSlice(Number(event.target.value)); }
 
   onKeyDown(event: KeyboardEvent): void {
     if (!this.imageLoaded || !this.isMultiFrame) return;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.nextSlice();
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.prevSlice();
-    }
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') { event.preventDefault(); this.nextSlice(); }
+    else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') { event.preventDefault(); this.prevSlice(); }
   }
 
   loadDicomFile(file: File): void {
@@ -483,6 +566,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.imageLoaded = false;
     this.isMultiFrame = false;
     this.measurements = [];
+    this.annotations = [];
     this.cdr.detectChanges();
 
     if (this.dicomElement?.nativeElement) {
@@ -490,7 +574,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
-
     cornerstone.loadImage(imageId).then((image: any) => {
       cornerstone.displayImage(this.dicomElement.nativeElement, image);
       const vp = cornerstone.getDefaultViewportForImage(this.dicomElement.nativeElement, image);
@@ -505,10 +588,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
           this.isMultiFrame = true;
           this.totalSlices = numberOfFrames;
           this.currentSlice = 0;
-          this.imageIds = Array.from(
-            { length: numberOfFrames },
-            (_, i) => `${imageId}?frame=${i}`
-          );
+          this.imageIds = Array.from({ length: numberOfFrames }, (_, i) => `${imageId}?frame=${i}`);
         } else {
           this.isMultiFrame = false;
           this.totalSlices = 1;
@@ -521,7 +601,6 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.extractMetadata(image);
       this.extractPixelSpacing(image);
-
       this.isLoading = false;
       this.imageLoaded = true;
       this.zoom = 1;
@@ -542,6 +621,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.imageLoaded = false;
     this.isMultiFrame = false;
     this.measurements = [];
+    this.annotations = [];
     this.cdr.detectChanges();
 
     if (this.dicomElement?.nativeElement) {
@@ -549,10 +629,9 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const imageId = 'wadouri:https://rawgit.com/cornerstonejs/cornerstoneWADOImageLoader/master/testImages/CT_SMALL.dcm';
-
     cornerstone.loadAndCacheImage(imageId).then((image: any) => {
       cornerstone.displayImage(this.dicomElement.nativeElement, image);
-      this.imageInfo = { patientName: 'Demo Patient', modality: 'CT', studyDate: '2026-04-21', institution: 'HIS-MedSystem Demo' };
+      this.imageInfo = { patientName: 'Demo Patient', modality: 'CT', studyDate: '2026-04-22', institution: 'HIS-MedSystem Demo' };
       this.pixelSpacing = null;
       this.isLoading = false;
       this.imageLoaded = true;
@@ -576,22 +655,14 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
         institution: ds?.string('x00080080') || '',
         frames: this.totalSlices
       };
-    } catch (_) {
-      this.imageInfo = {};
-    }
+    } catch (_) { this.imageInfo = {}; }
   }
 
   private extractPixelSpacing(image: any): void {
     try {
       const ps = image.data?.string('x00280030');
-      if (ps) {
-        this.pixelSpacing = parseFloat(ps.split('\\')[0]);
-      } else {
-        this.pixelSpacing = null;
-      }
-    } catch (e) {
-      this.pixelSpacing = null;
-    }
+      this.pixelSpacing = ps ? parseFloat(ps.split('\\')[0]) : null;
+    } catch (e) { this.pixelSpacing = null; }
   }
 
   // ===== VIEWPORT =====
@@ -625,18 +696,14 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleFullscreen(): void {
     const container = this.dicomElement?.nativeElement?.closest('.dicom-viewer-container');
     if (!container) return;
-    if (!document.fullscreenElement) {
-      container.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
-    }
+    if (!document.fullscreenElement) container.requestFullscreen?.();
+    else document.exitFullscreen?.();
   }
 
   // ===== MOUSE EVENTS =====
   onWheel(event: WheelEvent): void {
     event.preventDefault();
     if (!this.imageLoaded) return;
-
     if (event.ctrlKey) {
       this.wheelAccumulator = 0;
       const delta = event.deltaY > 0 ? -0.1 : 0.1;
@@ -644,14 +711,12 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.applyZoom();
       return;
     }
-
     if (this.isMultiFrame && this.totalSlices > 1) {
       this.wheelAccumulator += event.deltaY;
       const steps = Math.floor(Math.abs(this.wheelAccumulator) / this.WHEEL_THRESHOLD);
       if (steps > 0) {
         const direction = this.wheelAccumulator > 0 ? 1 : -1;
-        const jump = Math.min(steps, 5);
-        this.goToSlice(this.currentSlice + direction * jump);
+        this.goToSlice(this.currentSlice + direction * Math.min(steps, 5));
         this.wheelAccumulator -= direction * steps * this.WHEEL_THRESHOLD;
       }
     } else {
@@ -663,11 +728,10 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onMouseDown(event: MouseEvent): void {
-    if (this.activeTool === 'length') return;
+    if (this.activeTool !== 'pan') return;
     this.isDragging = true;
     this.lastX = event.clientX;
     this.lastY = event.clientY;
-
     if (this.isMultiFrame && this.totalSlices > 1 && event.button === 1) {
       this.isDraggingSlice = true;
       this.dragStartX = event.clientX;
@@ -676,27 +740,19 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onMouseMove(event: MouseEvent): void {
-    if (!this.isDragging || !this.imageLoaded || this.activeTool === 'length') return;
-
+    if (!this.isDragging || !this.imageLoaded || this.activeTool !== 'pan') return;
     const deltaX = event.clientX - this.lastX;
     const deltaY = event.clientY - this.lastY;
     this.lastX = event.clientX;
     this.lastY = event.clientY;
-
     try {
       if (this.isDraggingSlice && this.isMultiFrame) {
         const totalDeltaX = event.clientX - this.dragStartX;
         const sliceOffset = Math.round(totalDeltaX / this.DRAG_SENSITIVITY);
-        const targetSlice = Math.max(0, Math.min(
-          this.totalSlices - 1,
-          this.dragStartSlice - sliceOffset
-        ));
-        if (targetSlice !== this.currentSlice) {
-          this.goToSlice(targetSlice);
-        }
+        const targetSlice = Math.max(0, Math.min(this.totalSlices - 1, this.dragStartSlice - sliceOffset));
+        if (targetSlice !== this.currentSlice) this.goToSlice(targetSlice);
         return;
       }
-
       if (event.buttons === 1) {
         const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
         viewport.translation.x += deltaX;
@@ -713,7 +769,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     } catch (_) {}
   }
 
-  onMouseUp(event?: MouseEvent): void {
+  onMouseUp(): void {
     this.isDragging = false;
     this.isDraggingSlice = false;
   }
@@ -728,22 +784,15 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   onTouchMove(event: TouchEvent): void {
     if (!this.imageLoaded) return;
     event.preventDefault();
-
     const currentX = event.touches[0].clientX;
     const currentY = event.touches[0].clientY;
     const deltaX = currentX - this.touchStartX;
     const deltaY = currentY - this.touchStartY;
-
     if (this.isMultiFrame && this.totalSlices > 1) {
       const dominantDelta = Math.abs(deltaY) >= Math.abs(deltaX) ? -deltaY : -deltaX;
       const sliceOffset = Math.round(dominantDelta / this.TOUCH_SENSITIVITY);
-      const targetSlice = Math.max(0, Math.min(
-        this.totalSlices - 1,
-        this.touchStartSlice + sliceOffset
-      ));
-      if (targetSlice !== this.currentSlice) {
-        this.goToSlice(targetSlice);
-      }
+      const targetSlice = Math.max(0, Math.min(this.totalSlices - 1, this.touchStartSlice + sliceOffset));
+      if (targetSlice !== this.currentSlice) this.goToSlice(targetSlice);
     } else {
       try {
         const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
@@ -756,7 +805,5 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onTouchEnd(): void {
-    this.touchStartSlice = this.currentSlice;
-  }
+  onTouchEnd(): void { this.touchStartSlice = this.currentSlice; }
 }

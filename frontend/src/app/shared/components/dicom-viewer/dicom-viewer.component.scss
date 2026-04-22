@@ -576,6 +576,102 @@ label.btn-footer {
   .material-icons { font-size: 14px !important; }
 }
 
+/* ===== ANNOTATION SVG OVERLAY ===== */
+.annotation-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+  cursor: crosshair;
+  pointer-events: all;
+  user-select: none;
+}
+
+.annotation-svg circle,
+.annotation-svg line,
+.annotation-svg rect,
+.annotation-svg text {
+  pointer-events: none;
+}
+
+/* Annotation input popup */
+.annotation-input-wrapper {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(10,10,10,0.95);
+  border: 1px solid rgba(239,68,68,0.4);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  min-width: 240px;
+}
+
+.annotation-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 6px;
+  color: #f1f5f9;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+
+  &::placeholder { color: rgba(255,255,255,0.25); }
+  &:focus { border-color: rgba(239,68,68,0.6); }
+}
+
+.ann-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.ann-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+
+  .material-icons { font-size: 16px !important; }
+}
+
+.ann-save {
+  background: rgba(239,68,68,0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239,68,68,0.3);
+
+  &:hover { background: rgba(239,68,68,0.3); color: #fff; }
+}
+
+.ann-cancel {
+  background: rgba(255,255,255,0.05);
+  color: #64748b;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  &:hover { background: rgba(255,255,255,0.1); color: #94a3b8; }
+}
+
+/* Annotation hint */
+.annotation-hint {
+  color: #fca5a5;
+  border-color: rgba(239,68,68,0.3);
+  top: 54px;
+
+  .material-icons { color: #ef4444; }
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .viewer-toolbar {
