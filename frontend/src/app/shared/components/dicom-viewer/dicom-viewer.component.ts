@@ -38,7 +38,34 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   imageIds: string[] = [];
 
   // Active tool
-  activeTool: 'pan' | 'length' | 'annotation' = 'pan';
+  activeTool: 'pan' | 'length' | 'annotation' | 'probe' = 'pan';
+
+  // Window/Level presets
+  presets = [
+    { key: 'default',     label: 'По умолчанию',       ww: 400,  wc: 40,   icon: 'auto_awesome' },
+    { key: 'brain',       label: 'Мозг',               ww: 80,   wc: 40,   icon: 'psychology' },
+    { key: 'lung',        label: 'Лёгкие',             ww: 1500, wc: -600, icon: 'air' },
+    { key: 'bone',        label: 'Кости',              ww: 2000, wc: 500,  icon: 'accessibility' },
+    { key: 'soft',        label: 'Мягкие ткани',       ww: 400,  wc: 50,   icon: 'healing' },
+    { key: 'abdomen',     label: 'Брюшная полость',    ww: 400,  wc: 50,   icon: 'person' },
+    { key: 'liver',       label: 'Печень',             ww: 150,  wc: 60,   icon: 'water_drop' },
+    { key: 'mediastinum', label: 'Средостение',        ww: 350,  wc: 40,   icon: 'favorite' }
+  ];
+  activePreset = 'default';
+  showPresetsMenu = false;
+  private clickOutsideHandler!: (e: MouseEvent) => void;
+
+  // Pixel probe
+  showPixelProbe = false;
+  pixelProbeValue: any = null;
+  pixelProbeX = 0;
+  pixelProbeY = 0;
+  modality: string = '';
+
+  // Cine mode
+  isCinePlaying = false;
+  cineSpeed = 15;
+  private cineInterval: any = null;
 
   // SVG measurements
   measurements: Array<{id?: number; x1:number; y1:number; x2:number; y2:number; distance:string; sliceIndex?: number}> = [];
@@ -92,11 +119,15 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.keyDownHandler = this.onKeyDown.bind(this);
+    this.clickOutsideHandler = this.handleClickOutside.bind(this);
     document.addEventListener('keydown', this.keyDownHandler);
+    document.addEventListener('click', this.clickOutsideHandler);
   }
 
   ngOnDestroy(): void {
     document.removeEventListener('keydown', this.keyDownHandler);
+    document.removeEventListener('click', this.clickOutsideHandler);
+    this.stopCine();
     if (this.cornerstoneReady && this.dicomElement?.nativeElement) {
       try { cornerstone.disable(this.dicomElement.nativeElement); } catch (_) {}
     }
@@ -142,13 +173,136 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // ===== TOOL SELECTION =====
-  setTool(tool: 'pan' | 'length' | 'annotation'): void {
+  setTool(tool: 'pan' | 'length' | 'annotation' | 'probe'): void {
     this.activeTool = tool;
     this.isDrawing = false;
     this.drawStart = null;
     this.tempEnd = null;
     this.showAnnotationInput = false;
     this.pendingAnnotation = null;
+    this.showPixelProbe = false;
+  }
+
+  // ===== WINDOW/LEVEL PRESETS =====
+  applyPreset(preset: any): void {
+    if (!this.imageLoaded || !this.dicomElement?.nativeElement) return;
+    try {
+      const cs = (window as any).cornerstone;
+      const viewport = cs.getViewport(this.dicomElement.nativeElement);
+      viewport.voi.windowWidth = preset.ww;
+      viewport.voi.windowCenter = preset.wc;
+      cs.setViewport(this.dicomElement.nativeElement, viewport);
+      this.windowWidth = preset.ww;
+      this.windowCenter = preset.wc;
+      this.activePreset = preset.key;
+      this.showPresetsMenu = false;
+    } catch (e) {
+      console.error('Preset error:', e);
+    }
+  }
+
+  togglePresetsMenu(): void {
+    this.showPresetsMenu = !this.showPresetsMenu;
+  }
+
+  getPresetLabel(): string {
+    if (this.activePreset === 'default') return 'W/L';
+    return this.presets.find(p => p.key === this.activePreset)?.label || 'W/L';
+  }
+
+  handleClickOutside(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.preset-dropdown')) {
+      this.showPresetsMenu = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  // ===== PIXEL PROBE =====
+  updatePixelProbe(event: MouseEvent): void {
+    if (!this.imageLoaded || this.activeTool !== 'probe') return;
+    if (!this.dicomElement?.nativeElement) return;
+    try {
+      const cs = (window as any).cornerstone;
+      const element = this.dicomElement.nativeElement;
+      const rect = element.getBoundingClientRect();
+      this.pixelProbeX = event.clientX - rect.left;
+      this.pixelProbeY = event.clientY - rect.top;
+      const pixelCoords = cs.pageToPixel(element, event.pageX, event.pageY);
+      const enabledElement = cs.getEnabledElement(element);
+      if (!enabledElement?.image) return;
+      const image = enabledElement.image;
+      const pixelData = image.getPixelData();
+      const x = Math.round(pixelCoords.x);
+      const y = Math.round(pixelCoords.y);
+      if (x < 0 || y < 0 || x >= image.width || y >= image.height) {
+        this.pixelProbeValue = null;
+        return;
+      }
+      const pixelValue = pixelData[y * image.width + x];
+      const slope = image.slope || 1;
+      const intercept = image.intercept || 0;
+      const hu = Math.round(pixelValue * slope + intercept);
+      this.pixelProbeValue = {
+        x, y,
+        raw: pixelValue,
+        hu: this.modality === 'CT' ? hu : null,
+        modality: this.modality
+      };
+      this.showPixelProbe = true;
+    } catch (_) {
+      this.pixelProbeValue = null;
+    }
+  }
+
+  hidePixelProbe(): void {
+    this.showPixelProbe = false;
+    this.pixelProbeValue = null;
+  }
+
+  getTissueFromHU(hu: number): string {
+    if (hu < -900) return 'Воздух';
+    if (hu < -500) return 'Лёгкое';
+    if (hu < -100) return 'Жир';
+    if (hu < 10)   return 'Вода';
+    if (hu < 30)   return 'CSF';
+    if (hu < 60)   return 'Мышца';
+    if (hu < 100)  return 'Кровь';
+    if (hu < 200)  return 'Мягкие ткани';
+    if (hu < 400)  return 'Обызвествление';
+    if (hu < 1000) return 'Губчатая кость';
+    return 'Плотная кость';
+  }
+
+  // ===== CINE MODE =====
+  toggleCine(): void {
+    if (!this.isMultiFrame || this.totalSlices <= 1) return;
+    if (this.isCinePlaying) this.stopCine();
+    else this.startCine();
+  }
+
+  startCine(): void {
+    this.isCinePlaying = true;
+    const delay = 1000 / this.cineSpeed;
+    this.cineInterval = setInterval(() => {
+      this.goToSlice(this.currentSlice >= this.totalSlices - 1 ? 0 : this.currentSlice + 1);
+    }, delay);
+  }
+
+  stopCine(): void {
+    this.isCinePlaying = false;
+    if (this.cineInterval) {
+      clearInterval(this.cineInterval);
+      this.cineInterval = null;
+    }
+  }
+
+  updateCineSpeed(event: any): void {
+    this.cineSpeed = +event.target.value;
+    if (this.isCinePlaying) {
+      this.stopCine();
+      this.startCine();
+    }
   }
 
   // ===== SVG MEASUREMENTS =====
@@ -648,10 +802,11 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   private extractMetadata(image: any): void {
     try {
       const ds = image.data;
+      this.modality = ds?.string('x00080060') || '';
       this.imageInfo = {
         patientName: ds?.string('x00100010') || 'Anonymous',
         studyDate:   ds?.string('x00080020') || '',
-        modality:    ds?.string('x00080060') || '',
+        modality:    this.modality,
         institution: ds?.string('x00080080') || '',
         frames: this.totalSlices
       };

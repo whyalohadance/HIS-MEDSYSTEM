@@ -13,36 +13,84 @@
     </div>
 
     <div class="toolbar-controls">
-      <!-- Navigation tools -->
+
+      <!-- Tools -->
       <button class="tool-btn" [class.active]="activeTool === 'pan'"
-        (click)="setTool('pan')" title="Перемещение — тяни левой кнопкой · W/L правой">
+        (click)="setTool('pan')" title="Перемещение">
         <span class="material-icons">pan_tool</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'length'"
-        (click)="setTool('length')" title="Линейка — кликни и тяни">
+        (click)="setTool('length')" title="Линейка">
         <span class="material-icons">straighten</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'annotation'"
-        (click)="setTool('annotation')" title="Аннотация — кликни, чтобы добавить замечание">
+        (click)="setTool('annotation')" title="Замечание">
         <span class="material-icons">label_important</span>
       </button>
+      <button class="tool-btn" [class.active]="activeTool === 'probe'"
+        (click)="setTool('probe')" title="Pixel Probe (Hounsfield Units)">
+        <span class="material-icons">colorize</span>
+      </button>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Window/Level presets -->
+      <div class="preset-dropdown">
+        <button class="tool-btn preset-trigger" (click)="togglePresetsMenu()" title="Пресеты W/L">
+          <span class="material-icons">tune</span>
+          <span class="preset-label">{{ getPresetLabel() }}</span>
+          <span class="material-icons arrow-icon">{{ showPresetsMenu ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+        </button>
+        <div class="presets-menu" *ngIf="showPresetsMenu">
+          <div class="presets-title">Window/Level пресеты</div>
+          <button class="preset-item"
+            *ngFor="let preset of presets"
+            [class.active]="activePreset === preset.key"
+            (click)="applyPreset(preset)">
+            <span class="material-icons">{{ preset.icon }}</span>
+            <div class="preset-info">
+              <span class="preset-name">{{ preset.label }}</span>
+              <span class="preset-values">W:{{ preset.ww }} L:{{ preset.wc }}</span>
+            </div>
+            <span class="material-icons check-icon" *ngIf="activePreset === preset.key">check</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <!-- Cine mode -->
+      <div class="cine-controls" *ngIf="isMultiFrame && totalSlices > 1">
+        <button class="tool-btn cine-btn" [class.playing]="isCinePlaying"
+          (click)="toggleCine()" title="Автовоспроизведение серии">
+          <span class="material-icons">{{ isCinePlaying ? 'pause' : 'play_arrow' }}</span>
+        </button>
+        <div class="cine-speed" *ngIf="isCinePlaying">
+          <input type="range" min="1" max="30" step="1"
+            [value]="cineSpeed" (input)="updateCineSpeed($event)"
+            class="cine-slider">
+          <span class="cine-value">{{ cineSpeed }} fps</span>
+        </div>
+      </div>
+
+      <div class="toolbar-divider" *ngIf="isMultiFrame && totalSlices > 1"></div>
+
+      <!-- Measurements clear -->
       <button class="tool-btn" *ngIf="measurements.length > 0 || annotations.length > 0"
         (click)="clearMeasurements()" title="Очистить измерения и аннотации">
         <span class="material-icons">delete_sweep</span>
       </button>
 
-      <div class="toolbar-divider"></div>
-
-      <button class="tool-btn" (click)="resetViewport()" title="{{ 'DICOM.RESET' | translate }}" [disabled]="!imageLoaded">
+      <button class="tool-btn" (click)="resetViewport()" title="Сброс" [disabled]="!imageLoaded">
         <span class="material-icons">refresh</span>
       </button>
-      <button class="tool-btn" (click)="invertImage()" title="{{ 'DICOM.INVERT' | translate }}" [class.active]="inverted" [disabled]="!imageLoaded">
+      <button class="tool-btn" [class.active]="inverted" (click)="invertImage()" title="Инверсия" [disabled]="!imageLoaded">
         <span class="material-icons">invert_colors</span>
       </button>
-      <button class="tool-btn" (click)="toggleFullscreen()" title="{{ 'DICOM.FULLSCREEN' | translate }}">
+      <button class="tool-btn" (click)="toggleFullscreen()" title="Полный экран">
         <span class="material-icons">fullscreen</span>
       </button>
-      <button class="tool-btn export-btn" (click)="exportSnapshot()" title="Экспорт снимка PNG" *ngIf="imageLoaded">
+      <button class="tool-btn export-btn" *ngIf="imageLoaded" (click)="exportSnapshot()" title="Экспорт снимка">
         <span class="material-icons">download</span>
       </button>
 
@@ -200,6 +248,36 @@
         </div>
       </div>
 
+      <!-- Pixel Probe overlay (intercepts mousemove) -->
+      <div class="pixel-probe-overlay"
+           *ngIf="imageLoaded && activeTool === 'probe'"
+           (mousemove)="updatePixelProbe($event)"
+           (mouseleave)="hidePixelProbe()">
+      </div>
+
+      <!-- Pixel Probe info tooltip -->
+      <div class="pixel-probe-info"
+           *ngIf="showPixelProbe && pixelProbeValue"
+           [style.left.px]="pixelProbeX + 20"
+           [style.top.px]="pixelProbeY + 20">
+        <div class="probe-row">
+          <span class="probe-label">Pos:</span>
+          <span class="probe-value">{{ pixelProbeValue.x }}, {{ pixelProbeValue.y }}</span>
+        </div>
+        <div class="probe-row" *ngIf="pixelProbeValue.hu !== null && pixelProbeValue.hu !== undefined">
+          <span class="probe-label">HU:</span>
+          <span class="probe-value probe-hu">{{ pixelProbeValue.hu }}</span>
+        </div>
+        <div class="probe-row" *ngIf="pixelProbeValue.hu === null || pixelProbeValue.hu === undefined">
+          <span class="probe-label">Pixel:</span>
+          <span class="probe-value">{{ pixelProbeValue.raw }}</span>
+        </div>
+        <div class="probe-row" *ngIf="pixelProbeValue.hu !== null && pixelProbeValue.hu !== undefined">
+          <span class="probe-label">Tissue:</span>
+          <span class="probe-value probe-tissue">{{ getTissueFromHU(pixelProbeValue.hu) }}</span>
+        </div>
+      </div>
+
       <!-- Overlay info -->
       <div class="viewer-overlay-info" *ngIf="imageLoaded && imageInfo">
         <div class="info-top-left">
@@ -218,8 +296,16 @@
 
       <!-- Active tool label -->
       <div class="active-tool-label" *ngIf="imageLoaded">
-        <span class="material-icons">{{ activeTool === 'pan' ? 'pan_tool' : activeTool === 'length' ? 'straighten' : 'label_important' }}</span>
-        {{ activeTool === 'pan' ? 'Перемещение' : activeTool === 'length' ? 'Линейка' : 'Аннотация' }}
+        <span class="material-icons">{{
+          activeTool === 'pan' ? 'pan_tool' :
+          activeTool === 'length' ? 'straighten' :
+          activeTool === 'annotation' ? 'label_important' : 'colorize'
+        }}</span>
+        {{
+          activeTool === 'pan' ? 'Перемещение' :
+          activeTool === 'length' ? 'Линейка' :
+          activeTool === 'annotation' ? 'Аннотация' : 'Pixel Probe'
+        }}
       </div>
 
       <!-- Annotation hint -->
