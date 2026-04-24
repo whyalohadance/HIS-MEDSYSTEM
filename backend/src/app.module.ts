@@ -30,6 +30,10 @@ import { UploadModule } from './modules/upload/upload.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { StudiesModule } from './modules/studies/studies.module';
 import { Study } from './modules/studies/study.entity';
+import { LabModule } from './modules/lab/lab.module';
+import { LabTest } from './modules/lab/lab-test.entity';
+import { LabOrder } from './modules/lab/lab-order.entity';
+import { LabResult } from './modules/lab/lab-result.entity';
 import { Modality } from './modules/studies/modality.entity';
 import { Series } from './modules/studies/series.entity';
 import { DicomImage } from './modules/studies/dicom-image.entity';
@@ -49,7 +53,7 @@ import { AppService } from './app.service';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
-        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage],
+        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, LabTest, LabOrder, LabResult],
         synchronize: true,
         logging: false,
       }),
@@ -76,6 +80,7 @@ import { AppService } from './app.service';
     UploadModule,
     ReportsModule,
     StudiesModule,
+    LabModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],
