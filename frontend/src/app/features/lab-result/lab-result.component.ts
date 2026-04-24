@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -175,7 +175,8 @@ export class LabResultComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private api: ApiService,
-    private toast: ToastService
+    private toast: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -189,6 +190,7 @@ export class LabResultComponent implements OnInit {
     this.api.get<any>(`/lab/orders/${id}`).subscribe({
       next: res => {
         this.order = res.data;
+        this.cdr.detectChanges();
         this.loadTest(this.order.testId);
         this.loadResults(id);
       }
@@ -210,6 +212,7 @@ export class LabResultComponent implements OnInit {
             flag: null
           }));
         }
+        this.cdr.detectChanges();
       }
     });
   }
@@ -221,6 +224,7 @@ export class LabResultComponent implements OnInit {
         if (results.length > 0) {
           this.parameters = results;
         }
+        this.cdr.detectChanges();
       }
     });
   }
@@ -241,6 +245,8 @@ export class LabResultComponent implements OnInit {
 
   saveResults(): void {
     this.isSaving = true;
+    this.cdr.detectChanges();
+
     this.api.post<any>(`/lab/orders/${this.order.id}/results`, {
       results: this.parameters
     }).subscribe({
@@ -252,6 +258,7 @@ export class LabResultComponent implements OnInit {
       error: () => {
         this.toast.error('Ошибка сохранения');
         this.isSaving = false;
+        this.cdr.detectChanges();
       }
     });
   }

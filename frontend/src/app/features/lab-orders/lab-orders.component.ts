@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -211,7 +211,8 @@ export class LabOrdersComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private toast: ToastService
+    private toast: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -223,12 +224,17 @@ export class LabOrdersComponent implements OnInit {
 
   loadTests(): void {
     this.api.get<any>('/lab/tests').subscribe({
-      next: res => this.tests = res.data || []
+      next: res => {
+        this.tests = res.data || [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
   loadOrders(): void {
     this.isLoading = true;
+    this.cdr.detectChanges();
+
     let query = '/lab/orders?';
     if (this.filterStatus) query += `status=${this.filterStatus}&`;
     if (this.filterPriority) query += `priority=${this.filterPriority}`;
@@ -237,8 +243,12 @@ export class LabOrdersComponent implements OnInit {
       next: res => {
         this.orders = res.data || [];
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: () => this.isLoading = false
+      error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 

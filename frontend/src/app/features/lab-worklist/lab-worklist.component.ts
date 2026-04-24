@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
@@ -120,7 +120,7 @@ export class LabWorklistComponent implements OnInit {
   stats: any = null;
   isLoading = false;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadTests();
@@ -130,7 +130,10 @@ export class LabWorklistComponent implements OnInit {
 
   loadTests(): void {
     this.api.get<any>('/lab/tests').subscribe({
-      next: res => this.tests = res.data || []
+      next: res => {
+        this.tests = res.data || [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -140,14 +143,21 @@ export class LabWorklistComponent implements OnInit {
       next: res => {
         this.orders = res.data || [];
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: () => this.isLoading = false
+      error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
   loadStats(): void {
     this.api.get<any>('/lab/stats').subscribe({
-      next: res => this.stats = res.data
+      next: res => {
+        this.stats = res.data;
+        this.cdr.detectChanges();
+      }
     });
   }
 
