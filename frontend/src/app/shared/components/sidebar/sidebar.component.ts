@@ -41,6 +41,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.STUDIES',         icon: 'biotech',       route: '/studies' },
     { key: 'NAV.WORKLIST',        icon: 'fact_check',    route: '/worklist' },
     { key: 'NAV.DICOM',           icon: 'monitor_heart', route: '/dicom' },
+    { key: 'section-lis',         divider: true, sectionKey: 'NAV.SECTION_LIS' },
+    { key: 'NAV.LAB_ORDERS',      icon: 'science',       route: '/lab/orders' },
+    { key: 'NAV.LAB_WORKLIST',    icon: 'biotech',       route: '/lab/worklist' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
     { key: 'NAV.REPORTS',         icon: 'assessment',    route: '/reports' },
@@ -53,6 +56,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
     { key: 'NAV.APPOINTMENTS',    icon: 'event',         route: '/appointments' },
     { key: 'NAV.MY_CABINET',      icon: 'meeting_room',  route: '/my-cabinet' },
+    { key: 'section-lis',         divider: true, sectionKey: 'NAV.SECTION_LIS' },
+    { key: 'NAV.LAB_ORDERS',      icon: 'science',       route: '/lab/orders' },
+    { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
+    { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
+  ];
+
+  private labTechnicianNav: NavItem[] = [
+    { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'section-lis',         divider: true, sectionKey: 'NAV.SECTION_LIS' },
+    { key: 'NAV.LAB_ORDERS',      icon: 'science',       route: '/lab/orders' },
+    { key: 'NAV.LAB_WORKLIST',    icon: 'biotech',       route: '/lab/worklist' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
@@ -110,11 +126,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.authService.currentUser$.subscribe(user => {
         switch (user?.role) {
-          case 'admin':        this.navItems = this.adminNav; break;
-          case 'doctor':       this.navItems = this.doctorNav; break;
-          case 'receptionist': this.navItems = this.receptionistNav; break;
-          case 'radiologist':  this.navItems = this.radiologistNav; break;
-          default:             this.navItems = this.doctorNav;
+          case 'admin':           this.navItems = this.adminNav; break;
+          case 'doctor':          this.navItems = this.doctorNav; break;
+          case 'receptionist':    this.navItems = this.receptionistNav; break;
+          case 'radiologist':     this.navItems = this.radiologistNav; break;
+          case 'lab_technician':  this.navItems = this.labTechnicianNav; break;
+          default:                this.navItems = this.doctorNav;
         }
       })
     );

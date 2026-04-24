@@ -26,6 +26,12 @@ export const routes: Routes = [
       { path: 'worklist', loadComponent: () => import('./features/studies/worklist.component').then(m => m.WorklistComponent), canActivate: [roleGuard], data: { roles: ['admin', 'radiologist'] } },
       { path: 'dicom', loadComponent: () => import('./features/dicom-viewer/dicom-viewer-page.component').then(m => m.DicomViewerPageComponent), canActivate: [roleGuard], data: { roles: ['admin', 'radiologist'] } },
       { path: 'dicom/:id', loadComponent: () => import('./features/dicom-viewer/dicom-viewer-page.component').then(m => m.DicomViewerPageComponent), canActivate: [roleGuard], data: { roles: ['admin', 'radiologist'] } },
+
+      // LIS
+      { path: 'lab/orders', loadComponent: () => import('./features/lab-orders/lab-orders.component').then(m => m.LabOrdersComponent), canActivate: [roleGuard], data: { roles: ['admin', 'doctor', 'lab_technician'] } },
+      { path: 'lab/worklist', loadComponent: () => import('./features/lab-worklist/lab-worklist.component').then(m => m.LabWorklistComponent), canActivate: [roleGuard], data: { roles: ['admin', 'lab_technician'] } },
+      { path: 'lab/order/:id', loadComponent: () => import('./features/lab-result/lab-result.component').then(m => m.LabResultComponent), canActivate: [roleGuard], data: { roles: ['admin', 'doctor', 'lab_technician'] } },
+
       { path: 'my-room', loadComponent: () => import('./features/my-room/my-room.component').then(m => m.MyRoomComponent) },
       { path: 'my-cabinet', loadComponent: () => import('./features/my-cabinet/my-cabinet.component').then(m => m.MyCabinetComponent) },
 

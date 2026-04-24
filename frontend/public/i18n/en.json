@@ -18,6 +18,9 @@
     "SECTION_MAIN": "Main",
     "SECTION_MANAGEMENT": "Management",
     "SECTION_RIS": "RIS",
+    "SECTION_LIS": "LIS",
+    "LAB_ORDERS": "Lab Orders",
+    "LAB_WORKLIST": "Lab Worklist",
     "SECTION_SYSTEM": "System"
   },
   "COMMON": {
@@ -208,7 +211,8 @@
     "RECEPTIONISTS": "Receptionists",
     "ADMINS": "Administrators",
     "NO_STAFF": "No staff found",
-    "ROLE_RADIOLOGIST": "Radiologist"
+    "ROLE_RADIOLOGIST": "Radiologist",
+    "ROLE_LAB_TECHNICIAN": "Lab Technician"
   },
   "REPORTS": {
     "TITLE": "Reports",

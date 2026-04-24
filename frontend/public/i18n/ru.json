@@ -18,6 +18,9 @@
     "SECTION_MAIN": "Главное",
     "SECTION_MANAGEMENT": "Управление",
     "SECTION_RIS": "RIS",
+    "SECTION_LIS": "LIS",
+    "LAB_ORDERS": "Лаб. заказы",
+    "LAB_WORKLIST": "Лаб. Worklist",
     "SECTION_SYSTEM": "Система"
   },
   "COMMON": {
@@ -208,7 +211,8 @@
     "RECEPTIONISTS": "Регистратура",
     "ADMINS": "Администраторы",
     "NO_STAFF": "Сотрудников не найдено",
-    "ROLE_RADIOLOGIST": "Радиолог"
+    "ROLE_RADIOLOGIST": "Радиолог",
+    "ROLE_LAB_TECHNICIAN": "Лаборант"
   },
   "REPORTS": {
     "TITLE": "Отчёты",

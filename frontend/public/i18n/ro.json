@@ -18,6 +18,9 @@
     "SECTION_MAIN": "Principal",
     "SECTION_MANAGEMENT": "Management",
     "SECTION_RIS": "RIS",
+    "SECTION_LIS": "LIS",
+    "LAB_ORDERS": "Comenzi lab.",
+    "LAB_WORKLIST": "Worklist lab.",
     "SECTION_SYSTEM": "Sistem"
   },
   "COMMON": {
@@ -208,7 +211,8 @@
     "RECEPTIONISTS": "Recepționiști",
     "ADMINS": "Administratori",
     "NO_STAFF": "Nu există angajați",
-    "ROLE_RADIOLOGIST": "Radiolog"
+    "ROLE_RADIOLOGIST": "Radiolog",
+    "ROLE_LAB_TECHNICIAN": "Laborant"
   },
   "REPORTS": {
     "TITLE": "Rapoarte",
