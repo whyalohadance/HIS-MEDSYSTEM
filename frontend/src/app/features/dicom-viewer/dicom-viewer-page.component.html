@@ -35,7 +35,7 @@
   </div>
 
   <!-- Content -->
-  <div class="dicom-content">
+  <div class="dicom-content" [class.has-info]="study">
 
     <!-- Left: Viewer -->
     <div class="viewer-section">
@@ -46,7 +46,7 @@
     </div>
 
     <!-- Right: Info Panel -->
-    <div class="study-info-section">
+    <div class="study-info-section" *ngIf="study">
 
       <!-- DICOM Hierarchy -->
       <div class="hierarchy-panel" *ngIf="hierarchy">

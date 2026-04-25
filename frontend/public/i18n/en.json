@@ -274,7 +274,8 @@
     "MY_SCHEDULE": "My schedule",
     "NO_SCHEDULE": "No schedule assigned",
     "ACTIVE": "Active",
-    "INACTIVE": "Inactive"
+    "INACTIVE": "Inactive",
+    "CONTACT_ADMIN": "To change your data, please contact the system administrator"
   },
   "NOTIFICATIONS": {
     "TITLE": "Notifications",
@@ -421,6 +422,14 @@
     "MODALITY": "Modality",
     "SCHEDULED_DATE": "Scheduled date",
     "NO_STUDIES": "No studies found"
+  },
+  "STATUS": {
+    "SCHEDULED": "Scheduled",
+    "IN_PROGRESS": "In Progress",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "PENDING": "Pending",
+    "WAITING": "Waiting"
   },
   "DICOM": {
     "TITLE": "DICOM Viewer",

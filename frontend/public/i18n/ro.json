@@ -274,7 +274,8 @@
     "MY_SCHEDULE": "Orarul meu",
     "NO_SCHEDULE": "Orar neatribuit",
     "ACTIVE": "Activ",
-    "INACTIVE": "Inactiv"
+    "INACTIVE": "Inactiv",
+    "CONTACT_ADMIN": "Pentru modificarea datelor, contactați administratorul sistemului"
   },
   "NOTIFICATIONS": {
     "TITLE": "Notificări",
@@ -421,6 +422,14 @@
     "MODALITY": "Echipament",
     "SCHEDULED_DATE": "Data programată",
     "NO_STUDIES": "Nu există investigații"
+  },
+  "STATUS": {
+    "SCHEDULED": "Programat",
+    "IN_PROGRESS": "În curs",
+    "COMPLETED": "Finalizat",
+    "CANCELLED": "Anulat",
+    "PENDING": "În așteptare",
+    "WAITING": "În așteptare"
   },
   "DICOM": {
     "TITLE": "Vizualizator DICOM",

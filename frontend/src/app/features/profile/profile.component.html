@@ -45,41 +45,35 @@
     </div>
 
     <div class="right-col">
-      <!-- Форма редактирования -->
+      <!-- Форма профиля (только просмотр) -->
       <div class="edit-card">
         <h3>{{ 'PROFILE.EDIT_DATA' | translate }}</h3>
-        <div class="success-msg" *ngIf="successMessage">
-          <span class="material-icons">check_circle</span> {{ successMessage }}
-        </div>
-        <div class="error-msg" *ngIf="errorMessage">
-          <span class="material-icons">error</span> {{ errorMessage }}
-        </div>
         <div class="form-row">
           <div class="form-field">
             <label>{{ 'PATIENTS.FIRST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.firstName" placeholder="Ivan">
+            <input [(ngModel)]="form.firstName" placeholder="Ivan" readonly>
           </div>
           <div class="form-field">
             <label>{{ 'PATIENTS.LAST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.lastName" placeholder="Ivanov">
+            <input [(ngModel)]="form.lastName" placeholder="Ivanov" readonly>
           </div>
         </div>
         <div class="form-field">
           <label>{{ 'AUTH.EMAIL' | translate }}</label>
-          <input [(ngModel)]="form.email" placeholder="doctor@med.com">
+          <input [(ngModel)]="form.email" placeholder="doctor@med.com" readonly>
         </div>
         <div class="form-field">
           <label>{{ 'PATIENTS.PHONE' | translate }}</label>
-          <input [(ngModel)]="form.phone" placeholder="+373 69 000 000">
+          <input [(ngModel)]="form.phone" placeholder="+373 69 000 000" readonly>
         </div>
         <div class="form-field">
           <label>{{ 'PROFILE.ROLE' | translate }}</label>
           <input [value]="getRoleLabel()" disabled class="disabled-input">
         </div>
-        <button class="btn-primary" (click)="saveProfile()" [disabled]="isSaving">
-          <span class="material-icons">save</span>
-          {{ isSaving ? ('COMMON.SAVING' | translate) : ('PROFILE.SAVE_BTN' | translate) }}
-        </button>
+        <div class="profile-notice">
+          <span class="material-icons">info</span>
+          {{ 'PROFILE.CONTACT_ADMIN' | translate }}
+        </div>
       </div>
 
       <!-- Расписание врача -->

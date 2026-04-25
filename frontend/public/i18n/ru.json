@@ -274,7 +274,8 @@
     "MY_SCHEDULE": "Моё расписание",
     "NO_SCHEDULE": "Расписание не назначено",
     "ACTIVE": "Активно",
-    "INACTIVE": "Неактивно"
+    "INACTIVE": "Неактивно",
+    "CONTACT_ADMIN": "Для изменения данных обратитесь к администратору системы"
   },
   "NOTIFICATIONS": {
     "TITLE": "Уведомления",
@@ -421,6 +422,14 @@
     "MODALITY": "Оборудование",
     "SCHEDULED_DATE": "Дата исследования",
     "NO_STUDIES": "Исследований нет"
+  },
+  "STATUS": {
+    "SCHEDULED": "Ожидает",
+    "IN_PROGRESS": "В процессе",
+    "COMPLETED": "Завершён",
+    "CANCELLED": "Отменён",
+    "PENDING": "Ожидает",
+    "WAITING": "Ожидает"
   },
   "DICOM": {
     "TITLE": "DICOM Просмотрщик",

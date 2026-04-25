@@ -470,8 +470,15 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Date(date).toLocaleDateString(localeMap[lang] || 'ru-RU', { day: '2-digit', month: 'long' });
   }
 
-  getQueueStatusLabel(status: string): string {
-    const map: Record<string, string> = { scheduled: 'Ожидает', completed: 'Завершён', cancelled: 'Отменён' };
+  getStatusLabel(status: string): string {
+    const map: any = {
+      'scheduled': 'STATUS.SCHEDULED',
+      'in_progress': 'STATUS.IN_PROGRESS',
+      'completed': 'STATUS.COMPLETED',
+      'cancelled': 'STATUS.CANCELLED',
+      'pending': 'STATUS.PENDING',
+      'waiting': 'STATUS.WAITING'
+    };
     return map[status] || status;
   }
 }

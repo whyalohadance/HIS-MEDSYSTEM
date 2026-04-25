@@ -330,6 +330,69 @@
 .btn-cancel-sm   { background: #fce8e6; color: #ea4335; &:hover { background: #ea4335; color: white; } }
 .btn-patient-sm  { background: #e8f0fe; color: #1a73e8; &:hover { background: #1a73e8; color: white; } }
 
+/* ===== УНИФИЦИРОВАННЫЕ КНОПКИ ДЕЙСТВИЙ ===== */
+.appointment-card .action-btn,
+.apt-today-item .action-btn,
+.today-item .action-btn,
+.queue-item button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+  min-width: 90px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+  min-width: 90px;
+  text-decoration: none;
+
+  .material-icons { font-size: 16px; }
+
+  &.primary { background: #1a73e8; color: white; &:hover { background: #1557b0; } }
+  &.success { background: #10b981; color: white; &:hover { background: #059669; } }
+  &.danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; &:hover { background: #fecaca; } }
+  &.secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; &:hover { background: #e2e8f0; } }
+}
+
+.card-actions, .apt-actions, .queue-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .card-actions, .apt-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .action-btn { width: 100%; }
+}
+
 /* ===== РЕГИСТРАТУРА: приёмы сегодня ===== */
 .rec-item { gap: 10px; }
 .rec-queue { font-size: 13px; font-weight: 800; color: #a0aec0; min-width: 36px; letter-spacing: 1px; }

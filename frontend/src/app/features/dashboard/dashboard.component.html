@@ -130,12 +130,12 @@
           <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
             <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
             <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
-            <span class="today-badge" [class]="a.status">{{ a.status === 'scheduled' ? ('DASHBOARD.WAITING' | translate) : a.status === 'completed' ? ('DASHBOARD.COMPLETE' | translate) : ('DASHBOARD.CANCEL' | translate) }}</span>
-            <div class="today-actions">
-              <button class="btn-complete-sm" *ngIf="a.status === 'scheduled'" (click)="completeAppointment(a.id)">
+            <span class="today-badge" [class]="a.status">{{ getStatusLabel(a.status) | translate }}</span>
+            <div class="apt-actions">
+              <button class="action-btn success" *ngIf="a.status === 'scheduled'" (click)="completeAppointment(a.id)">
                 <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
               </button>
-              <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
+              <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
                 <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
               </a>
             </div>
@@ -244,17 +244,17 @@
               <div class="rec-doctor"><span class="material-icons">medical_services</span>{{ a.doctorName }}</div>
             </div>
             <span class="today-badge" [class]="a.status">
-              {{ a.status === 'scheduled' ? ('DASHBOARD.WAITING' | translate) : a.status === 'completed' ? ('DASHBOARD.COMPLETE' | translate) : ('DASHBOARD.CANCEL' | translate) }}
+              {{ getStatusLabel(a.status) | translate }}
             </span>
-            <div class="today-actions" *ngIf="a.status === 'scheduled'">
-              <button class="btn-complete-sm" (click)="updateAptStatus(a.id, 'completed')">
+            <div class="apt-actions" *ngIf="a.status === 'scheduled'">
+              <button class="action-btn success" (click)="updateAptStatus(a.id, 'completed')">
                 <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
               </button>
-              <button class="btn-cancel-sm" (click)="updateAptStatus(a.id, 'cancelled')">
+              <button class="action-btn danger" (click)="updateAptStatus(a.id, 'cancelled')">
                 <span class="material-icons">close</span> {{ 'DASHBOARD.CANCEL' | translate }}
               </button>
             </div>
-            <a class="btn-patient-sm" [routerLink]="['/patients', a.patientId]">
+            <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
               <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
             </a>
           </div>
@@ -272,7 +272,7 @@
                 <span><span class="material-icons">calendar_today</span>{{ p.createdAt | date:'dd.MM.yyyy' }}</span>
               </div>
             </div>
-            <a class="btn-patient-sm" routerLink="/appointments">
+            <a class="action-btn primary" routerLink="/appointments">
               <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
             </a>
           </div>
@@ -312,7 +312,7 @@
                   {{ d.isBusy ? ('STAFF.STATUS_BUSY' | translate) : ('STAFF.STATUS_AVAILABLE' | translate) }}
                 </div>
               </div>
-              <a *ngIf="!d.isBusy" class="btn-patient-sm" routerLink="/appointments">
+              <a *ngIf="!d.isBusy" class="action-btn primary" routerLink="/appointments">
                 <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
               </a>
             </div>
@@ -388,7 +388,7 @@
               <span class="material-icons">schedule</span>{{ q.time }}
             </div>
             <div class="queue-status-badge" [class]="q.status">
-              {{ getQueueStatusLabel(q.status) }}
+              {{ getStatusLabel(q.status) | translate }}
             </div>
           </div>
         </div>
