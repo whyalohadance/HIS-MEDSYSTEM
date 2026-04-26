@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../core/services/api.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 interface ReportSummary {
@@ -44,7 +45,12 @@ export class ReportsComponent implements OnInit {
 
   years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private translate: TranslateService) {}
+  constructor(
+    private api: ApiService,
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService,
+    public langService: LanguageService,
+  ) {}
 
   ngOnInit(): void {
     this.loadSummary();
@@ -75,14 +81,20 @@ export class ReportsComponent implements OnInit {
   downloadPDF(): void {
     this.isDownloading = true;
     const token = localStorage.getItem('token');
-    const url = `http://localhost:3000/api/reports/pdf?month=${this.selectedMonth}&year=${this.selectedYear}`;
+    const lang = this.langService.getCurrentLanguage() || 'ro';
+    const url = `http://localhost:3000/api/reports/pdf?month=${this.selectedMonth}&year=${this.selectedYear}&lang=${lang}`;
     fetch(url, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.blob())
       .then(blob => {
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+        const objectUrl = URL.createObjectURL(pdfBlob);
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `report_${this.getMonthName()}_${this.selectedYear}.pdf`;
+        a.href = objectUrl;
+        a.download = `report_${this.getMonthName()}_${this.selectedYear}_${lang}.pdf`;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
         this.isDownloading = false;
         this.cdr.detectChanges();
       })
@@ -92,14 +104,20 @@ export class ReportsComponent implements OnInit {
   downloadExcel(): void {
     this.isDownloading = true;
     const token = localStorage.getItem('token');
-    const url = `http://localhost:3000/api/reports/excel?month=${this.selectedMonth}&year=${this.selectedYear}`;
+    const lang = this.langService.getCurrentLanguage() || 'ro';
+    const url = `http://localhost:3000/api/reports/excel?month=${this.selectedMonth}&year=${this.selectedYear}&lang=${lang}`;
     fetch(url, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.blob())
       .then(blob => {
+        const xlsxBlob = new Blob([blob], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const objectUrl = URL.createObjectURL(xlsxBlob);
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `report_${this.getMonthName()}_${this.selectedYear}.xlsx`;
+        a.href = objectUrl;
+        a.download = `report_${this.getMonthName()}_${this.selectedYear}_${lang}.xlsx`;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
         this.isDownloading = false;
         this.cdr.detectChanges();
       })

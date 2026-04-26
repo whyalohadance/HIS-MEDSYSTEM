@@ -6,12 +6,12 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
 import { UserRole } from '../users/user.entity';
 
-const MONTH_NAMES_RU  = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTH_NAMES_LAT = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
 
-function contentDisposition(ruName: string, asciiName: string, ext: string): string {
-  const encoded = encodeURIComponent(`report_${ruName}.${ext}`);
-  return `attachment; filename="report_${asciiName}.${ext}"; filename*=UTF-8''${encoded}`;
+function contentDisposition(latName: string, lang: string, ext: string): string {
+  const filename = `report_${latName}_${lang}`;
+  const encoded = encodeURIComponent(`${filename}.${ext}`);
+  return `attachment; filename="${filename}.${ext}"; filename*=UTF-8''${encoded}`;
 }
 
 @ApiTags('reports')
@@ -32,33 +32,31 @@ export class ReportsController {
   async downloadPDF(
     @Query('month') month: string,
     @Query('year') year: string,
+    @Query('lang') lang: string,
     @Res() res: Response,
   ) {
     const m = parseInt(month) || new Date().getMonth() + 1;
     const y = parseInt(year) || new Date().getFullYear();
-    const ruName  = `${MONTH_NAMES_RU[m - 1]}_${y}`;
+    const l = lang || 'ro';
     const latName = `${MONTH_NAMES_LAT[m - 1]}_${y}`;
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', contentDisposition(ruName, latName, 'pdf'));
-    await this.service.generatePDF(m, y, res);
+    res.setHeader('Content-Disposition', contentDisposition(latName, l, 'pdf'));
+    await this.service.generatePDF(m, y, l, res);
   }
 
   @Get('excel')
   async downloadExcel(
     @Query('month') month: string,
     @Query('year') year: string,
+    @Query('lang') lang: string,
     @Res() res: Response,
   ) {
     const m = parseInt(month) || new Date().getMonth() + 1;
     const y = parseInt(year) || new Date().getFullYear();
-    const buffer = await this.service.generateExcel(m, y);
-    const ruName  = `${MONTH_NAMES_RU[m - 1]}_${y}`;
+    const l = lang || 'ro';
     const latName = `${MONTH_NAMES_LAT[m - 1]}_${y}`;
-    res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': contentDisposition(ruName, latName, 'xlsx'),
-      'Content-Length': String(buffer.length),
-    });
-    res.end(buffer);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', contentDisposition(latName, l, 'xlsx'));
+    await this.service.generateExcel(m, y, l, res);
   }
 }
