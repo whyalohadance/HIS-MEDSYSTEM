@@ -36,6 +36,8 @@ export class PatientCardComponent implements OnInit {
   labResults: { [orderId: number]: any[] } = {};
   isLoadingLab = false;
   tests: any[] = [];
+  isLoadingStudies = false;
+  modalitiesList: any[] = [];
 
   currentLocale = 'ru';
 
@@ -64,6 +66,7 @@ export class PatientCardComponent implements OnInit {
     this.currentLocale = this.translate.currentLang || localStorage.getItem('language') || 'ru';
     this.patientId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadAll();
+    this.loadModalities();
   }
 
   loadAll(): void {
@@ -96,10 +99,6 @@ export class PatientCardComponent implements OnInit {
       error: () => { this.isLoading = false; this.cdr.detectChanges(); }
     });
 
-    this.api.get<any>(`/studies/patient/${this.patientId}`).pipe(map(r => r.data)).subscribe({
-      next: studies => { this.studies = studies; this.cdr.detectChanges(); },
-      error: () => {}
-    });
   }
 
   get patientCode(): string {
@@ -121,21 +120,80 @@ export class PatientCardComponent implements OnInit {
     return d ? `${d.lastName} ${d.firstName}` : `Врач #${id}`;
   }
 
-  getStudyTypeLabel(type: string): string {
-    const map: Record<string, string> = {
-      mri: 'STUDIES.TYPE_MRI', ct: 'STUDIES.TYPE_CT', xray: 'STUDIES.TYPE_XRAY',
-      ultrasound: 'STUDIES.TYPE_ULTRASOUND', pet: 'STUDIES.TYPE_PET', mammography: 'STUDIES.TYPE_MAMMOGRAPHY'
+  getStudyStatusLabel(status: string): string {
+    const map: any = {
+      pending: 'Ожидает', in_progress: 'В процессе',
+      completed: 'Завершено', cancelled: 'Отменено', scheduled: 'Запланировано'
     };
-    return map[type] ? this.translate.instant(map[type]) : type;
+    return map[status] || status;
   }
 
-  getStudyStatusLabel(status: string): string {
-    const map: Record<string, string> = {
-      pending: 'STUDIES.STATUS_PENDING', scheduled: 'STUDIES.STATUS_SCHEDULED',
-      in_progress: 'STUDIES.STATUS_IN_PROGRESS', completed: 'STUDIES.STATUS_COMPLETED',
-      cancelled: 'STUDIES.STATUS_CANCELLED'
+  getStudyStatusColor(status: string): string {
+    const map: any = {
+      pending: '#f59e0b', in_progress: '#3b82f6',
+      completed: '#10b981', cancelled: '#ef4444', scheduled: '#8b5cf6'
     };
-    return map[status] ? this.translate.instant(map[status]) : status;
+    return map[status] || '#94a3b8';
+  }
+
+  getModalityIcon(type: string): string {
+    const map: any = {
+      mri: 'view_in_ar', ct: 'panorama_horizontal',
+      xray: 'broken_image', ultrasound: 'graphic_eq', mammography: 'visibility'
+    };
+    return map[type] || 'biotech';
+  }
+
+  getModalityLabel(type: string): string {
+    const map: any = {
+      mri: 'МРТ', ct: 'КТ', xray: 'Рентген',
+      ultrasound: 'УЗИ', mammography: 'Маммография'
+    };
+    return map[type] || type;
+  }
+
+  getModalityColor(type: string): string {
+    const map: any = {
+      mri: '#7c3aed', ct: '#3b82f6', xray: '#10b981',
+      ultrasound: '#f59e0b', mammography: '#ec4899'
+    };
+    return map[type] || '#94a3b8';
+  }
+
+  getCompletedStudiesCount(): number {
+    return this.studies.filter(s => s.status === 'completed').length;
+  }
+
+  getPendingStudiesCount(): number {
+    return this.studies.filter(s => s.status === 'pending' || s.status === 'in_progress').length;
+  }
+
+  openStudy(studyId: number): void {
+    this.router.navigate(['/dicom', studyId]);
+  }
+
+  loadStudiesHistory(): void {
+    if (!this.patient?.id) return;
+    this.isLoadingStudies = true;
+    this.cdr.detectChanges();
+    this.api.get<any>(`/studies?patientId=${this.patient.id}`).subscribe({
+      next: (res) => {
+        this.studies = res.data || [];
+        this.isLoadingStudies = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoadingStudies = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadModalities(): void {
+    this.api.get<any>('/studies/modalities').subscribe({
+      next: (res) => { this.modalitiesList = res.data || []; this.cdr.detectChanges(); },
+      error: () => {}
+    });
   }
 
   getStatusLabel(status: string): string {
@@ -252,6 +310,9 @@ export class PatientCardComponent implements OnInit {
     this.activeTab = tab as any;
     if (tab === 'lab' && this.labOrders.length === 0 && !this.isLoadingLab) {
       this.loadLabHistory();
+    }
+    if (tab === 'studies' && this.studies.length === 0 && !this.isLoadingStudies) {
+      this.loadStudiesHistory();
     }
     this.cdr.detectChanges();
   }

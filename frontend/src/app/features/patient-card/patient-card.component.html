@@ -119,9 +119,9 @@
       <span class="tab-count lab" *ngIf="labOrders.length > 0">{{ labOrders.length }}</span>
     </button>
     <button class="tab-btn" [class.active]="activeTab === 'studies'" (click)="setTab('studies')">
-      <span class="material-icons">biotech</span>
-      {{ 'PATIENT_CARD.TAB_STUDIES' | translate }}
-      <span class="tab-count" *ngIf="studies.length > 0">{{ studies.length }}</span>
+      <span class="material-icons">radiology</span>
+      <span>{{ 'PATIENT_CARD.TAB_STUDIES' | translate }}</span>
+      <span class="tab-count tab-count-ris" *ngIf="studies.length > 0">{{ studies.length }}</span>
     </button>
   </div>
 
@@ -289,27 +289,108 @@
   </div>
 
   <!-- TAB: STUDIES -->
-  <div *ngIf="activeTab === 'studies'">
-    <div class="results-list" *ngIf="studies.length > 0">
-      <div class="result-item" *ngFor="let s of studies">
-        <div class="result-icon">
-          <span class="material-icons">biotech</span>
+  <div class="tab-content" *ngIf="activeTab === 'studies'">
+
+    <div class="studies-header">
+      <h2>
+        <span class="material-icons">radiology</span>
+        История исследований
+      </h2>
+      <div class="studies-stats" *ngIf="studies.length > 0">
+        <div class="stat">
+          <span class="stat-num">{{ studies.length }}</span>
+          <span class="stat-label">Всего</span>
         </div>
-        <div class="result-info">
-          <div class="result-title">{{ getStudyTypeLabel(s.type) }} — {{ s.studyId }}</div>
-          <div class="result-date">{{ s.scheduledAt || formatDate(s.createdAt) }}</div>
-          <div class="result-desc" *ngIf="s.bodyPart">{{ s.bodyPart }}</div>
-          <div class="result-desc" *ngIf="s.conclusion">{{ s.conclusion }}</div>
+        <div class="stat completed">
+          <span class="stat-num">{{ getCompletedStudiesCount() }}</span>
+          <span class="stat-label">Завершено</span>
         </div>
-        <div class="result-actions">
-          <span class="badge" [class]="s.status">{{ getStudyStatusLabel(s.status) }}</span>
+        <div class="stat pending">
+          <span class="stat-num">{{ getPendingStudiesCount() }}</span>
+          <span class="stat-label">В работе</span>
         </div>
       </div>
     </div>
 
-    <div class="empty-state" *ngIf="studies.length === 0">
-      <span class="material-icons">biotech</span>
-      <p>{{ 'STUDIES.NO_STUDIES' | translate }}</p>
+    <div class="studies-loading" *ngIf="isLoadingStudies">
+      <div class="spinner-purple"></div>
+      <p>Загрузка исследований...</p>
+    </div>
+
+    <div class="studies-empty" *ngIf="!isLoadingStudies && studies.length === 0">
+      <span class="material-icons">radiology</span>
+      <h3>Нет исследований</h3>
+      <p>У этого пациента ещё не было радиологических исследований</p>
+    </div>
+
+    <div class="studies-grid" *ngIf="!isLoadingStudies && studies.length > 0">
+      <div class="study-card" *ngFor="let study of studies"
+           [style.border-top-color]="getModalityColor(study.type)"
+           (click)="openStudy(study.id)">
+
+        <div class="study-card-header">
+          <div class="modality-badge"
+               [style.background]="getModalityColor(study.type) + '15'"
+               [style.color]="getModalityColor(study.type)">
+            <span class="material-icons">{{ getModalityIcon(study.type) }}</span>
+            {{ getModalityLabel(study.type) }}
+          </div>
+          <span class="study-status"
+                [style.background]="getStudyStatusColor(study.status) + '20'"
+                [style.color]="getStudyStatusColor(study.status)">
+            {{ getStudyStatusLabel(study.status) }}
+          </span>
+        </div>
+
+        <div class="study-card-body">
+          <h3 class="study-body-part">{{ study.bodyPart || 'Без указания' }}</h3>
+          <p class="study-description" *ngIf="study.description">{{ study.description }}</p>
+
+          <div class="study-meta">
+            <div class="meta-item">
+              <span class="material-icons">tag</span>
+              <span class="study-id">{{ study.studyId }}</span>
+            </div>
+            <div class="meta-item" *ngIf="study.scheduledAt">
+              <span class="material-icons">event</span>
+              <span>{{ study.scheduledAt | date: 'dd.MM.yyyy' }}</span>
+            </div>
+            <div class="meta-item" *ngIf="study.scheduledTime">
+              <span class="material-icons">schedule</span>
+              <span>{{ study.scheduledTime }}</span>
+            </div>
+          </div>
+
+          <div class="study-priority"
+               *ngIf="study.priority && study.priority !== 'routine'"
+               [class.priority-urgent]="study.priority === 'urgent'"
+               [class.priority-stat]="study.priority === 'stat'">
+            <span class="material-icons">priority_high</span>
+            <span *ngIf="study.priority === 'urgent'">Срочно</span>
+            <span *ngIf="study.priority === 'stat'">КРИТИЧНО</span>
+          </div>
+
+          <div class="study-clinical" *ngIf="study.clinicalInfo">
+            <span class="material-icons">info</span>
+            {{ study.clinicalInfo }}
+          </div>
+
+          <div class="study-conclusion" *ngIf="study.conclusion">
+            <div class="conclusion-label">
+              <span class="material-icons">description</span>
+              Заключение
+            </div>
+            <p>{{ study.conclusion }}</p>
+          </div>
+        </div>
+
+        <div class="study-card-footer">
+          <button class="btn-open-dicom" (click)="$event.stopPropagation(); openStudy(study.id)">
+            <span class="material-icons">visibility</span>
+            Открыть DICOM
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
