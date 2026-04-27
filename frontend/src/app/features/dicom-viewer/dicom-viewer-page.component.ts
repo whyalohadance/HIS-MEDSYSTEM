@@ -8,6 +8,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { ConfirmService } from '../../core/services/confirm.service';
+import { LanguageService } from '../../core/services/language.service';
 import { map } from 'rxjs';
 
 @Component({
@@ -27,6 +28,7 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
   showReportPanel = false;
   reportData = { findings: '', conclusion: '' };
   isSavingReport = false;
+  isDownloadingReport = false;
   templates = [
     {
       title: 'Норма',
@@ -72,6 +74,7 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private toast: ToastService,
     private confirm: ConfirmService,
+    public langService: LanguageService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -201,6 +204,39 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
   isRadiologist(): boolean {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     return user.role === 'admin' || user.role === 'radiologist';
+  }
+
+  downloadReportPDF(): void {
+    if (!this.study?.id) return;
+    this.isDownloadingReport = true;
+    this.cdr.detectChanges();
+
+    const lang = this.langService.getCurrentLanguage() || 'ro';
+    const token = localStorage.getItem('token');
+    const apiUrl = 'http://localhost:3000/api';
+
+    fetch(`${apiUrl}/studies/${this.study.id}/report-pdf?lang=${lang}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = this.document.createElement('a');
+        a.href = url;
+        a.download = `study_${this.study.studyId}.pdf`;
+        this.document.body.appendChild(a);
+        a.click();
+        this.document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        this.isDownloadingReport = false;
+        this.toast.success('PDF скачан');
+        this.cdr.detectChanges();
+      })
+      .catch(() => {
+        this.isDownloadingReport = false;
+        this.toast.error('Ошибка скачивания');
+        this.cdr.detectChanges();
+      });
   }
 
   getTypeLabel(type: string): string { return this.typeLabels[type] || type; }

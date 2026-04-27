@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, Request, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
@@ -88,6 +89,15 @@ export class StudiesController {
         }
       }
     };
+  }
+
+  @Get(':id/report-pdf')
+  async getReportPDF(
+    @Param('id') id: string,
+    @Query('lang') lang: string,
+    @Res() res: Response,
+  ) {
+    await this.studiesService.generateReportPDF(+id, lang || 'ro', res);
   }
 
   @Get(':id')

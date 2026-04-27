@@ -385,9 +385,14 @@
         </div>
 
         <div class="study-card-footer">
-          <button class="btn-open-dicom" (click)="$event.stopPropagation(); openStudy(study.id)">
+          <button class="btn-open-dicom" (click)="openStudy(study.id); $event.stopPropagation()">
             <span class="material-icons">visibility</span>
             Открыть DICOM
+          </button>
+          <button class="btn-pdf-study" *ngIf="study.conclusion"
+                  (click)="downloadStudyPDF(study); $event.stopPropagation()">
+            <span class="material-icons">picture_as_pdf</span>
+            PDF
           </button>
         </div>
       </div>

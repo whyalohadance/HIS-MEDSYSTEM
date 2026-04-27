@@ -317,7 +317,17 @@
 
 .study-card-footer {
   padding: 10px 16px; border-top: 1px solid #f1f5f9;
-  display: flex; justify-content: flex-end;
+  display: flex; justify-content: flex-end; gap: 6px; align-items: center; flex-wrap: wrap;
+}
+
+.btn-pdf-study {
+  display: flex; align-items: center; gap: 4px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white; border: none; padding: 8px 14px;
+  border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; font-family: inherit;
+  .material-icons { font-size: 14px; }
+  &:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
 }
 
 .btn-open-dicom {

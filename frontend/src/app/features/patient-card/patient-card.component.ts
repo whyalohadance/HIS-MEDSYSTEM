@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
+import { LanguageService } from '../../core/services/language.service';
 import { map } from 'rxjs';
 import localeRo from '@angular/common/locales/ro';
 import localeRu from '@angular/common/locales/ru';
@@ -54,7 +55,8 @@ export class PatientCardComponent implements OnInit {
     private api: ApiService,
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public langService: LanguageService
   ) {
     this.translate.onLangChange.subscribe(event => {
       this.currentLocale = event.lang;
@@ -401,6 +403,27 @@ export class PatientCardComponent implements OnInit {
 
   goToOrder(orderId: number): void {
     this.router.navigate(['/lab/order', orderId]);
+  }
+
+  downloadStudyPDF(study: any): void {
+    const lang = this.langService.getCurrentLanguage() || 'ro';
+    const token = localStorage.getItem('token');
+    const apiUrl = 'http://localhost:3000/api';
+
+    fetch(`${apiUrl}/studies/${study.id}/report-pdf?lang=${lang}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(r => r.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `study_${study.studyId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
   }
 
   printCard(): void {

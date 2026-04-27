@@ -9,6 +9,12 @@ import { Measurement } from './measurement.entity';
 import { Annotation } from './annotation.entity';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
+import * as PDFDocument from 'pdfkit';
+import * as path from 'path';
+import * as fs from 'fs';
+import { Response } from 'express';
+import { Patient } from '../patients/patient.entity';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class StudiesService {
@@ -24,7 +30,11 @@ export class StudiesService {
     @InjectRepository(Measurement)
     private measurementRepo: Repository<Measurement>,
     @InjectRepository(Annotation)
-    private annotationRepo: Repository<Annotation>
+    private annotationRepo: Repository<Annotation>,
+    @InjectRepository(Patient)
+    private patientRepo: Repository<Patient>,
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
   ) {}
 
   private generateStudyId(): string {
@@ -221,5 +231,174 @@ export class StudiesService {
 
   async deleteAllAnnotations(studyId: number): Promise<void> {
     await this.annotationRepo.delete({ studyId });
+  }
+
+  async generateReportPDF(studyId: number, lang: string, res: Response): Promise<void> {
+    const study = await this.studyRepo.findOne({ where: { id: studyId } });
+    if (!study) throw new NotFoundException('Исследование не найдено');
+
+    const patient = await this.patientRepo.findOne({ where: { id: study.patientId } });
+    const radiologist = study.reportedById
+      ? await this.userRepo.findOne({ where: { id: study.reportedById } })
+      : null;
+    const measurements = await this.measurementRepo.find({ where: { studyId } });
+    const annotations = await this.annotationRepo.find({ where: { studyId } });
+
+    const fontsDir = path.join(process.cwd(), 'fonts');
+    const arialRegular = path.join(fontsDir, 'Arial.ttf');
+    const arialBold = path.join(fontsDir, 'Arial-Bold.ttf');
+    const hasArial = fs.existsSync(arialRegular) && fs.existsSync(arialBold);
+
+    const doc = new PDFDocument({ margin: 40, size: 'A4', bufferPages: true });
+
+    if (hasArial) {
+      doc.registerFont('Main', arialRegular);
+      doc.registerFont('Bold', arialBold);
+    }
+
+    const FONT = hasArial ? 'Main' : 'Helvetica';
+    const BOLD = hasArial ? 'Bold' : 'Helvetica-Bold';
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="study_${study.studyId}.pdf"`);
+    doc.pipe(res);
+
+    // ── Header ─────────────────────────────────────────────
+    doc.rect(0, 0, 595, 80).fill('#7c3aed');
+    doc.fillColor('white').font(BOLD).fontSize(22);
+    doc.text('HIS-MedSystem', 40, 25);
+    doc.font(FONT).fontSize(10);
+    doc.text('Радиологическое заключение', 40, 52);
+    doc.font(FONT).fontSize(10);
+    doc.text(`№ ${study.studyId}`, 400, 30, { align: 'right', width: 150 });
+    doc.text(new Date().toISOString().split('T')[0], 400, 52, { align: 'right', width: 150 });
+
+    doc.fillColor('black');
+    (doc as any).y = 100;
+
+    // ── Patient block ───────────────────────────────────────
+    doc.font(BOLD).fontSize(14).fillColor('#0f2d52');
+    doc.text('Информация о пациенте');
+    doc.moveDown(0.3);
+    doc.font(FONT).fontSize(10).fillColor('#1e293b');
+    if (patient) {
+      doc.text(`ФИО: ${patient.firstName} ${patient.lastName}`);
+      if (patient.dateOfBirth) doc.text(`Дата рождения: ${patient.dateOfBirth}`);
+      if (patient.phone) doc.text(`Телефон: ${patient.phone}`);
+      if (patient.gender) doc.text(`Пол: ${patient.gender === 'male' ? 'Мужской' : patient.gender === 'female' ? 'Женский' : patient.gender}`);
+    }
+    doc.moveDown(1);
+
+    // ── Study info ──────────────────────────────────────────
+    doc.font(BOLD).fontSize(14).fillColor('#0f2d52');
+    doc.text('Параметры исследования');
+    doc.moveDown(0.3);
+    doc.font(FONT).fontSize(10).fillColor('#1e293b');
+
+    const typeLabels: any = { mri: 'МРТ', ct: 'КТ', xray: 'Рентген', ultrasound: 'УЗИ', mammography: 'Маммография' };
+    doc.text(`Тип исследования: ${typeLabels[study.type] || study.type}`);
+    if (study.bodyPart) doc.text(`Область: ${study.bodyPart}`);
+    if (study.description) doc.text(`Описание: ${study.description}`);
+    if (study.scheduledAt) doc.text(`Дата проведения: ${study.scheduledAt}${study.scheduledTime ? ' ' + study.scheduledTime : ''}`);
+    if (study.priority && study.priority !== 'routine') {
+      const priorityLabel = study.priority === 'stat' ? 'КРИТИЧНО' : 'СРОЧНО';
+      doc.fillColor(study.priority === 'stat' ? '#dc2626' : '#d97706');
+      doc.font(BOLD).text(`Приоритет: ${priorityLabel}`);
+      doc.font(FONT).fillColor('#1e293b');
+    }
+    doc.moveDown(1);
+
+    // ── Clinical info ───────────────────────────────────────
+    if (study.clinicalInfo) {
+      doc.font(BOLD).fontSize(12).fillColor('#0f2d52');
+      doc.text('Клиническая информация');
+      doc.moveDown(0.3);
+      doc.font(FONT).fontSize(10).fillColor('#1e40af');
+      doc.text(study.clinicalInfo, { width: 515, align: 'left', lineGap: 2 });
+      doc.fillColor('#1e293b');
+      doc.moveDown(1);
+    }
+
+    // ── Findings ────────────────────────────────────────────
+    if (study.findings) {
+      doc.font(BOLD).fontSize(14).fillColor('#0f2d52');
+      doc.text('FINDINGS');
+      doc.moveDown(0.3);
+      doc.font(FONT).fontSize(10).fillColor('#1e293b');
+      doc.text(study.findings, { align: 'left', lineGap: 3, width: 515 });
+      doc.moveDown(1);
+    }
+
+    // ── Conclusion ──────────────────────────────────────────
+    if (study.conclusion) {
+      doc.font(BOLD).fontSize(14).fillColor('#6d28d9');
+      doc.text('ЗАКЛЮЧЕНИЕ');
+      doc.moveDown(0.3);
+      doc.font(FONT).fontSize(11).fillColor('#1e1b4b');
+      doc.text(study.conclusion, { width: 515, lineGap: 3 });
+      doc.moveDown(1);
+    }
+
+    // ── Measurements ────────────────────────────────────────
+    if (measurements && measurements.length > 0) {
+      doc.font(BOLD).fontSize(12).fillColor('#0f2d52');
+      doc.text(`Измерения (${measurements.length})`);
+      doc.moveDown(0.3);
+      doc.font(FONT).fontSize(9).fillColor('#1e293b');
+      measurements.forEach((m: any, i: number) => {
+        const dx = (m.x2 || 0) - (m.x1 || 0);
+        const dy = (m.y2 || 0) - (m.y1 || 0);
+        const pixels = Math.sqrt(dx * dx + dy * dy).toFixed(1);
+        doc.text(`${i + 1}. Расстояние ${m.distance} (${pixels} px)`);
+      });
+      doc.moveDown(1);
+    }
+
+    // ── Annotations ─────────────────────────────────────────
+    if (annotations && annotations.length > 0) {
+      doc.font(BOLD).fontSize(12).fillColor('#0f2d52');
+      doc.text(`Аннотации (${annotations.length})`);
+      doc.moveDown(0.3);
+      doc.font(FONT).fontSize(9).fillColor('#1e293b');
+      annotations.forEach((a: any, i: number) => {
+        doc.text(`${i + 1}. ${a.text}`);
+      });
+      doc.moveDown(1);
+    }
+
+    // ── No report placeholder ────────────────────────────────
+    if (!study.findings && !study.conclusion) {
+      doc.font(BOLD).fontSize(11).fillColor('#d97706');
+      doc.text('Заключение ещё не подготовлено радиологом');
+      doc.moveDown(1);
+    }
+
+    // ── Signature ────────────────────────────────────────────
+    doc.moveDown(1);
+    doc.font(BOLD).fontSize(11).fillColor('#0f2d52');
+    doc.text('Подпись:');
+    doc.moveDown(0.3);
+    doc.font(FONT).fontSize(10).fillColor('#1e293b');
+    if (radiologist) {
+      doc.text(`Радиолог: ${radiologist.firstName} ${radiologist.lastName}`);
+      if (study.reportedAt) {
+        const date = new Date(study.reportedAt).toISOString().split('T')[0];
+        doc.text(`Дата заключения: ${date}`);
+      }
+    } else {
+      doc.text('Радиолог: ___________________');
+      doc.text('Дата: _____________');
+    }
+    doc.moveDown(0.5);
+    doc.text('Подпись: ___________________');
+
+    // ── Footer ────────────────────────────────────────────────
+    doc.font(FONT).fontSize(8).fillColor('#94a3b8');
+    doc.text(
+      '© HIS-MedSystem · CUTM 2026 · Заключение действительно только при наличии оригинальных DICOM снимков',
+      40, 780, { align: 'center', width: 515 },
+    );
+
+    doc.end();
   }
 }

@@ -30,6 +30,12 @@
       </div>
     </div>
     <div class="header-right">
+      <button class="btn-download-report" *ngIf="study" (click)="downloadReportPDF()"
+              [disabled]="isDownloadingReport" title="Скачать PDF заключение">
+        <span class="material-icons" *ngIf="!isDownloadingReport">picture_as_pdf</span>
+        <div class="spinner-tiny" *ngIf="isDownloadingReport"></div>
+        <span>{{ isDownloadingReport ? 'Скачивание...' : 'PDF' }}</span>
+      </button>
       <button class="btn-report" *ngIf="study && isRadiologist()" (click)="toggleReportPanel()"
               [class.has-report]="study.conclusion">
         <span class="material-icons">{{ study.conclusion ? 'edit_note' : 'note_add' }}</span>
