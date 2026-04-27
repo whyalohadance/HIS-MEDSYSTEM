@@ -102,91 +102,214 @@
     </div>
   </div>
 
-  <!-- ИСТОРИЯ ПРИЁМОВ -->
-  <div class="section-title">
-    <span class="material-icons">history</span>
-    {{ 'PATIENT_CARD.APPOINTMENT_HISTORY' | translate }} ({{ appointments.length }})
+  <!-- ВКЛАДКИ -->
+  <div class="tabs-nav">
+    <button class="tab-btn" [class.active]="activeTab === 'info'" (click)="setTab('info')">
+      <span class="material-icons">info</span>
+      {{ 'PATIENT_CARD.TAB_INFO' | translate }}
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">
+      <span class="material-icons">event</span>
+      {{ 'PATIENT_CARD.TAB_APPOINTMENTS' | translate }}
+      <span class="tab-count" *ngIf="appointments.length > 0">{{ appointments.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'lab'" (click)="setTab('lab')">
+      <span class="material-icons">science</span>
+      {{ 'PATIENT_CARD.TAB_LAB' | translate }}
+      <span class="tab-count lab" *ngIf="labOrders.length > 0">{{ labOrders.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'studies'" (click)="setTab('studies')">
+      <span class="material-icons">biotech</span>
+      {{ 'PATIENT_CARD.TAB_STUDIES' | translate }}
+      <span class="tab-count" *ngIf="studies.length > 0">{{ studies.length }}</span>
+    </button>
   </div>
 
-  <div class="appointments-history" *ngIf="appointments.length > 0">
-    <div class="history-item" *ngFor="let a of appointments" [class]="a.status">
-      <div class="history-date">
-        <div class="hdate">{{ formatDate(a.date) }}</div>
-        <div class="htime">{{ a.time }}</div>
-      </div>
-      <div class="history-info">
-        <div class="history-doctor">
-          <span class="material-icons">medical_services</span>
-          {{ getDoctorName(a.doctorId) }}
+  <!-- TAB: INFO -->
+  <div *ngIf="activeTab === 'info'">
+    <!-- РЕЗУЛЬТАТЫ -->
+    <div class="section-title">
+      <span class="material-icons">assignment</span>
+      {{ 'PATIENT_CARD.RESULTS_DOCUMENTS' | translate }} ({{ results.length }})
+    </div>
+
+    <div class="results-list" *ngIf="results.length > 0">
+      <div class="result-item" *ngFor="let r of results">
+        <div class="result-icon">
+          <span class="material-icons">description</span>
         </div>
-        <div class="history-notes" *ngIf="a.notes">{{ a.notes }}</div>
+        <div class="result-info">
+          <div class="result-title">{{ r.title || 'Result #' + r.id }}</div>
+          <div class="result-date">{{ formatDate(r.createdAt) }}</div>
+          <div class="result-desc" *ngIf="r.description">{{ r.description }}</div>
+        </div>
+        <div class="result-actions">
+          <button class="btn-view" *ngIf="r.fileUrl" (click)="openResultViewer(r)">
+            <span class="material-icons">visibility</span>
+            {{ 'COMMON.PREVIEW' | translate }}
+          </button>
+          <button class="btn-download" *ngIf="r.fileUrl" (click)="downloadResultPDF(r)">
+            <span class="material-icons">download</span>
+            {{ 'COMMON.DOWNLOAD' | translate }}
+          </button>
+        </div>
       </div>
-      <div class="history-right">
-        <span class="badge" [class]="a.status">{{ getStatusLabel(a.status) }}</span>
-        <div class="history-price" *ngIf="a.price">{{ a.price }} MDL</div>
-      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="results.length === 0">
+      <span class="material-icons">assignment_late</span>
+      <p>{{ 'PATIENT_CARD.NO_RESULTS' | translate }}</p>
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="appointments.length === 0">
-    <span class="material-icons">event_busy</span>
-    <p>{{ 'PATIENT_CARD.NO_APPOINTMENTS' | translate }}</p>
-  </div>
+  <!-- TAB: APPOINTMENTS -->
+  <div *ngIf="activeTab === 'appointments'">
+    <div class="appointments-history" *ngIf="appointments.length > 0">
+      <div class="history-item" *ngFor="let a of appointments" [class]="a.status">
+        <div class="history-date">
+          <div class="hdate">{{ formatDate(a.date) }}</div>
+          <div class="htime">{{ a.time }}</div>
+        </div>
+        <div class="history-info">
+          <div class="history-doctor">
+            <span class="material-icons">medical_services</span>
+            {{ getDoctorName(a.doctorId) }}
+          </div>
+          <div class="history-notes" *ngIf="a.notes">{{ a.notes }}</div>
+        </div>
+        <div class="history-right">
+          <span class="badge" [class]="a.status">{{ getStatusLabel(a.status) }}</span>
+          <div class="history-price" *ngIf="a.price">{{ a.price }} MDL</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- РЕЗУЛЬТАТЫ -->
-  <div class="section-title">
-    <span class="material-icons">assignment</span>
-    {{ 'PATIENT_CARD.RESULTS_DOCUMENTS' | translate }} ({{ results.length }})
-  </div>
-
-  <div class="results-list" *ngIf="results.length > 0">
-    <div class="result-item" *ngFor="let r of results">
-      <div class="result-icon">
-        <span class="material-icons">description</span>
-      </div>
-      <div class="result-info">
-        <div class="result-title">{{ r.title || 'Result #' + r.id }}</div>
-        <div class="result-date">{{ formatDate(r.createdAt) }}</div>
-        <div class="result-desc" *ngIf="r.description">{{ r.description }}</div>
-      </div>
-      <div class="result-actions">
-        <button class="btn-view" *ngIf="r.fileUrl" (click)="openResultViewer(r)">
-          <span class="material-icons">visibility</span>
-          {{ 'COMMON.PREVIEW' | translate }}
-        </button>
-        <button class="btn-download" *ngIf="r.fileUrl" (click)="downloadResultPDF(r)">
-          <span class="material-icons">download</span>
-          {{ 'COMMON.DOWNLOAD' | translate }}
-        </button>
-      </div>
+    <div class="empty-state" *ngIf="appointments.length === 0">
+      <span class="material-icons">event_busy</span>
+      <p>{{ 'PATIENT_CARD.NO_APPOINTMENTS' | translate }}</p>
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="results.length === 0">
-    <span class="material-icons">assignment_late</span>
-    <p>{{ 'PATIENT_CARD.NO_RESULTS' | translate }}</p>
+  <!-- TAB: LAB -->
+  <div *ngIf="activeTab === 'lab'">
+
+    <!-- Loading -->
+    <div class="loading" *ngIf="isLoadingLab">
+      <span class="material-icons spin">autorenew</span>
+      {{ 'COMMON.LOADING' | translate }}
+    </div>
+
+    <ng-container *ngIf="!isLoadingLab">
+      <!-- Lab header stats -->
+      <div class="lab-header" *ngIf="labOrders.length > 0">
+        <div class="lab-stat">
+          <span class="material-icons">receipt_long</span>
+          <div>
+            <div class="lab-stat-num">{{ labOrders.length }}</div>
+            <div class="lab-stat-lbl">{{ 'LAB.TOTAL_ORDERS' | translate }}</div>
+          </div>
+        </div>
+        <div class="lab-stat green">
+          <span class="material-icons">check_circle</span>
+          <div>
+            <div class="lab-stat-num">{{ getCompletedCount() }}</div>
+            <div class="lab-stat-lbl">{{ 'LAB.COMPLETED_ORDERS' | translate }}</div>
+          </div>
+        </div>
+        <div class="lab-stat orange">
+          <span class="material-icons">pending</span>
+          <div>
+            <div class="lab-stat-num">{{ getPendingCount() }}</div>
+            <div class="lab-stat-lbl">{{ 'LAB.PENDING_ORDERS' | translate }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lab orders list -->
+      <div class="lab-orders-list" *ngIf="labOrders.length > 0">
+        <div class="lab-order-card" *ngFor="let order of labOrders">
+          <div class="order-header">
+            <div class="order-left">
+              <div class="order-id">
+                <span class="material-icons">science</span>
+                {{ 'LAB.ORDER' | translate }} #{{ order.id }}
+              </div>
+              <div class="order-date">{{ formatDate(order.createdAt) }}</div>
+            </div>
+            <div class="order-right">
+              <span class="lab-status-badge" [class]="getLabStatusColor(order.status)">
+                {{ getLabStatusLabel(order.status) }}
+              </span>
+              <span class="abnormal-badge" *ngIf="countAbnormal(order.id) > 0">
+                <span class="material-icons">warning</span>
+                {{ countAbnormal(order.id) }} {{ 'LAB.ABNORMAL' | translate }}
+              </span>
+              <button class="btn-order-detail" *ngIf="order.status === 'completed'" (click)="goToOrder(order.id)">
+                <span class="material-icons">open_in_new</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="order-notes" *ngIf="order.notes">{{ order.notes }}</div>
+
+          <!-- Results grid for completed orders -->
+          <div class="order-results" *ngIf="order.status === 'completed' && labResults[order.id]">
+            <div class="results-grid">
+              <div class="result-row" *ngFor="let res of labResults[order.id]"
+                   [class.abnormal]="res.flag && res.flag !== 'normal'">
+                <div class="res-name">{{ getTestNameForOrder(res.testId) }}</div>
+                <div class="res-value">
+                  <span class="res-val-num">{{ res.value }}</span>
+                  <span class="res-unit" *ngIf="res.unit">{{ res.unit }}</span>
+                </div>
+                <div class="res-range" *ngIf="res.normalMin != null || res.normalMax != null">
+                  {{ res.normalMin }} – {{ res.normalMax }}
+                </div>
+                <div class="res-flag">
+                  <span class="flag-badge" [class]="getFlagClass(res.flag)">{{ getFlagLabel(res.flag) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending result placeholder -->
+          <div class="order-pending-msg" *ngIf="order.status === 'pending' || order.status === 'in_progress'">
+            <span class="material-icons">hourglass_empty</span>
+            {{ 'LAB.RESULTS_PENDING' | translate }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty lab state -->
+      <div class="empty-state" *ngIf="labOrders.length === 0">
+        <span class="material-icons">science</span>
+        <p>{{ 'LAB.NO_ORDERS' | translate }}</p>
+      </div>
+    </ng-container>
   </div>
 
-  <!-- ИССЛЕДОВАНИЯ RIS -->
-  <div class="section-title" *ngIf="studies.length > 0">
-    <span class="material-icons">biotech</span>
-    {{ 'STUDIES.TITLE' | translate }} ({{ studies.length }})
-  </div>
+  <!-- TAB: STUDIES -->
+  <div *ngIf="activeTab === 'studies'">
+    <div class="results-list" *ngIf="studies.length > 0">
+      <div class="result-item" *ngFor="let s of studies">
+        <div class="result-icon">
+          <span class="material-icons">biotech</span>
+        </div>
+        <div class="result-info">
+          <div class="result-title">{{ getStudyTypeLabel(s.type) }} — {{ s.studyId }}</div>
+          <div class="result-date">{{ s.scheduledAt || formatDate(s.createdAt) }}</div>
+          <div class="result-desc" *ngIf="s.bodyPart">{{ s.bodyPart }}</div>
+          <div class="result-desc" *ngIf="s.conclusion">{{ s.conclusion }}</div>
+        </div>
+        <div class="result-actions">
+          <span class="badge" [class]="s.status">{{ getStudyStatusLabel(s.status) }}</span>
+        </div>
+      </div>
+    </div>
 
-  <div class="results-list" *ngIf="studies.length > 0">
-    <div class="result-item" *ngFor="let s of studies">
-      <div class="result-icon">
-        <span class="material-icons">biotech</span>
-      </div>
-      <div class="result-info">
-        <div class="result-title">{{ getStudyTypeLabel(s.type) }} — {{ s.studyId }}</div>
-        <div class="result-date">{{ s.scheduledAt || formatDate(s.createdAt) }}</div>
-        <div class="result-desc" *ngIf="s.bodyPart">{{ s.bodyPart }}</div>
-        <div class="result-desc" *ngIf="s.conclusion">{{ s.conclusion }}</div>
-      </div>
-      <div class="result-actions">
-        <span class="badge" [class]="s.status">{{ getStudyStatusLabel(s.status) }}</span>
-      </div>
+    <div class="empty-state" *ngIf="studies.length === 0">
+      <span class="material-icons">biotech</span>
+      <p>{{ 'STUDIES.NO_STUDIES' | translate }}</p>
     </div>
   </div>
 

@@ -326,7 +326,11 @@
     "NO_RESULTS": "Результатов нет",
     "LOADING_DOC": "Загрузка документа...",
     "UNSUPPORTED_PREVIEW": "Предпросмотр недоступен для этого типа файла",
-    "NOT_FOUND": "Пациент не найден"
+    "NOT_FOUND": "Пациент не найден",
+    "TAB_INFO": "Документы",
+    "TAB_APPOINTMENTS": "Приёмы",
+    "TAB_LAB": "Анализы",
+    "TAB_STUDIES": "Исследования"
   },
   "ROOMS": {
     "TITLE": "Кабинеты",
@@ -472,5 +476,18 @@
     "PRICE": "Цена",
     "BACK": "Назад",
     "ACCESS_DENIED": "Доступ только для Admin и Радиолога"
+  },
+  "LAB": {
+    "ORDER": "Заказ",
+    "TOTAL_ORDERS": "Заказов",
+    "COMPLETED_ORDERS": "Завершено",
+    "PENDING_ORDERS": "В процессе",
+    "NO_ORDERS": "Лабораторных заказов нет",
+    "ABNORMAL": "вне нормы",
+    "RESULTS_PENDING": "Результаты ещё не готовы",
+    "STATUS_PENDING": "Ожидает",
+    "STATUS_IN_PROGRESS": "Выполняется",
+    "STATUS_COMPLETED": "Готово",
+    "STATUS_CANCELLED": "Отменено"
   }
 }

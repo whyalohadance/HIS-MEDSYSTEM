@@ -326,7 +326,11 @@
     "NO_RESULTS": "Nu există rezultate",
     "LOADING_DOC": "Se încarcă documentul...",
     "UNSUPPORTED_PREVIEW": "Previzualizarea nu este disponibilă pentru acest tip de fișier",
-    "NOT_FOUND": "Pacientul nu a fost găsit"
+    "NOT_FOUND": "Pacientul nu a fost găsit",
+    "TAB_INFO": "Documente",
+    "TAB_APPOINTMENTS": "Programări",
+    "TAB_LAB": "Analize",
+    "TAB_STUDIES": "Investigații"
   },
   "ROOMS": {
     "TITLE": "Cabinete",
@@ -472,5 +476,18 @@
     "PRICE": "Preț",
     "BACK": "Înapoi",
     "ACCESS_DENIED": "Acces permis doar pentru Admin și Radiolog"
+  },
+  "LAB": {
+    "ORDER": "Comanda",
+    "TOTAL_ORDERS": "Total comenzi",
+    "COMPLETED_ORDERS": "Finalizate",
+    "PENDING_ORDERS": "În progres",
+    "NO_ORDERS": "Nu există comenzi de laborator",
+    "ABNORMAL": "anormale",
+    "RESULTS_PENDING": "Rezultatele nu sunt încă gata",
+    "STATUS_PENDING": "În așteptare",
+    "STATUS_IN_PROGRESS": "În lucru",
+    "STATUS_COMPLETED": "Finalizat",
+    "STATUS_CANCELLED": "Anulat"
   }
 }

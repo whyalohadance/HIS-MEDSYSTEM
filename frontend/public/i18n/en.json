@@ -326,7 +326,11 @@
     "NO_RESULTS": "No results",
     "LOADING_DOC": "Loading document...",
     "UNSUPPORTED_PREVIEW": "Preview not available for this file type",
-    "NOT_FOUND": "Patient not found"
+    "NOT_FOUND": "Patient not found",
+    "TAB_INFO": "Documents",
+    "TAB_APPOINTMENTS": "Appointments",
+    "TAB_LAB": "Lab Results",
+    "TAB_STUDIES": "Studies"
   },
   "ROOMS": {
     "TITLE": "Rooms",
@@ -472,5 +476,18 @@
     "PRICE": "Price",
     "BACK": "Back",
     "ACCESS_DENIED": "Access only for Admin and Radiologist"
+  },
+  "LAB": {
+    "ORDER": "Order",
+    "TOTAL_ORDERS": "Total orders",
+    "COMPLETED_ORDERS": "Completed",
+    "PENDING_ORDERS": "In progress",
+    "NO_ORDERS": "No lab orders found",
+    "ABNORMAL": "abnormal",
+    "RESULTS_PENDING": "Results are not yet ready",
+    "STATUS_PENDING": "Pending",
+    "STATUS_IN_PROGRESS": "In progress",
+    "STATUS_COMPLETED": "Completed",
+    "STATUS_CANCELLED": "Cancelled"
   }
 }

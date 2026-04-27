@@ -31,6 +31,12 @@ export class PatientCardComponent implements OnInit {
   isLoading = true;
   patientId = 0;
 
+  activeTab: 'info' | 'appointments' | 'lab' | 'studies' = 'info';
+  labOrders: any[] = [];
+  labResults: { [orderId: number]: any[] } = {};
+  isLoadingLab = false;
+  tests: any[] = [];
+
   currentLocale = 'ru';
 
   viewingResult: any = null;
@@ -240,6 +246,100 @@ export class PatientCardComponent implements OnInit {
 
   canPreview(result: any): boolean {
     return this.isPDF(result) || this.isImage(result) || this.isOffice(result);
+  }
+
+  setTab(tab: string): void {
+    this.activeTab = tab as any;
+    if (tab === 'lab' && this.labOrders.length === 0 && !this.isLoadingLab) {
+      this.loadLabHistory();
+    }
+    this.cdr.detectChanges();
+  }
+
+  loadLabHistory(): void {
+    if (!this.patient?.id) return;
+    this.isLoadingLab = true;
+    this.api.get<any>(`/lab/patient/${this.patient.id}`).subscribe({
+      next: (res) => {
+        this.labOrders = res.data || [];
+        this.isLoadingLab = false;
+        this.cdr.detectChanges();
+        this.labOrders.forEach(order => {
+          if (order.status === 'completed') {
+            this.api.get<any>(`/lab/orders/${order.id}/results`).subscribe({
+              next: (r) => {
+                this.labResults[order.id] = r.data || [];
+                this.cdr.detectChanges();
+              },
+              error: () => {}
+            });
+          }
+        });
+        if (this.tests.length === 0) this.loadTestsCatalog();
+      },
+      error: () => { this.isLoadingLab = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  loadTestsCatalog(): void {
+    this.api.get<any>('/lab/tests').subscribe({
+      next: (res) => { this.tests = res.data || []; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+  }
+
+  getLabStatusColor(status: string): string {
+    const map: Record<string, string> = {
+      pending: 'status-pending', in_progress: 'status-progress',
+      completed: 'status-completed', cancelled: 'status-cancelled'
+    };
+    return map[status] || 'status-pending';
+  }
+
+  getLabStatusLabel(status: string): string {
+    const keys: Record<string, string> = {
+      pending: 'LAB.STATUS_PENDING', in_progress: 'LAB.STATUS_IN_PROGRESS',
+      completed: 'LAB.STATUS_COMPLETED', cancelled: 'LAB.STATUS_CANCELLED'
+    };
+    const key = keys[status];
+    return key ? this.translate.instant(key) : status;
+  }
+
+  getFlagClass(flag: string): string {
+    const map: Record<string, string> = {
+      normal: 'flag-normal', low: 'flag-low', high: 'flag-high',
+      critical_low: 'flag-critical', critical_high: 'flag-critical'
+    };
+    return map[flag] || 'flag-normal';
+  }
+
+  getFlagLabel(flag: string): string {
+    const map: Record<string, string> = {
+      normal: 'N', low: 'L', high: 'H', critical_low: 'CL', critical_high: 'CH'
+    };
+    return map[flag] || flag;
+  }
+
+  countAbnormal(orderId: number): number {
+    const results = this.labResults[orderId] || [];
+    return results.filter(r => r.flag && r.flag !== 'normal').length;
+  }
+
+  getTestNameForOrder(testId: number): string {
+    const t = this.tests.find(t => t.id === testId);
+    return t ? (t.name || t.testName || `Test #${testId}`) : `Test #${testId}`;
+  }
+
+  getCompletedCount(): number {
+    return this.labOrders.filter(o => o.status === 'completed').length;
+  }
+
+  getPendingCount(): number {
+    return this.labOrders.filter(o => o.status === 'pending' || o.status === 'in_progress').length;
+  }
+
+  goToOrder(orderId: number): void {
+    this.router.navigate(['/lab/order', orderId]);
   }
 
   printCard(): void {
