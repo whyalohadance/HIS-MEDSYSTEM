@@ -65,6 +65,18 @@ export class StudiesService {
     return study;
   }
 
+  async saveReport(studyId: number, userId: number, dto: any): Promise<Study> {
+    await this.studyRepo.update(studyId, {
+      findings: dto.findings,
+      conclusion: dto.conclusion,
+      status: StudyStatus.COMPLETED,
+      reportedAt: new Date(),
+      reportedById: userId,
+      completedAt: new Date().toISOString().split('T')[0],
+    });
+    return this.studyRepo.findOne({ where: { id: studyId } }) as Promise<Study>;
+  }
+
   async findByPatient(patientId: number): Promise<Study[]> {
     return this.studyRepo.find({
       where: { patientId },

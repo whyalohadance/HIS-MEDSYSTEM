@@ -29,9 +29,16 @@
         </div>
       </div>
     </div>
-    <span class="status-badge" *ngIf="study" [class]="'status-' + study.status">
-      {{ getStatusLabel(study.status) }}
-    </span>
+    <div class="header-right">
+      <button class="btn-report" *ngIf="study && isRadiologist()" (click)="toggleReportPanel()"
+              [class.has-report]="study.conclusion">
+        <span class="material-icons">{{ study.conclusion ? 'edit_note' : 'note_add' }}</span>
+        {{ study.conclusion ? 'Редактировать заключение' : 'Написать заключение' }}
+      </button>
+      <span class="status-badge" *ngIf="study" [class]="'status-' + study.status">
+        {{ getStatusLabel(study.status) }}
+      </span>
+    </div>
   </div>
 
   <!-- Content -->
@@ -127,51 +134,114 @@
         </div>
       </div>
 
-      <!-- Conclusion Card -->
-      <div class="info-card" *ngIf="study && (study.findings || study.conclusion || isRadiologistOrAdmin)">
+      <!-- Conclusion Card (Task 7) -->
+      <div class="info-card report-card" *ngIf="study?.conclusion">
         <h3 class="info-card-title">
           <span class="material-icons">description</span>
-          {{ 'DICOM.RADIOLOGIST_REPORT' | translate }}
+          Заключение радиолога
         </h3>
-
-        <div *ngIf="!isEditing">
-          <div class="findings-block" *ngIf="study.findings">
-            <div class="findings-label">{{ 'DICOM.FINDINGS' | translate }}</div>
-            <p class="findings-text">{{ study.findings }}</p>
+        <div class="report-display">
+          <div class="report-section" *ngIf="study.findings">
+            <div class="report-section-title">FINDINGS</div>
+            <p>{{ study.findings }}</p>
           </div>
-          <div class="findings-block" *ngIf="study.conclusion">
-            <div class="findings-label">{{ 'DICOM.CONCLUSION' | translate }}</div>
-            <p class="findings-text">{{ study.conclusion }}</p>
+          <div class="report-section conclusion" *ngIf="study.conclusion">
+            <div class="report-section-title">ЗАКЛЮЧЕНИЕ</div>
+            <p>{{ study.conclusion }}</p>
           </div>
-          <div class="no-findings" *ngIf="!study.findings && !study.conclusion">
-            <span class="material-icons">pending</span>
-            {{ 'DICOM.NO_REPORT' | translate }}
-          </div>
-          <button class="btn-edit-findings" *ngIf="isRadiologistOrAdmin" (click)="isEditing = true">
-            <span class="material-icons">edit</span>
-            {{ (study.findings ? 'DICOM.EDIT_REPORT' : 'DICOM.ADD_REPORT') | translate }}
-          </button>
-        </div>
-
-        <div class="findings-form" *ngIf="isEditing">
-          <div class="form-field">
-            <label>{{ 'DICOM.FINDINGS' | translate }}</label>
-            <textarea [(ngModel)]="editFindings" rows="4" [placeholder]="'DICOM.FINDINGS_PLACEHOLDER' | translate"></textarea>
-          </div>
-          <div class="form-field">
-            <label>{{ 'DICOM.CONCLUSION' | translate }}</label>
-            <textarea [(ngModel)]="editConclusion" rows="3" [placeholder]="'DICOM.CONCLUSION_PLACEHOLDER' | translate"></textarea>
-          </div>
-          <div class="form-actions">
-            <button class="btn-save" (click)="saveFindings()" [disabled]="isSaving">
-              <span class="material-icons">save</span>
-              {{ isSaving ? ('COMMON.SAVING' | translate) : ('DICOM.SAVE_REPORT' | translate) }}
-            </button>
-            <button class="btn-cancel" (click)="isEditing = false">{{ 'COMMON.CANCEL' | translate }}</button>
+          <div class="report-meta" *ngIf="study.reportedAt">
+            <span class="material-icons">verified</span>
+            {{ study.reportedAt | date: 'dd.MM.yyyy HH:mm' }}
           </div>
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Report panel overlay (Task 6) -->
+  <div class="report-overlay" *ngIf="showReportPanel" (click)="showReportPanel = false"></div>
+
+  <!-- Report panel (Task 6) -->
+  <div class="report-panel" [class.open]="showReportPanel">
+    <div class="report-header">
+      <div>
+        <h2>
+          <span class="material-icons">description</span>
+          Заключение радиолога
+        </h2>
+        <p class="report-study" *ngIf="study">
+          {{ study.studyId }} · {{ study.bodyPart }}
+        </p>
+      </div>
+      <button class="btn-close-report" (click)="showReportPanel = false">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="report-body">
+      <!-- Шаблоны -->
+      <div class="templates-section">
+        <label class="section-label">
+          <span class="material-icons">auto_awesome</span>
+          Быстрые шаблоны
+        </label>
+        <div class="templates-grid">
+          <button class="template-btn" *ngFor="let t of templates" (click)="applyTemplate(t)">
+            <span class="material-icons">{{
+              t.title === 'Норма' ? 'check_circle' :
+              t.title === 'Воспаление' ? 'local_fire_department' : 'warning'
+            }}</span>
+            {{ t.title }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <span class="material-icons">visibility</span>
+          Findings (что видно на снимке)
+        </label>
+        <textarea
+          class="report-textarea"
+          rows="6"
+          [(ngModel)]="reportData.findings"
+          placeholder="Опишите визуальные находки: расположение, размеры, характеристики структур..."
+          [disabled]="isSavingReport">
+        </textarea>
+        <div class="char-count">{{ reportData.findings.length }} / 1000</div>
+      </div>
+
+      <div class="form-section">
+        <label class="form-label">
+          <span class="material-icons">medical_services</span>
+          Заключение (диагностический вывод)
+        </label>
+        <textarea
+          class="report-textarea conclusion"
+          rows="5"
+          [(ngModel)]="reportData.conclusion"
+          placeholder="Сформулируйте диагностический вывод и рекомендации..."
+          [disabled]="isSavingReport">
+        </textarea>
+        <div class="char-count">{{ reportData.conclusion.length }} / 500</div>
+      </div>
+
+      <div class="report-info" *ngIf="study?.reportedAt">
+        <span class="material-icons">history</span>
+        Последнее обновление: {{ study.reportedAt | date: 'dd.MM.yyyy HH:mm' }}
+      </div>
+    </div>
+
+    <div class="report-footer">
+      <button class="btn-cancel-report" (click)="showReportPanel = false" [disabled]="isSavingReport">
+        Отмена
+      </button>
+      <button class="btn-save-report" (click)="saveReport()" [disabled]="isSavingReport">
+        <span class="material-icons" *ngIf="!isSavingReport">save</span>
+        <div class="spinner-mini" *ngIf="isSavingReport"></div>
+        {{ isSavingReport ? 'Сохранение...' : 'Сохранить и завершить' }}
+      </button>
     </div>
   </div>
 

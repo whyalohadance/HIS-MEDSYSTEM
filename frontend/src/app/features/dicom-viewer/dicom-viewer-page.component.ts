@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DicomViewerComponent } from '../../shared/components/dicom-viewer/dicom-viewer.component';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
+import { ConfirmService } from '../../core/services/confirm.service';
 import { map } from 'rxjs';
 
 @Component({
@@ -21,6 +23,27 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
   editFindings = '';
   editConclusion = '';
   isSaving = false;
+
+  showReportPanel = false;
+  reportData = { findings: '', conclusion: '' };
+  isSavingReport = false;
+  templates = [
+    {
+      title: 'Норма',
+      findings: 'Структура исследуемой области без видимых патологий. Ткани однородной структуры.',
+      conclusion: 'Патологических изменений не выявлено.'
+    },
+    {
+      title: 'Воспаление',
+      findings: 'Определяется отёк мягких тканей, усиление сосудистого рисунка.',
+      conclusion: 'Признаки воспалительного процесса. Рекомендована консультация специалиста.'
+    },
+    {
+      title: 'Образование',
+      findings: 'Визуализируется объёмное образование с чёткими контурами размером ___мм.',
+      conclusion: 'Объёмное образование. Требуется дополнительное обследование.'
+    }
+  ];
 
   hierarchy: any = null;
   seriesList: any[] = [];
@@ -47,6 +70,8 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
     private api: ApiService,
     public auth: AuthService,
     private cdr: ChangeDetectorRef,
+    private toast: ToastService,
+    private confirm: ConfirmService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -64,6 +89,8 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
           this.study = study;
           this.editFindings = study.findings || '';
           this.editConclusion = study.conclusion || '';
+          this.reportData.findings = study.findings || '';
+          this.reportData.conclusion = study.conclusion || '';
           this.cdr.detectChanges();
           this.loadHierarchy();
           this.loadMeasurements();
@@ -125,6 +152,55 @@ export class DicomViewerPageComponent implements OnInit, OnDestroy {
       this.api.delete(`/studies/measurements/${m.id}`).subscribe();
     }
     this.measurements.splice(index, 1);
+  }
+
+  toggleReportPanel(): void {
+    this.showReportPanel = !this.showReportPanel;
+  }
+
+  applyTemplate(template: any): void {
+    this.reportData.findings = template.findings;
+    this.reportData.conclusion = template.conclusion;
+  }
+
+  async saveReport(): Promise<void> {
+    if (!this.reportData.findings.trim() || !this.reportData.conclusion.trim()) {
+      this.toast.error('Заполните findings и заключение');
+      return;
+    }
+
+    if (this.study?.status === 'completed') {
+      const confirmed = await this.confirm.confirm({
+        title: 'Перезаписать заключение?',
+        message: 'Это исследование уже имеет заключение. Хотите его обновить?',
+        confirmText: 'Обновить',
+        cancelText: 'Отмена'
+      });
+      if (!confirmed) return;
+    }
+
+    this.isSavingReport = true;
+    this.cdr.detectChanges();
+
+    this.api.post<any>(`/studies/${this.study.id}/report`, this.reportData).subscribe({
+      next: (res) => {
+        this.toast.success('Заключение сохранено');
+        this.study = res.data;
+        this.isSavingReport = false;
+        this.showReportPanel = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.toast.error('Ошибка сохранения');
+        this.isSavingReport = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isRadiologist(): boolean {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user.role === 'admin' || user.role === 'radiologist';
   }
 
   getTypeLabel(type: string): string { return this.typeLabels[type] || type; }

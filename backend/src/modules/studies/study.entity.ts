@@ -82,6 +82,12 @@ export class Study {
   @Column({ nullable: true })
   completedAt: string;
 
+  @Column({ nullable: true })
+  reportedAt: Date;
+
+  @Column({ nullable: true })
+  reportedById: number;
+
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   price: number;
 

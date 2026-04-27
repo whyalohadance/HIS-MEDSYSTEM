@@ -162,6 +162,18 @@ export class StudiesController {
     return { success: true };
   }
 
+  @Post(':id/report')
+  @Roles(UserRole.ADMIN, UserRole.RADIOLOGIST)
+  async saveReport(
+    @Param('id') id: string,
+    @Body() dto: any,
+    @Request() req: any,
+  ) {
+    const userId = req.user?.userId || req.user?.sub;
+    const data = await this.studiesService.saveReport(+id, userId, dto);
+    return { success: true, data };
+  }
+
   @Delete(':id')
   @Roles(UserRole.ADMIN)
   async remove(@Param('id') id: string) {
