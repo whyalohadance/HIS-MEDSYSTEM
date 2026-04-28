@@ -5,7 +5,7 @@ import PDFDocument = require('pdfkit');
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 import * as fs from 'fs';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { Appointment } from '../appointments/appointment.entity';
 import { Patient } from '../patients/patient.entity';
 import { User } from '../users/user.entity';

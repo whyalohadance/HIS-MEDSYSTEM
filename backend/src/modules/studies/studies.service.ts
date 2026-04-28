@@ -9,10 +9,10 @@ import { Measurement } from './measurement.entity';
 import { Annotation } from './annotation.entity';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { UpdateStudyDto } from './dto/update-study.dto';
-import * as PDFDocument from 'pdfkit';
+const PDFDocument = require('pdfkit');
 import * as path from 'path';
 import * as fs from 'fs';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { Patient } from '../patients/patient.entity';
 import { User } from '../users/user.entity';
 
