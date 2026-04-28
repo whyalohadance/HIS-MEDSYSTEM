@@ -31,9 +31,9 @@ interface QueueItem {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
-  private statusChart: Chart | null = null;
-  private monthChart: Chart | null = null;
-  private doctorWeekChart: Chart | null = null;
+  private statusChart: Chart<any> | null = null;
+  private monthChart: Chart<any> | null = null;
+  private doctorWeekChart: Chart<any> | null = null;
   @ViewChild('statusChart') statusChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('monthChart') monthChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('doctorWeekChart') doctorWeekChartRef!: ElementRef<HTMLCanvasElement>;
@@ -365,7 +365,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const colors = this.chartColors();
     this.statusChart = new Chart(canvas, {
-      type: 'doughnut',
+      type: 'doughnut' as const,
       data: {
         labels: [
           this.translate.instant('DASHBOARD.COMPLETED'),

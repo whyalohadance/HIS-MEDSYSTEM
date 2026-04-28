@@ -42,6 +42,12 @@ export class LabController {
     return { success: true, data };
   }
 
+  @Get('patient/:patientId/history')
+  async getPatientHistory(@Param('patientId') patientId: string) {
+    const data = await this.labService.getParameterHistory(+patientId);
+    return { success: true, data };
+  }
+
   @Get('patient/:patientId')
   async getPatientOrders(@Param('patientId') patientId: string) {
     const data = await this.labService.findByPatient(+patientId);

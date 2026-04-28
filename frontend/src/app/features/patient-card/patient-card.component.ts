@@ -1,4 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +25,7 @@ registerLocaleData(localeEn, 'en');
   styleUrls: ['./patient-card.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class PatientCardComponent implements OnInit {
+export class PatientCardComponent implements OnInit, OnDestroy {
   patient: any = null;
   appointments: any[] = [];
   results: any[] = [];
@@ -32,13 +34,17 @@ export class PatientCardComponent implements OnInit {
   isLoading = true;
   patientId = 0;
 
-  activeTab: 'info' | 'appointments' | 'lab' | 'studies' = 'info';
+  activeTab: 'info' | 'appointments' | 'lab' | 'studies' | 'dynamics' = 'info';
   labOrders: any[] = [];
   labResults: { [orderId: number]: any[] } = {};
   isLoadingLab = false;
   tests: any[] = [];
   isLoadingStudies = false;
   modalitiesList: any[] = [];
+  parameterHistory: any[] = [];
+  selectedParameter: any = null;
+  isLoadingHistory = false;
+  chartInstance: any = null;
 
   currentLocale = 'ru';
 
@@ -316,7 +322,174 @@ export class PatientCardComponent implements OnInit {
     if (tab === 'studies' && this.studies.length === 0 && !this.isLoadingStudies) {
       this.loadStudiesHistory();
     }
+    if (tab === 'dynamics' && this.parameterHistory.length === 0 && !this.isLoadingHistory) {
+      this.loadParameterHistory();
+    }
     this.cdr.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+  }
+
+  loadParameterHistory(): void {
+    if (!this.patient?.id) return;
+    this.isLoadingHistory = true;
+    this.cdr.detectChanges();
+    this.api.get<any>(`/lab/patient/${this.patient.id}/history`).subscribe({
+      next: (res) => {
+        this.parameterHistory = res.data?.parameters || [];
+        if (this.parameterHistory.length > 0) {
+          this.selectParameter(this.parameterHistory[0]);
+        }
+        this.isLoadingHistory = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.isLoadingHistory = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  selectParameter(param: any): void {
+    this.selectedParameter = param;
+    this.cdr.detectChanges();
+    setTimeout(() => this.renderChart(), 100);
+  }
+
+  renderChart(): void {
+    if (!this.selectedParameter) return;
+    const canvas = document.getElementById('paramChart') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+
+    const points = this.selectedParameter.points;
+    const labels = points.map((p: any) => {
+      const d = new Date(p.date);
+      return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+    });
+    const values = points.map((p: any) => p.value);
+    const colors = points.map((p: any) => {
+      if (p.flag === 'critical_low' || p.flag === 'critical_high') return '#dc2626';
+      if (p.flag === 'low' || p.flag === 'high') return '#f59e0b';
+      return '#10b981';
+    });
+
+    const minRange = this.selectedParameter.minRange;
+    const maxRange = this.selectedParameter.maxRange;
+
+    const datasets: any[] = [
+      {
+        label: this.selectedParameter.name,
+        data: values,
+        borderColor: '#1a73e8',
+        backgroundColor: 'rgba(26, 115, 232, 0.1)',
+        borderWidth: 3,
+        tension: 0.3,
+        pointBackgroundColor: colors,
+        pointBorderColor: colors,
+        pointRadius: 6,
+        pointHoverRadius: 9,
+        fill: true
+      }
+    ];
+
+    if (minRange !== null && maxRange !== null) {
+      datasets.push({
+        label: 'Норма (мин)',
+        data: new Array(values.length).fill(minRange),
+        borderColor: 'rgba(16, 185, 129, 0.4)',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        pointRadius: 0,
+        fill: false,
+        tension: 0
+      });
+      datasets.push({
+        label: 'Норма (макс)',
+        data: new Array(values.length).fill(maxRange),
+        borderColor: 'rgba(16, 185, 129, 0.4)',
+        borderWidth: 2,
+        borderDash: [5, 5],
+        pointRadius: 0,
+        fill: '-1',
+        backgroundColor: 'rgba(16, 185, 129, 0.06)',
+        tension: 0
+      });
+    }
+
+    const self = this;
+    this.chartInstance = new Chart(canvas, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { usePointStyle: true, padding: 15, font: { size: 12, family: 'inherit' } }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(15, 45, 82, 0.95)',
+            padding: 12,
+            titleFont: { size: 13, weight: 'bold' },
+            bodyFont: { size: 12 },
+            callbacks: {
+              label: (ctx: any) => {
+                if (ctx.datasetIndex !== 0) return '';
+                const p = points[ctx.dataIndex];
+                const status = p.flag === 'normal' ? '✓ норма' :
+                               p.flag === 'low' ? '⬇ ниже нормы' :
+                               p.flag === 'high' ? '⬆ выше нормы' :
+                               p.flag === 'critical_low' ? '⬇⬇ критично' :
+                               p.flag === 'critical_high' ? '⬆⬆ критично' : '';
+                return `${p.value} ${self.selectedParameter.unit || ''} (${status})`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { font: { size: 11 }, color: '#64748b' },
+            title: {
+              display: true,
+              text: this.selectedParameter.unit || 'Значение',
+              color: '#64748b',
+              font: { size: 11 }
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10 }, color: '#94a3b8', maxRotation: 45, minRotation: 0 }
+          }
+        }
+      }
+    });
+  }
+
+  getTrend(param: any): { trend: 'up' | 'down' | 'stable'; diff: number; percent: number } {
+    if (!param?.points || param.points.length < 2) return { trend: 'stable', diff: 0, percent: 0 };
+    const first = param.points[0].value;
+    const last = param.points[param.points.length - 1].value;
+    const diff = last - first;
+    const percent = first !== 0 ? (diff / first) * 100 : 0;
+    if (Math.abs(percent) < 5) return { trend: 'stable', diff, percent };
+    return { trend: percent > 0 ? 'up' : 'down', diff, percent };
+  }
+
+  getAbnormalCount(param: any): number {
+    return (param?.points || []).filter((p: any) => p.flag !== 'normal').length;
+  }
+
+  getLatestValue(param: any): any {
+    if (!param?.points || param.points.length === 0) return null;
+    return param.points[param.points.length - 1];
   }
 
   loadLabHistory(): void {

@@ -169,4 +169,51 @@ export class LabService {
     const completed = await this.orderRepo.count({ where: { status: OrderStatus.COMPLETED } });
     return { total, pending, inProgress, completed };
   }
+
+  async getParameterHistory(patientId: number): Promise<any> {
+    const orders = await this.orderRepo.find({
+      where: { patientId, status: OrderStatus.COMPLETED },
+      order: { completedAt: 'ASC' }
+    });
+
+    if (orders.length === 0) return { parameters: [] };
+
+    const orderIds = orders.map(o => o.id);
+    const allResults = await this.resultRepo
+      .createQueryBuilder('r')
+      .where('r.orderId IN (:...ids)', { ids: orderIds })
+      .getMany();
+
+    const grouped: any = {};
+
+    allResults.forEach(r => {
+      if (r.numericValue === null || r.numericValue === undefined) return;
+      if (!grouped[r.parameterName]) {
+        grouped[r.parameterName] = {
+          name: r.parameterName,
+          unit: r.unit,
+          referenceRange: r.referenceRange,
+          minRange: r.minRange !== null ? Number(r.minRange) : null,
+          maxRange: r.maxRange !== null ? Number(r.maxRange) : null,
+          points: []
+        };
+      }
+      const order = orders.find(o => o.id === r.orderId);
+      if (order) {
+        grouped[r.parameterName].points.push({
+          date: order.completedAt || order.createdAt,
+          value: Number(r.numericValue),
+          flag: r.flag,
+          orderId: order.id,
+          orderNumber: order.orderNumber
+        });
+      }
+    });
+
+    const parameters = Object.values(grouped)
+      .filter((p: any) => p.points.length >= 1)
+      .sort((a: any, b: any) => b.points.length - a.points.length);
+
+    return { parameters };
+  }
 }

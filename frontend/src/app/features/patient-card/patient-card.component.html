@@ -123,6 +123,10 @@
       <span>{{ 'PATIENT_CARD.TAB_STUDIES' | translate }}</span>
       <span class="tab-count tab-count-ris" *ngIf="studies.length > 0">{{ studies.length }}</span>
     </button>
+    <button class="tab-btn" [class.active]="activeTab === 'dynamics'" (click)="setTab('dynamics')">
+      <span class="material-icons">trending_up</span>
+      <span>Динамика</span>
+    </button>
   </div>
 
   <!-- TAB: INFO -->
@@ -394,6 +398,135 @@
             <span class="material-icons">picture_as_pdf</span>
             PDF
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: DYNAMICS -->
+  <div class="tab-content" *ngIf="activeTab === 'dynamics'">
+
+    <div class="dynamics-header">
+      <h2>
+        <span class="material-icons">trending_up</span>
+        Динамика показателей
+      </h2>
+      <p class="dynamics-subtitle">История изменений показателей анализов во времени</p>
+    </div>
+
+    <div class="dynamics-loading" *ngIf="isLoadingHistory">
+      <div class="spinner-blue"></div>
+      <p>Загрузка истории...</p>
+    </div>
+
+    <div class="dynamics-empty" *ngIf="!isLoadingHistory && parameterHistory.length === 0">
+      <span class="material-icons">show_chart</span>
+      <h3>Нет данных для графика</h3>
+      <p>У пациента ещё нет завершённых анализов с числовыми показателями</p>
+    </div>
+
+    <div class="dynamics-content" *ngIf="!isLoadingHistory && parameterHistory.length > 0">
+
+      <!-- Список параметров слева -->
+      <div class="parameters-sidebar">
+        <div class="sidebar-header">
+          <span class="material-icons">list</span>
+          Показатели ({{ parameterHistory.length }})
+        </div>
+        <div class="parameters-list">
+          <button class="param-btn" *ngFor="let param of parameterHistory"
+                  [class.active]="selectedParameter?.name === param.name"
+                  (click)="selectParameter(param)">
+            <div class="param-main">
+              <div class="param-name">{{ param.name }}</div>
+              <div class="param-meta">
+                <span class="param-points">
+                  <span class="material-icons">scatter_plot</span>
+                  {{ param.points.length }}
+                </span>
+                <span class="param-abnormal" *ngIf="getAbnormalCount(param) > 0">
+                  <span class="material-icons">warning</span>
+                  {{ getAbnormalCount(param) }}
+                </span>
+              </div>
+            </div>
+            <div class="param-latest" *ngIf="getLatestValue(param)">
+              <span class="latest-value"
+                    [class.flag-low]="getLatestValue(param).flag === 'low' || getLatestValue(param).flag === 'critical_low'"
+                    [class.flag-high]="getLatestValue(param).flag === 'high' || getLatestValue(param).flag === 'critical_high'">
+                {{ getLatestValue(param).value }}
+              </span>
+              <span class="latest-unit">{{ param.unit }}</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- График справа -->
+      <div class="chart-container" *ngIf="selectedParameter">
+        <div class="chart-header">
+          <div>
+            <h3>{{ selectedParameter.name }}</h3>
+            <div class="chart-meta">
+              <span class="meta-tag" *ngIf="selectedParameter.unit">
+                <span class="material-icons">straighten</span>
+                {{ selectedParameter.unit }}
+              </span>
+              <span class="meta-tag" *ngIf="selectedParameter.referenceRange">
+                <span class="material-icons">check_circle</span>
+                Норма: {{ selectedParameter.referenceRange }}
+              </span>
+              <span class="meta-tag">
+                <span class="material-icons">timeline</span>
+                {{ selectedParameter.points.length }} измерений
+              </span>
+            </div>
+          </div>
+
+          <div class="trend-block">
+            <div class="trend-icon"
+                 [class.trend-up]="getTrend(selectedParameter).trend === 'up'"
+                 [class.trend-down]="getTrend(selectedParameter).trend === 'down'"
+                 [class.trend-stable]="getTrend(selectedParameter).trend === 'stable'">
+              <span class="material-icons">
+                {{ getTrend(selectedParameter).trend === 'up' ? 'trending_up' :
+                   getTrend(selectedParameter).trend === 'down' ? 'trending_down' : 'trending_flat' }}
+              </span>
+            </div>
+            <div class="trend-info">
+              <div class="trend-label">Тренд</div>
+              <div class="trend-value">
+                {{ getTrend(selectedParameter).percent > 0 ? '+' : '' }}{{ getTrend(selectedParameter).percent | number: '1.0-1' }}%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-canvas-wrapper">
+          <canvas id="paramChart"></canvas>
+        </div>
+
+        <!-- История измерений -->
+        <div class="measurements-history">
+          <div class="history-header">История измерений</div>
+          <div class="history-list">
+            <div class="history-item" *ngFor="let p of selectedParameter.points; let i = index"
+                 [class]="'flag-' + p.flag">
+              <div class="history-num">{{ i + 1 }}</div>
+              <div class="history-date">{{ p.date | date: 'dd MMM yyyy' }}</div>
+              <div class="history-value">
+                <span>{{ p.value }}</span>
+                <span class="history-unit">{{ selectedParameter.unit }}</span>
+              </div>
+              <span class="flag-badge-small" [class]="'flag-' + p.flag">
+                {{ p.flag === 'normal' ? '✓' :
+                   p.flag === 'low' ? '⬇' :
+                   p.flag === 'high' ? '⬆' :
+                   p.flag === 'critical_low' ? '⬇⬇' :
+                   p.flag === 'critical_high' ? '⬆⬆' : '—' }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
