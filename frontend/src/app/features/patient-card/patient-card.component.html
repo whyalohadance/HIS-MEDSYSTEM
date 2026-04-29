@@ -168,27 +168,38 @@
 
   <!-- TAB: APPOINTMENTS -->
   <div *ngIf="activeTab === 'appointments'">
-    <div class="appointments-history" *ngIf="appointments.length > 0">
-      <div class="history-item" *ngFor="let a of appointments" [class]="a.status">
-        <div class="history-date">
-          <div class="hdate">{{ formatDate(a.date) }}</div>
-          <div class="htime">{{ a.time }}</div>
+    <div class="apt-list" *ngIf="appointments && appointments.length > 0">
+      <article class="apt-card" *ngFor="let apt of appointments">
+        <div class="apt-date">
+          <div class="apt-date-num">{{ apt.date | date:'dd' }}</div>
+          <div class="apt-date-mon">{{ apt.date | date:'MMM' }}</div>
+          <div class="apt-date-year">{{ apt.date | date:'yyyy' }}</div>
         </div>
-        <div class="history-info">
-          <div class="history-doctor">
-            <span class="material-icons">medical_services</span>
-            {{ getDoctorName(a.doctorId) }}
+        <div class="apt-divider"></div>
+        <div class="apt-info">
+          <div class="apt-row">
+            <span class="material-icons">schedule</span>
+            <span class="apt-time">{{ apt.time || '--:--' }}</span>
           </div>
-          <div class="history-notes" *ngIf="a.notes">{{ a.notes }}</div>
+          <div class="apt-row">
+            <span class="material-icons">person</span>
+            <span class="apt-doctor">{{ getDoctorName(apt.doctorId) }}</span>
+          </div>
+          <div class="apt-row" *ngIf="apt.notes">
+            <span class="material-icons">notes</span>
+            <span class="apt-notes">{{ apt.notes }}</span>
+          </div>
         </div>
-        <div class="history-right">
-          <span class="badge" [class]="a.status">{{ getStatusLabel(a.status) }}</span>
-          <div class="history-price" *ngIf="a.price">{{ a.price }} MDL</div>
+        <div class="apt-side">
+          <span class="apt-status-badge" [class]="'status-' + apt.status">
+            {{ getStatusLabel(apt.status) }}
+          </span>
+          <span class="apt-price-badge" *ngIf="apt.price">{{ apt.price }} MDL</span>
         </div>
-      </div>
+      </article>
     </div>
 
-    <div class="empty-state" *ngIf="appointments.length === 0">
+    <div class="empty-block" *ngIf="!appointments || appointments.length === 0">
       <span class="material-icons">event_busy</span>
       <p>{{ 'PATIENT_CARD.NO_APPOINTMENTS' | translate }}</p>
     </div>

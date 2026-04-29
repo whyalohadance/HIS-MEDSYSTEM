@@ -223,6 +223,16 @@
 
 .footer-left { display: flex; gap: 6px; flex-wrap: wrap; }
 
+.btn-dicom {
+  display: flex; align-items: center; gap: 5px;
+  background: #1e1b4b; color: #a5b4fc; border: none;
+  padding: 7px 12px; border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  text-decoration: none; transition: background 0.2s;
+  &:hover { background: #312e81; color: #c4b5fd; }
+  .material-icons { font-size: 15px; }
+}
+
 .btn-conclusion {
   display: flex; align-items: center; gap: 5px;
   background: #7c3aed; color: white; border: none;

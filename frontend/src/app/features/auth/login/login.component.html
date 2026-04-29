@@ -101,31 +101,13 @@
       </form>
       <div class="demo-section fg-4">
         <div class="demo-label">Demo accounts</div>
-        <div class="demo-buttons">
-          <button class="demo-btn" (click)="fillDemo('admin@med.com')">
-            <span class="material-icons">admin_panel_settings</span>
-            <span class="demo-btn-name">Admin</span>
-            <span class="demo-btn-role">Full access</span>
-          </button>
-          <button class="demo-btn" (click)="fillDemo('doctor@med.com')">
-            <span class="material-icons">medical_services</span>
-            <span class="demo-btn-name">Doctor</span>
-            <span class="demo-btn-role">Medical</span>
-          </button>
-          <button class="demo-btn" (click)="fillDemo('reception@med.com')">
-            <span class="material-icons">support_agent</span>
-            <span class="demo-btn-name">Reception</span>
-            <span class="demo-btn-role">Booking</span>
-          </button>
-          <button class="demo-btn" (click)="fillDemo('radiolog@med.com')">
-            <span class="material-icons">biotech</span>
-            <span class="demo-btn-name">Radiolog</span>
-            <span class="demo-btn-role">RIS</span>
-          </button>
-          <button class="demo-btn" (click)="fillDemo('lab@med.com')">
-            <span class="material-icons">science</span>
-            <span class="demo-btn-name">Lab</span>
-            <span class="demo-btn-role">LIS</span>
+        <div class="demo-accounts">
+          <button class="demo-btn" *ngFor="let acc of demoAccounts"
+            [style.--demo-color]="acc.color"
+            [style.--demo-bg]="acc.color + '18'"
+            (click)="loginAs(acc)">
+            <span class="material-icons">{{ acc.icon }}</span>
+            <span class="demo-btn-label">{{ acc.label }}</span>
           </button>
         </div>
       </div>

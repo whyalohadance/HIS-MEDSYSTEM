@@ -476,25 +476,43 @@
   margin-bottom: 10px;
 }
 
-.demo-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.demo-accounts {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
 
 .demo-btn {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: 4px;
+  padding: 8px 4px;
   background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   font-family: inherit;
 }
 
-.demo-btn:hover { border-color: #1a73e8; background: #f0f7ff; }
-.demo-btn .material-icons { font-size: 14px; color: #1a73e8; }
-.demo-btn-name { font-size: 12px; font-weight: 600; color: #1e293b; }
-.demo-btn-role { font-size: 10px; color: #94a3b8; margin-left: auto; }
+.demo-btn:hover {
+  border-color: var(--demo-color, #1a73e8);
+  background: var(--demo-bg, #f0f7ff);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.demo-btn .material-icons { font-size: 20px; color: var(--demo-color, #1a73e8); }
+
+.demo-btn-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
 
 /* Языки */
 .lang-section {
@@ -538,7 +556,9 @@
 @media (max-width: 480px) {
   .right-panel { padding: 32px 20px; }
   .form-title { font-size: 24px; }
-  .demo-buttons { grid-template-columns: 1fr; }
+  .demo-accounts { gap: 4px; }
+  .demo-btn { padding: 6px 2px; }
+  .demo-btn-label { font-size: 9px; }
 }
 
 /* ===== ТЁМНАЯ ТЕМА ===== */

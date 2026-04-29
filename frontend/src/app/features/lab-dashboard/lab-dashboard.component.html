@@ -1,0 +1,81 @@
+<div class="ld-page">
+  <!-- Header -->
+  <div class="ld-header">
+    <div class="ld-header-left">
+      <div class="ld-avatar">
+        <span class="material-icons">biotech</span>
+      </div>
+      <div>
+        <h1 class="ld-title">Лаборатория</h1>
+        <p class="ld-subtitle">Добро пожаловать, {{ auth.currentUser?.firstName || 'Лаборант' }}</p>
+      </div>
+    </div>
+    <div class="ld-actions">
+      <a routerLink="/lab/worklist" class="ld-btn ld-btn-primary">
+        <span class="material-icons">queue</span>
+        Очередь анализов
+      </a>
+      <a routerLink="/lab/orders" class="ld-btn ld-btn-outline">
+        <span class="material-icons">receipt_long</span>
+        Все заказы
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="ld-stats">
+    <div class="ld-stat-card">
+      <span class="material-icons">receipt_long</span>
+      <div class="ld-stat-num">{{ stats.total }}</div>
+      <div class="ld-stat-lbl">Всего заказов</div>
+    </div>
+    <div class="ld-stat-card pending">
+      <span class="material-icons">pending_actions</span>
+      <div class="ld-stat-num">{{ stats.pending }}</div>
+      <div class="ld-stat-lbl">Ожидают</div>
+    </div>
+    <div class="ld-stat-card progress">
+      <span class="material-icons">autorenew</span>
+      <div class="ld-stat-num">{{ stats.inProgress }}</div>
+      <div class="ld-stat-lbl">В работе</div>
+    </div>
+    <div class="ld-stat-card done">
+      <span class="material-icons">check_circle</span>
+      <div class="ld-stat-num">{{ stats.completed }}</div>
+      <div class="ld-stat-lbl">Выполнено</div>
+    </div>
+  </div>
+
+  <!-- Worklist -->
+  <div class="ld-section">
+    <div class="ld-section-header">
+      <h2>
+        <span class="material-icons">queue</span>
+        Очередь работ
+      </h2>
+      <a routerLink="/lab/worklist" class="ld-link">Все →</a>
+    </div>
+
+    <div class="ld-loading" *ngIf="isLoading">
+      <span class="material-icons spin">autorenew</span> Загрузка...
+    </div>
+
+    <div class="ld-empty" *ngIf="!isLoading && worklist.length === 0">
+      <span class="material-icons">check_circle_outline</span>
+      <p>Очередь пуста — все задания выполнены</p>
+    </div>
+
+    <div class="ld-worklist" *ngIf="!isLoading && worklist.length > 0">
+      <a class="ld-wl-item" *ngFor="let order of worklist" [routerLink]="['/lab/order', order.id]">
+        <div class="ld-wl-num">{{ order.orderNumber }}</div>
+        <div class="ld-wl-info">
+          <span class="ld-priority-badge" [class]="getPriorityClass(order.priority)">
+            {{ getPriorityLabel(order.priority) }}
+          </span>
+          <span class="ld-wl-date">{{ order.createdAt | date:'dd.MM HH:mm' }}</span>
+        </div>
+        <span class="ld-wl-arrow material-icons">chevron_right</span>
+      </a>
+    </div>
+  </div>
+</div>

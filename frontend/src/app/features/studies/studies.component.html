@@ -83,6 +83,10 @@
 
       <div class="study-card-footer">
         <div class="footer-left">
+          <a class="btn-dicom" [routerLink]="['/dicom', study.id]" *ngIf="isRadiologistOrAdmin" title="DICOM Viewer">
+            <span class="material-icons">monitor_heart</span>
+            DICOM
+          </a>
           <button class="btn-conclusion"
             *ngIf="study.status === 'completed' || study.status === 'in_progress'"
             (click)="openConclusionModal(study)">

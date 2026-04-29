@@ -16,6 +16,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+      { path: 'lab-dashboard', loadComponent: () => import('./features/lab-dashboard/lab-dashboard.component').then(m => m.LabDashboardComponent), canActivate: [roleGuard], data: { roles: ['admin', 'lab_technician'] } },
+      { path: 'ris-dashboard', loadComponent: () => import('./features/ris-dashboard/ris-dashboard.component').then(m => m.RisDashboardComponent), canActivate: [roleGuard], data: { roles: ['admin', 'radiologist'] } },
       { path: 'profile', loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent) },
       { path: 'notifications', loadComponent: () => import('./features/notifications/notifications.component').then(m => m.NotificationsComponent) },
       { path: 'patients', loadComponent: () => import('./features/patients/patients.component').then(m => m.PatientsComponent) },

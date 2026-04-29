@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -90,11 +90,16 @@ export class StudiesComponent implements OnInit {
     { value: 'stat', labelKey: 'STUDIES.PRIORITY_STAT' }
   ];
 
+  get isRadiologistOrAdmin(): boolean {
+    return this.authService.isAdmin || this.authService.isRadiologist;
+  }
+
   constructor(
     private api: ApiService,
     public authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {

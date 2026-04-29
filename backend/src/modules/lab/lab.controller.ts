@@ -62,7 +62,7 @@ export class LabController {
 
   @Post('orders')
   async createOrder(@Body() dto: any, @Request() req: any) {
-    const doctorId = req.user?.userId || req.user?.sub;
+    const doctorId = req.user?.id || req.user?.userId || req.user?.sub;
     const data = await this.labService.createOrder(doctorId, dto);
     return { success: true, data };
   }

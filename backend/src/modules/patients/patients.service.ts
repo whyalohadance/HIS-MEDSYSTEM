@@ -29,8 +29,9 @@ export class PatientsService {
     return patient;
   }
 
-  async create(dto: CreatePatientDto, doctorId: number): Promise<Patient> {
-    const patient = this.repo.create({ ...dto, doctorId });
+  async create(dto: CreatePatientDto, userId: number): Promise<Patient> {
+    const { doctorId: dtoDoctorId, ...rest } = dto;
+    const patient = this.repo.create({ ...rest, doctorId: dtoDoctorId ?? userId });
     return this.repo.save(patient);
   }
 

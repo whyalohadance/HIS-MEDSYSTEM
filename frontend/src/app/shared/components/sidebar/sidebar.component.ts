@@ -65,7 +65,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private labTechnicianNav: NavItem[] = [
     { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
-    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/lab-dashboard' },
     { key: 'section-lis',         divider: true, sectionKey: 'NAV.SECTION_LIS' },
     { key: 'NAV.LAB_ORDERS',      icon: 'science',       route: '/lab/orders' },
     { key: 'NAV.LAB_WORKLIST',    icon: 'biotech',       route: '/lab/worklist' },
@@ -89,7 +89,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   private radiologistNav: NavItem[] = [
     { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
-    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/ris-dashboard' },
     { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
     { key: 'section-ris',         divider: true, sectionKey: 'NAV.SECTION_RIS' },
     { key: 'NAV.STUDIES',         icon: 'biotech',       route: '/studies' },

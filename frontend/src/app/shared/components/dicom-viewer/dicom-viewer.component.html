@@ -14,7 +14,7 @@
 
     <div class="toolbar-controls">
 
-      <!-- Tools -->
+      <!-- Инструменты -->
       <button class="tool-btn" [class.active]="activeTool === 'pan'"
         (click)="setTool('pan')" title="Перемещение">
         <span class="material-icons">pan_tool</span>
@@ -28,59 +28,57 @@
         <span class="material-icons">label_important</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'probe'"
-        (click)="setTool('probe')" title="Pixel Probe (Hounsfield Units)">
+        (click)="setTool('probe')" title="Pixel Probe (HU)">
         <span class="material-icons">colorize</span>
       </button>
 
       <div class="toolbar-divider"></div>
 
-      <!-- Window/Level presets -->
-      <div class="preset-dropdown">
-        <button class="tool-btn preset-trigger" (click)="togglePresetsMenu()" title="Пресеты W/L">
+      <!-- Пресеты Window/Level -->
+      <div class="presets-dropdown">
+        <button class="tool-btn preset-btn" (click)="togglePresets()"
+          [class.active]="activePreset !== 'Default'" title="Window/Level пресеты">
           <span class="material-icons">tune</span>
-          <span class="preset-label">{{ getPresetLabel() }}</span>
-          <span class="material-icons arrow-icon">{{ showPresetsMenu ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+          <span class="preset-label">{{ activePreset }}</span>
         </button>
-        <div class="presets-menu" *ngIf="showPresetsMenu">
-          <div class="presets-title">Window/Level пресеты</div>
-          <button class="preset-item"
-            *ngFor="let preset of presets"
-            [class.active]="activePreset === preset.key"
-            (click)="applyPreset(preset)">
-            <span class="material-icons">{{ preset.icon }}</span>
+        <div class="presets-menu" *ngIf="showPresets">
+          <div class="preset-item" *ngFor="let p of windowPresets"
+            [class.active]="activePreset === p.name"
+            (click)="applyPreset(p); showPresets = false">
+            <span class="material-icons" [style.color]="p.color">{{ p.icon }}</span>
             <div class="preset-info">
-              <span class="preset-name">{{ preset.label }}</span>
-              <span class="preset-values">W:{{ preset.ww }} L:{{ preset.wc }}</span>
+              <span class="preset-name">{{ p.name }}</span>
+              <span class="preset-values" *ngIf="p.name !== 'Default'">
+                W: {{ p.w }} / L: {{ p.l }}
+              </span>
             </div>
-            <span class="material-icons check-icon" *ngIf="activePreset === preset.key">check</span>
-          </button>
+          </div>
         </div>
       </div>
 
       <div class="toolbar-divider"></div>
 
-      <!-- Cine mode -->
-      <div class="cine-controls" *ngIf="isMultiFrame && totalSlices > 1">
-        <button class="tool-btn cine-btn" [class.playing]="isCinePlaying"
-          (click)="toggleCine()" title="Автовоспроизведение серии">
-          <span class="material-icons">{{ isCinePlaying ? 'pause' : 'play_arrow' }}</span>
-        </button>
-        <div class="cine-speed" *ngIf="isCinePlaying">
-          <input type="range" min="1" max="30" step="1"
-            [value]="cineSpeed" (input)="updateCineSpeed($event)"
-            class="cine-slider">
-          <span class="cine-value">{{ cineSpeed }} fps</span>
-        </div>
+      <!-- Cine Mode -->
+      <button class="tool-btn cine-btn" *ngIf="totalSlices > 1"
+        [class.active]="isPlaying"
+        (click)="toggleCine()" [title]="isPlaying ? 'Стоп' : 'Play серия'">
+        <span class="material-icons">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
+      </button>
+      <div class="cine-speed" *ngIf="totalSlices > 1">
+        <input type="range" class="speed-slider"
+          min="1" max="30" step="1"
+          [(ngModel)]="cineSpeed"
+          (change)="changeCineSpeed(cineSpeed)">
+        <span class="speed-label">{{ cineSpeed }} FPS</span>
       </div>
 
-      <div class="toolbar-divider" *ngIf="isMultiFrame && totalSlices > 1"></div>
+      <div class="toolbar-divider" *ngIf="totalSlices > 1"></div>
 
-      <!-- Measurements clear -->
+      <!-- Остальные -->
       <button class="tool-btn" *ngIf="measurements.length > 0 || annotations.length > 0"
-        (click)="clearMeasurements()" title="Очистить измерения и аннотации">
+        (click)="clearAll()" title="Очистить всё">
         <span class="material-icons">delete_sweep</span>
       </button>
-
       <button class="tool-btn" (click)="resetViewport()" title="Сброс" [disabled]="!imageLoaded">
         <span class="material-icons">refresh</span>
       </button>
@@ -90,18 +88,9 @@
       <button class="tool-btn" (click)="toggleFullscreen()" title="Полный экран">
         <span class="material-icons">fullscreen</span>
       </button>
-      <button class="tool-btn export-btn" *ngIf="imageLoaded" (click)="exportSnapshot()" title="Экспорт снимка">
+      <button class="tool-btn export-btn" *ngIf="imageLoaded" (click)="exportSnapshot()" title="Экспорт PNG">
         <span class="material-icons">download</span>
       </button>
-
-      <div class="toolbar-divider"></div>
-
-      <!-- Zoom slider -->
-      <div class="control-group" *ngIf="imageLoaded">
-        <span class="material-icons control-icon">zoom_in</span>
-        <input type="range" min="0.1" max="5" step="0.1" [(ngModel)]="zoom" (input)="applyZoom()" class="control-slider">
-        <span class="control-value">{{ zoom }}x</span>
-      </div>
     </div>
   </div>
 
@@ -248,33 +237,46 @@
         </div>
       </div>
 
-      <!-- Pixel Probe overlay (intercepts mousemove) -->
-      <div class="pixel-probe-overlay"
+      <!-- Pixel Probe SVG crosshair -->
+      <svg class="probe-svg"
            *ngIf="imageLoaded && activeTool === 'probe'"
-           (mousemove)="updatePixelProbe($event)"
-           (mouseleave)="hidePixelProbe()">
-      </div>
+           (mousemove)="onProbeMove($event)"
+           (mouseleave)="onProbeLeave()">
+        <g *ngIf="showPixelProbe">
+          <circle [attr.cx]="probeX" [attr.cy]="probeY" r="8"
+                  fill="none" stroke="#6ee7b7" stroke-width="2"/>
+          <circle [attr.cx]="probeX" [attr.cy]="probeY" r="2"
+                  fill="#6ee7b7"/>
+          <line [attr.x1]="probeX - 15" [attr.y1]="probeY"
+                [attr.x2]="probeX - 5"  [attr.y2]="probeY"
+                stroke="#6ee7b7" stroke-width="1.5"/>
+          <line [attr.x1]="probeX + 5"  [attr.y1]="probeY"
+                [attr.x2]="probeX + 15" [attr.y2]="probeY"
+                stroke="#6ee7b7" stroke-width="1.5"/>
+          <line [attr.x1]="probeX" [attr.y1]="probeY - 15"
+                [attr.x2]="probeX" [attr.y2]="probeY - 5"
+                stroke="#6ee7b7" stroke-width="1.5"/>
+          <line [attr.x1]="probeX" [attr.y1]="probeY + 5"
+                [attr.x2]="probeX" [attr.y2]="probeY + 15"
+                stroke="#6ee7b7" stroke-width="1.5"/>
+        </g>
+      </svg>
 
-      <!-- Pixel Probe info tooltip -->
+      <!-- Pixel Probe info panel -->
       <div class="pixel-probe-info"
-           *ngIf="showPixelProbe && pixelProbeValue"
-           [style.left.px]="pixelProbeX + 20"
-           [style.top.px]="pixelProbeY + 20">
+           *ngIf="showPixelProbe && activeTool === 'probe'">
         <div class="probe-row">
-          <span class="probe-label">Pos:</span>
-          <span class="probe-value">{{ pixelProbeValue.x }}, {{ pixelProbeValue.y }}</span>
-        </div>
-        <div class="probe-row" *ngIf="pixelProbeValue.hu !== null && pixelProbeValue.hu !== undefined">
-          <span class="probe-label">HU:</span>
-          <span class="probe-value probe-hu">{{ pixelProbeValue.hu }}</span>
-        </div>
-        <div class="probe-row" *ngIf="pixelProbeValue.hu === null || pixelProbeValue.hu === undefined">
           <span class="probe-label">Pixel:</span>
-          <span class="probe-value">{{ pixelProbeValue.raw }}</span>
+          <span class="probe-value">{{ pixelValue | number:'1.0-0' }}</span>
         </div>
-        <div class="probe-row" *ngIf="pixelProbeValue.hu !== null && pixelProbeValue.hu !== undefined">
-          <span class="probe-label">Tissue:</span>
-          <span class="probe-value probe-tissue">{{ getTissueFromHU(pixelProbeValue.hu) }}</span>
+        <div class="probe-row">
+          <span class="probe-label">HU:</span>
+          <span class="probe-value" [style.color]="getHUColor(pixelHU)">
+            {{ pixelHU | number:'1.0-0' }}
+          </span>
+        </div>
+        <div class="probe-tissue" *ngIf="pixelHU !== null">
+          {{ getTissueType(pixelHU) }}
         </div>
       </div>
 

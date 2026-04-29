@@ -41,30 +41,33 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
   activeTool: 'pan' | 'length' | 'annotation' | 'probe' = 'pan';
 
   // Window/Level presets
-  presets = [
-    { key: 'default',     label: 'По умолчанию',       ww: 400,  wc: 40,   icon: 'auto_awesome' },
-    { key: 'brain',       label: 'Мозг',               ww: 80,   wc: 40,   icon: 'psychology' },
-    { key: 'lung',        label: 'Лёгкие',             ww: 1500, wc: -600, icon: 'air' },
-    { key: 'bone',        label: 'Кости',              ww: 2000, wc: 500,  icon: 'accessibility' },
-    { key: 'soft',        label: 'Мягкие ткани',       ww: 400,  wc: 50,   icon: 'healing' },
-    { key: 'abdomen',     label: 'Брюшная полость',    ww: 400,  wc: 50,   icon: 'person' },
-    { key: 'liver',       label: 'Печень',             ww: 150,  wc: 60,   icon: 'water_drop' },
-    { key: 'mediastinum', label: 'Средостение',        ww: 350,  wc: 40,   icon: 'favorite' }
+  windowPresets = [
+    { name: 'Default',       w: 0,    l: 0,    icon: 'tune',             color: '#94a3b8' },
+    { name: 'Мозг',          w: 80,   l: 40,   icon: 'psychology',       color: '#a78bfa' },
+    { name: 'Кости',         w: 2000, l: 500,  icon: 'accessibility_new',color: '#fbbf24' },
+    { name: 'Лёгкие',        w: 1500, l: -600, icon: 'air',              color: '#60a5fa' },
+    { name: 'Мягкие ткани',  w: 400,  l: 50,   icon: 'spa',              color: '#6ee7b7' },
+    { name: 'Печень',        w: 150,  l: 60,   icon: 'water_drop',       color: '#f87171' },
+    { name: 'Позвоночник',   w: 1800, l: 400,  icon: 'straighten',       color: '#fb923c' },
+    { name: 'Медиастинум',   w: 350,  l: 50,   icon: 'favorite',         color: '#ec4899' }
   ];
-  activePreset = 'default';
-  showPresetsMenu = false;
-  private clickOutsideHandler!: (e: MouseEvent) => void;
+  activePreset = 'Default';
+  showPresets = false;
+  defaultWindowWidth = 400;
+  defaultWindowCenter = 40;
 
   // Pixel probe
   showPixelProbe = false;
-  pixelProbeValue: any = null;
-  pixelProbeX = 0;
-  pixelProbeY = 0;
+  pixelValue: number | null = null;
+  pixelHU: number | null = null;
+  probeX = 0;
+  probeY = 0;
+  currentImage: any = null;
   modality: string = '';
 
   // Cine mode
-  isCinePlaying = false;
-  cineSpeed = 15;
+  isPlaying = false;
+  cineSpeed = 10;
   private cineInterval: any = null;
 
   // SVG measurements
@@ -119,15 +122,12 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.keyDownHandler = this.onKeyDown.bind(this);
-    this.clickOutsideHandler = this.handleClickOutside.bind(this);
     document.addEventListener('keydown', this.keyDownHandler);
-    document.addEventListener('click', this.clickOutsideHandler);
   }
 
   ngOnDestroy(): void {
     document.removeEventListener('keydown', this.keyDownHandler);
-    document.removeEventListener('click', this.clickOutsideHandler);
-    this.stopCine();
+    if (this.cineInterval) clearInterval(this.cineInterval);
     if (this.cornerstoneReady && this.dicomElement?.nativeElement) {
       try { cornerstone.disable(this.dicomElement.nativeElement); } catch (_) {}
     }
@@ -189,120 +189,111 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       const cs = (window as any).cornerstone;
       const viewport = cs.getViewport(this.dicomElement.nativeElement);
-      viewport.voi.windowWidth = preset.ww;
-      viewport.voi.windowCenter = preset.wc;
+      if (preset.name === 'Default') {
+        viewport.voi.windowWidth = this.defaultWindowWidth;
+        viewport.voi.windowCenter = this.defaultWindowCenter;
+      } else {
+        viewport.voi.windowWidth = preset.w;
+        viewport.voi.windowCenter = preset.l;
+      }
+      this.windowWidth = viewport.voi.windowWidth;
+      this.windowCenter = viewport.voi.windowCenter;
+      this.activePreset = preset.name;
       cs.setViewport(this.dicomElement.nativeElement, viewport);
-      this.windowWidth = preset.ww;
-      this.windowCenter = preset.wc;
-      this.activePreset = preset.key;
-      this.showPresetsMenu = false;
-    } catch (e) {
-      console.error('Preset error:', e);
-    }
+    } catch (e) { console.error(e); }
   }
 
-  togglePresetsMenu(): void {
-    this.showPresetsMenu = !this.showPresetsMenu;
-  }
-
-  getPresetLabel(): string {
-    if (this.activePreset === 'default') return 'W/L';
-    return this.presets.find(p => p.key === this.activePreset)?.label || 'W/L';
-  }
-
-  handleClickOutside(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.preset-dropdown')) {
-      this.showPresetsMenu = false;
-      this.cdr.detectChanges();
-    }
+  togglePresets(): void {
+    this.showPresets = !this.showPresets;
   }
 
   // ===== PIXEL PROBE =====
-  updatePixelProbe(event: MouseEvent): void {
-    if (!this.imageLoaded || this.activeTool !== 'probe') return;
-    if (!this.dicomElement?.nativeElement) return;
+  onProbeMove(event: MouseEvent): void {
+    if (this.activeTool !== 'probe' || !this.imageLoaded || !this.currentImage) return;
+    const rect = (event.currentTarget as SVGElement).getBoundingClientRect();
+    this.probeX = event.clientX - rect.left;
+    this.probeY = event.clientY - rect.top;
     try {
       const cs = (window as any).cornerstone;
       const element = this.dicomElement.nativeElement;
-      const rect = element.getBoundingClientRect();
-      this.pixelProbeX = event.clientX - rect.left;
-      this.pixelProbeY = event.clientY - rect.top;
-      const pixelCoords = cs.pageToPixel(element, event.pageX, event.pageY);
-      const enabledElement = cs.getEnabledElement(element);
-      if (!enabledElement?.image) return;
-      const image = enabledElement.image;
-      const pixelData = image.getPixelData();
-      const x = Math.round(pixelCoords.x);
-      const y = Math.round(pixelCoords.y);
-      if (x < 0 || y < 0 || x >= image.width || y >= image.height) {
-        this.pixelProbeValue = null;
-        return;
+      const imagePoint = cs.pageToPixel(element, event.clientX, event.clientY);
+      if (imagePoint.x >= 0 && imagePoint.x < this.currentImage.width &&
+          imagePoint.y >= 0 && imagePoint.y < this.currentImage.height) {
+        const pixelData = this.currentImage.getPixelData();
+        const pixelIndex = Math.floor(imagePoint.y) * this.currentImage.width + Math.floor(imagePoint.x);
+        const rawValue = pixelData[pixelIndex];
+        this.pixelValue = rawValue;
+        const slope = this.currentImage.slope || 1;
+        const intercept = this.currentImage.intercept || 0;
+        this.pixelHU = rawValue * slope + intercept;
+        this.showPixelProbe = true;
+      } else {
+        this.showPixelProbe = false;
       }
-      const pixelValue = pixelData[y * image.width + x];
-      const slope = image.slope || 1;
-      const intercept = image.intercept || 0;
-      const hu = Math.round(pixelValue * slope + intercept);
-      this.pixelProbeValue = {
-        x, y,
-        raw: pixelValue,
-        hu: this.modality === 'CT' ? hu : null,
-        modality: this.modality
-      };
-      this.showPixelProbe = true;
-    } catch (_) {
-      this.pixelProbeValue = null;
+    } catch (e) {
+      console.warn('Probe error:', e);
     }
   }
 
-  hidePixelProbe(): void {
+  onProbeLeave(): void {
     this.showPixelProbe = false;
-    this.pixelProbeValue = null;
   }
 
-  getTissueFromHU(hu: number): string {
-    if (hu < -900) return 'Воздух';
-    if (hu < -500) return 'Лёгкое';
-    if (hu < -100) return 'Жир';
-    if (hu < 10)   return 'Вода';
-    if (hu < 30)   return 'CSF';
-    if (hu < 60)   return 'Мышца';
-    if (hu < 100)  return 'Кровь';
-    if (hu < 200)  return 'Мягкие ткани';
-    if (hu < 400)  return 'Обызвествление';
-    if (hu < 1000) return 'Губчатая кость';
-    return 'Плотная кость';
+  getHUColor(hu: number | null): string {
+    if (hu === null) return '#6ee7b7';
+    if (hu < -900) return '#60a5fa';
+    if (hu < -100) return '#a78bfa';
+    if (hu < 20)   return '#6ee7b7';
+    if (hu < 100)  return '#fbbf24';
+    if (hu < 400)  return '#fb923c';
+    return '#f87171';
+  }
+
+  getTissueType(hu: number | null): string {
+    if (hu === null) return '';
+    if (hu < -900) return '🌬️ Воздух / лёгкие';
+    if (hu < -100) return '💧 Жировая ткань';
+    if (hu < 20)   return '💦 Жидкость / вода';
+    if (hu < 50)   return '🧠 Мозг / СМЖ';
+    if (hu < 100)  return '🫀 Мягкие ткани';
+    if (hu < 400)  return '🧬 Органы / мышцы';
+    if (hu < 700)  return '🦴 Губчатая кость';
+    return '🦴 Компактная кость';
   }
 
   // ===== CINE MODE =====
   toggleCine(): void {
-    if (!this.isMultiFrame || this.totalSlices <= 1) return;
-    if (this.isCinePlaying) this.stopCine();
+    if (!this.imageLoaded || this.totalSlices < 2) return;
+    if (this.isPlaying) this.stopCine();
     else this.startCine();
   }
 
   startCine(): void {
-    this.isCinePlaying = true;
-    const delay = 1000 / this.cineSpeed;
+    this.isPlaying = true;
+    const intervalMs = 1000 / this.cineSpeed;
     this.cineInterval = setInterval(() => {
-      this.goToSlice(this.currentSlice >= this.totalSlices - 1 ? 0 : this.currentSlice + 1);
-    }, delay);
+      let next = this.currentSlice + 1;
+      if (next >= this.totalSlices) next = 0;
+      this.goToSlice(next);
+    }, intervalMs);
   }
 
   stopCine(): void {
-    this.isCinePlaying = false;
+    this.isPlaying = false;
     if (this.cineInterval) {
       clearInterval(this.cineInterval);
       this.cineInterval = null;
     }
   }
 
-  updateCineSpeed(event: any): void {
-    this.cineSpeed = +event.target.value;
-    if (this.isCinePlaying) {
-      this.stopCine();
-      this.startCine();
-    }
+  changeCineSpeed(speed: number): void {
+    this.cineSpeed = speed;
+    if (this.isPlaying) { this.stopCine(); this.startCine(); }
+  }
+
+  // ===== CLEAR ALL =====
+  clearAll(): void {
+    this.clearMeasurements();
   }
 
   // ===== SVG MEASUREMENTS =====
@@ -672,6 +663,10 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       cornerstone.setViewport(this.dicomElement.nativeElement, vp);
       this.windowWidth = vp?.voi?.windowWidth ?? 400;
       this.windowCenter = vp?.voi?.windowCenter ?? 40;
+      this.defaultWindowWidth = this.windowWidth;
+      this.defaultWindowCenter = this.windowCenter;
+      this.currentImage = image;
+      this.activePreset = 'Default';
       this.extractMetadata(image);
       this.extractPixelSpacing(image);
       this.isLoading = false;
@@ -695,6 +690,7 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isMultiFrame && this.imageIds.length > 1) {
       cornerstone.loadImage(this.imageIds[index]).then((image: any) => {
         if (!this.dicomElement?.nativeElement) return;
+        this.currentImage = image;
         try {
           const viewport = cornerstone.getViewport(this.dicomElement.nativeElement);
           cornerstone.displayImage(this.dicomElement.nativeElement, image);
@@ -734,6 +730,10 @@ export class DicomViewerComponent implements OnInit, AfterViewInit, OnDestroy {
       cornerstone.setViewport(this.dicomElement.nativeElement, vp);
       this.windowWidth = vp?.voi?.windowWidth ?? 400;
       this.windowCenter = vp?.voi?.windowCenter ?? 40;
+      this.defaultWindowWidth = this.windowWidth;
+      this.defaultWindowCenter = this.windowCenter;
+      this.currentImage = image;
+      this.activePreset = 'Default';
 
       try {
         const dataSet = image.data;

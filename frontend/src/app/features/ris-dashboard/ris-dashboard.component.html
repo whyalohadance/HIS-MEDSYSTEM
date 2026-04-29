@@ -1,0 +1,84 @@
+<div class="rd-page">
+  <!-- Header -->
+  <div class="rd-header">
+    <div class="rd-header-left">
+      <div class="rd-avatar">
+        <span class="material-icons">radiology</span>
+      </div>
+      <div>
+        <h1 class="rd-title">Радиология</h1>
+        <p class="rd-subtitle">Добро пожаловать, {{ auth.currentUser?.firstName || 'Радиолог' }}</p>
+      </div>
+    </div>
+    <div class="rd-actions">
+      <a routerLink="/worklist" class="rd-btn rd-btn-primary">
+        <span class="material-icons">fact_check</span>
+        Worklist
+      </a>
+      <a routerLink="/studies" class="rd-btn rd-btn-outline">
+        <span class="material-icons">biotech</span>
+        Исследования
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="rd-stats">
+    <div class="rd-stat-card">
+      <span class="material-icons">folder_open</span>
+      <div class="rd-stat-num">{{ stats.total }}</div>
+      <div class="rd-stat-lbl">Всего</div>
+    </div>
+    <div class="rd-stat-card pending">
+      <span class="material-icons">schedule</span>
+      <div class="rd-stat-num">{{ stats.pending }}</div>
+      <div class="rd-stat-lbl">Назначено</div>
+    </div>
+    <div class="rd-stat-card progress">
+      <span class="material-icons">autorenew</span>
+      <div class="rd-stat-num">{{ stats.inProgress }}</div>
+      <div class="rd-stat-lbl">В работе</div>
+    </div>
+    <div class="rd-stat-card done">
+      <span class="material-icons">check_circle</span>
+      <div class="rd-stat-num">{{ stats.completed }}</div>
+      <div class="rd-stat-lbl">Завершено</div>
+    </div>
+  </div>
+
+  <!-- Pending studies -->
+  <div class="rd-section">
+    <div class="rd-section-header">
+      <h2>
+        <span class="material-icons">pending_actions</span>
+        Ожидают обработки
+      </h2>
+      <a routerLink="/worklist" class="rd-link">Все →</a>
+    </div>
+
+    <div class="rd-loading" *ngIf="isLoading">
+      <span class="material-icons spin">autorenew</span> Загрузка...
+    </div>
+
+    <div class="rd-empty" *ngIf="!isLoading && pendingStudies.length === 0">
+      <span class="material-icons">check_circle_outline</span>
+      <p>Нет ожидающих исследований</p>
+    </div>
+
+    <div class="rd-studies" *ngIf="!isLoading && pendingStudies.length > 0">
+      <a class="rd-study-item" *ngFor="let s of pendingStudies" [routerLink]="['/dicom', s.id]">
+        <div class="rd-modality-icon">
+          <span class="material-icons">{{ getModalityIcon(s.type) }}</span>
+        </div>
+        <div class="rd-study-info">
+          <div class="rd-study-id">{{ s.studyId }}</div>
+          <div class="rd-study-meta">{{ getModalityLabel(s.type) }} · {{ s.bodyPart || '—' }}</div>
+        </div>
+        <span class="rd-status-badge" [class]="getStatusClass(s.status)">
+          {{ getStatusLabel(s.status) }}
+        </span>
+        <span class="material-icons rd-arrow">chevron_right</span>
+      </a>
+    </div>
+  </div>
+</div>

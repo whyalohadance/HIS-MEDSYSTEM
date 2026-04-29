@@ -23,6 +23,14 @@ export class LoginComponent implements OnInit {
   emailFocused = false;
   passwordFocused = false;
 
+  demoAccounts = [
+    { role: 'admin',         email: 'admin@med.com',     label: 'Admin',     icon: 'admin_panel_settings', color: '#1a73e8' },
+    { role: 'doctor',        email: 'doctor@med.com',    label: 'Doctor',    icon: 'medical_services',     color: '#10b981' },
+    { role: 'receptionist',  email: 'reception@med.com', label: 'Reception', icon: 'support_agent',        color: '#f59e0b' },
+    { role: 'radiologist',   email: 'radiolog@med.com',  label: 'Radiology', icon: 'radiology',            color: '#7c3aed' },
+    { role: 'lab_technician',email: 'lab@med.com',       label: 'Lab',       icon: 'biotech',              color: '#06b6d4' },
+  ];
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -57,15 +65,28 @@ export class LoginComponent implements OnInit {
     this.form.password = 'password123';
   }
 
+  loginAs(acc: { email: string; role: string }): void {
+    this.form.email = acc.email;
+    this.form.password = 'password123';
+    this.login();
+  }
+
+  private getRoleRoute(role: string): string {
+    if (role === 'lab_technician') return '/lab-dashboard';
+    if (role === 'radiologist') return '/ris-dashboard';
+    return '/dashboard';
+  }
+
   login(): void {
     if (!this.form.email || !this.form.password) return;
     this.isLoading = true;
     this.error = '';
 
     this.authService.login(this.form.email, this.form.password).subscribe({
-      next: () => {
+      next: (res) => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        const role = res?.data?.user?.role || this.authService.role;
+        this.router.navigate([this.getRoleRoute(role)]);
       },
       error: () => {
         this.isLoading = false;

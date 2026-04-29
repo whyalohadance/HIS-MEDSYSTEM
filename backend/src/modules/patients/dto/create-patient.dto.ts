@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsOptional, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreatePatientDto {
   @IsString()
@@ -28,4 +29,17 @@ export class CreatePatientDto {
   @IsString()
   @IsOptional()
   address?: string;
+
+  @IsString()
+  @IsOptional()
+  city?: string;
+
+  @IsString()
+  @IsOptional()
+  country?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  doctorId?: number;
 }

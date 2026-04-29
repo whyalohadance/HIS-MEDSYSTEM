@@ -129,7 +129,7 @@ export class StudiesController {
 
   @Post(':id/measurements')
   async addMeasurement(@Param('id') id: string, @Body() dto: any, @Request() req: any) {
-    const userId = req.user?.userId || req.user?.sub;
+    const userId = req.user?.id || req.user?.userId || req.user?.sub;
     const data = await this.studiesService.createMeasurement(+id, userId, dto);
     return { success: true, data };
   }
@@ -155,7 +155,7 @@ export class StudiesController {
 
   @Post(':id/annotations')
   async addAnnotation(@Param('id') id: string, @Body() dto: any, @Request() req: any) {
-    const userId = req.user?.userId || req.user?.sub;
+    const userId = req.user?.id || req.user?.userId || req.user?.sub;
     const data = await this.studiesService.createAnnotation(+id, userId, dto);
     return { success: true, data };
   }
@@ -179,7 +179,7 @@ export class StudiesController {
     @Body() dto: any,
     @Request() req: any,
   ) {
-    const userId = req.user?.userId || req.user?.sub;
+    const userId = req.user?.id || req.user?.userId || req.user?.sub;
     const data = await this.studiesService.saveReport(+id, userId, dto);
     return { success: true, data };
   }
