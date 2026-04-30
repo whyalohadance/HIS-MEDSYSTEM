@@ -1,4 +1,5 @@
-import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsBoolean, IsArray, IsEnum } from 'class-validator';
+import { RoomType } from '../room.entity';
 
 export class CreateRoomDto {
   @IsString()
@@ -8,9 +9,21 @@ export class CreateRoomDto {
   @IsOptional()
   number?: string;
 
+  @IsEnum(RoomType)
+  @IsOptional()
+  type?: RoomType;
+
   @IsNumber()
   @IsOptional()
   floor?: number;
+
+  @IsNumber()
+  @IsOptional()
+  assignedUserId?: number;
+
+  @IsArray()
+  @IsOptional()
+  services?: { name: string; price: number; duration: number }[];
 
   @IsString()
   @IsOptional()

@@ -13,8 +13,21 @@ export class RoomsController {
   constructor(private service: RoomsService) {}
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    const data = await this.service.findAll();
+    return { success: true, data };
+  }
+
+  @Get('active')
+  async findActive() {
+    const data = await this.service.findActive();
+    return { success: true, data };
+  }
+
+  @Get('by-type')
+  async getByType(@Query('type') type: string) {
+    const data = await this.service.findByType(type);
+    return { success: true, data };
   }
 
   @Get('available')

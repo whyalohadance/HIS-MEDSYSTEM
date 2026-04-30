@@ -2,9 +2,7 @@
   <!-- Header -->
   <div class="ld-header">
     <div class="ld-header-left">
-      <div class="ld-avatar">
-        <span class="material-icons">biotech</span>
-      </div>
+      <div class="ld-avatar"><span class="material-icons">biotech</span></div>
       <div>
         <h1 class="ld-title">Лаборатория</h1>
         <p class="ld-subtitle">Добро пожаловать, {{ auth.currentUser?.firstName || 'Лаборант' }}</p>
@@ -12,12 +10,10 @@
     </div>
     <div class="ld-actions">
       <a routerLink="/lab/worklist" class="ld-btn ld-btn-primary">
-        <span class="material-icons">queue</span>
-        Очередь анализов
+        <span class="material-icons">queue</span>Очередь
       </a>
       <a routerLink="/lab/orders" class="ld-btn ld-btn-outline">
-        <span class="material-icons">receipt_long</span>
-        Все заказы
+        <span class="material-icons">receipt_long</span>Все заказы
       </a>
     </div>
   </div>
@@ -27,7 +23,7 @@
     <div class="ld-stat-card">
       <span class="material-icons">receipt_long</span>
       <div class="ld-stat-num">{{ stats.total }}</div>
-      <div class="ld-stat-lbl">Всего заказов</div>
+      <div class="ld-stat-lbl">Всего</div>
     </div>
     <div class="ld-stat-card pending">
       <span class="material-icons">pending_actions</span>
@@ -46,36 +42,70 @@
     </div>
   </div>
 
-  <!-- Worklist -->
-  <div class="ld-section">
-    <div class="ld-section-header">
-      <h2>
-        <span class="material-icons">queue</span>
-        Очередь работ
-      </h2>
-      <a routerLink="/lab/worklist" class="ld-link">Все →</a>
+  <div class="ld-grid">
+    <!-- Worklist -->
+    <div class="ld-section">
+      <div class="ld-section-header">
+        <h2><span class="material-icons">queue</span>Очередь работ</h2>
+        <a routerLink="/lab/worklist" class="ld-link">Все →</a>
+      </div>
+      <div class="ld-loading" *ngIf="isLoading">
+        <span class="material-icons spin">autorenew</span> Загрузка...
+      </div>
+      <div class="ld-empty" *ngIf="!isLoading && worklist.length === 0">
+        <span class="material-icons">check_circle_outline</span>
+        <p>Очередь пуста</p>
+      </div>
+      <div class="ld-worklist" *ngIf="!isLoading && worklist.length > 0">
+        <a class="ld-wl-item" *ngFor="let order of worklist" [routerLink]="['/lab/order', order.id]">
+          <div class="ld-wl-num">{{ order.orderNumber }}</div>
+          <div class="ld-wl-info">
+            <span class="ld-priority-badge" [class]="getPriorityClass(order.priority)">
+              {{ getPriorityLabel(order.priority) }}
+            </span>
+            <span class="ld-wl-date">{{ order.createdAt | date:'dd.MM HH:mm' }}</span>
+          </div>
+          <span class="ld-wl-arrow material-icons">chevron_right</span>
+        </a>
+      </div>
     </div>
 
-    <div class="ld-loading" *ngIf="isLoading">
-      <span class="material-icons spin">autorenew</span> Загрузка...
-    </div>
-
-    <div class="ld-empty" *ngIf="!isLoading && worklist.length === 0">
-      <span class="material-icons">check_circle_outline</span>
-      <p>Очередь пуста — все задания выполнены</p>
-    </div>
-
-    <div class="ld-worklist" *ngIf="!isLoading && worklist.length > 0">
-      <a class="ld-wl-item" *ngFor="let order of worklist" [routerLink]="['/lab/order', order.id]">
-        <div class="ld-wl-num">{{ order.orderNumber }}</div>
-        <div class="ld-wl-info">
-          <span class="ld-priority-badge" [class]="getPriorityClass(order.priority)">
-            {{ getPriorityLabel(order.priority) }}
-          </span>
-          <span class="ld-wl-date">{{ order.createdAt | date:'dd.MM HH:mm' }}</span>
+    <!-- Сегодня -->
+    <div class="ld-section" *ngIf="todayOrders.length > 0 || weeklyStats.length > 0">
+      <div class="ld-section-header">
+        <h2><span class="material-icons">today</span>Сегодня</h2>
+        <span class="ld-badge-count">{{ todayOrders.length }}</span>
+      </div>
+      <div class="ld-today-summary">
+        <div class="ld-today-card" style="--c:#fef3c7;--t:#d97706">
+          <span class="ld-today-icon"><span class="material-icons">schedule</span></span>
+          <div><div class="ld-today-num">{{ getTodayPending() }}</div><div class="ld-today-lbl">Запланировано</div></div>
         </div>
-        <span class="ld-wl-arrow material-icons">chevron_right</span>
-      </a>
+        <div class="ld-today-card" style="--c:#dbeafe;--t:#1e40af">
+          <span class="ld-today-icon"><span class="material-icons">play_circle</span></span>
+          <div><div class="ld-today-num">{{ getTodayInProgress() }}</div><div class="ld-today-lbl">В процессе</div></div>
+        </div>
+        <div class="ld-today-card" style="--c:#d1fae5;--t:#047857">
+          <span class="ld-today-icon"><span class="material-icons">check_circle</span></span>
+          <div><div class="ld-today-num">{{ getTodayCompleted() }}</div><div class="ld-today-lbl">Готово</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Недельная активность -->
+  <div class="ld-section" *ngIf="weeklyStats.length > 0">
+    <div class="ld-section-header">
+      <h2><span class="material-icons">show_chart</span>Активность за неделю</h2>
+    </div>
+    <div class="ld-weekly-chart">
+      <div class="ld-day-bar" *ngFor="let day of weeklyStats" [class.today]="day.isToday">
+        <div class="ld-bar-value">{{ day.count }}</div>
+        <div class="ld-bar-wrapper">
+          <div class="ld-bar-fill" [style.height.%]="day.count > 0 ? (day.count / getMaxDayCount()) * 100 : 4"></div>
+        </div>
+        <div class="ld-bar-label">{{ day.date }}</div>
+      </div>
     </div>
   </div>
 </div>

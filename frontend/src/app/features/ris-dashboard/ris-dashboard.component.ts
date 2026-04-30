@@ -16,8 +16,9 @@ import { AuthService } from '../../core/services/auth.service';
 export class RisDashboardComponent implements OnInit {
   stats = { total: 0, pending: 0, inProgress: 0, completed: 0 };
   pendingStudies: any[] = [];
-  recentStudies: any[] = [];
   isLoading = true;
+  todayStudies: any[] = [];
+  weeklyStats: { date: string; count: number; isToday: boolean }[] = [];
 
   constructor(
     private api: ApiService,
@@ -33,14 +34,18 @@ export class RisDashboardComponent implements OnInit {
     this.api.get<any>('/studies').subscribe({
       next: (res) => {
         const all: any[] = res.data || [];
-        this.stats.total = all.length;
-        this.stats.pending = all.filter(s => s.status === 'pending' || s.status === 'scheduled').length;
+        this.stats.total      = all.length;
+        this.stats.pending    = all.filter(s => ['pending','scheduled'].includes(s.status)).length;
         this.stats.inProgress = all.filter(s => s.status === 'in_progress').length;
-        this.stats.completed = all.filter(s => s.status === 'completed').length;
-        this.pendingStudies = all
-          .filter(s => ['pending', 'scheduled', 'in_progress'].includes(s.status))
-          .slice(0, 8);
-        this.recentStudies = [...all].slice(0, 5);
+        this.stats.completed  = all.filter(s => s.status === 'completed').length;
+        this.pendingStudies   = all.filter(s => ['pending','scheduled','in_progress'].includes(s.status)).slice(0, 8);
+
+        const today = new Date().toISOString().split('T')[0];
+        this.todayStudies = all.filter(s =>
+          (s.scheduledAt && String(s.scheduledAt).startsWith(today)) ||
+          (s.createdAt   && String(s.createdAt).startsWith(today))
+        );
+        this.weeklyStats = this.calculateWeekly(all);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -48,19 +53,40 @@ export class RisDashboardComponent implements OnInit {
     });
   }
 
+  calculateWeekly(studies: any[]): { date: string; count: number; isToday: boolean }[] {
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      const dateStr = d.toISOString().split('T')[0];
+      return {
+        date: d.toLocaleDateString('ru-RU', { weekday: 'short' }),
+        count: studies.filter(s => s.completedAt && String(s.completedAt).startsWith(dateStr)).length,
+        isToday: i === 6
+      };
+    });
+  }
+
+  getMaxDayCount(): number {
+    return Math.max(...this.weeklyStats.map(d => d.count), 1);
+  }
+
+  getTodayPending():    number { return this.todayStudies.filter(s => ['pending','scheduled'].includes(s.status)).length; }
+  getTodayInProgress(): number { return this.todayStudies.filter(s => s.status === 'in_progress').length; }
+  getTodayCompleted():  number { return this.todayStudies.filter(s => s.status === 'completed').length; }
+
   getModalityIcon(type: string): string {
-    return { mri: 'settings_input_antenna', ct: 'blur_on', xray: 'image', ultrasound: 'water', pet: 'biotech' }[type] || 'medical_services';
+    return ({ mri: 'settings_input_antenna', ct: 'blur_on', xray: 'image', ultrasound: 'water', pet: 'biotech' } as any)[type] || 'medical_services';
   }
 
   getModalityLabel(type: string): string {
-    return { mri: 'МРТ', ct: 'КТ', xray: 'Рентген', ultrasound: 'УЗИ', pet: 'ПЭТ' }[type] || type;
+    return ({ mri: 'МРТ', ct: 'КТ', xray: 'Рентген', ultrasound: 'УЗИ', pet: 'ПЭТ' } as any)[type] || type;
   }
 
   getStatusLabel(s: string): string {
-    return { pending: 'Ожидает', scheduled: 'Назначено', in_progress: 'В работе', completed: 'Готово', cancelled: 'Отменено' }[s] || s;
+    return ({ pending: 'Ожидает', scheduled: 'Назначено', in_progress: 'В работе', completed: 'Готово', cancelled: 'Отменено' } as any)[s] || s;
   }
 
   getStatusClass(s: string): string {
-    return { pending: 'st-pending', scheduled: 'st-scheduled', in_progress: 'st-progress', completed: 'st-done', cancelled: 'st-cancel' }[s] || '';
+    return ({ pending: 'st-pending', scheduled: 'st-scheduled', in_progress: 'st-progress', completed: 'st-done', cancelled: 'st-cancel' } as any)[s] || '';
   }
 }

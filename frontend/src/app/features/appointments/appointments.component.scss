@@ -416,3 +416,31 @@ input[type="file"] {
 
   .modal-body .form-row { grid-template-columns: 1fr !important; }
 }
+
+/* ===== SERVICE SUMMARY ===== */
+.service-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  margin: -4px 0;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .material-icons { font-size: 20px; color: #94a3b8; }
+  &.highlight .material-icons { color: #10b981; }
+}
+
+.summary-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
+.summary-value { font-size: 14px; font-weight: 700; color: #0f2d52; }
+.summary-item.highlight .summary-value { color: #047857; }
+
+@media (max-width: 600px) {
+  .service-summary { grid-template-columns: 1fr; }
+}

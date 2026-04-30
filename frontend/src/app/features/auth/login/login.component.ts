@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
     { role: 'admin',         email: 'admin@med.com',     label: 'Admin',     icon: 'admin_panel_settings', color: '#1a73e8' },
     { role: 'doctor',        email: 'doctor@med.com',    label: 'Doctor',    icon: 'medical_services',     color: '#10b981' },
     { role: 'receptionist',  email: 'reception@med.com', label: 'Reception', icon: 'support_agent',        color: '#f59e0b' },
-    { role: 'radiologist',   email: 'radiolog@med.com',  label: 'Radiology', icon: 'radiology',            color: '#7c3aed' },
-    { role: 'lab_technician',email: 'lab@med.com',       label: 'Lab',       icon: 'biotech',              color: '#06b6d4' },
+    { role: 'radiologist',   email: 'radiolog@med.com',  label: 'RIS',       icon: 'radiology',            color: '#7c3aed' },
+    { role: 'lab_technician',email: 'lab@med.com',       label: 'LIS',       icon: 'biotech',              color: '#06b6d4' },
   ];
 
   constructor(

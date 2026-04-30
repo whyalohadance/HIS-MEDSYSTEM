@@ -14,7 +14,8 @@ import { map } from 'rxjs';
 
 interface Doctor { id: number; firstName: string; lastName: string; }
 interface Patient { id: number; firstName: string; lastName: string; phone?: string; dateOfBirth?: string; }
-interface Room { id: number; name: string; number: string; }
+interface RoomService { name: string; price: number; duration: number; }
+interface Room { id: number; name: string; number: string; type?: string; assignedUserId?: number; services?: RoomService[]; isActive?: boolean; }
 
 @Component({
   selector: 'app-appointments',
@@ -32,10 +33,15 @@ export class AppointmentsComponent implements OnInit {
   appointments: Appointment[] = [];
   doctors: Doctor[] = [];
   rooms: Room[] = [];
+  allRooms: Room[] = [];
   patients: Patient[] = [];
   isLoading = true;
   isSaving = false;
   successMsg = '';
+
+  selectedRoom: Room | null = null;
+  availableServices: RoomService[] = [];
+  selectedService: RoomService | null = null;
 
   showResultModal = false;
   selectedAptForResult: any = null;
@@ -72,7 +78,8 @@ export class AppointmentsComponent implements OnInit {
     time: string;
     notes: string;
     price: number;
-  } = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0 };
+    examination: string;
+  } = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0, examination: '' };
 
   constructor(
     private service: AppointmentsService,
@@ -88,6 +95,7 @@ export class AppointmentsComponent implements OnInit {
     this.loadAppointments();
     this.loadDoctors();
     this.loadPatients();
+    this.loadAllRooms();
 
     const state = window.history.state;
     if (state?.patientId) {
@@ -115,13 +123,74 @@ export class AppointmentsComponent implements OnInit {
     });
   }
 
+  loadAllRooms(): void {
+    this.api.get<any>('/rooms/active').subscribe({
+      next: (res) => {
+        this.allRooms = (res.data || []).filter((r: Room) => r.isActive !== false);
+        this.rooms = this.allRooms;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // fallback to /rooms
+        this.api.get<any>('/rooms').subscribe({
+          next: (res) => {
+            const data = res.data || res;
+            this.allRooms = Array.isArray(data) ? data : [];
+            this.rooms = this.allRooms;
+            this.cdr.detectChanges();
+          }
+        });
+      }
+    });
+  }
+
   loadRooms(): void {
     if (this.form.date && this.form.time) {
       this.api.get<any>(`/rooms/available?date=${this.form.date}&time=${this.form.time}`)
         .pipe(map(r => r.data || r)).subscribe({
-          next: data => { this.rooms = Array.isArray(data) ? data : []; this.cdr.detectChanges(); }
+          next: data => { this.cdr.detectChanges(); }
         });
     }
+  }
+
+  onRoomChange(): void {
+    this.selectedRoom = this.allRooms.find(r => r.id === +this.form.roomId) || null;
+    this.availableServices = this.selectedRoom?.services || [];
+    this.selectedService = null;
+    this.form.examination = '';
+    this.form.price = 0;
+    if (this.selectedRoom?.assignedUserId) {
+      this.form.doctorId = this.selectedRoom.assignedUserId;
+    }
+    this.cdr.detectChanges();
+  }
+
+  onServiceChange(): void {
+    this.selectedService = this.availableServices.find(s => s.name === this.form.examination) || null;
+    if (this.selectedService) {
+      this.form.price = this.selectedService.price;
+    }
+    this.cdr.detectChanges();
+  }
+
+  getRoomTypeLabel(type: string): string {
+    const map: Record<string, string> = {
+      consultation: 'Консультация', radiology: 'Радиология',
+      laboratory: 'Лаборатория', procedure: 'Процедуры', surgery: 'Операция'
+    };
+    return map[type] || type;
+  }
+
+  getRoomTypeIcon(type: string): string {
+    const map: Record<string, string> = {
+      consultation: 'medical_services', radiology: 'radiology',
+      laboratory: 'biotech', procedure: 'healing', surgery: 'local_hospital'
+    };
+    return map[type] || 'meeting_room';
+  }
+
+  getRoomsByType(type: string): Room[] {
+    return this.allRooms.filter(r => r.type === type);
   }
 
   // Фильтрация
@@ -224,12 +293,14 @@ export class AppointmentsComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.form = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0 };
+    this.form = { patientId: 0, doctorId: 0, roomId: 0, date: '', time: '', notes: '', price: 0, examination: '' };
     this.patientSearch = '';
     this.selectedPatient = null;
     this.patientSuggestions = [];
     this.showSuggestions = false;
-    this.rooms = [];
+    this.selectedRoom = null;
+    this.availableServices = [];
+    this.selectedService = null;
   }
 
   save(): void {

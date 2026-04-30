@@ -18,6 +18,16 @@ export class RoomsService {
     return this.repo.find({ order: { name: 'ASC' } });
   }
 
+  async findActive(): Promise<Room[]> {
+    return this.repo.find({ where: { isActive: true }, order: { type: 'ASC', number: 'ASC' } });
+  }
+
+  async findByType(type?: string): Promise<Room[]> {
+    const where: any = { isActive: true };
+    if (type) where.type = type;
+    return this.repo.find({ where, order: { number: 'ASC' } });
+  }
+
   async findOne(id: number): Promise<Room> {
     const room = await this.repo.findOne({ where: { id } });
     if (!room) throw new NotFoundException('Кабинет не найден');
