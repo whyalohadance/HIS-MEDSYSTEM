@@ -254,7 +254,18 @@
       </div>
       <div class="apt-actions">
         <span class="badge" [class]="apt.status">{{ getStatusLabel(apt.status) }}</span>
-        <div class="action-btns" *ngIf="apt.status === 'scheduled'">
+        <div class="appt-time-status"
+          *ngIf="apt.status !== 'completed' && apt.status !== 'cancelled'"
+          [style.background]="getAppointmentTimeStatus(apt).color + '18'"
+          [style.color]="getAppointmentTimeStatus(apt).color">
+          <span class="material-icons">{{
+            getAppointmentTimeStatus(apt).status === 'now'      ? 'play_circle' :
+            getAppointmentTimeStatus(apt).status === 'soon'     ? 'notifications_active' :
+            getAppointmentTimeStatus(apt).status === 'finished' ? 'timer_off' : 'schedule'
+          }}</span>
+          {{ getAppointmentTimeStatus(apt).label }}
+        </div>
+        <div class="action-btns" *ngIf="isAdminOrReception() && (apt.status === 'scheduled' || apt.status === 'in_progress')">
           <button class="btn-complete" (click)="updateStatus(apt.id, 'completed')"><span class="material-icons">check</span></button>
           <button class="btn-cancel" (click)="updateStatus(apt.id, 'cancelled')"><span class="material-icons">close</span></button>
         </div>

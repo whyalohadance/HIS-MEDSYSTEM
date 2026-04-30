@@ -121,26 +121,58 @@
         </div>
 
         <!-- Приёмы сегодня -->
-        <div class="section-title">{{ 'DASHBOARD.TODAY_APPOINTMENTS' | translate }}</div>
-        <div class="today-empty" *ngIf="todayAppointments.length === 0">
-          <span class="material-icons">event_available</span>
-          <span>{{ 'DASHBOARD.NO_TODAY' | translate }}</span>
-        </div>
-        <div class="today-list" *ngIf="todayAppointments.length > 0">
-          <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
-            <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
-            <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
-            <span class="today-badge" [class]="a.status">{{ getStatusLabel(a.status) | translate }}</span>
-            <div class="apt-actions">
-              <button class="action-btn success" *ngIf="a.status === 'scheduled'" (click)="completeAppointment(a.id)">
-                <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
-              </button>
-              <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
-                <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
-              </a>
-            </div>
+        <div class="section-title-row">
+          <span class="section-title">{{ 'DASHBOARD.TODAY_APPOINTMENTS' | translate }}</span>
+          <div class="today-toggle" *ngIf="completedTodayAppointments.length > 0">
+            <button class="toggle-sm" [class.active]="!showCompletedToday" (click)="showCompletedToday = false">
+              Активные ({{ todayAppointments.length }})
+            </button>
+            <button class="toggle-sm" [class.active]="showCompletedToday" (click)="showCompletedToday = true">
+              Завершённые ({{ completedTodayAppointments.length }})
+            </button>
           </div>
         </div>
+
+        <ng-container *ngIf="!showCompletedToday">
+          <div class="today-empty" *ngIf="todayAppointments.length === 0">
+            <span class="material-icons">event_available</span>
+            <span>{{ 'DASHBOARD.NO_TODAY' | translate }}</span>
+          </div>
+          <div class="today-list" *ngIf="todayAppointments.length > 0">
+            <div class="today-item" *ngFor="let a of todayAppointments" [class]="a.status">
+              <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
+              <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
+              <div class="today-right">
+                <span class="today-badge" [class]="a.status">{{ getStatusLabel(a.status) | translate }}</span>
+                <span class="time-status-mini"
+                  *ngIf="getTimeStatus(a).label"
+                  [style.color]="getTimeStatus(a).color">
+                  {{ getTimeStatus(a).label }}
+                </span>
+              </div>
+              <div class="apt-actions">
+                <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
+                  <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="showCompletedToday">
+          <div class="today-list">
+            <div class="today-item" *ngFor="let a of completedTodayAppointments" [class]="a.status">
+              <div class="today-time"><span class="material-icons">schedule</span>{{ a.time }}</div>
+              <div class="today-patient">{{ getPatientName(a.patientId) }}</div>
+              <span class="today-badge" [class]="a.status">{{ getStatusLabel(a.status) | translate }}</span>
+              <div class="apt-actions">
+                <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
+                  <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </ng-container>
 
         <!-- Ближайшие приёмы -->
         <div class="section-title" *ngIf="upcomingAppointments.length > 0">{{ 'DASHBOARD.UPCOMING' | translate }}</div>

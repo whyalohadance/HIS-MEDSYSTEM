@@ -404,8 +404,47 @@ export class AppointmentsComponent implements OnInit {
     return d ? `${d.firstName?.[0] || ''}${d.lastName?.[0] || ''}` : '?';
   }
 
+  isAdminOrReception(): boolean {
+    const role = this.authService.currentUser?.role;
+    return role === 'admin' || role === 'receptionist';
+  }
+
   updateStatus(id: number, status: AppointmentStatus): void {
-    this.service.updateStatus(id, status).subscribe({ next: () => this.loadAppointments() });
+    this.service.updateStatus(id, status).subscribe({
+      next: () => this.loadAppointments(),
+      error: (err) => {
+        alert(err?.error?.error?.message || 'Нет доступа для изменения статуса');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  getAppointmentTimeStatus(apt: Appointment): { status: string; label: string; color: string } {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+
+    if (apt.date < today) return { status: 'past',   label: 'Прошёл',          color: '#94a3b8' };
+    if (apt.date > today) return { status: 'future', label: `${apt.date}`,     color: '#3b82f6' };
+    if (!apt.time)        return { status: 'today',  label: 'Сегодня',         color: '#3b82f6' };
+
+    const start   = this.parseTime(apt.time);
+    const end     = start + (apt.duration || 30);
+    const current = now.getHours() * 60 + now.getMinutes();
+
+    if (current < start) {
+      const diff = start - current;
+      if (diff <= 30) return { status: 'soon',     label: `Через ${diff} мин`,           color: '#f59e0b' };
+      return            { status: 'today',          label: `Сегодня в ${apt.time}`,        color: '#3b82f6' };
+    }
+    if (current < end) {
+      return { status: 'now',      label: `Идёт · ${end - current} мин`,    color: '#10b981' };
+    }
+    return   { status: 'finished', label: 'Время закончилось',               color: '#dc2626' };
+  }
+
+  private parseTime(time: string): number {
+    const [h, m] = time.split(':').map(Number);
+    return h * 60 + m;
   }
 
   delete(id: number): void {
@@ -485,12 +524,13 @@ export class AppointmentsComponent implements OnInit {
   }
 
   getStatusLabel(status: AppointmentStatus): string {
-    const keys: Record<AppointmentStatus, string> = {
-      scheduled: 'APPOINTMENTS.STATUS_SCHEDULED',
-      completed: 'APPOINTMENTS.STATUS_COMPLETED',
-      cancelled: 'APPOINTMENTS.STATUS_CANCELLED'
+    const map: Record<string, string> = {
+      scheduled:   'APPOINTMENTS.STATUS_SCHEDULED',
+      in_progress: 'APPOINTMENTS.STATUS_IN_PROGRESS',
+      completed:   'APPOINTMENTS.STATUS_COMPLETED',
+      cancelled:   'APPOINTMENTS.STATUS_CANCELLED',
     };
-    return this.translate.instant(keys[status]);
+    return this.translate.instant(map[status] || status);
   }
 
   formatDate(date: string): string {

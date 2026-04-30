@@ -52,6 +52,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   doctorScheduled = 0;
   recentAppointments: any[] = [];
   todayAppointments: any[] = [];
+  completedTodayAppointments: any[] = [];
+  showCompletedToday = false;
   upcomingAppointments: any[] = [];
   todayPatients: any[] = [];
   doctorAllAppointments: any[] = [];
@@ -176,9 +178,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.doctorResults = results.length;
         this.doctorAllAppointments = appointments.filter(a => a.doctorId === me?.id);
 
-        this.todayAppointments = appointments
+        const allToday = appointments
           .filter(a => a.date === todayStr && a.doctorId === me?.id)
           .sort((a: any, b: any) => a.time.localeCompare(b.time));
+
+        this.todayAppointments = allToday.filter(a => a.status === 'scheduled' || a.status === 'in_progress');
+        this.completedTodayAppointments = allToday.filter(a => a.status === 'completed' || a.status === 'cancelled');
 
         this.upcomingAppointments = appointments
           .filter(a => a.status === 'scheduled' && a.date >= todayStr && a.doctorId === me?.id)
@@ -200,10 +205,28 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  isAdminOrReception(): boolean {
+    const role = this.authService.currentUser?.role;
+    return role === 'admin' || role === 'receptionist';
+  }
+
   completeAppointment(id: number): void {
     this.appointmentsService.updateStatus(id, 'completed').subscribe({
-      next: () => this.loadDoctorStats()
+      next: () => { this.loadDoctorStats(); this.loadReceptionStats(); }
     });
+  }
+
+  getTimeStatus(apt: any): { label: string; color: string } {
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    if (!apt.time || apt.date !== today) return { label: '', color: '' };
+    const [h, m] = apt.time.split(':').map(Number);
+    const start   = h * 60 + m;
+    const end     = start + (apt.duration || 30);
+    const current = now.getHours() * 60 + now.getMinutes();
+    if (current >= start && current < end) return { label: `Идёт · ${end - current} мин`, color: '#10b981' };
+    if (current < start && start - current <= 30) return { label: `Через ${start - current} мин`, color: '#f59e0b' };
+    return { label: '', color: '' };
   }
 
   getPatientName(id: number): string {
@@ -232,7 +255,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadQueue(appointments);
 
         this.receptionTodayAppointments = appointments
-          .filter((a: any) => a.date === todayStr)
+          .filter((a: any) => a.date === todayStr && (a.status === 'scheduled' || a.status === 'in_progress'))
           .sort((a: any, b: any) => a.time.localeCompare(b.time))
           .map((a: any, index: number) => {
             const patient = patients.find((p: any) => p.id === a.patientId);

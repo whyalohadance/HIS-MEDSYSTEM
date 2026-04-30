@@ -15,6 +15,11 @@
 @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
 .section-title { font-size: 13px; font-weight: 700; color: #718096; margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.8px; }
+.section-title-row { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 12px; .section-title { margin: 0; } }
+.today-toggle { display: flex; gap: 4px; }
+.toggle-sm { padding: 4px 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: transparent; font-size: 11px; font-weight: 600; color: #94a3b8; cursor: pointer; font-family: inherit; transition: all 0.15s; &.active { background: #1a73e8; color: white; border-color: #1a73e8; } }
+.today-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.time-status-mini { font-size: 10px; font-weight: 700; }
 
 .dashboard-main .dashboard-main .stats-grid-4 { overflow: hidden; }
 .stats-grid-4 { overflow: hidden; }

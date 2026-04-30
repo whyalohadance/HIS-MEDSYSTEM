@@ -186,7 +186,8 @@
     "SELECT_DATE": "Select date",
     "VISIT_REASON": "Visit reason",
     "VISIT_REASON_PLACEHOLDER": "Describe the reason for visit...",
-    "PRIORITY": "Priority"
+    "PRIORITY": "Priority",
+    "STATUS_IN_PROGRESS": "In Progress"
   },
   "STAFF": {
     "TITLE": "Staff",

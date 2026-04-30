@@ -186,7 +186,8 @@
     "SELECT_DATE": "Selectează data",
     "VISIT_REASON": "Motivul vizitei",
     "VISIT_REASON_PLACEHOLDER": "Descrieți motivul vizitei...",
-    "PRIORITY": "Prioritate"
+    "PRIORITY": "Prioritate",
+    "STATUS_IN_PROGRESS": "În desfășurare"
   },
   "STAFF": {
     "TITLE": "Personal",

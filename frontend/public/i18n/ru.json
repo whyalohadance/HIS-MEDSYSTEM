@@ -186,7 +186,8 @@
     "SELECT_DATE": "Выберите дату",
     "VISIT_REASON": "Причина визита",
     "VISIT_REASON_PLACEHOLDER": "Опишите причину визита...",
-    "PRIORITY": "Приоритет"
+    "PRIORITY": "Приоритет",
+    "STATUS_IN_PROGRESS": "В процессе"
   },
   "STAFF": {
     "TITLE": "Персонал",

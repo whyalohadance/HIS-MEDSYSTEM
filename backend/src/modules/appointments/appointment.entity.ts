@@ -3,9 +3,10 @@ import { User } from '../users/user.entity';
 import { Patient } from '../patients/patient.entity';
 
 export enum AppointmentStatus {
-  SCHEDULED = 'scheduled',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
+  SCHEDULED   = 'scheduled',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED   = 'completed',
+  CANCELLED   = 'cancelled',
 }
 
 @Entity('appointments')
@@ -36,6 +37,15 @@ export class Appointment {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true, default: 0 })
   price: number;
+
+  @Column({ default: 30 })
+  duration: number;
+
+  @Column({ type: 'text', nullable: true })
+  completedAt: string;
+
+  @Column({ nullable: true })
+  examination: string;
 
   @Column({ default: false })
   notified: boolean;

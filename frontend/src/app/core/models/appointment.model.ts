@@ -1,4 +1,4 @@
-export type AppointmentStatus = 'scheduled' | 'completed' | 'cancelled';
+export type AppointmentStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
 
 export interface Appointment {
   id: number;
@@ -9,8 +9,11 @@ export interface Appointment {
   doctorName: string;
   date: string;
   time: string;
+  duration?: number;
   status: AppointmentStatus;
   notes?: string;
+  examination?: string;
   price?: number;
+  completedAt?: string;
   createdAt: string;
 }
