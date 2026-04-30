@@ -29,6 +29,9 @@ export class Room {
   assignedUserId: number;
 
   @Column({ type: 'json', nullable: true })
+  assignedDoctorIds: number[];
+
+  @Column({ type: 'json', nullable: true })
   services: { name: string; price: number; duration: number }[];
 
   @Column({ default: true })

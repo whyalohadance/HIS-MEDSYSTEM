@@ -444,3 +444,60 @@ input[type="file"] {
 @media (max-width: 600px) {
   .service-summary { grid-template-columns: 1fr; }
 }
+
+/* Doctor picker */
+.doctor-picker {
+  margin-bottom: 16px;
+  label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 8px;
+    .material-icons { font-size: 16px; color: #1a73e8; }
+  }
+}
+
+.doctors-list { display: flex; flex-direction: column; gap: 8px; }
+
+.doctor-card {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  background: white; border: 1.5px solid #e2e8f0; border-radius: 10px;
+  cursor: pointer; transition: all 0.15s; font-family: inherit; text-align: left; width: 100%;
+  &:hover:not(:disabled) { border-color: #1a73e8; background: #eff6ff; }
+  &.selected { background: #d1fae5; border-color: #10b981; }
+  &.busy { opacity: 0.55; cursor: not-allowed; background: #f8fafc; }
+}
+
+.doctor-avatar {
+  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; color: white; font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+
+.doctor-info { flex: 1; min-width: 0; }
+.doctor-name { font-size: 14px; font-weight: 600; color: #0f2d52; margin-bottom: 3px; }
+.doctor-status { font-size: 11px; }
+
+.status-free { display: inline-flex; align-items: center; gap: 4px; color: #047857; font-weight: 500;
+  .material-icons { font-size: 13px; }
+}
+.status-busy { display: inline-flex; align-items: center; gap: 4px; color: #dc2626; font-weight: 500;
+  .material-icons { font-size: 13px; }
+}
+.check-icon { color: #10b981; font-size: 22px; }
+
+.doctors-loading { display: flex; align-items: center; gap: 8px; padding: 12px; color: #64748b; font-size: 13px; }
+
+.spinner-mini {
+  width: 16px; height: 16px; border: 2px solid #e2e8f0; border-top-color: #1a73e8;
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+
+.doctors-empty {
+  display: flex; align-items: center; gap: 8px; padding: 14px;
+  background: #fef3c7; border-radius: 8px; color: #92400e; font-size: 13px;
+  .material-icons { color: #d97706; }
+}
+
+.info-box {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  border-radius: 10px; font-size: 13px; font-weight: 500; margin-bottom: 16px;
+  .material-icons { font-size: 18px; }
+}
+.info-radiology { background: #ede9fe; color: #6d28d9; }
+.info-lab { background: #d1fae5; color: #047857; }

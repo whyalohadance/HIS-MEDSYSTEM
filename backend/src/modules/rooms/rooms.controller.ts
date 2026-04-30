@@ -35,6 +35,16 @@ export class RoomsController {
     return this.service.findAvailable(date, time);
   }
 
+  @Get(':id/available-doctors')
+  async getAvailableDoctors(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('date') date: string,
+    @Query('time') time: string,
+  ) {
+    const data = await this.service.getAvailableDoctorsForRoom(id, date, time);
+    return { success: true, data };
+  }
+
   @Post()
   @Roles(UserRole.ADMIN)
   create(@Body() dto: CreateRoomDto) {

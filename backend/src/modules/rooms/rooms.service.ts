@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Appointment } from '../appointments/appointment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Room } from './room.entity';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class RoomsService {
@@ -12,6 +13,8 @@ export class RoomsService {
     private repo: Repository<Room>,
     @InjectRepository(Appointment)
     private appointmentsRepo: Repository<Appointment>,
+    @InjectRepository(User)
+    private userRepo: Repository<User>,
   ) {}
 
   async findAll(): Promise<Room[]> {
@@ -46,6 +49,30 @@ export class RoomsService {
 
   async remove(id: number): Promise<void> {
     await this.repo.delete(id);
+  }
+
+  async getAvailableDoctorsForRoom(roomId: number, date: string, time?: string): Promise<any[]> {
+    const room = await this.repo.findOne({ where: { id: roomId } });
+    if (!room || !room.assignedDoctorIds || room.assignedDoctorIds.length === 0) return [];
+
+    const doctors = await this.userRepo.find({ where: { id: In(room.assignedDoctorIds) } });
+
+    const busyAppointments = await this.appointmentsRepo.find({ where: { date, roomId } });
+
+    return doctors.map(doctor => {
+      const doctorApts = busyAppointments.filter(a => a.doctorId === doctor.id);
+      const isAtSpecificTime = time
+        ? busyAppointments.some(a => a.doctorId === doctor.id && a.time === time)
+        : false;
+      return {
+        id: doctor.id,
+        firstName: doctor.firstName,
+        lastName: doctor.lastName,
+        busyCount: doctorApts.length,
+        isAvailable: !isAtSpecificTime && doctorApts.length < 8,
+        busySlots: doctorApts.map(a => a.time),
+      };
+    });
   }
 
   async findAvailable(date: string, time: string): Promise<Room[]> {

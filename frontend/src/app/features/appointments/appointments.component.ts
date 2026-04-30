@@ -42,6 +42,8 @@ export class AppointmentsComponent implements OnInit {
   selectedRoom: Room | null = null;
   availableServices: RoomService[] = [];
   selectedService: RoomService | null = null;
+  availableDoctors: any[] = [];
+  isLoadingDoctors = false;
 
   showResultModal = false;
   selectedAptForResult: any = null;
@@ -159,8 +161,11 @@ export class AppointmentsComponent implements OnInit {
     this.selectedService = null;
     this.form.examination = '';
     this.form.price = 0;
-    if (this.selectedRoom?.assignedUserId) {
-      this.form.doctorId = this.selectedRoom.assignedUserId;
+    this.form.doctorId = 0;
+    this.availableDoctors = [];
+
+    if (this.selectedRoom && this.form.date) {
+      this.loadAvailableDoctors();
     }
     this.cdr.detectChanges();
   }
@@ -171,6 +176,57 @@ export class AppointmentsComponent implements OnInit {
       this.form.price = this.selectedService.price;
     }
     this.cdr.detectChanges();
+  }
+
+  onDateChange(): void {
+    this.form.doctorId = 0;
+    if (this.selectedRoom && this.form.date) {
+      this.loadAvailableDoctors();
+    }
+  }
+
+  onTimeChange(): void {
+    if (this.selectedRoom && this.form.date) {
+      this.loadAvailableDoctors();
+    }
+  }
+
+  loadAvailableDoctors(): void {
+    if (!this.selectedRoom || !this.form.date) return;
+
+    if (this.selectedRoom.type === 'laboratory') {
+      this.availableDoctors = [];
+      return;
+    }
+
+    this.isLoadingDoctors = true;
+    this.cdr.detectChanges();
+
+    let url = `/rooms/${this.selectedRoom.id}/available-doctors?date=${this.form.date}`;
+    if (this.form.time) url += `&time=${this.form.time}`;
+
+    this.api.get<any>(url).subscribe({
+      next: (res) => {
+        this.availableDoctors = res.data || [];
+        if (this.selectedRoom?.type === 'radiology' && this.availableDoctors.length > 0) {
+          const first = this.availableDoctors.find(d => d.isAvailable);
+          if (first) this.form.doctorId = first.id;
+        }
+        this.isLoadingDoctors = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.isLoadingDoctors = false; this.cdr.detectChanges(); }
+    });
+  }
+
+  selectDoctor(doctorId: number): void {
+    this.form.doctorId = doctorId;
+    this.cdr.detectChanges();
+  }
+
+  getSelectedDoctorName(): string {
+    const doc = this.availableDoctors.find(d => d.id === this.form.doctorId);
+    return doc ? `${doc.firstName} ${doc.lastName}` : '';
   }
 
   getRoomTypeLabel(type: string): string {
@@ -301,10 +357,19 @@ export class AppointmentsComponent implements OnInit {
     this.selectedRoom = null;
     this.availableServices = [];
     this.selectedService = null;
+    this.availableDoctors = [];
+  }
+
+  isSaveDisabled(): boolean {
+    if (!this.form.patientId || !this.form.date || !this.form.time || !this.form.roomId) return true;
+    const type = this.selectedRoom?.type;
+    if (type === 'consultation' && !this.form.doctorId) return true;
+    if (type === 'radiology' && !this.form.doctorId) return true;
+    return false;
   }
 
   save(): void {
-    if (!this.form.patientId || !this.form.doctorId || !this.form.date || !this.form.time) return;
+    if (this.isSaveDisabled()) return;
     this.isSaving = true;
     this.service.create(this.form).subscribe({
       next: () => {

@@ -18,7 +18,7 @@
   <div class="form-card" *ngIf="showForm">
     <h3>{{ 'APPOINTMENTS.FORM_TITLE' | translate }}</h3>
     <div class="form-row">
-      <div class="form-field">
+      <div class="form-field" style="grid-column:1/-1">
         <label>{{ 'APPOINTMENTS.PATIENT' | translate }} *</label>
         <div class="autocomplete-wrapper">
           <div class="autocomplete-input-wrap">
@@ -45,14 +45,6 @@
             {{ selectedPatient.lastName }} {{ selectedPatient.firstName }}
           </div>
         </div>
-      </div>
-      <div class="form-field">
-        <label>{{ 'APPOINTMENTS.DOCTOR' | translate }}</label>
-        <select [(ngModel)]="form.doctorId" [disabled]="authService.isDoctor || !!selectedRoom?.assignedUserId">
-          <option [value]="0" disabled>{{ 'APPOINTMENTS.SELECT_DOCTOR' | translate }}</option>
-          <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
-        </select>
-        <small *ngIf="selectedRoom?.assignedUserId" style="color:#10b981;font-size:11px">Назначен из кабинета</small>
       </div>
     </div>
 
@@ -124,12 +116,65 @@
     <div class="form-row">
       <div class="form-field">
         <label>{{ 'APPOINTMENTS.DATE' | translate }} *</label>
-        <app-date-picker [value]="form.date" (valueChange)="form.date = $event"></app-date-picker>
+        <app-date-picker [value]="form.date" (valueChange)="form.date = $event; onDateChange()"></app-date-picker>
       </div>
       <div class="form-field">
         <label>{{ 'APPOINTMENTS.TIME' | translate }} *</label>
-        <input type="time" [(ngModel)]="form.time">
+        <input type="time" [(ngModel)]="form.time" (change)="onTimeChange()">
       </div>
+    </div>
+
+    <!-- Выбор доктора — только для consultation -->
+    <div class="doctor-picker" *ngIf="selectedRoom?.type === 'consultation' && form.date">
+      <label><span class="material-icons">person</span> Доступные врачи на {{ form.date }}<span *ngIf="form.time"> в {{ form.time }}</span></label>
+      <div class="doctors-loading" *ngIf="isLoadingDoctors">
+        <div class="spinner-mini"></div> Загрузка...
+      </div>
+      <div class="doctors-empty" *ngIf="!isLoadingDoctors && availableDoctors.length === 0">
+        <span class="material-icons">person_off</span> К этому кабинету не привязаны врачи
+      </div>
+      <div class="doctors-list" *ngIf="!isLoadingDoctors && availableDoctors.length > 0">
+        <button type="button" class="doctor-card"
+          *ngFor="let doc of availableDoctors"
+          [class.selected]="form.doctorId === doc.id"
+          [class.busy]="!doc.isAvailable"
+          [disabled]="!doc.isAvailable"
+          (click)="doc.isAvailable && selectDoctor(doc.id)">
+          <div class="doctor-avatar" [style.background]="doc.isAvailable ? '#10b981' : '#94a3b8'">
+            {{ doc.firstName[0] }}{{ doc.lastName[0] }}
+          </div>
+          <div class="doctor-info">
+            <div class="doctor-name">{{ doc.firstName }} {{ doc.lastName }}</div>
+            <div class="doctor-status">
+              <span *ngIf="doc.isAvailable" class="status-free">
+                <span class="material-icons">check_circle</span> Свободен · {{ doc.busyCount }}/8 приёмов
+              </span>
+              <span *ngIf="!doc.isAvailable" class="status-busy">
+                <span class="material-icons">block</span>
+                <span *ngIf="form.time">Занят в {{ form.time }}</span>
+                <span *ngIf="!form.time">День занят полностью</span>
+              </span>
+            </div>
+          </div>
+          <span class="material-icons check-icon" *ngIf="form.doctorId === doc.id">check_circle</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Инфо для радиологии -->
+    <div class="info-box info-radiology" *ngIf="selectedRoom?.type === 'radiology' && form.doctorId">
+      <span class="material-icons">info</span>
+      <span>Радиолог назначен автоматически: {{ getSelectedDoctorName() }}</span>
+    </div>
+    <div class="info-box info-radiology" *ngIf="selectedRoom?.type === 'radiology' && !form.doctorId && form.date">
+      <span class="material-icons">warning</span>
+      <span>Нет доступных радиологов на эту дату. Сначала привяжите врача к кабинету.</span>
+    </div>
+
+    <!-- Инфо для лаборатории -->
+    <div class="info-box info-lab" *ngIf="selectedRoom?.type === 'laboratory'">
+      <span class="material-icons">biotech</span>
+      <span>Анализы будут переданы в лабораторию автоматически — врач не требуется</span>
     </div>
     <div class="form-field notes-field">
       <label>{{ 'APPOINTMENTS.NOTES' | translate }}</label>
@@ -137,7 +182,7 @@
     </div>
     <div class="form-actions">
       <button class="btn-primary" (click)="save()"
-        [disabled]="isSaving || !form.patientId || !form.date || !form.time">
+        [disabled]="isSaving || isSaveDisabled()">
         {{ isSaving ? ('COMMON.SAVING' | translate) : ('APPOINTMENTS.SAVE_BTN' | translate) }}
       </button>
       <button class="btn-secondary" (click)="showForm = false; resetForm()">{{ 'COMMON.CANCEL' | translate }}</button>

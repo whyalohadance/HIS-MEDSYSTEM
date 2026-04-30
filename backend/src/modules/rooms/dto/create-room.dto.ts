@@ -23,6 +23,10 @@ export class CreateRoomDto {
 
   @IsArray()
   @IsOptional()
+  assignedDoctorIds?: number[];
+
+  @IsArray()
+  @IsOptional()
   services?: { name: string; price: number; duration: number }[];
 
   @IsString()

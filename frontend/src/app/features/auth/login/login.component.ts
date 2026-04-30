@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
 
@@ -22,12 +22,13 @@ export class LoginComponent implements OnInit {
   showPassword = false;
   emailFocused = false;
   passwordFocused = false;
+  isLanguageChanging = false;
 
   demoAccounts = [
     { role: 'admin',         email: 'admin@med.com',     label: 'Admin',     icon: 'admin_panel_settings', color: '#1a73e8' },
     { role: 'doctor',        email: 'doctor@med.com',    label: 'Doctor',    icon: 'medical_services',     color: '#10b981' },
     { role: 'receptionist',  email: 'reception@med.com', label: 'Reception', icon: 'support_agent',        color: '#f59e0b' },
-    { role: 'radiologist',   email: 'radiolog@med.com',  label: 'RIS',       icon: 'radiology',            color: '#7c3aed' },
+    { role: 'radiologist',   email: 'radiolog@med.com',  label: 'RIS',       icon: 'medical_information',  color: '#7c3aed' },
     { role: 'lab_technician',email: 'lab@med.com',       label: 'LIS',       icon: 'biotech',              color: '#06b6d4' },
   ];
 
@@ -35,7 +36,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    public langService: LanguageService
+    public langService: LanguageService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -69,6 +71,20 @@ export class LoginComponent implements OnInit {
     this.form.email = acc.email;
     this.form.password = 'password123';
     this.login();
+  }
+
+  changeLanguage(lang: string): void {
+    if (this.langService.getCurrentLanguage() === lang) return;
+    this.isLanguageChanging = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.langService.setLanguage(lang);
+      this.translate.use(lang);
+      setTimeout(() => {
+        this.isLanguageChanging = false;
+        this.cdr.detectChanges();
+      }, 200);
+    }, 100);
   }
 
   private getRoleRoute(role: string): string {

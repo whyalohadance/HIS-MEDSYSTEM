@@ -26,7 +26,7 @@
     </div>
 
     <!-- Контент -->
-    <div class="left-content">
+    <div class="left-content" [class.lang-changing]="isLanguageChanging">
       <h1 class="left-title">
         {{ 'AUTH.LEFT_TITLE_1' | translate }}<br>
         <span>{{ 'AUTH.LEFT_TITLE_2' | translate }}</span><br>
@@ -67,7 +67,7 @@
 
   <!-- Правая панель -->
   <div class="right-panel">
-    <div class="form-container" [class.visible]="formVisible">
+    <div class="form-container" [class.visible]="formVisible" [class.lang-changing]="isLanguageChanging">
       <div class="form-header">
         <h2 class="form-title">{{ 'AUTH.LOGIN' | translate }}</h2>
         <p class="form-subtitle">{{ 'AUTH.SUBTITLE' | translate }}</p>
@@ -115,7 +115,7 @@
         <button *ngFor="let lang of langService.languages"
           class="lang-btn"
           [class.active]="langService.getCurrentLanguage() === lang.code"
-          (click)="langService.setLanguage(lang.code)">
+          (click)="changeLanguage(lang.code)">
           {{ lang.flag }} {{ lang.label }}
         </button>
       </div>
