@@ -1,140 +1,245 @@
-# HIS-MedSystem — Project Brain for Claude Code
+# 🤖 CLAUDE.md — Контекст проекта HIS-MedSystem
 
-## Что это за проект
-HIS-MedSystem (Hospital Information System) — полноценная медицинская веб-система.
-Разработана студентом Ceban Devid, CUTM (Colegiul Universității Tehnice a Moldovei), специальность AAW.
-GitHub: https://github.com/whyalohadance/HIS-MEDSYSTEM
+> Файл-памятка для Claude Code — полный контекст проекта для эффективной работы.
 
-## Структура проекта
-- Backend: ~/Documents/GitHub/HIS-MEDSYSTEM/backend (NestJS, порт 3000)
-- Frontend: ~/Documents/GitHub/HIS-MEDSYSTEM/frontend (Angular 19, порт 4200)
-- База данных: PostgreSQL 16, medical_db
+---
 
-## Как запустить
-Terminal 1: cd ~/Documents/GitHub/HIS-MEDSYSTEM/backend && npm run start:dev
-Terminal 2: cd ~/Documents/GitHub/HIS-MEDSYSTEM/frontend && ng serve
-Docker: cd ~/Documents/GitHub/HIS-MEDSYSTEM && make up
+## 🎯 ОБЩЕЕ
 
-## База данных
-Host: localhost:5432
-DB: medical_db | User: medical_user | Password: medical123
-JWT Secret: medical_super_secret_key_2024
+**Проект:** HIS-MedSystem — медицинская информационная система  
+**Автор:** Ceban Devid  
+**Учебное заведение:** CUTM (Colegiul Universității Tehnice a Moldovei)  
+**Специальность:** Administrarea Aplicațiilor Web (AAW)  
+**Год:** 2026  
+**Практика:** Centrul de Diagnostic German (CDG), Chișinău
 
-## Тестовые аккаунты
-admin@med.com / password123 — полный доступ
-doctor@med.com / password123 — медицинский доступ
-reception@med.com / password123 — запись пациентов
-radiolog@med.com / password123 — RIS + DICOM Viewer
+---
 
-## Роли и доступ
-- admin: всё
-- doctor: пациенты, приёмы, результаты, My Cabinet
-- receptionist: пациенты, приёмы, кабинеты
-- radiologist: RIS исследования, Worklist, DICOM Viewer
+## 📂 ПУТИ К ФАЙЛАМ
 
-## Технологии Backend
-NestJS 10, TypeORM (synchronize: true), PostgreSQL 16
-JWT + bcryptjs + Passport, Multer (upload), Mammoth (docx→HTML)
-PDFKit + шрифт Roboto (кириллица!), ExcelJS, @nestjs/schedule (cron)
-Swagger UI на /api/docs
+```
+~/Documents/GitHub/HIS-MEDSYSTEM/
+├── backend/    — NestJS + PostgreSQL
+└── frontend/   — Angular 19
+```
 
-## Технологии Frontend
-Angular 19 Standalone Components, SCSS + CSS Variables
-@ngx-translate/core — 3 языка: RO/RU/EN
-Chart.js — графики на dashboard
-Cornerstone.js — DICOM Viewer
-i18n файлы: frontend/public/i18n/ro.json, ru.json, en.json
+**GitHub:** https://github.com/whyalohadance/HIS-MEDSYSTEM
 
-## Структура Frontend
-src/app/features/ — страницы:
-  auth/login/ — страница логина с анимацией (2 файла: .html + .scss отдельно!)
-  dashboard/ — дашборд (разный для каждой роли)
-  patients/ — список пациентов
-  patient-card/ — карточка пациента
-  appointments/ — приёмы
-  staff/ — персонал
-  rooms/ — кабинеты
-  reports/ — отчёты PDF/Excel
-  studies/ — RIS исследования
-  worklist/ — список работ радиолога
-  dicom-viewer/ — DICOM Viewer
-  my-cabinet/ — кабинет доктора
-  not-found/ — страница 404
+---
 
-src/app/shared/components/ — компоненты:
-  sidebar/ — боковое меню (role-based)
-  header/ — шапка (язык RO/RU/EN, темная тема, уведомления)
-  bottom-nav/ — нижняя навигация на мобильных
-  toast/ — всплывающие уведомления
-  confirm-dialog/ — диалог подтверждения
-  dicom-viewer/ — компонент просмотра DICOM
-  date-picker/ — кастомный выбор даты
+## 🚀 ЗАПУСК
 
-src/app/core/services/ — сервисы:
-  auth.service.ts — авторизация
-  api.service.ts — HTTP запросы (добавляет JWT автоматически)
-  language.service.ts — переключение языков
-  toast.service.ts — toast уведомления
-  confirm.service.ts — confirm диалог
+```bash
+# Backend
+cd ~/Documents/GitHub/HIS-MEDSYSTEM/backend
+npm run start:dev
 
-## Важные детали
-- Токен JWT хранится в localStorage под ключом 'token'
-- Пользователь хранится в localStorage под ключом 'user'
-- Темная тема: class 'dark-theme' на body
-- Bottom nav показывается только до 768px
-- Sidebar скрыт на мобильных (до 768px)
-- Страница логина: login.component.html и login.component.scss ОТДЕЛЬНЫЕ ФАЙЛЫ
-- Анимация логина: animState = 'logo' → 'moving' → 'form'
-- Логотип в центре (фаза logo), потом в левой панели (фаза form)
+# Frontend (новый терминал)
+cd ~/Documents/GitHub/HIS-MEDSYSTEM/frontend
+ng serve
 
-## Цветовая палитра
-primary: #1a73e8 (синий)
-dark: #0f2d52 (тёмно-синий)
-success: #34a853 (зелёный)
-danger: #ea4335 (красный)
-warning: #f9ab00 (жёлтый)
-bg-light: #f4f6f9
-bg-dark: #0f172a
-card-dark: #1e293b
+# Или Docker
+cd ~/Documents/GitHub/HIS-MEDSYSTEM
+make up
+```
 
-## Breakpoints
-xs: 0-480px | sm: 480-768px | md: 768-1024px | lg: 1024-1440px | xl: 1440px+
+**Порты:**
+- Backend: 3000
+- Frontend: 4200
+- PostgreSQL: 5432
 
-## Частые проблемы
-Порт занят: kill -9 $(lsof -ti:3000) или kill -9 $(lsof -ti:4200)
-CORS: проверь main.ts — app.enableCors({origin: ['http://localhost:4200']})
-JSON невалидный: python3 -c "import json; json.load(open('файл.json'))"
+---
 
-## Backend модули (src/modules/)
-auth, users, patients, appointments, results, rooms, reports,
-notifications, schedules, examinations, upload, studies (RIS)
+## 🗄 БАЗА ДАННЫХ
 
-## Правила работы — ВСЕГДА
-- После изменений frontend: npx ng build --configuration=development
-- После изменений backend: npm run build
-- Каждую задачу завершай: git add . && git commit -m "..." && git push origin main
-- Используй ApiService для HTTP запросов (не fetch напрямую)
-- Добавляй TranslateModule в imports каждого нового компонента
-- Проверяй валидность JSON: python3 -c "import json; json.load(open(...))"
+```
+DB:       medical_db
+User:     medical_user
+Password: medical123
+Host:     localhost:5432
+```
 
-## Правила работы — НИКОГДА
-- Не меняй порты (3000 и 4200)
-- Не удаляй существующие модули без причины
-- Не хардкодируй тексты — используй translate pipe
-- Не забывай про dark theme при добавлении новых стилей
-- Не используй display:none для скрытия логотипа — используй opacity
+---
 
-## Docker
-docker-compose.yml — продакшен (3 контейнера)
-docker-compose.dev.yml — только PostgreSQL
-make up — запустить всё
-make down — остановить
-make logs — логи
+## 👥 АККАУНТЫ (все с паролем password123)
 
-## RIS модуль (Radiology Information System)
-Study entity: studyId (STU-YYYYMMDD-XXXX), type (mri/ct/xray/ultrasound/pet),
-status (pending/scheduled/in_progress/completed/cancelled),
-priority (routine/urgent/stat), findings, conclusion
-Modality entity: оборудование (МРТ Siemens 3T, КТ GE Revolution, etc.)
-Доступ: только admin и radiologist
-DICOM Viewer: Cornerstone.js, маршрут /dicom и /dicom/:id
+| Email | Роль | Описание |
+|-------|------|----------|
+| admin@med.com | admin | Полный доступ |
+| doctor@med.com | doctor | Пациенты, приёмы, заключения |
+| reception@med.com | receptionist | Расписание, регистрация |
+| radiolog@med.com | radiologist | RIS, DICOM Viewer |
+| lab@med.com | lab_technician | LIS, результаты анализов |
+
+---
+
+## 🏗 АРХИТЕКТУРА
+
+### Backend модули:
+- **auth** — JWT authentication
+- **users** — пользователи и роли
+- **patients** — пациенты
+- **appointments** — приёмы (с Cron auto-complete)
+- **rooms** — кабинеты с услугами и докторами
+- **studies** — RIS (исследования + DICOM)
+- **lab** — LIS (анализы)
+- **reports** — PDF/Excel отчёты
+- **notifications** — уведомления
+
+### Frontend pages:
+- /auth/login
+- /dashboard, /lab-dashboard, /ris-dashboard
+- /patients, /patients/:id
+- /appointments
+- /studies, /worklist, /dicom, /dicom/:id
+- /lab/orders, /lab/worklist, /lab/order/:id, /lab/catalog
+- /reports
+- /staff, /rooms (admin only)
+- /profile, /notifications
+
+---
+
+## 🎨 ЦВЕТА
+
+- Primary: #1a73e8 (синий — HIS)
+- RIS: #7c3aed (фиолетовый)
+- LIS: #10b981 (зелёный)
+- Dark: #0f2d52
+- Success: #10b981 / #047857
+- Warning: #f59e0b / #d97706
+- Danger: #ef4444 / #dc2626
+
+---
+
+## 📦 РЕАЛИЗОВАННЫЕ ФУНКЦИИ
+
+### HIS
+- [x] JWT auth + 5 ролей + RoleGuard
+- [x] CRUD пациенты + tabs в карточке (Info/Appointments/Lab/Studies/Dynamics)
+- [x] Programări с проверкой свободных докторов
+- [x] Cabinete с услугами и прайсом
+- [x] Auto-complete приёмов по времени (Cron каждую минуту)
+- [x] Notificări с Cron 2 часа до приёма
+- [x] Reports PDF (PDFKit + Roboto) + Excel (ExcelJS)
+- [x] Multilingvism RO/RU/EN (@ngx-translate)
+- [x] Mobile + Bottom Navigation
+- [x] Toast + ConfirmDialog + 404
+- [x] Docker + docker-compose + Makefile
+- [x] Swagger /api/docs
+- [x] GlobalExceptionFilter
+
+### RIS (Radiology)
+- [x] Studies CRUD + Worklist + Stats
+- [x] DICOM Viewer (Cornerstone.js)
+- [x] Multi-frame + Multi-file navigation
+- [x] Линейка (SVG overlay) с pixelSpacing → мм
+- [x] Аннотации с текстом
+- [x] Pixel Probe + Hounsfield Units + tissue detection
+- [x] Window/Level пресеты (8: Default, Мозг, Кости, Лёгкие, и т.д.)
+- [x] Cine Mode (1-30 FPS, loop)
+- [x] Заключение радиолога с шаблонами (Норма/Воспаление/Образование)
+- [x] Прикрепление снимков к заключению
+- [x] PDF заключение с шапкой, скриншотами, подписью
+- [x] Сохранение измерений и аннотаций в БД
+- [x] Экспорт PNG со всеми измерениями
+- [x] Иерархия Patient→Study→Series→Image
+
+### LIS (Laboratory)
+- [x] LabTest catalog (admin) с 8 категориями
+- [x] LabOrder с приоритетами (routine/urgent/stat)
+- [x] LabResult с auto-flag (normal/low/high/critical)
+- [x] Worklist для лаборанта
+- [x] Статистика для admin
+- [x] Назначение анализов из приёма
+- [x] PDF результатов с шапкой, таблицей, подписью
+- [x] График динамики показателей (Chart.js)
+- [x] Auto-create LabOrder при booking лабораторного кабинета
+
+### Dashboards
+- [x] Admin Dashboard
+- [x] Doctor Dashboard
+- [x] Reception Dashboard
+- [x] Lab Dashboard (статистика, weekly chart, today summary)
+- [x] RIS Dashboard (по модальностям, срочные, weekly chart)
+- [x] Auto-redirect после логина по роли
+
+### UX
+- [x] Login Apple-style + анимация смены языка
+- [x] Demo accounts кнопки (5 ролей)
+- [x] Dark theme DICOM Viewer
+- [x] Toast уведомления
+- [x] Confirm dialogs
+- [x] Loading spinners
+- [x] Empty states
+- [x] Hover эффекты
+
+---
+
+## ⚠️ ВАЖНО — НЕ ДЕЛАТЬ
+
+- ❌ НЕ устанавливать cornerstone-tools npm (конфликт с core 2.6)
+- ❌ НЕ использовать display:none для логотипа на login (только opacity)
+- ❌ НЕ хардкодить тексты — всегда translate pipe
+- ❌ НЕ забывать ChangeDetectorRef + detectChanges() в subscribe
+- ❌ НЕ создавать login.component.ts inline — отдельные .html и .scss
+- ❌ НЕ менять порты 3000/4200
+- ❌ НЕ использовать import { Response } from 'express' — только import type
+- ❌ НЕ использовать import * as PDFDocument from 'pdfkit' — только const PDFDocument = require('pdfkit')
+
+---
+
+## 🔧 ТИПИЧНЫЕ КОМАНДЫ ОТЛАДКИ
+
+```bash
+# Получить токен админа
+TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@med.com","password":"password123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['data']['accessToken'])")
+
+# Проверить health
+curl -s http://localhost:3000/api/health
+
+# Проверить endpoint с токеном
+curl -s http://localhost:3000/api/patients -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+
+# Перезапустить backend
+kill -9 $(lsof -ti:3000) 2>/dev/null && cd backend && npm run start:dev
+
+# Пересобрать frontend
+cd frontend && npx ng build --configuration=development
+```
+
+---
+
+## 📝 СТРУКТУРА ОТВЕТОВ API
+
+Все ответы имеют формат:
+```json
+{
+  "success": true,
+  "data": { ... },
+  "message": "..." // опционально
+}
+```
+
+Ошибки:
+```json
+{
+  "success": false,
+  "requestId": "uuid",
+  "error": {
+    "code": 400,
+    "message": "..."
+  },
+  "timestamp": "2026-..."
+}
+```
+
+---
+
+## 🎓 ДЛЯ ПРАКТИКИ (CUTM)
+
+**Период:** 21.04.2026 – 12.06.2026 (8 недель, 300 часов)  
+**Место:** Centrul de Diagnostic German (CDG), Chișinău  
+**Темы:** Анализ, проектирование, разработка, тестирование, деплой
