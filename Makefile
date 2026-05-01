@@ -1,49 +1,88 @@
-.PHONY: up down build logs restart clean dev help
+.PHONY: help up down restart logs logs-be logs-fe logs-db build dev dev-down clean backup shell-be shell-db shell-fe ps
 
 help:
-	@echo "HIS-MedSystem — comenzi disponibile:"
-	@echo "  make up       - Pornește toate serviciile Docker"
-	@echo "  make down     - Oprește toate serviciile"
-	@echo "  make build    - Reconstruiește imaginile Docker"
-	@echo "  make logs     - Afișează logurile"
-	@echo "  make restart  - Repornește serviciile"
-	@echo "  make clean    - Șterge toate containerele și volumele"
-	@echo "  make dev      - Pornește doar PostgreSQL pentru dezvoltare"
+	@echo "🏥 HIS-MedSystem — Доступные команды:"
+	@echo ""
+	@echo "📦 Production:"
+	@echo "  make up          - Запустить все сервисы"
+	@echo "  make down        - Остановить все сервисы"
+	@echo "  make restart     - Перезапустить"
+	@echo "  make logs        - Показать логи"
+	@echo "  make build       - Пересобрать образы"
+	@echo ""
+	@echo "💻 Development:"
+	@echo "  make dev         - Запустить только PostgreSQL + pgAdmin"
+	@echo "  make dev-down    - Остановить dev окружение"
+	@echo ""
+	@echo "🛠 Утилиты:"
+	@echo "  make clean       - Удалить контейнеры и тома"
+	@echo "  make backup      - Бекап базы данных"
+	@echo "  make shell-be    - Войти в контейнер backend"
+	@echo "  make shell-db    - Войти в PostgreSQL"
 
 up:
+	@echo "🚀 Запуск HIS-MedSystem..."
 	docker-compose up -d
-	@echo "HIS-MedSystem pornit la http://localhost"
+	@echo "✅ Запущено! Frontend: http://localhost · Backend: http://localhost:3000"
 
 down:
+	@echo "🛑 Остановка HIS-MedSystem..."
 	docker-compose down
-	@echo "HIS-MedSystem oprit"
 
-build:
-	docker-compose up --build -d
-	@echo "Rebuild complet"
+restart:
+	@echo "🔄 Перезапуск..."
+	docker-compose restart
 
 logs:
 	docker-compose logs -f
 
-logs-backend:
-	docker logs his_backend -f
+logs-be:
+	docker-compose logs -f backend
 
-logs-frontend:
-	docker logs his_frontend -f
+logs-fe:
+	docker-compose logs -f frontend
 
-restart:
-	docker-compose restart
-	@echo "Servicii repornite"
+logs-db:
+	docker-compose logs -f postgres
 
-clean:
-	docker-compose down -v --rmi all
-	@echo "Curatat complet"
+build:
+	@echo "🔨 Пересборка образов..."
+	docker-compose build --no-cache
 
 dev:
+	@echo "💻 Запуск dev окружения (PostgreSQL + pgAdmin)..."
 	docker-compose -f docker-compose.dev.yml up -d
-	@echo "PostgreSQL pornit pentru dezvoltare locala"
-	@echo "  Backend:  cd backend && npm run start:dev"
-	@echo "  Frontend: cd frontend && ng serve"
+	@echo "✅ PostgreSQL: localhost:5432"
+	@echo "✅ pgAdmin: http://localhost:5050 (admin@his.local / admin)"
+	@echo ""
+	@echo "Теперь запусти backend и frontend локально:"
+	@echo "  cd backend && npm run start:dev"
+	@echo "  cd frontend && ng serve"
 
-status:
+dev-down:
+	docker-compose -f docker-compose.dev.yml down
+
+clean:
+	@echo "⚠️  Это удалит ВСЕ данные!"
+	@read -p "Вы уверены? [y/N]: " confirm && [ "$$confirm" = "y" ] || exit 1
+	docker-compose down -v
+	docker-compose -f docker-compose.dev.yml down -v
+	@echo "✅ Очищено"
+
+backup:
+	@echo "💾 Создание бекапа БД..."
+	@mkdir -p backups
+	docker-compose exec -T postgres pg_dump -U medical_user medical_db > backups/backup_$$(date +%Y%m%d_%H%M%S).sql
+	@echo "✅ Бекап сохранён в backups/"
+
+shell-be:
+	docker-compose exec backend sh
+
+shell-db:
+	docker-compose exec postgres psql -U medical_user -d medical_db
+
+shell-fe:
+	docker-compose exec frontend sh
+
+ps:
 	docker-compose ps

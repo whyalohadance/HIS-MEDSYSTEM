@@ -1,4 +1,13 @@
 node_modules
 dist
-.angular
+.git
+.gitignore
 *.log
+coverage
+.nyc_output
+.vscode
+.idea
+.angular
+README.md
+e2e
+karma.conf.js

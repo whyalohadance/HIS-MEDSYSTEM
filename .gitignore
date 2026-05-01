@@ -45,12 +45,13 @@ coverage/
 # OS
 Thumbs.db
 
-# Uploads (если есть)
+# Uploads
 backend/uploads/
 
 # Database
 *.sqlite
 *.db
 
-# Roboto fonts (могут быть локальными)
-# backend/fonts/*.ttf
+# Backups
+backups/*.sql
+!backups/.gitkeep

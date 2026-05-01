@@ -2,65 +2,90 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: his_postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_DB: ${DB_DATABASE:-medical_db}
+      POSTGRES_USER: ${DB_USERNAME:-medical_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-medical123}
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-medical_user} -d ${DB_DATABASE:-medical_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
+    networks:
+      - his_network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: his_backend
-    environment:
-      PORT: ${PORT}
-      DB_HOST: postgres
-      DB_PORT: ${DB_PORT}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-      NODE_ENV: ${NODE_ENV}
-    ports:
-      - "3000:3000"
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-medical_user}
+      DB_PASSWORD: ${DB_PASSWORD:-medical123}
+      DB_DATABASE: ${DB_DATABASE:-medical_db}
+      JWT_SECRET: ${JWT_SECRET:-your-very-long-secret-key-min-32-chars-please-change}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      PORT: 3000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+    ports:
+      - "3000:3000"
     volumes:
       - ./backend/uploads:/app/uploads
-      - ./backend/fonts:/app/fonts
+      - ./backend/fonts:/app/fonts:ro
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
-    restart: unless-stopped
+      start_period: 40s
+    networks:
+      - his_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: his_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
     ports:
       - "80:80"
-    depends_on:
-      backend:
-        condition: service_started
+    networks:
+      - his_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: his_pgadmin
     restart: unless-stopped
+    profiles: ["dev"]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@his.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - his_network
 
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  his_network:
+    driver: bridge
