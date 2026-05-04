@@ -6,8 +6,8 @@ import { Notification } from '../models/notification.model';
 interface ApiResponse<T> {
   success: boolean;
   data: T;
-  requestId: string;
-  timestamp: string;
+  requestId?: string;
+  timestamp?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -16,25 +16,25 @@ export class NotificationsService {
 
   getAll(): Observable<Notification[]> {
     return this.api.get<ApiResponse<Notification[]>>('/notifications').pipe(
-      map(res => res.data)
+      map(res => res.data || [])
     );
   }
 
   getUnreadCount(): Observable<number> {
-    return this.api.get<ApiResponse<number>>('/notifications/unread-count').pipe(
-      map(res => res.data)
+    return this.api.get<ApiResponse<{ count: number }>>('/notifications/unread-count').pipe(
+      map(res => res.data?.count ?? 0)
     );
   }
 
-  markAsRead(id: number): Observable<Notification> {
-    return this.api.patch<ApiResponse<Notification>>(
-      `/notifications/${id}/read`, {}
-    ).pipe(map(res => res.data));
+  markAsRead(id: number): Observable<any> {
+    return this.api.patch<any>(`/notifications/${id}/read`, {});
   }
 
-  markAllAsRead(): Observable<void> {
-    return this.api.patch<ApiResponse<void>>(
-      '/notifications/read-all', {}
-    ).pipe(map(() => void 0));
+  markAllAsRead(): Observable<any> {
+    return this.api.patch<any>('/notifications/read-all', {});
+  }
+
+  delete(id: number): Observable<any> {
+    return this.api.delete<any>(`/notifications/${id}`);
   }
 }

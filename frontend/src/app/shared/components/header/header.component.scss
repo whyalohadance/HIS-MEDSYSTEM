@@ -38,17 +38,22 @@
 }
 
 /* ===== NOTIFICATIONS ===== */
+.notif-wrap {
+  position: relative;
+}
+
 .notif-btn {
   position: relative;
   width: 40px;
   height: 40px;
   border-radius: 10px;
   background: #f4f6f9;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
   color: #718096;
+  cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
@@ -67,13 +72,197 @@
   color: white;
   font-size: 10px;
   font-weight: 700;
-  width: 18px;
+  min-width: 18px;
   height: 18px;
-  border-radius: 50%;
+  padding: 0 4px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+}
+
+/* ===== NOTIFICATION PANEL ===== */
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 360px;
+  max-height: 480px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: dropdownIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.notif-panel-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f2d52;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .material-icons { font-size: 18px; color: #1a73e8; }
+  }
+}
+
+.btn-mark-all {
+  background: transparent;
+  border: none;
+  color: #1a73e8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: inherit;
+
+  &:hover { background: #eff6ff; }
+}
+
+.notif-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notif-empty {
+  text-align: center;
+  padding: 36px 20px;
+  color: #94a3b8;
+
+  .material-icons { font-size: 44px; opacity: 0.4; display: block; margin: 0 auto; }
+  p { margin: 10px 0 0; font-size: 13px; }
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+
+  &:hover { background: #f8fafc; }
+
+  &.unread {
+    background: #eff6ff;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      background: #1a73e8;
+      border-radius: 50%;
+    }
+  }
+
+  &.priority-critical {
+    background: #fef2f2;
+
+    &.unread::before {
+      background: #ef4444;
+      animation: pulse-dot 1.5s ease infinite;
+    }
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+  50% { opacity: 0.5; transform: translateY(-50%) scale(1.6); }
+}
+
+.notif-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-icons { font-size: 17px; }
+
+  &.type-appointment_reminder { background: #fef3c7; color: #d97706; }
+  &.type-lab_result_ready     { background: #d1fae5; color: #047857; }
+  &.type-lab_critical         { background: #fee2e2; color: #dc2626; }
+  &.type-study_report_ready   { background: #ede9fe; color: #6d28d9; }
+  &.type-monthly_report       { background: #dbeafe; color: #1e40af; }
+  &.type-system               { background: #f1f5f9; color: #64748b; }
+}
+
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f2d52;
+  margin-bottom: 2px;
+}
+
+.notif-message {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-time {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.notif-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .material-icons { font-size: 14px; }
+}
+
+.notif-item:hover .notif-close { opacity: 1; }
+.notif-close:hover { background: #fee2e2; color: #ef4444; }
+
+@media (max-width: 600px) {
+  .notif-panel {
+    right: -40px;
+    width: calc(100vw - 24px);
+  }
 }
 
 /* ===== USER MENU TRIGGER ===== */

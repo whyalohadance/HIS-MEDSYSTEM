@@ -27,11 +27,53 @@
       <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
     </button>
 
-    <!-- Notifications -->
-    <a routerLink="/notifications" class="notif-btn">
-      <span class="material-icons">notifications</span>
-      <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
-    </a>
+    <!-- Notifications bell + inline panel -->
+    <div class="notif-wrap">
+      <button class="notif-btn" (click)="toggleNotifPanel($event)" aria-label="Уведомления">
+        <span class="material-icons">notifications</span>
+        <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+      </button>
+
+      <div class="notif-panel" *ngIf="showNotifPanel" (click)="$event.stopPropagation()">
+        <div class="notif-panel-header">
+          <h3>
+            <span class="material-icons">notifications</span>
+            Уведомления
+          </h3>
+          <button class="btn-mark-all" *ngIf="unreadCount > 0" (click)="markAllRead()">
+            Прочитать всё
+          </button>
+        </div>
+
+        <div class="notif-list">
+          <div class="notif-empty" *ngIf="notifications.length === 0">
+            <span class="material-icons">notifications_none</span>
+            <p>Нет уведомлений</p>
+          </div>
+
+          <div class="notif-item"
+            *ngFor="let n of notifications"
+            [class.unread]="!n.isRead"
+            [class]="'notif-item priority-' + n.priority + (n.isRead ? '' : ' unread')"
+            (click)="openNotif(n)">
+
+            <div class="notif-icon" [class]="'type-' + n.type">
+              <span class="material-icons">{{ getNotifIcon(n.type) }}</span>
+            </div>
+
+            <div class="notif-content">
+              <div class="notif-title">{{ n.title }}</div>
+              <div class="notif-message">{{ n.message }}</div>
+              <div class="notif-time">{{ getTimeAgo(n.createdAt) }}</div>
+            </div>
+
+            <button class="notif-close" (click)="deleteNotif(n.id, $event)" title="Удалить">
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Avatar + dropdown -->
     <div class="user-menu" (click)="toggleUserDropdown($event)" [class.open]="showUserDropdown">
@@ -42,7 +84,6 @@
       </div>
       <span class="material-icons chevron hide-mobile" [class.rotated]="showUserDropdown">expand_more</span>
 
-      <!-- Custom dropdown -->
       <div class="user-dropdown" *ngIf="showUserDropdown" (click)="$event.stopPropagation()">
         <div class="dropdown-top">
           <div class="dropdown-avatar">{{ getInitials() }}</div>

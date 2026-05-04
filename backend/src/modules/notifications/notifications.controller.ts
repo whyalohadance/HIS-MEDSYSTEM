@@ -1,40 +1,48 @@
-import { ApiTags } from '@nestjs/swagger';
-import {
-  Controller, Get, Post, Patch, Param,
-  Body, UseGuards, Request, ParseIntPipe
-} from '@nestjs/common';
-import { NotificationsService } from './notifications.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
+import { Controller, Get, Post, Patch, Delete, Param, UseGuards, Request, ParseIntPipe } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { NotificationsService } from './notifications.service';
 
 @ApiTags('notifications')
-@Controller('notifications')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
+@Controller('notifications')
 export class NotificationsController {
-  constructor(private service: NotificationsService) {}
+  constructor(private readonly service: NotificationsService) {}
 
   @Get()
-  findAll(@Request() req) {
-    return this.service.findAll(req.user.id);
+  async getAll(@Request() req: any) {
+    const data = await this.service.findAll(req.user.id);
+    return { success: true, data };
   }
 
   @Get('unread-count')
-  getUnreadCount(@Request() req) {
-    return this.service.getUnreadCount(req.user.id);
-  }
-
-  @Post()
-  create(@Body() dto: CreateNotificationDto) {
-    return this.service.create(dto);
+  async unreadCount(@Request() req: any) {
+    const data = await this.service.unreadCount(req.user.id);
+    return { success: true, data };
   }
 
   @Patch(':id/read')
-  markAsRead(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    return this.service.markAsRead(id, req.user.id);
+  async markAsRead(@Param('id', ParseIntPipe) id: number) {
+    return this.service.markAsRead(id);
   }
 
   @Patch('read-all')
-  markAllAsRead(@Request() req) {
+  async markAllAsRead(@Request() req: any) {
     return this.service.markAllAsRead(req.user.id);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.delete(id);
+  }
+
+  @Post('test-cron')
+  async testCron(@Request() req: any) {
+    if (req.user?.role !== 'admin') {
+      return { success: false, error: 'Only admin can trigger cron manually' };
+    }
+    await this.service.triggerAllCrons();
+    return { success: true, message: 'All cron jobs triggered manually' };
   }
 }
