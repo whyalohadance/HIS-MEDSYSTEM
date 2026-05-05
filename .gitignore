@@ -22,13 +22,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 nest.log
+logs/
 
 # IDE
-.vscode/
+.vscode/settings.json
 .idea/
 *.swp
 *.swo
+
+# OS
 .DS_Store
+Thumbs.db
 
 # Testing
 coverage/
@@ -39,19 +43,23 @@ coverage/
 .eslintcache
 .cache/
 
-# Angular specific
+# Angular
 .angular/
 
-# OS
-Thumbs.db
+# Docker
+.docker/
 
-# Uploads
-backend/uploads/
+# Uploads & media (data lives in Docker volumes, not in git)
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/dicom/*
+!backend/dicom/.gitkeep
 
-# Database
+# Database files
 *.sqlite
 *.db
 
-# Backups
+# Backups (keep placeholder, ignore actual dumps)
 backups/*.sql
+backups/*.dump
 !backups/.gitkeep

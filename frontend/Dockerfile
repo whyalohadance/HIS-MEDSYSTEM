@@ -1,34 +1,41 @@
+# ============================================
 # Stage 1: Builder
+# ============================================
 FROM node:20-alpine AS builder
+
+RUN apk add --no-cache tzdata
+ENV TZ=Europe/Chisinau
 
 WORKDIR /app
 
-# Копируем package files
 COPY package*.json ./
-
-# Устанавливаем зависимости
 RUN npm ci
 
-# Копируем исходники
 COPY . .
 
-# Билдим production версию
+# Angular project name: medical-app
 RUN npm run build -- --configuration=production
 
+# ============================================
 # Stage 2: Nginx
+# ============================================
 FROM nginx:alpine AS production
 
-# Удаляем дефолтный конфиг nginx
+RUN apk add --no-cache tzdata wget
+ENV TZ=Europe/Chisinau
+
+# Дефолтный конфиг nginx удаляем
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Копируем наш конфиг
+# Наш конфиг
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Копируем готовый билд (Angular project name: medical-app)
+# Angular build output (project name: medical-app)
 COPY --from=builder /app/dist/medical-app/browser /usr/share/nginx/html
 
-# Открываем порт 80
+HEALTHCHECK --interval=30s --timeout=3s --start-period=15s \
+  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
 EXPOSE 80
 
-# Запуск nginx в foreground режиме
 CMD ["nginx", "-g", "daemon off;"]
