@@ -56,7 +56,7 @@ import { AppService } from './app.service';
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
         entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult],
-        synchronize: true,
+        synchronize: config.get('DB_SYNCHRONIZE', 'true') !== 'false',
         logging: false,
       }),
     }),

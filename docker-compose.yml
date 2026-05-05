@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE:-medical_db}
       POSTGRES_USER: ${DB_USERNAME:-medical_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-medical123}
+      TZ: Europe/Chisinau
     ports:
       - "5432:5432"
     volumes:
@@ -16,6 +17,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       - his_network
 
@@ -30,6 +40,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
+      TZ: Europe/Chisinau
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME:-medical_user}
@@ -39,6 +50,7 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       PORT: 3000
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-false}
     ports:
       - "3000:3000"
     volumes:
@@ -50,6 +62,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
     networks:
       - his_network
 
@@ -63,6 +84,15 @@ services:
       - backend
     ports:
       - "80:80"
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
     networks:
       - his_network
 
@@ -75,10 +105,20 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@his.local}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
+      TZ: Europe/Chisinau
     ports:
       - "5050:80"
     depends_on:
       - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
     networks:
       - his_network
 
