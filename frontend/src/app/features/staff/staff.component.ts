@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../core/services/api.service';
+import { ToastService } from '../../core/services/toast.service';
 import { map, forkJoin } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -121,8 +122,59 @@ interface StaffMember {
               {{ s.status === 'busy' ? ('STAFF.STATUS_BUSY' | translate) : ('STAFF.STATUS_AVAILABLE' | translate) }}
             </span>
           </div>
+          <button class="btn-edit" (click)="editUser(s)" title="Редактировать">
+            <span class="material-icons">edit</span>
+          </button>
           <button class="btn-danger" (click)="delete(s.id)" [title]="'COMMON.DELETE' | translate">
             <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div class="modal-backdrop" *ngIf="showEditModal" (click)="showEditModal = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Редактировать сотрудника</h2>
+          <button class="modal-close" (click)="showEditModal = false"><span class="material-icons">close</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Имя</label>
+              <input type="text" [(ngModel)]="editForm.firstName">
+            </div>
+            <div class="form-field">
+              <label>Фамилия</label>
+              <input type="text" [(ngModel)]="editForm.lastName">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Роль</label>
+              <select [(ngModel)]="editForm.role">
+                <option value="doctor">Врач</option>
+                <option value="receptionist">Регистратор</option>
+                <option value="radiologist">Радиолог</option>
+                <option value="lab_technician">Лаборант</option>
+                <option value="admin">Администратор</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Телефон</label>
+              <input type="text" [(ngModel)]="editForm.phone" placeholder="+373 69 000 000">
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Новый пароль (оставь пустым, чтобы не менять)</label>
+            <input type="password" [(ngModel)]="editForm.password" placeholder="Минимум 6 символов">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="showEditModal = false">Отмена</button>
+          <button class="btn-primary" (click)="saveEdit()" [disabled]="isSaving">
+            {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
           </button>
         </div>
       </div>
@@ -189,6 +241,17 @@ interface StaffMember {
     .status-dot-inline { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .status-dot-inline.available { background: #34a853; }
     .status-dot-inline.busy { background: #f9ab00; }
+    .btn-edit { background: none; border: none; cursor: pointer; color: #1a73e8; padding: 8px; border-radius: 8px; display: flex; align-items: center; }
+    .btn-edit:hover { background: #e8f0fe; }
+    /* Edit modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(3px); }
+    .modal-content { background: white; border-radius: 16px; max-width: 560px; width: 100%; display: flex; flex-direction: column; overflow: hidden; }
+    .modal-header { padding: 18px 22px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h2 { margin: 0; font-size: 18px; color: #0f2d52; }
+    .modal-close { background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; }
+    .modal-close:hover { background: #f1f5f9; }
+    .modal-body { padding: 22px; }
+    .modal-footer { padding: 16px 22px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end; gap: 10px; }
   `]
 })
 export class StaffComponent implements OnInit {
@@ -202,7 +265,11 @@ export class StaffComponent implements OnInit {
 
   form = { firstName: '', lastName: '', password: '', role: 'doctor', phone: '' };
 
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private translate: TranslateService) {}
+  showEditModal = false;
+  editingUser: StaffMember | null = null;
+  editForm: any = {};
+
+  constructor(private api: ApiService, private toast: ToastService, private cdr: ChangeDetectorRef, private translate: TranslateService) {}
 
   ngOnInit(): void { this.load(); }
 
@@ -280,6 +347,29 @@ export class StaffComponent implements OnInit {
         this.load(); this.cdr.detectChanges();
       },
       error: err => { this.isSaving = false; this.errorMsg = err?.error?.error?.message || 'Ошибка при добавлении'; this.cdr.detectChanges(); }
+    });
+  }
+
+  editUser(user: StaffMember): void {
+    this.editingUser = user;
+    this.editForm = { firstName: user.firstName, lastName: user.lastName, role: user.role, phone: user.phone || '', password: '' };
+    this.showEditModal = true;
+  }
+
+  saveEdit(): void {
+    if (!this.editingUser || this.isSaving) return;
+    this.isSaving = true;
+    const payload: any = { firstName: this.editForm.firstName, lastName: this.editForm.lastName, role: this.editForm.role, phone: this.editForm.phone };
+    if (this.editForm.password && this.editForm.password.length >= 6) payload.password = this.editForm.password;
+    this.api.patch<any>(`/users/${this.editingUser.id}`, payload).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.showEditModal = false;
+        this.toast.success('Сотрудник обновлён');
+        this.load();
+        this.cdr.detectChanges();
+      },
+      error: () => { this.isSaving = false; this.toast.error('Ошибка при обновлении'); this.cdr.detectChanges(); }
     });
   }
 

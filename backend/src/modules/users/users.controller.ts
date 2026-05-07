@@ -1,5 +1,5 @@
 import { ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Put, Delete, Body, UseGuards, Request, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Put, Patch, Delete, Body, UseGuards, Request, Param, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../../common/guards/roles.guard';
@@ -31,6 +31,14 @@ export class UsersController {
   @Roles(UserRole.ADMIN)
   findAll() {
     return this.service.findAll();
+  }
+
+  @Patch(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+    const data = await this.service.adminUpdateById(id, body);
+    return { success: true, data };
   }
 
   @Delete(':id')

@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
 import { User } from './user.entity';
 
 const SAFE_FIELDS: (keyof User)[] = ['id', 'firstName', 'lastName', 'email', 'role', 'phone', 'roomId', 'createdAt'];
@@ -43,6 +44,17 @@ export class UsersService {
     const allowed = ['firstName', 'lastName', 'phone', 'roomId'];
     const filtered: any = {};
     allowed.forEach(k => { if ((data as any)[k] !== undefined) filtered[k] = (data as any)[k]; });
+    await this.repo.update(id, filtered);
+    return this.findById(id);
+  }
+
+  async adminUpdateById(id: number, data: any): Promise<User> {
+    const allowed = ['firstName', 'lastName', 'phone', 'role', 'roomId'];
+    const filtered: any = {};
+    allowed.forEach(k => { if (data[k] !== undefined) filtered[k] = data[k]; });
+    if (data.password && data.password.length >= 6) {
+      filtered.password = await bcrypt.hash(data.password, 10);
+    }
     await this.repo.update(id, filtered);
     return this.findById(id);
   }
