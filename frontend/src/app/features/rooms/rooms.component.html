@@ -1,0 +1,200 @@
+<div class="page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'ROOMS.TITLE' | translate }}</h1>
+      <p class="page-sub">{{ filteredRooms.length }} / {{ rooms.length }}</p>
+    </div>
+    <button class="btn-primary" (click)="openCreate()">
+      <span class="material-icons">add</span> {{ 'ROOMS.CREATE' | translate }}
+    </button>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button
+      *ngFor="let tab of filterTabs"
+      class="tab-btn"
+      [class.active]="filterType === tab.value"
+      (click)="filterType = tab.value"
+    >
+      <span class="material-icons">{{ tab.icon }}</span>
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">
+    <span class="material-icons spin">autorenew</span> Загрузка...
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredRooms.length === 0">
+    <span class="material-icons">meeting_room</span>
+    <p>{{ rooms.length === 0 ? ('ROOMS.EMPTY' | translate) : ('ROOMS.NO_ROOMS' | translate) }}</p>
+  </div>
+
+  <!-- Rooms Grid -->
+  <div class="grid" *ngIf="!isLoading && filteredRooms.length > 0">
+    <div class="room-card" *ngFor="let r of filteredRooms">
+      <!-- Card Header -->
+      <div class="room-header">
+        <div class="room-icon" [style.background]="getTypeMeta(r.type).bg">
+          <span class="material-icons" [style.color]="getTypeMeta(r.type).color">{{ getTypeMeta(r.type).icon }}</span>
+        </div>
+        <div class="room-info">
+          <div class="room-name">{{ r.name }}</div>
+          <div class="room-sub">
+            <span *ngIf="r.number">Каб. {{ r.number }}</span>
+            <span *ngIf="r.floor"> · Эт. {{ r.floor }}</span>
+          </div>
+        </div>
+        <div class="room-badges">
+          <span class="room-type-badge" [style.background]="getTypeMeta(r.type).bg" [style.color]="getTypeMeta(r.type).color">
+            {{ getTypeMeta(r.type).label }}
+          </span>
+          <span class="status-badge" [class.active]="r.isActive" [class.inactive]="!r.isActive">
+            {{ r.isActive ? 'Активен' : 'Неактивен' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Services Mini -->
+      <div class="services-mini" *ngIf="r.services?.length">
+        <span class="svc-pill" *ngFor="let s of r.services | slice:0:3">
+          {{ $any(s).name }} — {{ $any(s).price }} MDL
+        </span>
+        <span class="svc-more" *ngIf="r.services.length > 3">+{{ r.services.length - 3 }}</span>
+      </div>
+      <div class="no-services" *ngIf="!r.services?.length">
+        <span class="material-icons">info_outline</span> Нет услуг
+      </div>
+
+      <!-- Staff Chips -->
+      <div class="staff-chips" *ngIf="getStaffNames(r).length">
+        <span class="staff-chip" *ngFor="let name of getStaffNames(r)">
+          <span class="material-icons">person</span> {{ name }}
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="room-actions">
+        <button class="btn-edit" (click)="openEdit(r)">
+          <span class="material-icons">edit</span> Изменить
+        </button>
+        <button class="btn-delete" (click)="deleteRoom(r.id)">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="showModal = false">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        <span class="material-icons">meeting_room</span>
+        {{ editingRoom ? ('ROOMS.EDIT' | translate) : ('ROOMS.CREATE' | translate) }}
+      </h2>
+      <button class="btn-close" (click)="showModal = false">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Number & Floor -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Номер кабинета</label>
+          <input type="text" [(ngModel)]="form.number" placeholder="101">
+        </div>
+        <div class="form-group">
+          <label>Этаж</label>
+          <input type="number" [(ngModel)]="form.floor" min="0" max="20">
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label>Название кабинета *</label>
+        <input type="text" [(ngModel)]="form.name" placeholder="Кабинет терапевта">
+      </div>
+
+      <!-- Type -->
+      <div class="form-group">
+        <label>Тип кабинета</label>
+        <div class="type-selector">
+          <label
+            class="type-option"
+            *ngFor="let t of roomTypes"
+            [class.selected]="form.type === t.value"
+          >
+            <input type="radio" [(ngModel)]="form.type" [value]="t.value" (change)="form.assignedDoctorIds = []">
+            <span class="material-icons">{{ t.icon }}</span>
+            <span>{{ t.label }}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Staff -->
+      <div class="form-group">
+        <label>Привязанный персонал</label>
+        <div class="staff-list" *ngIf="getAvailableStaff().length > 0; else noStaff">
+          <label
+            class="staff-cb"
+            *ngFor="let s of getAvailableStaff()"
+            [class.sel]="isDoctorSelected(s.id)"
+          >
+            <input type="checkbox" [checked]="isDoctorSelected(s.id)" (change)="toggleDoctor(s.id)">
+            <span class="s-avatar" [class]="s.role">{{ s.firstName?.[0] }}{{ s.lastName?.[0] }}</span>
+            <span class="s-name">{{ s.firstName }} {{ s.lastName }}</span>
+            <span class="s-check material-icons" *ngIf="isDoctorSelected(s.id)">check</span>
+          </label>
+        </div>
+        <ng-template #noStaff>
+          <div class="empty-staff">Нет персонала для типа "{{ form.type }}"</div>
+        </ng-template>
+      </div>
+
+      <!-- Services -->
+      <div class="form-group">
+        <label>Услуги и цены</label>
+        <div class="services-list" *ngIf="form.services.length > 0">
+          <div class="svc-row" *ngFor="let s of form.services; let i = index">
+            <span class="svc-n">{{ s.name }}</span>
+            <span class="svc-p">{{ s.price }} MDL</span>
+            <span class="svc-d">{{ s.duration }} мин</span>
+            <button class="btn-icon-sm danger" (click)="removeService(i)">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+        <div class="add-svc-row">
+          <input type="text" [(ngModel)]="newSvc.name" placeholder="Название услуги">
+          <input type="number" [(ngModel)]="newSvc.price" placeholder="Цена">
+          <input type="number" [(ngModel)]="newSvc.duration" placeholder="Мин">
+          <button class="btn-add-svc" (click)="addService()">
+            <span class="material-icons">add</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active toggle -->
+      <div class="form-group toggle-row">
+        <label>
+          <input type="checkbox" [(ngModel)]="form.isActive"> Активен
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="showModal = false">Отмена</button>
+      <button class="btn-save" (click)="saveRoom()" [disabled]="isSaving">
+        <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'check' }}</span>
+        {{ editingRoom ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+  </div>
+</div>
