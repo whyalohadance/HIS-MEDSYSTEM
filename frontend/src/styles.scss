@@ -1454,3 +1454,310 @@ body.dark-theme .nav-tab.active .nav-icon-wrap { background: rgba(129, 140, 248,
   .reception-apt-item.completed { border-left-color: #34a853 !important; }
   .reception-apt-item.cancelled { border-left-color: #ea4335 !important; }
 }
+
+/* ===========================================
+   ГЛОБАЛЬНЫЕ ПРАВИЛА ДЛЯ MATERIAL ICONS
+   Решают проблему "иконка отдельно — текст отдельно"
+   =========================================== */
+
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp {
+  font-family: 'Material Icons', 'Material Icons Outlined' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  flex-shrink: 0 !important;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+}
+
+/* Универсальное правило для кнопок и ссылок с иконкой */
+button:has(.material-icons),
+a:has(.material-icons) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Все элементы которые содержат иконку + текст */
+.btn-primary,
+.btn-secondary,
+.btn-cancel,
+.btn-save,
+.btn-edit,
+.btn-del,
+.btn-add,
+.action-btn,
+.filter-btn,
+.tab-btn,
+.cat-tab,
+.type-card,
+.type-option,
+.staff-chip,
+.tag,
+.chip,
+.badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+
+  & > span:not(.material-icons) {
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* Для карточек с иконкой сверху и текстом снизу */
+.type-card,
+.demo-btn {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+/* Заголовки с иконками */
+h1, h2, h3, h4, h5, h6 {
+  &:has(.material-icons) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Ссылки в sidebar */
+.sidebar a,
+.nav-link,
+.menu-item,
+.nav-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  white-space: nowrap !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+
+  span:not(.material-icons) {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+}
+
+/* Notification panel items */
+.notif-item,
+.notif-icon {
+  display: flex !important;
+  align-items: center !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Toast уведомления */
+.toast,
+.toast-message {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Form labels с иконками */
+label:has(.material-icons) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Empty states — вертикальный layout (иконка сверху, текст снизу) */
+.empty,
+.empty-state,
+.no-data {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  .material-icons {
+    margin-bottom: 12px;
+  }
+}
+
+/* Loading row — горизонтальный layout (спиннер + текст в строку) */
+.loading,
+.ld-loading,
+.rd-loading,
+.loading-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Status badges */
+.status-badge,
+.priority-badge,
+.role-badge,
+.type-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+}
+
+/* Cards с иконками в шапке */
+.card-header,
+.section-header,
+.modal-header {
+  &:has(.material-icons) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Tabs с иконками */
+.tab-btn,
+.tab-link,
+.tabs-nav button,
+.tabs-nav a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  white-space: nowrap !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+}
+
+/* Список персонала */
+.staff-item,
+.doctor-card,
+.staff-cb,
+.staff-chip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Summary items в формах */
+.summary-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+
+  & > div {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+.summary-label,
+.summary-value {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Dropdown items */
+.dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  white-space: nowrap !important;
+
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Универсальный fix для flex containers */
+.flex-row,
+.flex-center,
+.flex-between {
+  .material-icons {
+    flex-shrink: 0 !important;
+  }
+}
+
+/* Размеры иконок по умолчанию */
+.material-icons {
+  font-size: 18px;
+}
+
+.icon-sm { font-size: 14px !important; }
+.icon-md { font-size: 18px !important; }
+.icon-lg { font-size: 24px !important; }
+.icon-xl { font-size: 32px !important; }
+
+/* Цвета иконок */
+.icon-primary { color: #1a73e8 !important; }
+.icon-success { color: #10b981 !important; }
+.icon-warning { color: #f59e0b !important; }
+.icon-danger  { color: #ef4444 !important; }
+.icon-muted   { color: #94a3b8 !important; }
+.icon-ris     { color: #7c3aed !important; }
+.icon-lis     { color: #10b981 !important; }

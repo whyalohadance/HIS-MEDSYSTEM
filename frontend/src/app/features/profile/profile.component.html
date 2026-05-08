@@ -78,7 +78,7 @@
 
       <!-- Расписание врача -->
       <div class="schedule-card" *ngIf="authService.isDoctor">
-        <h3><span class="material-icons">calendar_month</span> {{ 'PROFILE.MY_SCHEDULE' | translate }}</h3>
+        <h3><span class="material-icons">calendar_month</span><span> {{ 'PROFILE.MY_SCHEDULE' | translate }}</span></h3>
         <div class="schedule-empty" *ngIf="mySchedules.length === 0">
           <span class="material-icons">event_busy</span>
           <p>{{ 'PROFILE.NO_SCHEDULE' | translate }}</p>

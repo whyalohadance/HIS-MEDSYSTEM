@@ -5,12 +5,13 @@
       <p class="page-sub">Медицинские результаты и анализы пациентов</p>
     </div>
     <button class="btn-primary" (click)="showForm = !showForm" *ngIf="authService.isDoctor || authService.isAdmin">
-      <span class="material-icons">add</span> Добавить результат
+      <span class="material-icons">add</span>
+      <span>Добавить результат</span>
     </button>
   </div>
 
   <div class="success-msg" *ngIf="successMessage">
-    <span class="material-icons">check_circle</span> {{ successMessage }}
+    <span class="material-icons">check_circle</span><span> {{ successMessage }}</span>
   </div>
 
   <div class="form-card" *ngIf="showForm">
@@ -54,7 +55,7 @@
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Загрузка...
+    <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
   </div>
 
   <div class="empty-state" *ngIf="!isLoading && results.length === 0">

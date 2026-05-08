@@ -13,11 +13,11 @@
   </div>
 
   <div class="success-toast" *ngIf="successMessage">
-    <span class="material-icons">check_circle</span> {{ successMessage }}
+    <span class="material-icons">check_circle</span><span> {{ successMessage }}</span>
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+    <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <div class="worklist-table" *ngIf="!isLoading && studies.length > 0">

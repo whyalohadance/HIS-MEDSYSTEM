@@ -6,7 +6,8 @@
       <p class="page-sub">{{ filteredRooms.length }} / {{ rooms.length }}</p>
     </div>
     <button class="btn-primary" (click)="openCreate()">
-      <span class="material-icons">add</span> {{ 'ROOMS.CREATE' | translate }}
+      <span class="material-icons">add</span>
+      <span>{{ 'ROOMS.CREATE' | translate }}</span>
     </button>
   </div>
 
@@ -19,13 +20,14 @@
       (click)="filterType = tab.value"
     >
       <span class="material-icons">{{ tab.icon }}</span>
-      {{ tab.label }}
+      <span>{{ tab.label }}</span>
     </button>
   </div>
 
   <!-- Loading -->
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> Загрузка...
+    <span class="material-icons spin">autorenew</span>
+    <span>Загрузка...</span>
   </div>
 
   <!-- Empty State -->
@@ -67,20 +69,23 @@
         <span class="svc-more" *ngIf="r.services.length > 3">+{{ r.services.length - 3 }}</span>
       </div>
       <div class="no-services" *ngIf="!r.services?.length">
-        <span class="material-icons">info_outline</span> Нет услуг
+        <span class="material-icons">info_outline</span>
+        <span>Нет услуг</span>
       </div>
 
       <!-- Staff Chips -->
       <div class="staff-chips" *ngIf="getStaffNames(r).length">
         <span class="staff-chip" *ngFor="let name of getStaffNames(r)">
-          <span class="material-icons">person</span> {{ name }}
+          <span class="material-icons">person</span>
+          <span>{{ name }}</span>
         </span>
       </div>
 
       <!-- Actions -->
       <div class="room-actions">
         <button class="btn-edit" (click)="openEdit(r)">
-          <span class="material-icons">edit</span> Изменить
+          <span class="material-icons">edit</span>
+          <span>Изменить</span>
         </button>
         <button class="btn-delete" (click)="deleteRoom(r.id)">
           <span class="material-icons">delete</span>
@@ -190,10 +195,12 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn-cancel" (click)="showModal = false">Отмена</button>
+      <button class="btn-cancel" (click)="showModal = false">
+        <span>Отмена</span>
+      </button>
       <button class="btn-save" (click)="saveRoom()" [disabled]="isSaving">
         <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'check' }}</span>
-        {{ editingRoom ? 'Сохранить' : 'Создать' }}
+        <span>{{ editingRoom ? 'Сохранить' : 'Создать' }}</span>
       </button>
     </div>
   </div>

@@ -6,12 +6,13 @@
       <p class="page-sub">{{ 'PATIENTS.SEARCH_SUBTITLE' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="showForm = !showForm; resetForm()">
-      <span class="material-icons">person_add</span> {{ 'PATIENTS.ADD_PATIENT' | translate }}
+      <span class="material-icons">person_add</span>
+      <span>{{ 'PATIENTS.ADD_PATIENT' | translate }}</span>
     </button>
   </div>
 
   <div class="success-msg" *ngIf="successMessage">
-    <span class="material-icons">check_circle</span> {{ successMessage }}
+    <span class="material-icons">check_circle</span><span> {{ successMessage }}</span>
   </div>
 
   <!-- Форма добавления -->
@@ -86,7 +87,7 @@
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> {{ 'COMMON.SEARCHING' | translate }}
+    <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.SEARCHING' | translate }}</span>
   </div>
 
   <div class="empty-state" *ngIf="!hasSearched && !isLoading">
@@ -114,7 +115,7 @@
           <span *ngIf="p.email"> · {{ p.email }}</span>
         </div>
         <div class="patient-doctor" *ngIf="getDoctorName(p.doctorId)">
-          <span class="material-icons">medical_services</span> {{ getDoctorName(p.doctorId) }}
+          <span class="material-icons">medical_services</span><span> {{ getDoctorName(p.doctorId) }}</span>
         </div>
       </div>
       <span class="gender-badge" [class.male]="p.gender === 'male'" [class.female]="p.gender === 'female'">

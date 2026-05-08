@@ -24,17 +24,18 @@
     <div class="period-actions">
       <button class="btn-pdf" (click)="downloadPDF()" [disabled]="isDownloading">
         <span class="material-icons">picture_as_pdf</span>
-        {{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_PDF' | translate) }}
+        <span>{{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_PDF' | translate) }}</span>
       </button>
       <button class="btn-excel" (click)="downloadExcel()" [disabled]="isDownloading">
         <span class="material-icons">table_chart</span>
-        {{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_EXCEL' | translate) }}
+        <span>{{ isDownloading ? ('REPORTS.DOWNLOADING' | translate) : ('REPORTS.DOWNLOAD_EXCEL' | translate) }}</span>
       </button>
     </div>
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+    <span class="material-icons spin">autorenew</span>
+    <span>{{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <div class="error-state" *ngIf="!isLoading && error">
@@ -76,6 +77,64 @@
         <span class="material-icons">badge</span>
         <div class="stat-value">{{ summary.staff.length }}</div>
         <div class="stat-label">{{ 'REPORTS.TOTAL_STAFF' | translate }}</div>
+      </div>
+    </div>
+
+    <!-- Графики аналитики -->
+    <div class="section-title">Аналитика за период</div>
+    <div class="charts-grid" *ngIf="!isStatsLoading && monthlyStats">
+      <div class="chart-card large">
+        <div class="chart-heading">
+          <span class="material-icons">show_chart</span>
+          <span>Активность по дням месяца</span>
+        </div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas #dailyChart></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-heading">
+          <span class="material-icons">donut_large</span>
+          <span>Статусы приёмов</span>
+        </div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas #statusChart></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-heading">
+          <span class="material-icons">leaderboard</span>
+          <span>Топ-5 услуг</span>
+        </div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas #servicesChart></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card large">
+        <div class="chart-heading">
+          <span class="material-icons">bar_chart</span>
+          <span>Годовая динамика {{ selectedYear }}</span>
+        </div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas #yearlyChart></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="chart-stats-summary" *ngIf="!isStatsLoading && monthlyStats?.summary">
+      <div class="chart-stat-pill">
+        <span class="material-icons">biotech</span>
+        <span>Анализов: <strong>{{ monthlyStats.summary.totalLabOrders }}</strong></span>
+      </div>
+      <div class="chart-stat-pill ris">
+        <span class="material-icons">radiology</span>
+        <span>Исследований: <strong>{{ monthlyStats.summary.totalStudies }}</strong></span>
+      </div>
+      <div class="chart-stat-pill success">
+        <span class="material-icons">payments</span>
+        <span>Выручка: <strong>{{ monthlyStats.summary.totalRevenue | number:'1.0-0' }} MDL</strong></span>
       </div>
     </div>
 

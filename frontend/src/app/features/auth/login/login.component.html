@@ -92,7 +92,7 @@
         </div>
         <div class="error-message" *ngIf="error">
           <span class="material-icons">error_outline</span>
-          {{ error }}
+          <span>{{ error }}</span>
         </div>
         <button type="submit" class="btn-login fg-3" [disabled]="isLoading">
           <span *ngIf="!isLoading">{{ 'AUTH.LOGIN_BTN' | translate }}</span>

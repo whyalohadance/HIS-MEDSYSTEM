@@ -1,7 +1,7 @@
 <div class="dashboard">
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+    <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <!-- ===== АДМИН ===== -->
@@ -152,7 +152,8 @@
               </div>
               <div class="apt-actions">
                 <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
-                  <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
+                  <span class="material-icons">person</span>
+                  <span>{{ 'DASHBOARD.CARD' | translate }}</span>
                 </a>
               </div>
             </div>
@@ -167,7 +168,8 @@
               <span class="today-badge" [class]="a.status">{{ getStatusLabel(a.status) | translate }}</span>
               <div class="apt-actions">
                 <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
-                  <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
+                  <span class="material-icons">person</span>
+                  <span>{{ 'DASHBOARD.CARD' | translate }}</span>
                 </a>
               </div>
             </div>
@@ -178,7 +180,7 @@
         <div class="section-title" *ngIf="upcomingAppointments.length > 0">{{ 'DASHBOARD.UPCOMING' | translate }}</div>
         <div class="upcoming-list" *ngIf="upcomingAppointments.length > 0">
           <div class="upcoming-item" *ngFor="let a of upcomingAppointments">
-            <div class="upcoming-date"><span class="material-icons">event</span> {{ formatDate(a.date) }} · {{ a.time }}</div>
+            <div class="upcoming-date"><span class="material-icons">event</span><span> {{ formatDate(a.date) }} · {{ a.time }}</span></div>
             <div class="upcoming-patient">{{ getPatientName(a.patientId) }}</div>
             <span class="badge scheduled">{{ 'DASHBOARD.PLANNED' | translate }}</span>
           </div>
@@ -202,7 +204,7 @@
         <div class="queue-section" style="margin-bottom:16px">
           <div class="queue-header">
             <div class="queue-title">
-              <span class="material-icons">people</span> {{ 'DASHBOARD.PATIENTS_TODAY' | translate }}
+              <span class="material-icons">people</span><span> {{ 'DASHBOARD.PATIENTS_TODAY' | translate }}</span>
             </div>
             <span class="queue-label" style="font-size:13px;color:#718096">{{ todayPatients.length }}</span>
           </div>
@@ -280,14 +282,17 @@
             </span>
             <div class="apt-actions" *ngIf="a.status === 'scheduled'">
               <button class="action-btn success" (click)="updateAptStatus(a.id, 'completed')">
-                <span class="material-icons">check</span> {{ 'DASHBOARD.COMPLETE' | translate }}
+                <span class="material-icons">check</span>
+                <span>{{ 'DASHBOARD.COMPLETE' | translate }}</span>
               </button>
               <button class="action-btn danger" (click)="updateAptStatus(a.id, 'cancelled')">
-                <span class="material-icons">close</span> {{ 'DASHBOARD.CANCEL' | translate }}
+                <span class="material-icons">close</span>
+                <span>{{ 'DASHBOARD.CANCEL' | translate }}</span>
               </button>
             </div>
             <a class="action-btn secondary" [routerLink]="['/patients', a.patientId]">
-              <span class="material-icons">person</span> {{ 'DASHBOARD.CARD' | translate }}
+              <span class="material-icons">person</span>
+              <span>{{ 'DASHBOARD.CARD' | translate }}</span>
             </a>
           </div>
         </div>
@@ -305,7 +310,8 @@
               </div>
             </div>
             <a class="action-btn primary" routerLink="/appointments">
-              <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
+              <span class="material-icons">add</span>
+              <span>{{ 'DASHBOARD.BOOK' | translate }}</span>
             </a>
           </div>
         </div>
@@ -332,7 +338,7 @@
         <!-- Статус врачей -->
         <div class="queue-section" style="margin:16px 0">
           <div class="queue-header">
-            <div class="queue-title"><span class="material-icons">medical_services</span> {{ 'DASHBOARD.DOCTORS_STATUS' | translate }}</div>
+            <div class="queue-title"><span class="material-icons">medical_services</span><span> {{ 'DASHBOARD.DOCTORS_STATUS' | translate }}</span></div>
           </div>
           <div class="doctors-status-list">
             <div class="doctor-status-item" *ngFor="let d of receptionDoctors">
@@ -345,7 +351,8 @@
                 </div>
               </div>
               <a *ngIf="!d.isBusy" class="action-btn primary" routerLink="/appointments">
-                <span class="material-icons">add</span> {{ 'DASHBOARD.BOOK' | translate }}
+                <span class="material-icons">add</span>
+                <span>{{ 'DASHBOARD.BOOK' | translate }}</span>
               </a>
             </div>
           </div>
@@ -354,7 +361,7 @@
         <!-- Кабинеты -->
         <div class="queue-section">
           <div class="queue-header">
-            <div class="queue-title"><span class="material-icons">meeting_room</span> {{ 'DASHBOARD.ROOMS_STATUS' | translate }}</div>
+            <div class="queue-title"><span class="material-icons">meeting_room</span><span> {{ 'DASHBOARD.ROOMS_STATUS' | translate }}</span></div>
           </div>
           <div class="rooms-status-list">
             <div class="room-status-item" *ngFor="let r of receptionRooms">

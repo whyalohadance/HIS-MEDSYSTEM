@@ -10,10 +10,10 @@
     </div>
     <div class="rd-actions">
       <a routerLink="/worklist" class="rd-btn rd-btn-primary">
-        <span class="material-icons">fact_check</span>Worklist
+        <span class="material-icons">fact_check</span><span>Worklist</span>
       </a>
       <a routerLink="/studies" class="rd-btn rd-btn-outline">
-        <span class="material-icons">biotech</span>Исследования
+        <span class="material-icons">biotech</span><span>Исследования</span>
       </a>
     </div>
   </div>
@@ -46,11 +46,11 @@
     <!-- Pending Studies -->
     <div class="rd-section">
       <div class="rd-section-header">
-        <h2><span class="material-icons">pending_actions</span>Ожидают обработки</h2>
+        <h2><span class="material-icons">pending_actions</span><span>Ожидают обработки</span></h2>
         <a routerLink="/worklist" class="rd-link">Все →</a>
       </div>
       <div class="rd-loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
       </div>
       <div class="rd-empty" *ngIf="!isLoading && pendingStudies.length === 0">
         <span class="material-icons">check_circle_outline</span>
@@ -74,7 +74,7 @@
     <!-- Сегодня -->
     <div class="rd-section">
       <div class="rd-section-header">
-        <h2><span class="material-icons">today</span>Сегодня</h2>
+        <h2><span class="material-icons">today</span><span>Сегодня</span></h2>
         <span class="rd-badge-count">{{ todayStudies.length }}</span>
       </div>
       <div class="rd-today-summary">
@@ -97,7 +97,7 @@
   <!-- Недельная активность -->
   <div class="rd-section" *ngIf="weeklyStats.length > 0">
     <div class="rd-section-header">
-      <h2><span class="material-icons">show_chart</span>Активность за неделю</h2>
+      <h2><span class="material-icons">show_chart</span><span>Активность за неделю</span></h2>
     </div>
     <div class="rd-weekly-chart">
       <div class="rd-day-bar" *ngFor="let day of weeklyStats" [class.today]="day.isToday">

@@ -6,12 +6,14 @@
       <p class="page-sub">{{ 'APPOINTMENTS.SUBTITLE' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="openForm()" *ngIf="!authService.isDoctor">
-      <span class="material-icons">add</span> {{ 'APPOINTMENTS.NEW_APPOINTMENT' | translate }}
+      <span class="material-icons">add</span>
+      <span>{{ 'APPOINTMENTS.NEW_APPOINTMENT' | translate }}</span>
     </button>
   </div>
 
   <div class="success-msg" *ngIf="successMsg">
-    <span class="material-icons">check_circle</span> {{ successMsg }}
+    <span class="material-icons">check_circle</span>
+    <span>{{ successMsg }}</span>
   </div>
 
   <!-- ФОРМА -->
@@ -201,7 +203,8 @@
       <option *ngFor="let d of doctors" [value]="d.id">{{ d.lastName }} {{ d.firstName }}</option>
     </select>
     <button class="btn-clear-filters" *ngIf="hasActiveFilters" (click)="clearFilters()">
-      <span class="material-icons">filter_alt_off</span> {{ 'APPOINTMENTS.RESET' | translate }}
+      <span class="material-icons">filter_alt_off</span>
+      <span>{{ 'APPOINTMENTS.RESET' | translate }}</span>
     </button>
   </div>
 
@@ -217,7 +220,8 @@
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+    <span class="material-icons spin">autorenew</span>
+    <span>{{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <div class="empty-state" *ngIf="!isLoading && filtered.length === 0">
@@ -244,13 +248,14 @@
         </div>
       </div>
       <div class="apt-datetime">
-        <div class="date"><span class="material-icons">event</span> {{ formatDate(apt.date) }}</div>
-        <div class="time"><span class="material-icons">schedule</span> {{ apt.time }}</div>
-        <div class="room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span> {{ 'APPOINTMENTS.ROOM' | translate }} #{{ apt.roomId }}</div>
-        <div class="price" *ngIf="apt.price"><span class="material-icons">payments</span> {{ apt.price }} MDL</div>
+        <div class="date"><span class="material-icons">event</span><span> {{ formatDate(apt.date) }}</span></div>
+        <div class="time"><span class="material-icons">schedule</span><span> {{ apt.time }}</span></div>
+        <div class="room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span><span> {{ 'APPOINTMENTS.ROOM' | translate }} #{{ apt.roomId }}</span></div>
+        <div class="price" *ngIf="apt.price"><span class="material-icons">payments</span><span> {{ apt.price }} MDL</span></div>
       </div>
       <div class="apt-notes" *ngIf="apt.notes">
-        <span class="material-icons">notes</span> {{ apt.notes }}
+        <span class="material-icons">notes</span>
+        <span>{{ apt.notes }}</span>
       </div>
       <div class="apt-actions">
         <span class="badge" [class]="apt.status">{{ getStatusLabel(apt.status) }}</span>

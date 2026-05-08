@@ -9,18 +9,19 @@
 
   <!-- СЕКЦИЯ 1: Профиль -->
   <div class="section-card profile-card">
-    <div class="section-title"><span class="material-icons">person</span> Профиль</div>
+    <div class="section-title"><span class="material-icons">person</span><span> Профиль</span></div>
     <div class="profile-body" *ngIf="profile">
       <div class="profile-avatar">{{ getInitials() }}</div>
       <div class="profile-info">
         <div class="profile-name">{{ profile.lastName }} {{ profile.firstName }}</div>
         <div class="profile-role">Врач</div>
-        <div class="profile-detail" *ngIf="profile.email"><span class="material-icons">email</span>{{ profile.email }}</div>
-        <div class="profile-detail" *ngIf="profile.phone"><span class="material-icons">phone</span>{{ profile.phone }}</div>
-        <div class="profile-detail" *ngIf="!profile.phone" style="color:#a0aec0"><span class="material-icons">phone</span>Телефон не указан</div>
+        <div class="profile-detail" *ngIf="profile.email"><span class="material-icons">email</span><span>{{ profile.email }}</span></div>
+        <div class="profile-detail" *ngIf="profile.phone"><span class="material-icons">phone</span><span>{{ profile.phone }}</span></div>
+        <div class="profile-detail" *ngIf="!profile.phone" style="color:#a0aec0"><span class="material-icons">phone</span><span>Телефон не указан</span></div>
       </div>
       <button class="btn-edit" (click)="openEditModal()">
-        <span class="material-icons">edit</span> Редактировать
+        <span class="material-icons">edit</span>
+        <span>Редактировать</span>
       </button>
     </div>
     <div class="skeleton" *ngIf="isLoadingProfile"></div>
@@ -28,19 +29,20 @@
 
   <!-- СЕКЦИЯ 2: Приёмы на сегодня -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">today</span> {{ 'MY_CABINET.APPOINTMENTS_TODAY' | translate }}</div>
-    <div class="loading-row" *ngIf="isLoadingApts"><span class="material-icons spin">autorenew</span> Загрузка...</div>
+    <div class="section-title"><span class="material-icons">today</span><span> {{ 'MY_CABINET.APPOINTMENTS_TODAY' | translate }}</span></div>
+    <div class="loading-row" *ngIf="isLoadingApts"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingApts && todayAppointments.length === 0">
-      <span class="material-icons">event_busy</span> {{ 'MY_CABINET.NO_APPOINTMENTS' | translate }}
+      <span class="material-icons">event_busy</span><span> {{ 'MY_CABINET.NO_APPOINTMENTS' | translate }}</span>
     </div>
     <div class="apt-list" *ngIf="!isLoadingApts && todayAppointments.length > 0">
       <div class="apt-row" *ngFor="let apt of todayAppointments" [class]="apt.status">
-        <div class="apt-time"><span class="material-icons">schedule</span> {{ apt.time }}</div>
+        <div class="apt-time"><span class="material-icons">schedule</span><span> {{ apt.time }}</span></div>
         <div class="apt-patient">{{ getPatientName(apt.patientId) }}</div>
-        <div class="apt-room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span> {{ getRoomName(apt.roomId) }}</div>
+        <div class="apt-room" *ngIf="apt.roomId"><span class="material-icons">meeting_room</span><span> {{ getRoomName(apt.roomId) }}</span></div>
         <span class="badge" [class]="apt.status">{{ getStatusLabel(apt.status) }}</span>
         <button class="btn-complete-apt" *ngIf="apt.status === 'scheduled'" (click)="completeAppointment(apt.id)">
-          <span class="material-icons">check</span> {{ 'MY_CABINET.COMPLETE' | translate }}
+          <span class="material-icons">check</span>
+          <span>{{ 'MY_CABINET.COMPLETE' | translate }}</span>
         </button>
       </div>
     </div>
@@ -48,14 +50,14 @@
 
   <!-- СЕКЦИЯ 3: Мои пациенты -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">people</span> {{ 'MY_CABINET.MY_PATIENTS' | translate }}</div>
+    <div class="section-title"><span class="material-icons">people</span><span> {{ 'MY_CABINET.MY_PATIENTS' | translate }}</span></div>
     <div class="search-wrap" *ngIf="!isLoadingPatients && myPatients.length > 0 || patientSearch">
       <span class="material-icons">search</span>
       <input [(ngModel)]="patientSearch" placeholder="Поиск по имени...">
     </div>
-    <div class="loading-row" *ngIf="isLoadingPatients"><span class="material-icons spin">autorenew</span> Загрузка...</div>
+    <div class="loading-row" *ngIf="isLoadingPatients"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingPatients && myPatients.length === 0">
-      <span class="material-icons">person_off</span> Пациентов не найдено
+      <span class="material-icons">person_off</span><span> Пациентов не найдено</span>
     </div>
     <div class="patient-list" *ngIf="!isLoadingPatients && myPatients.length > 0">
       <div class="patient-row" *ngFor="let p of myPatients">
@@ -63,12 +65,13 @@
         <div class="patient-info">
           <div class="patient-name">{{ p.lastName }} {{ p.firstName }}</div>
           <div class="patient-meta">
-            <span *ngIf="p.phone"><span class="material-icons">phone</span>{{ p.phone }}</span>
-            <span *ngIf="p.dateOfBirth"><span class="material-icons">cake</span>{{ p.dateOfBirth }}</span>
+            <span *ngIf="p.phone"><span class="material-icons">phone</span><span>{{ p.phone }}</span></span>
+            <span *ngIf="p.dateOfBirth"><span class="material-icons">cake</span><span>{{ p.dateOfBirth }}</span></span>
           </div>
         </div>
         <button class="btn-card" (click)="goToPatient(p.id)">
-          <span class="material-icons">open_in_new</span> Карточка
+          <span class="material-icons">open_in_new</span>
+          <span>Карточка</span>
         </button>
       </div>
     </div>
@@ -77,14 +80,15 @@
   <!-- СЕКЦИЯ 4: Последние результаты -->
   <div class="section-card">
     <div class="section-title-row">
-      <div class="section-title"><span class="material-icons">assignment</span> Последние результаты</div>
+      <div class="section-title"><span class="material-icons">assignment</span><span> Последние результаты</span></div>
       <button class="btn-add-result" (click)="openResultModal()">
-        <span class="material-icons">add</span> Добавить результат
+        <span class="material-icons">add</span>
+        <span>Добавить результат</span>
       </button>
     </div>
-    <div class="loading-row" *ngIf="isLoadingResults"><span class="material-icons spin">autorenew</span> Загрузка...</div>
+    <div class="loading-row" *ngIf="isLoadingResults"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingResults && results.length === 0">
-      <span class="material-icons">assignment_late</span> Результатов нет
+      <span class="material-icons">assignment_late</span><span> Результатов нет</span>
     </div>
     <div class="result-list" *ngIf="!isLoadingResults && results.length > 0">
       <div class="result-row" *ngFor="let r of results">
@@ -99,7 +103,7 @@
 
   <!-- СЕКЦИЯ 5: Статистика -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">bar_chart</span> {{ 'MY_CABINET.MY_STATS' | translate }}</div>
+    <div class="section-title"><span class="material-icons">bar_chart</span><span> {{ 'MY_CABINET.MY_STATS' | translate }}</span></div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-val">{{ stats.total }}</div>
@@ -122,10 +126,10 @@
 
   <!-- СЕКЦИЯ 6: Расписание -->
   <div class="section-card">
-    <div class="section-title"><span class="material-icons">calendar_month</span> {{ 'MY_CABINET.MY_SCHEDULE' | translate }}</div>
-    <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span> Загрузка...</div>
+    <div class="section-title"><span class="material-icons">calendar_month</span><span> {{ 'MY_CABINET.MY_SCHEDULE' | translate }}</span></div>
+    <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingSchedules && schedules.length === 0">
-      <span class="material-icons">event_busy</span> Расписание не назначено
+      <span class="material-icons">event_busy</span><span> Расписание не назначено</span>
     </div>
     <div class="schedule-table" *ngIf="!isLoadingSchedules && schedules.length > 0">
       <div class="schedule-header">
@@ -133,8 +137,8 @@
       </div>
       <div class="schedule-row" *ngFor="let s of schedules">
         <span class="day-label">{{ DAY_LABELS[s.dayOfWeek] || s.dayOfWeek }}</span>
-        <span class="time-range"><span class="material-icons">schedule</span> {{ s.startTime }} — {{ s.endTime }}</span>
-        <span class="room-label"><span class="material-icons">meeting_room</span> {{ getRoomName(s.roomId) }}</span>
+        <span class="time-range"><span class="material-icons">schedule</span><span> {{ s.startTime }} — {{ s.endTime }}</span></span>
+        <span class="room-label"><span class="material-icons">meeting_room</span><span> {{ getRoomName(s.roomId) }}</span></span>
       </div>
     </div>
   </div>
@@ -162,12 +166,13 @@
         <input [(ngModel)]="editForm.phone" placeholder="+373...">
       </div>
       <div class="success-inline" *ngIf="profileSaved">
-        <span class="material-icons">check_circle</span> Сохранено!
+        <span class="material-icons">check_circle</span><span> Сохранено!</span>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" (click)="saveProfile()" [disabled]="isSavingProfile">
-        <span class="material-icons">save</span> {{ isSavingProfile ? 'Сохранение...' : 'Сохранить' }}
+        <span class="material-icons">save</span>
+        <span>{{ isSavingProfile ? 'Сохранение...' : 'Сохранить' }}</span>
       </button>
       <button class="btn-secondary" (click)="closeEditModal()">Отмена</button>
     </div>
@@ -196,12 +201,13 @@
         <small *ngIf="resultFile">Выбран: {{ resultFile.name }}</small>
       </div>
       <div class="success-inline" *ngIf="resultSuccess">
-        <span class="material-icons">check_circle</span> Результат сохранён!
+        <span class="material-icons">check_circle</span><span> Результат сохранён!</span>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" (click)="saveResult()" [disabled]="isSavingResult || !resultForm.title">
-        <span class="material-icons">save</span> {{ isSavingResult ? 'Сохранение...' : 'Сохранить' }}
+        <span class="material-icons">save</span>
+        <span>{{ isSavingResult ? 'Сохранение...' : 'Сохранить' }}</span>
       </button>
       <button class="btn-secondary" (click)="closeResultModal()">Отмена</button>
     </div>

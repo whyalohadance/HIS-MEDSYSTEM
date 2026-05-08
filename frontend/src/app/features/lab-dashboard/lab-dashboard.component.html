@@ -10,10 +10,10 @@
     </div>
     <div class="ld-actions">
       <a routerLink="/lab/worklist" class="ld-btn ld-btn-primary">
-        <span class="material-icons">queue</span>Очередь
+        <span class="material-icons">queue</span><span>Очередь</span>
       </a>
       <a routerLink="/lab/orders" class="ld-btn ld-btn-outline">
-        <span class="material-icons">receipt_long</span>Все заказы
+        <span class="material-icons">receipt_long</span><span>Все заказы</span>
       </a>
     </div>
   </div>
@@ -46,11 +46,11 @@
     <!-- Worklist -->
     <div class="ld-section">
       <div class="ld-section-header">
-        <h2><span class="material-icons">queue</span>Очередь работ</h2>
+        <h2><span class="material-icons">queue</span><span>Очередь работ</span></h2>
         <a routerLink="/lab/worklist" class="ld-link">Все →</a>
       </div>
       <div class="ld-loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
       </div>
       <div class="ld-empty" *ngIf="!isLoading && worklist.length === 0">
         <span class="material-icons">check_circle_outline</span>
@@ -73,7 +73,7 @@
     <!-- Сегодня -->
     <div class="ld-section" *ngIf="todayOrders.length > 0 || weeklyStats.length > 0">
       <div class="ld-section-header">
-        <h2><span class="material-icons">today</span>Сегодня</h2>
+        <h2><span class="material-icons">today</span><span>Сегодня</span></h2>
         <span class="ld-badge-count">{{ todayOrders.length }}</span>
       </div>
       <div class="ld-today-summary">
@@ -96,7 +96,7 @@
   <!-- Недельная активность -->
   <div class="ld-section" *ngIf="weeklyStats.length > 0">
     <div class="ld-section-header">
-      <h2><span class="material-icons">show_chart</span>Активность за неделю</h2>
+      <h2><span class="material-icons">show_chart</span><span>Активность за неделю</span></h2>
     </div>
     <div class="ld-weekly-chart">
       <div class="ld-day-bar" *ngFor="let day of weeklyStats" [class.today]="day.isToday">

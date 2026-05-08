@@ -10,14 +10,17 @@
   <!-- HEADER -->
   <div class="card-header">
     <button class="btn-back" (click)="goBack()">
-      <span class="material-icons">arrow_back</span> {{ 'PATIENT_CARD.BACK' | translate }}
+      <span class="material-icons">arrow_back</span>
+      <span>{{ 'PATIENT_CARD.BACK' | translate }}</span>
     </button>
     <div class="header-actions">
       <button class="btn-print" (click)="printCard()">
-        <span class="material-icons">print</span> {{ 'PATIENT_CARD.PRINT' | translate }}
+        <span class="material-icons">print</span>
+        <span>{{ 'PATIENT_CARD.PRINT' | translate }}</span>
       </button>
       <button class="btn-book" (click)="bookAppointment()">
-        <span class="material-icons">event_available</span> {{ 'PATIENT_CARD.BOOK_APPOINTMENT' | translate }}
+        <span class="material-icons">event_available</span>
+        <span>{{ 'PATIENT_CARD.BOOK_APPOINTMENT' | translate }}</span>
       </button>
     </div>
   </div>
@@ -556,10 +559,12 @@
       </div>
       <div class="viewer-actions">
         <button class="viewer-btn" (click)="downloadResultPDF(viewingResult)">
-          <span class="material-icons">download</span> {{ 'COMMON.DOWNLOAD' | translate }}
+          <span class="material-icons">download</span>
+          <span>{{ 'COMMON.DOWNLOAD' | translate }}</span>
         </button>
         <button class="viewer-btn" (click)="printResult()">
-          <span class="material-icons">print</span> {{ 'COMMON.PRINT' | translate }}
+          <span class="material-icons">print</span>
+          <span>{{ 'COMMON.PRINT' | translate }}</span>
         </button>
         <button class="viewer-close" (click)="closeResultViewer()">
           <span class="material-icons">close</span>
@@ -586,7 +591,8 @@
         <span class="material-icons">insert_drive_file</span>
         <p>{{ 'PATIENT_CARD.UNSUPPORTED_PREVIEW' | translate }}</p>
         <button class="btn-download" (click)="downloadResultPDF(viewingResult)">
-          <span class="material-icons">download</span> {{ 'COMMON.DOWNLOAD' | translate }}
+          <span class="material-icons">download</span>
+          <span>{{ 'COMMON.DOWNLOAD' | translate }}</span>
         </button>
       </div>
     </div>
@@ -595,7 +601,7 @@
 </div>
 
 <div class="loading" *ngIf="isLoading">
-  <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
+  <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span>
 </div>
 
 <div class="empty-state" *ngIf="!isLoading && !patient">
