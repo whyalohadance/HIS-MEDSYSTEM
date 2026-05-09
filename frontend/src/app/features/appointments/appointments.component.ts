@@ -239,7 +239,7 @@ export class AppointmentsComponent implements OnInit {
 
   getRoomTypeIcon(type: string): string {
     const map: Record<string, string> = {
-      consultation: 'medical_services', radiology: 'radiology',
+      consultation: 'medical_services', radiology: 'blur_on',
       laboratory: 'biotech', procedure: 'healing', surgery: 'local_hospital'
     };
     return map[type] || 'meeting_room';

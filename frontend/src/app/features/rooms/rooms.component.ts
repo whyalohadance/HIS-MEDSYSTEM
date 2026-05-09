@@ -9,10 +9,10 @@ import { map } from 'rxjs';
 
 const TYPE_META: Record<string, { icon: string; bg: string; color: string; label: string }> = {
   consultation: { icon: 'medical_services', bg: '#e8f0fe', color: '#1a73e8', label: 'Консультация' },
-  radiology:    { icon: 'radiology',         bg: '#ede9fe', color: '#7c3aed', label: 'Радиология' },
-  laboratory:   { icon: 'biotech',            bg: '#d1fae5', color: '#059669', label: 'Лаборатория' },
-  procedure:    { icon: 'vaccines',           bg: '#fce7f3', color: '#be185d', label: 'Процедурная' },
-  surgery:      { icon: 'healing',            bg: '#fee2e2', color: '#dc2626', label: 'Хирургия' },
+  radiology:    { icon: 'blur_on',           bg: '#ede9fe', color: '#7c3aed', label: 'Радиология' },
+  laboratory:   { icon: 'biotech',           bg: '#d1fae5', color: '#059669', label: 'Лаборатория' },
+  procedure:    { icon: 'vaccines',          bg: '#fce7f3', color: '#be185d', label: 'Процедурная' },
+  surgery:      { icon: 'healing',           bg: '#fee2e2', color: '#dc2626', label: 'Хирургия' },
 };
 
 @Component({
@@ -39,7 +39,7 @@ export class RoomsComponent implements OnInit {
 
   readonly roomTypes = [
     { value: 'consultation', label: 'Консультация', icon: 'medical_services' },
-    { value: 'radiology',    label: 'Радиология',   icon: 'radiology' },
+    { value: 'radiology',    label: 'Радиология',   icon: 'blur_on' },
     { value: 'laboratory',   label: 'Лаборатория',  icon: 'biotech' },
     { value: 'procedure',    label: 'Процедурная',  icon: 'vaccines' },
     { value: 'surgery',      label: 'Хирургия',     icon: 'healing' },
@@ -48,7 +48,7 @@ export class RoomsComponent implements OnInit {
   readonly filterTabs = [
     { value: 'all',          label: 'Все',           icon: 'grid_view' },
     { value: 'consultation', label: 'Консультация',  icon: 'medical_services' },
-    { value: 'radiology',    label: 'Радиология',    icon: 'radiology' },
+    { value: 'radiology',    label: 'Радиология',    icon: 'blur_on' },
     { value: 'laboratory',   label: 'Лаборатория',   icon: 'biotech' },
     { value: 'procedure',    label: 'Процедурная',   icon: 'vaccines' },
     { value: 'surgery',      label: 'Хирургия',      icon: 'healing' },
