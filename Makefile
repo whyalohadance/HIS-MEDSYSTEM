@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs logs-be logs-fe logs-db build rebuild dev dev-down \
-        status shell-be shell-fe shell-db backup restore seed reset-db \
+        status shell-be shell-fe shell-db backup restore seed seed-demo reset-db \
         pgadmin clean clean-all prune health deploy update
 
 # ============================================
@@ -42,6 +42,7 @@ help: ## Показать список команд
 	@echo "  $(YELLOW)make backup$(NC)          Создать бекап БД"
 	@echo "  $(YELLOW)make restore FILE=...$(NC) Восстановить из бекапа"
 	@echo "  $(YELLOW)make seed$(NC)            Создать тестовые аккаунты"
+	@echo "  $(YELLOW)make seed-demo$(NC)       Заполнить все модули demo данными"
 	@echo "  $(YELLOW)make reset-db$(NC)        Сбросить БД (ОПАСНО!)"
 	@echo ""
 	@echo "$(GREEN)🛠 Утилиты:$(NC)"
@@ -164,6 +165,10 @@ seed: ## Создать тестовые аккаунты (admin/doctor/receptio
 	else \
 		echo "$(YELLOW)⚠️  Файл backend/seed-docker.js не найден$(NC)"; \
 	fi
+
+seed-demo: ## Заполнить ВСЕ модули demo данными (кабинеты, тесты, приёмы, заказы)
+	@echo "$(CYAN)🎬 Загрузка demo данных...$(NC)"
+	@bash scripts/seed-all-data.sh
 
 reset-db: ## Сбросить БД — УДАЛИТ ВСЕ ДАННЫЕ!
 	@echo "$(RED)⚠️  ЭТО УДАЛИТ ВСЕ ДАННЫЕ В БД!$(NC)"
