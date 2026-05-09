@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
+import { EditPatientModalComponent } from '../../shared/components/edit-patient-modal/edit-patient-modal.component';
 import { map } from 'rxjs';
 
 @Component({
   selector: 'app-worklist',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, EditPatientModalComponent],
   templateUrl: './worklist.component.html',
   styleUrls: ['./worklist.component.scss']
 })
@@ -20,6 +21,9 @@ export class WorklistComponent implements OnInit {
   showConclusionModal = false;
   selectedStudy: any = null;
   successMessage = '';
+
+  showEditPatient = false;
+  editingPatientId = 0;
 
   conclusionForm = {
     findings: '',
@@ -141,6 +145,24 @@ export class WorklistComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  isAdmin(): boolean {
+    return JSON.parse(localStorage.getItem('user') || '{}').role === 'admin';
+  }
+
+  openEditPatient(patientId: number): void {
+    this.editingPatientId = patientId;
+    this.showEditPatient = true;
+  }
+
+  onCloseEditPatient(): void {
+    this.showEditPatient = false;
+  }
+
+  onPatientSaved(_data: any): void {
+    this.showEditPatient = false;
+    this.loadAll();
   }
 
   private showSuccess(key: string): void {

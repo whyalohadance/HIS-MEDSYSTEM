@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
+import { EditPatientModalComponent } from '../../shared/components/edit-patient-modal/edit-patient-modal.component';
 
 @Component({
   selector: 'app-lab-worklist',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, EditPatientModalComponent],
   template: `
     <div class="worklist-page">
       <div class="page-header">
@@ -39,6 +40,9 @@ import { ApiService } from '../../core/services/api.service';
             <div class="work-meta">
               <span class="material-icons">person</span>
               Пациент #{{ o.patientId }}
+              <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(o.patientId)" title="Редактировать пациента">
+                <span class="material-icons">edit</span>
+              </button>
               <span class="dot">•</span>
               {{ o.scheduledAt || 'без даты' }}
             </div>
@@ -65,6 +69,13 @@ import { ApiService } from '../../core/services/api.service';
         <span class="material-icons spinning">refresh</span>
       </div>
     </div>
+
+    <app-edit-patient-modal
+      [patientId]="editingPatientId"
+      [show]="showEditPatient"
+      (close)="onCloseEditPatient()"
+      (saved)="onPatientSaved($event)">
+    </app-edit-patient-modal>
   `,
   styles: [`
     .worklist-page { padding: 32px; }
@@ -106,6 +117,10 @@ import { ApiService } from '../../core/services/api.service';
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinning { animation: spin 1s linear infinite; font-size: 36px; }
 
+    .btn-edit-patient { display: inline-flex; align-items: center; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 2px 6px; cursor: pointer; color: #1a73e8; transition: all 0.15s; }
+    .btn-edit-patient:hover { background: #dbeafe; }
+    .btn-edit-patient .material-icons { font-size: 13px; }
+
     :host-context(body.dark-theme) h1 { color: #e2e8f0; }
     :host-context(body.dark-theme) .work-item { background: #1e293b; border-color: #334155; }
     :host-context(body.dark-theme) .work-test { color: #e2e8f0; }
@@ -120,7 +135,27 @@ export class LabWorklistComponent implements OnInit {
   stats: any = null;
   isLoading = false;
 
+  showEditPatient = false;
+  editingPatientId = 0;
+
   constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
+
+  isAdmin(): boolean {
+    return JSON.parse(localStorage.getItem('user') || '{}').role === 'admin';
+  }
+
+  openEditPatient(patientId: number): void {
+    this.editingPatientId = patientId;
+    this.showEditPatient = true;
+  }
+
+  onCloseEditPatient(): void {
+    this.showEditPatient = false;
+  }
+
+  onPatientSaved(data: any): void {
+    this.showEditPatient = false;
+  }
 
   ngOnInit(): void {
     this.loadTests();

@@ -137,6 +137,10 @@ const CATEGORIES = [
                   <span class="material-icons">add</span> Параметр
                 </button>
               </div>
+              <div class="params-hint" *ngIf="newTest.parameters?.length">
+                <span class="material-icons">info</span>
+                <span>Мин/Макс — референсные значения (нормы). Результат вне диапазона будет автоматически отмечен как ↑ высокий или ↓ низкий.</span>
+              </div>
               <div class="params-list">
                 <div class="param-row" *ngFor="let p of newTest.parameters; let i = index">
                   <input type="text" [(ngModel)]="p.name" placeholder="Название">
@@ -221,6 +225,8 @@ const CATEGORIES = [
     .params-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; }
     .btn-mini { display: flex; align-items: center; gap: 4px; padding: 4px 10px; background: #d1fae5; color: #047857; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
     .btn-mini .material-icons { font-size: 14px; }
+    .params-hint { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; background: #f0fdf4; border-left: 3px solid #10b981; border-radius: 6px; font-size: 12px; color: #047857; margin-bottom: 8px; }
+    .params-hint .material-icons { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
     .params-list { display: flex; flex-direction: column; gap: 6px; }
     .param-row { display: grid; grid-template-columns: 2fr 70px 65px 65px 32px; gap: 6px; align-items: center; }
     .param-row input { padding: 6px 8px !important; font-size: 12px !important; border-radius: 6px !important; margin-bottom: 0 !important; }

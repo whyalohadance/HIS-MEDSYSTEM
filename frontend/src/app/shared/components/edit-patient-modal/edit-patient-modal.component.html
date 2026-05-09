@@ -1,0 +1,133 @@
+<div class="modal-backdrop" *ngIf="show" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>
+        <span class="material-icons">edit</span>
+        <span>Редактирование пациента</span>
+      </h2>
+      <button class="btn-close" (click)="onClose()">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <span>Загрузка...</span>
+      </div>
+
+      <ng-container *ngIf="!isLoading">
+
+        <div class="warning-box" *ngIf="!isAdmin">
+          <span class="material-icons">lock</span>
+          <span>Только администратор может редактировать данные пациента</span>
+        </div>
+
+        <div class="readonly-info" *ngIf="patient">
+          <div class="info-row">
+            <span class="info-label">ID:</span>
+            <span class="info-value">#{{ patient.id }}</span>
+          </div>
+          <div class="info-row" *ngIf="patient.createdAt">
+            <span class="info-label">Создан:</span>
+            <span class="info-value">{{ patient.createdAt | date:'dd.MM.yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Имя *</label>
+            <input type="text" [(ngModel)]="formData.firstName" [disabled]="!isAdmin" placeholder="Имя">
+          </div>
+          <div class="form-group">
+            <label>Фамилия *</label>
+            <input type="text" [(ngModel)]="formData.lastName" [disabled]="!isAdmin" placeholder="Фамилия">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">wc</span>
+              <span>Пол</span>
+            </label>
+            <div class="gender-toggle">
+              <button type="button" class="gender-btn"
+                [class.active]="formData.gender === 'male'"
+                [disabled]="!isAdmin"
+                (click)="isAdmin && (formData.gender = 'male')">
+                <span class="material-icons">male</span>
+                <span>Мужской</span>
+              </button>
+              <button type="button" class="gender-btn"
+                [class.active]="formData.gender === 'female'"
+                [disabled]="!isAdmin"
+                (click)="isAdmin && (formData.gender = 'female')">
+                <span class="material-icons">female</span>
+                <span>Женский</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <span class="material-icons">cake</span>
+              <span>Дата рождения{{ getAge() ? ' (' + getAge() + ' лет)' : '' }}</span>
+            </label>
+            <input type="date" [(ngModel)]="formData.dateOfBirth" [disabled]="!isAdmin">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">phone</span>
+              <span>Телефон</span>
+            </label>
+            <input type="tel" [(ngModel)]="formData.phone" [disabled]="!isAdmin" placeholder="+373...">
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">email</span>
+              <span>Email</span>
+            </label>
+            <input type="email" [(ngModel)]="formData.email" [disabled]="!isAdmin" placeholder="email@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span class="material-icons">home</span>
+            <span>Адрес</span>
+          </label>
+          <input type="text" [(ngModel)]="formData.address" [disabled]="!isAdmin"
+            placeholder="Bd. Stefan cel Mare 100, Chisinau">
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span class="material-icons">bloodtype</span>
+            <span>Группа крови</span>
+          </label>
+          <select [(ngModel)]="formData.bloodType" [disabled]="!isAdmin">
+            <option *ngFor="let bt of bloodTypes" [value]="bt.value">{{ bt.label }}</option>
+          </select>
+        </div>
+
+      </ng-container>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onClose()">
+        <span>Отмена</span>
+      </button>
+      <button class="btn-save" (click)="save()" *ngIf="isAdmin" [disabled]="isSaving">
+        <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'check' }}</span>
+        <span>{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</span>
+      </button>
+    </div>
+
+  </div>
+</div>

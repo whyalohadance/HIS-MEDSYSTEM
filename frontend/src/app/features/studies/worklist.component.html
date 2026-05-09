@@ -35,6 +35,9 @@
         <div class="item-patient">
           <span class="material-icons">person</span>
           {{ getPatientName(study.patientId) }}
+          <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(study.patientId)" title="Редактировать пациента">
+            <span class="material-icons">edit</span>
+          </button>
         </div>
         <div class="item-details">
           <span *ngIf="study.bodyPart">
@@ -79,6 +82,14 @@
     <span class="material-icons">done_all</span>
     <p>{{ 'STUDIES.NO_STUDIES' | translate }}</p>
   </div>
+
+  <!-- Edit Patient Modal -->
+  <app-edit-patient-modal
+    [patientId]="editingPatientId"
+    [show]="showEditPatient"
+    (close)="onCloseEditPatient()"
+    (saved)="onPatientSaved($event)">
+  </app-edit-patient-modal>
 
   <!-- Conclusion Modal -->
   <div class="modal-overlay" *ngIf="showConclusionModal" (click)="closeConclusionModal()">

@@ -1,6 +1,6 @@
 import { ApiTags } from '@nestjs/swagger';
 import {
-  Controller, Get, Post, Put, Delete,
+  Controller, Get, Post, Put, Patch, Delete,
   Body, Param, UseGuards, Request, ParseIntPipe
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
@@ -18,6 +18,12 @@ export class PatientsController {
     return this.service.findAll(req.user.id, req.user.role);
   }
 
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.service.findOne(id);
+    return { success: true, data };
+  }
+
   @Post()
   create(@Body() dto: CreatePatientDto, @Request() req) {
     return this.service.create(dto, req.user.id);
@@ -26,6 +32,12 @@ export class PatientsController {
   @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: Partial<CreatePatientDto>) {
     return this.service.update(id, dto);
+  }
+
+  @Patch(':id')
+  async patch(@Param('id', ParseIntPipe) id: number, @Body() dto: Partial<CreatePatientDto>) {
+    const data = await this.service.update(id, dto);
+    return { success: true, data };
   }
 
   @Delete(':id')
