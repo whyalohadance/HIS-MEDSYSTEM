@@ -73,7 +73,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadCurrentUser(): void {
-    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    const stored = JSON.parse(localStorage.getItem('currentUser') || '{}');
     this.isAdmin = stored.role === 'admin';
 
     if (this.isAdmin) {
@@ -177,7 +177,7 @@ export class ProfileComponent implements OnInit {
   }
 
   isMyProfile(): boolean {
-    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    const stored = JSON.parse(localStorage.getItem('currentUser') || '{}');
     return stored.id === this.selectedUserId;
   }
 
@@ -210,9 +210,9 @@ export class ProfileComponent implements OnInit {
         this.selectUser(this.selectedUserId!);
 
         if (this.isMyProfile()) {
-          const stored = JSON.parse(localStorage.getItem('user') || '{}');
+          const stored = JSON.parse(localStorage.getItem('currentUser') || '{}');
           const updated = { ...stored, ...payload };
-          localStorage.setItem('user', JSON.stringify(updated));
+          localStorage.setItem('currentUser', JSON.stringify(updated));
         }
 
         this.cdr.detectChanges();
