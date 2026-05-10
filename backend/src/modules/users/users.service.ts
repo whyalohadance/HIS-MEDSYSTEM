@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { User } from './user.entity';
 
-const SAFE_FIELDS: (keyof User)[] = ['id', 'firstName', 'lastName', 'email', 'role', 'phone', 'roomId', 'createdAt'];
+const SAFE_FIELDS: (keyof User)[] = ['id', 'firstName', 'lastName', 'email', 'role', 'phone', 'roomId', 'specialization', 'isActive', 'createdAt', 'updatedAt'];
 
 @Injectable()
 export class UsersService {
@@ -49,7 +49,7 @@ export class UsersService {
   }
 
   async adminUpdateById(id: number, data: any): Promise<User> {
-    const allowed = ['firstName', 'lastName', 'phone', 'role', 'roomId'];
+    const allowed = ['firstName', 'lastName', 'email', 'phone', 'role', 'roomId', 'specialization', 'isActive'];
     const filtered: any = {};
     allowed.forEach(k => { if (data[k] !== undefined) filtered[k] = data[k]; });
     if (data.password && data.password.length >= 6) {

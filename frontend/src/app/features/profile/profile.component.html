@@ -1,102 +1,290 @@
-<div class="profile-page">
-  <div class="page-header">
-    <h1 class="page-title">{{ 'PROFILE.TITLE' | translate }}</h1>
-    <p class="page-sub">{{ 'PROFILE.SUBTITLE' | translate }}</p>
-  </div>
+<div class="profile-page" [class.is-admin]="isAdmin">
 
-  <div class="profile-grid">
+  <!-- ЛЕВАЯ КОЛОНКА: список персонала (только для админа) -->
+  <aside class="staff-sidebar" *ngIf="isAdmin">
 
-    <!-- Карточка профиля -->
-    <div class="profile-card">
-      <div class="avatar-large">{{ getInitials() }}</div>
-      <div class="profile-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</div>
-      <div class="role-badge" [class]="currentUser?.role">{{ getRoleLabel() }}</div>
-      <div class="profile-meta">
-        <div class="meta-item">
-          <span class="material-icons">email</span>
-          <span>{{ currentUser?.email }}</span>
-        </div>
-        <div class="meta-item" *ngIf="currentUser?.phone">
-          <span class="material-icons">phone</span>
-          <span>{{ currentUser?.phone }}</span>
-        </div>
-        <div class="meta-item">
-          <span class="material-icons">calendar_today</span>
-          <span>{{ 'PROFILE.MEMBER_SINCE' | translate }} {{ currentUser?.createdAt | date:'dd.MM.yyyy' }}</span>
-        </div>
-      </div>
-
-      <!-- Кабинет врача -->
-      <div class="room-card" *ngIf="authService.isDoctor">
-        <div class="room-header">
-          <span class="material-icons">meeting_room</span>
-          {{ 'PROFILE.MY_CABINET' | translate }}
-        </div>
-        <div class="room-body" *ngIf="myRoom">
-          <div class="room-number">{{ 'PROFILE.CABINET_NO' | translate }}{{ myRoom.number }}</div>
-          <div class="room-info" *ngIf="myRoom.name">{{ myRoom.name }}</div>
-          <div class="room-info" *ngIf="myRoom.floor">{{ 'PROFILE.FLOOR' | translate }} {{ myRoom.floor }}</div>
-        </div>
-        <div class="room-empty" *ngIf="!myRoom">
-          <span class="material-icons">info</span>
-          {{ 'PROFILE.CABINET_NOT_ASSIGNED' | translate }}
-        </div>
-      </div>
+    <div class="sidebar-header">
+      <h2>
+        <span class="material-icons">groups</span>
+        <span>Персонал</span>
+      </h2>
+      <span class="staff-count">{{ allStaff.length }}</span>
     </div>
 
-    <div class="right-col">
-      <!-- Форма профиля (только просмотр) -->
-      <div class="edit-card">
-        <h3>{{ 'PROFILE.EDIT_DATA' | translate }}</h3>
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ 'PATIENTS.FIRST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.firstName" placeholder="Ivan" readonly>
-          </div>
-          <div class="form-field">
-            <label>{{ 'PATIENTS.LAST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.lastName" placeholder="Ivanov" readonly>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>{{ 'AUTH.EMAIL' | translate }}</label>
-          <input [(ngModel)]="form.email" placeholder="doctor@med.com" readonly>
-        </div>
-        <div class="form-field">
-          <label>{{ 'PATIENTS.PHONE' | translate }}</label>
-          <input [(ngModel)]="form.phone" placeholder="+373 69 000 000" readonly>
-        </div>
-        <div class="form-field">
-          <label>{{ 'PROFILE.ROLE' | translate }}</label>
-          <input [value]="getRoleLabel()" disabled class="disabled-input">
-        </div>
-        <div class="profile-notice">
-          <span class="material-icons">info</span>
-          {{ 'PROFILE.CONTACT_ADMIN' | translate }}
-        </div>
-      </div>
+    <!-- Поиск -->
+    <div class="search-bar">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilter()"
+        placeholder="Поиск...">
+    </div>
 
-      <!-- Расписание врача -->
-      <div class="schedule-card" *ngIf="authService.isDoctor">
-        <h3><span class="material-icons">calendar_month</span><span> {{ 'PROFILE.MY_SCHEDULE' | translate }}</span></h3>
-        <div class="schedule-empty" *ngIf="mySchedules.length === 0">
-          <span class="material-icons">event_busy</span>
-          <p>{{ 'PROFILE.NO_SCHEDULE' | translate }}</p>
+    <!-- Фильтр по ролям -->
+    <div class="role-filter">
+      <button
+        type="button"
+        class="role-btn"
+        *ngFor="let r of roles"
+        [class.active]="selectedRole === r.value"
+        [style.--c]="r.color"
+        (click)="setRole(r.value)">
+        <span class="material-icons">{{ r.icon }}</span>
+        <span class="role-label">{{ r.label }}</span>
+        <span class="role-count" *ngIf="r.value !== 'all'">{{ countByRole(r.value) }}</span>
+        <span class="role-count" *ngIf="r.value === 'all'">{{ allStaff.length }}</span>
+      </button>
+    </div>
+
+    <!-- Список -->
+    <div class="staff-list">
+      <button
+        type="button"
+        class="staff-item"
+        *ngFor="let u of filteredStaff"
+        [class.selected]="selectedUserId === u.id"
+        [class.inactive]="!u.isActive"
+        (click)="selectUser(u.id)">
+
+        <div class="staff-avatar" [style.background]="getRoleInfo(u.role).color">
+          {{ getInitials(u) }}
         </div>
-        <div class="schedule-list" *ngIf="mySchedules.length > 0">
-          <div class="schedule-item" *ngFor="let s of mySchedules">
-            <div class="schedule-day">{{ getDayLabel(s.dayOfWeek) }}</div>
-            <div class="schedule-time">
-              <span class="material-icons">schedule</span>
-              {{ s.startTime }} — {{ s.endTime }}
-            </div>
-            <span class="schedule-badge" [class.active]="s.isActive">
-              {{ s.isActive ? ('PROFILE.ACTIVE' | translate) : ('PROFILE.INACTIVE' | translate) }}
+
+        <div class="staff-info">
+          <div class="staff-name">{{ u.firstName }} {{ u.lastName }}</div>
+          <div class="staff-meta">
+            <span class="role-pill" [style.color]="getRoleInfo(u.role).color">
+              <span class="material-icons">{{ getRoleInfo(u.role).icon }}</span>
+              {{ getRoleInfo(u.role).label }}
             </span>
           </div>
         </div>
+
+        <span class="material-icons select-arrow">chevron_right</span>
+      </button>
+
+      <div class="empty-staff" *ngIf="filteredStaff.length === 0 && !isLoading">
+        <span class="material-icons">person_search</span>
+        <p>Никого не найдено</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ПРАВАЯ ОБЛАСТЬ: форма редактирования -->
+  <main class="profile-main">
+
+    <!-- Шапка профиля -->
+    <div class="profile-card" *ngIf="selectedUser">
+      <div class="profile-header" [style.background]="'linear-gradient(135deg, ' + getRoleInfo(selectedUser.role).color + ', ' + getRoleInfo(selectedUser.role).color + 'cc)'">
+        <div class="big-avatar">{{ getInitials(selectedUser) }}</div>
+        <div class="big-info">
+          <div class="big-name">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</div>
+          <div class="big-role">
+            <span class="material-icons">{{ getRoleInfo(selectedUser.role).icon }}</span>
+            <span>{{ getRoleInfo(selectedUser.role).label }}</span>
+          </div>
+          <div class="big-email">
+            <span class="material-icons">mail</span>
+            <span>{{ selectedUser.email }}</span>
+          </div>
+        </div>
+
+        <div class="profile-badges">
+          <span class="badge" *ngIf="isMyProfile()">
+            <span class="material-icons">person</span>
+            Это вы
+          </span>
+          <span class="badge" [class.inactive]="!selectedUser.isActive">
+            <span class="material-icons">{{ selectedUser.isActive ? 'check_circle' : 'block' }}</span>
+            {{ selectedUser.isActive ? 'Активен' : 'Неактивен' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Предупреждение для не-админов -->
+      <div class="readonly-warning" *ngIf="!canEdit()">
+        <span class="material-icons">lock</span>
+        <div>
+          <strong>Только просмотр</strong>
+          <p>Для изменения данных профиля обратитесь к администратору</p>
+        </div>
+      </div>
+
+      <!-- Форма -->
+      <div class="profile-form">
+
+        <h3>
+          <span class="material-icons">badge</span>
+          <span>Личные данные</span>
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Имя *</label>
+            <input
+              type="text"
+              [(ngModel)]="formData.firstName"
+              [disabled]="!canEdit()"
+              placeholder="Ion">
+          </div>
+          <div class="form-group">
+            <label>Фамилия *</label>
+            <input
+              type="text"
+              [(ngModel)]="formData.lastName"
+              [disabled]="!canEdit()"
+              placeholder="Popescu">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">mail</span>
+              <span>Email *</span>
+            </label>
+            <input
+              type="email"
+              [(ngModel)]="formData.email"
+              [disabled]="!canEdit()"
+              placeholder="user@med.com">
+          </div>
+          <div class="form-group">
+            <label>
+              <span class="material-icons">phone</span>
+              <span>Телефон</span>
+            </label>
+            <input
+              type="tel"
+              [(ngModel)]="formData.phone"
+              [disabled]="!canEdit()"
+              placeholder="+373 XX XXXXXX">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>
+              <span class="material-icons">work</span>
+              <span>Роль</span>
+            </label>
+            <select
+              [(ngModel)]="formData.role"
+              [disabled]="!canEdit() || isMyProfile()">
+              <option value="admin">Админы</option>
+              <option value="doctor">Врачи</option>
+              <option value="receptionist">Ресепшн</option>
+              <option value="radiologist">Радиологи</option>
+              <option value="lab_technician">Лаборанты</option>
+            </select>
+            <small class="hint" *ngIf="isMyProfile()">Свою роль изменить нельзя</small>
+          </div>
+          <div class="form-group">
+            <label>Специализация</label>
+            <input
+              type="text"
+              [(ngModel)]="formData.specialization"
+              [disabled]="!canEdit()"
+              placeholder="Терапевт, Кардиолог...">
+          </div>
+        </div>
+
+        <div class="form-actions" *ngIf="canEdit()">
+          <button
+            type="button"
+            class="btn-toggle-active"
+            *ngIf="!isMyProfile()"
+            [class.deactivate]="formData.isActive"
+            (click)="toggleActive()">
+            <span class="material-icons">{{ formData.isActive ? 'block' : 'check_circle' }}</span>
+            <span>{{ formData.isActive ? 'Деактивировать' : 'Активировать' }}</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-save"
+            (click)="save()"
+            [disabled]="isSaving">
+            <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'save' }}</span>
+            <span>{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Смена пароля -->
+      <div class="profile-form password-section" *ngIf="canEdit()">
+        <h3>
+          <span class="material-icons">lock</span>
+          <span>Безопасность</span>
+        </h3>
+
+        <button
+          type="button"
+          class="btn-show-password"
+          *ngIf="!changingPassword"
+          (click)="toggleChangePassword()">
+          <span class="material-icons">key</span>
+          <span>Изменить пароль</span>
+        </button>
+
+        <div class="password-form" *ngIf="changingPassword">
+          <div class="form-group">
+            <label>Новый пароль</label>
+            <input
+              type="password"
+              [(ngModel)]="passwordData.newPassword"
+              placeholder="Минимум 6 символов"
+              autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label>Подтвердите пароль</label>
+            <input
+              type="password"
+              [(ngModel)]="passwordData.confirmPassword"
+              placeholder="Повторите пароль"
+              autocomplete="new-password">
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn-cancel"
+              (click)="toggleChangePassword()">
+              Отмена
+            </button>
+            <button
+              type="button"
+              class="btn-save"
+              (click)="savePassword()"
+              [disabled]="isSaving">
+              <span class="material-icons">save</span>
+              <span>Сохранить пароль</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Метаданные -->
+      <div class="profile-meta">
+        <div class="meta-row">
+          <span class="meta-label">ID пользователя</span>
+          <span class="meta-value">#{{ selectedUser.id }}</span>
+        </div>
+        <div class="meta-row" *ngIf="selectedUser.createdAt">
+          <span class="meta-label">Создан</span>
+          <span class="meta-value">{{ selectedUser.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
+        <div class="meta-row" *ngIf="selectedUser.updatedAt">
+          <span class="meta-label">Последнее обновление</span>
+          <span class="meta-value">{{ selectedUser.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+        </div>
       </div>
     </div>
 
-  </div>
+    <div class="loading-state" *ngIf="!selectedUser && isLoading">
+      <div class="spinner"></div>
+      <span>Загрузка...</span>
+    </div>
+  </main>
 </div>

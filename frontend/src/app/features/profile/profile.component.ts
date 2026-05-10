@@ -1,124 +1,291 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../core/services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
-import { User } from '../../core/models/user.model';
-import { map } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
-interface ApiResponse<T> { success: boolean; data: T; }
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  currentUser: User | null = null;
+  currentUser: any = null;
+  isAdmin = false;
+
+  // Список всего персонала (для админа)
+  allStaff: any[] = [];
+  filteredStaff: any[] = [];
+  searchTerm = '';
+  selectedRole = 'all';
+
+  // Сейчас редактируется
+  selectedUserId: number | null = null;
+  selectedUser: any = null;
+
+  // Форма редактирования
+  formData: any = this.emptyForm();
+
+  // Состояния
+  isLoading = false;
   isSaving = false;
-  successMessage = '';
-  errorMessage = '';
+  changingPassword = false;
 
-  // Для врача
-  myRoom: any = null;
-  mySchedules: any[] = [];
+  // Пароль (отдельная форма)
+  passwordData = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
 
-  form = { firstName: '', lastName: '', email: '', phone: '' };
+  roles = [
+    { value: 'all', label: 'Все', icon: 'apps', color: '#64748b' },
+    { value: 'admin', label: 'Админы', icon: 'admin_panel_settings', color: '#1a73e8' },
+    { value: 'doctor', label: 'Врачи', icon: 'medical_services', color: '#10b981' },
+    { value: 'receptionist', label: 'Ресепшн', icon: 'support_agent', color: '#f59e0b' },
+    { value: 'radiologist', label: 'Радиологи', icon: 'medical_information', color: '#7c3aed' },
+    { value: 'lab_technician', label: 'Лаборанты', icon: 'biotech', color: '#06b6d4' }
+  ];
 
   constructor(
-    public authService: AuthService,
     private api: ApiService,
-    private cdr: ChangeDetectorRef,
-    private translate: TranslateService
+    private toast: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadProfile();
-    if (this.authService.isDoctor) {
-      this.loadMyRoom();
-      this.loadMySchedules();
+    this.loadCurrentUser();
+  }
+
+  private emptyForm(): any {
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      role: 'doctor',
+      specialization: '',
+      isActive: true
+    };
+  }
+
+  loadCurrentUser(): void {
+    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    this.isAdmin = stored.role === 'admin';
+
+    if (this.isAdmin) {
+      this.loadAllStaff();
+      this.selectUser(stored.id);
+    } else {
+      this.loadOwnProfile();
     }
   }
 
-  loadProfile(): void {
-    this.api.get<ApiResponse<User>>('/users/me').subscribe({
-      next: res => {
-        this.currentUser = res.data;
-        localStorage.setItem('currentUser', JSON.stringify(res.data));
-        this.authService['currentUserSubject'].next(res.data);
-        this.form = {
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          email: res.data.email,
-          phone: res.data.phone || '',
+  loadOwnProfile(): void {
+    this.api.get<any>('/users/me').subscribe({
+      next: (res) => {
+        const user = res.data || res;
+        this.selectedUser = user;
+        this.selectedUserId = user.id;
+        this.formData = {
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          email: user.email || '',
+          phone: user.phone || '',
+          role: user.role || 'doctor',
+          specialization: user.specialization || '',
+          isActive: user.isActive !== false
         };
         this.cdr.detectChanges();
-      }
-    });
-  }
-
-  loadMyRoom(): void {
-    this.api.get<any>('/rooms').pipe(map(r => r.data)).subscribe({
-      next: rooms => {
-        const me = this.authService.currentUser;
-        this.myRoom = rooms.find((r: any) => r.doctorId === me?.id) || null;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  loadMySchedules(): void {
-    this.api.get<any>('/schedules/my').pipe(map(r => r.data)).subscribe({
-      next: data => { this.mySchedules = data; this.cdr.detectChanges(); },
-      error: () => { this.mySchedules = []; this.cdr.detectChanges(); }
-    });
-  }
-
-  saveProfile(): void {
-    if (this.isSaving) return;
-    this.isSaving = true;
-    this.api.put<ApiResponse<User>>('/users/me', this.form).subscribe({
-      next: res => {
-        this.currentUser = res.data;
-        localStorage.setItem('currentUser', JSON.stringify(res.data));
-        this.authService['currentUserSubject'].next(res.data);
-        this.isSaving = false;
-        this.successMessage = 'Профиль обновлён!';
-        this.cdr.detectChanges();
-        setTimeout(() => { this.successMessage = ''; this.cdr.detectChanges(); }, 3000);
       },
       error: () => {
-        this.isSaving = false;
-        this.errorMessage = 'Ошибка сохранения';
+        this.toast.error('Ошибка загрузки профиля');
         this.cdr.detectChanges();
       }
     });
   }
 
-  getDayLabel(day: string): string {
-    const keys: Record<string, string> = {
-      monday: 'SCHEDULE.MONDAY', tuesday: 'SCHEDULE.TUESDAY', wednesday: 'SCHEDULE.WEDNESDAY',
-      thursday: 'SCHEDULE.THURSDAY', friday: 'SCHEDULE.FRIDAY', saturday: 'SCHEDULE.SATURDAY', sunday: 'SCHEDULE.SUNDAY'
-    };
-    const key = keys[day];
-    return key ? this.translate.instant(key) : day;
+  loadAllStaff(): void {
+    this.isLoading = true;
+    this.api.get<any>('/users').subscribe({
+      next: (res) => {
+        this.allStaff = res.data || res || [];
+        this.applyFilter();
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.toast.error('Ошибка загрузки персонала');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  getInitials(): string {
-    if (!this.currentUser) return '?';
-    return `${this.currentUser.firstName?.[0] || ''}${this.currentUser.lastName?.[0] || ''}`;
+  applyFilter(): void {
+    let result = [...this.allStaff];
+
+    if (this.selectedRole !== 'all') {
+      result = result.filter(u => u.role === this.selectedRole);
+    }
+
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter(u =>
+        u.firstName?.toLowerCase().includes(term) ||
+        u.lastName?.toLowerCase().includes(term) ||
+        u.email?.toLowerCase().includes(term)
+      );
+    }
+
+    this.filteredStaff = result;
+    this.cdr.detectChanges();
   }
 
-  getRoleLabel(): string {
-    const keys: Record<string, string> = {
-      doctor: 'STAFF.ROLE_DOCTOR', admin: 'STAFF.ROLE_ADMIN', patient: 'PATIENTS.TITLE', receptionist: 'STAFF.ROLE_RECEPTIONIST'
-    };
-    if (!this.currentUser) return '';
-    const key = keys[this.currentUser.role];
-    return key ? this.translate.instant(key) : this.currentUser.role;
+  setRole(role: string): void {
+    this.selectedRole = role;
+    this.applyFilter();
+  }
+
+  selectUser(userId: number): void {
+    this.selectedUserId = userId;
+    this.api.get<any>(`/users/${userId}`).subscribe({
+      next: (res) => {
+        const user = res.data || res;
+        this.selectedUser = user;
+        this.formData = {
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          email: user.email || '',
+          phone: user.phone || '',
+          role: user.role || 'doctor',
+          specialization: user.specialization || '',
+          isActive: user.isActive !== false
+        };
+        this.passwordData = { currentPassword: '', newPassword: '', confirmPassword: '' };
+        this.changingPassword = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.toast.error('Ошибка загрузки профиля');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  isMyProfile(): boolean {
+    const stored = JSON.parse(localStorage.getItem('user') || '{}');
+    return stored.id === this.selectedUserId;
+  }
+
+  canEdit(): boolean {
+    return this.isAdmin;
+  }
+
+  save(): void {
+    if (!this.canEdit()) {
+      this.toast.error('Только администратор может редактировать профили');
+      return;
+    }
+
+    if (!this.formData.firstName || !this.formData.lastName || !this.formData.email) {
+      this.toast.error('Заполни обязательные поля');
+      return;
+    }
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
+
+    const payload = { ...this.formData };
+
+    this.api.patch(`/users/${this.selectedUserId}`, payload).subscribe({
+      next: () => {
+        this.toast.success('Профиль обновлён');
+        this.isSaving = false;
+
+        this.loadAllStaff();
+        this.selectUser(this.selectedUserId!);
+
+        if (this.isMyProfile()) {
+          const stored = JSON.parse(localStorage.getItem('user') || '{}');
+          const updated = { ...stored, ...payload };
+          localStorage.setItem('user', JSON.stringify(updated));
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.toast.error(err?.error?.error?.message || 'Ошибка сохранения');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleChangePassword(): void {
+    this.changingPassword = !this.changingPassword;
+    this.passwordData = { currentPassword: '', newPassword: '', confirmPassword: '' };
+    this.cdr.detectChanges();
+  }
+
+  savePassword(): void {
+    if (!this.canEdit()) return;
+
+    if (!this.passwordData.newPassword || this.passwordData.newPassword.length < 6) {
+      this.toast.error('Пароль должен быть не менее 6 символов');
+      return;
+    }
+
+    if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
+      this.toast.error('Пароли не совпадают');
+      return;
+    }
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
+
+    this.api.patch(`/users/${this.selectedUserId}`, {
+      password: this.passwordData.newPassword
+    }).subscribe({
+      next: () => {
+        this.toast.success('Пароль изменён');
+        this.changingPassword = false;
+        this.passwordData = { currentPassword: '', newPassword: '', confirmPassword: '' };
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.toast.error(err?.error?.error?.message || 'Ошибка');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleActive(): void {
+    if (!this.canEdit()) return;
+    if (this.isMyProfile() && this.selectedUser?.isActive) {
+      this.toast.error('Нельзя деактивировать свой собственный аккаунт');
+      return;
+    }
+
+    this.formData.isActive = !this.formData.isActive;
+    this.save();
+  }
+
+  getRoleInfo(role: string): any {
+    return this.roles.find(r => r.value === role) || { value: role, label: role, icon: 'person', color: '#64748b' };
+  }
+
+  getInitials(user: any): string {
+    if (!user) return '??';
+    return (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
+  }
+
+  countByRole(role: string): number {
+    return this.allStaff.filter(u => u.role === role).length;
   }
 }

@@ -35,6 +35,12 @@ export class User {
   @Column({ nullable: true })
   roomId: number;
 
+  @Column({ nullable: true })
+  specialization: string;
+
+  @Column({ default: true })
+  isActive: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

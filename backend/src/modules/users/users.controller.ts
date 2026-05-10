@@ -33,6 +33,13 @@ export class UsersController {
     return this.service.findAll();
   }
 
+  @Get(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.service.findById(id);
+  }
+
   @Patch(':id')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
