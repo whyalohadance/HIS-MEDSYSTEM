@@ -1,394 +1,262 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Chart, registerables } from 'chart.js';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
-import { map, forkJoin } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-interface StaffMember {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  phone: string;
-  createdAt: string;
-  status?: 'busy' | 'available';
-}
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-staff',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, TranslateModule],
-  template: `
-    <div class="page">
-      <div class="page-header">
-        <div>
-          <h1 class="page-title">{{ 'STAFF.TITLE' | translate }}</h1>
-          <p class="page-sub">{{ staff.length }} {{ 'STAFF.EMPLOYEES_COUNT' | translate }}</p>
-        </div>
-        <button class="btn-primary" (click)="showForm = !showForm">
-          <span class="material-icons">person_add</span> {{ 'STAFF.ADD_STAFF' | translate }}
-        </button>
-      </div>
-
-      <div class="success-msg" *ngIf="successMsg">
-        <span class="material-icons">check_circle</span> {{ successMsg }}
-      </div>
-
-      <div class="form-card" *ngIf="showForm">
-        <h3>{{ 'STAFF.NEW_EMPLOYEE' | translate }}</h3>
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ 'STAFF.FIRST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.firstName" placeholder="Ivan" (ngModelChange)="updateEmail()">
-          </div>
-          <div class="form-field">
-            <label>{{ 'STAFF.LAST_NAME' | translate }}</label>
-            <input [(ngModel)]="form.lastName" placeholder="Ivanov" (ngModelChange)="updateEmail()">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ 'STAFF.EMAIL_AUTO' | translate }}</label>
-            <div class="email-preview">{{ generatedEmail || '—' }}</div>
-          </div>
-          <div class="form-field">
-            <label>{{ 'STAFF.ROLE_LABEL' | translate }}</label>
-            <select [(ngModel)]="form.role">
-              <option value="doctor">{{ 'STAFF.ROLE_DOCTOR' | translate }}</option>
-              <option value="receptionist">{{ 'STAFF.ROLE_RECEPTIONIST' | translate }}</option>
-              <option value="radiologist">{{ 'STAFF.ROLE_RADIOLOGIST' | translate }}</option>
-              <option value="lab_technician">Лаборант</option>
-              <option value="admin">{{ 'STAFF.ROLE_ADMIN' | translate }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ 'STAFF.PASSWORD_LABEL' | translate }}</label>
-            <input type="password" [(ngModel)]="form.password" [placeholder]="'STAFF.MIN_PASSWORD' | translate">
-          </div>
-          <div class="form-field">
-            <label>{{ 'STAFF.PHONE_LABEL' | translate }}</label>
-            <input [(ngModel)]="form.phone" placeholder="+373 69 000 000">
-          </div>
-        </div>
-        <div class="error-msg" *ngIf="errorMsg">{{ errorMsg }}</div>
-        <div class="form-actions">
-          <button class="btn-primary" (click)="save()"
-            [disabled]="isSaving || !form.firstName || !form.lastName || !form.password">
-            {{ isSaving ? ('COMMON.SAVING' | translate) : ('STAFF.ADD_STAFF_FULL' | translate) }}
-          </button>
-          <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
-        </div>
-      </div>
-
-      <div class="filters">
-        <button class="filter-btn" [class.active]="filter === 'all'" (click)="filter = 'all'">{{ 'STAFF.ALL' | translate }}</button>
-        <button class="filter-btn" [class.active]="filter === 'doctor'" (click)="filter = 'doctor'">{{ 'STAFF.DOCTORS' | translate }}</button>
-        <button class="filter-btn" [class.active]="filter === 'receptionist'" (click)="filter = 'receptionist'">{{ 'STAFF.RECEPTIONISTS' | translate }}</button>
-        <button class="filter-btn" [class.active]="filter === 'radiologist'" (click)="filter = 'radiologist'">{{ 'STAFF.ROLE_RADIOLOGIST' | translate }}</button>
-        <button class="filter-btn" [class.active]="filter === 'lab_technician'" (click)="filter = 'lab_technician'">Лаборанты</button>
-        <button class="filter-btn" [class.active]="filter === 'admin'" (click)="filter = 'admin'">{{ 'STAFF.ADMINS' | translate }}</button>
-      </div>
-
-      <div class="loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
-      </div>
-
-      <div class="empty-state" *ngIf="!isLoading && filteredStaff.length === 0">
-        <span class="material-icons">badge</span>
-        <p>{{ 'STAFF.NO_STAFF' | translate }}</p>
-      </div>
-
-      <div class="staff-list" *ngIf="!isLoading && filteredStaff.length > 0">
-        <div class="staff-card" *ngFor="let s of filteredStaff">
-          <div class="staff-avatar-wrap">
-            <div class="staff-avatar" [class]="s.role">{{ getInitials(s) }}</div>
-            <div class="status-dot" [class]="s.role === 'doctor' ? (s.status === 'busy' ? 'busy' : 'available') : 'none'"></div>
-          </div>
-          <div class="staff-info">
-            <div class="staff-name">{{ s.lastName }} {{ s.firstName }}</div>
-            <div class="staff-email">{{ s.email }}</div>
-            <div class="staff-phone" *ngIf="s.phone">{{ s.phone }}</div>
-          </div>
-          <div class="staff-right">
-            <span class="role-badge" [class]="s.role">{{ getRoleLabel(s.role) }}</span>
-            <span class="status-badge" *ngIf="s.role === 'doctor'" [class]="s.status">
-              <span class="status-dot-inline" [class]="s.status"></span>
-              {{ s.status === 'busy' ? ('STAFF.STATUS_BUSY' | translate) : ('STAFF.STATUS_AVAILABLE' | translate) }}
-            </span>
-          </div>
-          <button class="btn-edit" (click)="editUser(s)" title="Редактировать">
-            <span class="material-icons">edit</span>
-          </button>
-          <button class="btn-danger" (click)="delete(s.id)" [title]="'COMMON.DELETE' | translate">
-            <span class="material-icons">delete</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit modal -->
-    <div class="modal-backdrop" *ngIf="showEditModal" (click)="showEditModal = false">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>Редактировать сотрудника</h2>
-          <button class="modal-close" (click)="showEditModal = false"><span class="material-icons">close</span></button>
-        </div>
-        <div class="modal-body">
-          <div class="form-row">
-            <div class="form-field">
-              <label>Имя</label>
-              <input type="text" [(ngModel)]="editForm.firstName">
-            </div>
-            <div class="form-field">
-              <label>Фамилия</label>
-              <input type="text" [(ngModel)]="editForm.lastName">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <label>Роль</label>
-              <select [(ngModel)]="editForm.role">
-                <option value="doctor">Врач</option>
-                <option value="receptionist">Регистратор</option>
-                <option value="radiologist">Радиолог</option>
-                <option value="lab_technician">Лаборант</option>
-                <option value="admin">Администратор</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label>Телефон</label>
-              <input type="text" [(ngModel)]="editForm.phone" placeholder="+373 69 000 000">
-            </div>
-          </div>
-          <div class="form-field">
-            <label>Новый пароль (оставь пустым, чтобы не менять)</label>
-            <input type="password" [(ngModel)]="editForm.password" placeholder="Минимум 6 символов">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" (click)="showEditModal = false">Отмена</button>
-          <button class="btn-primary" (click)="saveEdit()" [disabled]="isSaving">
-            {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
-          </button>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .page { max-width: 900px; }
-    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-    .page-title { font-size: 26px; font-weight: 700; color: #0f2d52; }
-    .page-sub { font-size: 14px; color: #718096; margin-top: 4px; }
-    .btn-primary { display: flex; align-items: center; gap: 8px; background: #1a73e8; color: white; border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
-    .btn-primary:hover { background: #1557b0; }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-secondary { background: #f4f6f9; color: #2d3748; border: none; border-radius: 10px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
-    .btn-danger { background: none; border: none; cursor: pointer; color: #ea4335; padding: 8px; border-radius: 8px; display: flex; align-items: center; }
-    .btn-danger:hover { background: #fce8e6; }
-    .success-msg { display: flex; align-items: center; gap: 8px; background: #e6f4ea; color: #34a853; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; font-weight: 600; }
-    .form-card { background: white; border-radius: 14px; padding: 24px; border: 1px solid #e2e8f0; margin-bottom: 24px; }
-    .form-card h3 { margin: 0 0 20px; color: #0f2d52; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    .form-field { display: flex; flex-direction: column; gap: 6px; }
-    .form-field label { font-size: 13px; font-weight: 600; color: #4a5568; }
-    .form-field input, .form-field select { padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: white; }
-    .form-field input:focus, .form-field select:focus { border-color: #1a73e8; }
-    .email-preview { padding: 10px 14px; background: #f4f6f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; color: #1a73e8; font-weight: 600; }
-    .error-msg { color: #ea4335; font-size: 13px; margin-bottom: 12px; }
-    .form-actions { display: flex; gap: 12px; }
-    .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-    .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid #e2e8f0; background: white; color: #718096; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
-    .filter-btn.active { background: #1a73e8; color: white; border-color: #1a73e8; }
-    .loading { display: flex; align-items: center; gap: 8px; color: #718096; padding: 40px; justify-content: center; }
-    .loading .material-icons { animation: spin 1s linear infinite; }
-    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    .empty-state { text-align: center; padding: 60px; color: #a0aec0; }
-    .empty-state .material-icons { font-size: 48px; display: block; margin-bottom: 12px; }
-    .staff-list { display: flex; flex-direction: column; gap: 10px; }
-    .staff-card { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; transition: border-color 0.2s; }
-    .staff-card:hover { border-color: #1a73e8; }
-    .staff-avatar-wrap { position: relative; flex-shrink: 0; }
-    .staff-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
-    .staff-avatar.doctor { background: #e8f0fe; color: #1a73e8; }
-    .staff-avatar.receptionist { background: #e6f4ea; color: #34a853; }
-    .staff-avatar.admin { background: #f3e8fd; color: #9334e6; }
-    .staff-avatar.radiologist { background: #ede9fe; color: #7c3aed; }
-    .staff-avatar.lab_technician { background: #d1fae5; color: #059669; }
-    .status-dot { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid white; }
-    .status-dot.available { background: #34a853; }
-    .status-dot.busy { background: #f9ab00; }
-    .status-dot.none { display: none; }
-    .staff-info { flex: 1; }
-    .staff-name { font-size: 14px; font-weight: 600; color: #0f2d52; }
-    .staff-email { font-size: 13px; color: #718096; margin-top: 2px; }
-    .staff-phone { font-size: 12px; color: #a0aec0; margin-top: 2px; }
-    .staff-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-    .role-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .role-badge.doctor { background: #e8f0fe; color: #1a73e8; }
-    .role-badge.receptionist { background: #e6f4ea; color: #34a853; }
-    .role-badge.admin { background: #f3e8fd; color: #9334e6; }
-    .role-badge.radiologist { background: #ede9fe; color: #7c3aed; }
-    .role-badge.lab_technician { background: #d1fae5; color: #059669; }
-    .status-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-    .status-badge.available { background: #e6f4ea; color: #34a853; }
-    .status-badge.busy { background: #fef7e0; color: #f9ab00; }
-    .status-dot-inline { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .status-dot-inline.available { background: #34a853; }
-    .status-dot-inline.busy { background: #f9ab00; }
-    .btn-edit { background: none; border: none; cursor: pointer; color: #1a73e8; padding: 8px; border-radius: 8px; display: flex; align-items: center; }
-    .btn-edit:hover { background: #e8f0fe; }
-    /* Edit modal */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(3px); }
-    .modal-content { background: white; border-radius: 16px; max-width: 560px; width: 100%; display: flex; flex-direction: column; overflow: hidden; }
-    .modal-header { padding: 18px 22px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-    .modal-header h2 { margin: 0; font-size: 18px; color: #0f2d52; }
-    .modal-close { background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; }
-    .modal-close:hover { background: #f1f5f9; }
-    .modal-body { padding: 22px; }
-    .modal-footer { padding: 16px 22px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end; gap: 10px; }
-  `]
+  imports: [CommonModule, FormsModule, TranslateModule],
+  templateUrl: './staff.component.html',
+  styleUrls: ['./staff.component.scss']
 })
-export class StaffComponent implements OnInit {
-  staff: StaffMember[] = [];
-  isLoading = true;
-  showForm = false;
-  isSaving = false;
-  errorMsg = '';
-  successMsg = '';
-  filter = 'all';
+export class StaffComponent implements OnInit, AfterViewInit {
+  staff: any[] = [];
+  filtered: any[] = [];
+  searchTerm = '';
+  selectedRole = 'all';
+  isLoading = false;
 
-  form = { firstName: '', lastName: '', password: '', role: 'doctor', phone: '' };
+  stats: any = {
+    total: 0,
+    active: 0,
+    inactive: 0,
+    byRole: {}
+  };
 
-  showEditModal = false;
-  editingUser: StaffMember | null = null;
-  editForm: any = {};
+  showCreateModal = false;
+  newUser: any = this.emptyUser();
+  isCreating = false;
 
-  constructor(private api: ApiService, private toast: ToastService, private cdr: ChangeDetectorRef, private translate: TranslateService) {}
+  isAdmin = false;
 
-  ngOnInit(): void { this.load(); }
+  @ViewChild('activityChart') activityChartRef!: ElementRef;
+  private activityChart: any;
 
-  load(): void {
-    forkJoin({
-      users: this.api.get<any>('/users').pipe(map(r => r.data)),
-      appointments: this.api.get<any>('/appointments').pipe(map(r => r.data))
-    }).subscribe({
-      next: ({ users, appointments }) => {
-        const now = new Date();
-        const todayStr = now.toISOString().split('T')[0];
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  roles = [
+    { value: 'all', label: 'Все', icon: 'apps', color: '#64748b' },
+    { value: 'admin', label: 'Админы', icon: 'admin_panel_settings', color: '#1a73e8' },
+    { value: 'doctor', label: 'Врачи', icon: 'medical_services', color: '#10b981' },
+    { value: 'receptionist', label: 'Ресепшн', icon: 'support_agent', color: '#f59e0b' },
+    { value: 'radiologist', label: 'Радиологи', icon: 'medical_information', color: '#7c3aed' },
+    { value: 'lab_technician', label: 'Лаборанты', icon: 'biotech', color: '#06b6d4' }
+  ];
 
-        this.staff = users.map((u: StaffMember) => {
-          if (u.role !== 'doctor') return { ...u, status: undefined };
+  constructor(
+    private api: ApiService,
+    private toast: ToastService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-          const isBusy = appointments.some((a: any) => {
-            if (a.doctorId !== u.id) return false;
-            if (a.date !== todayStr) return false;
-            if (a.status !== 'scheduled' && a.status !== 'completed') return false;
-            const [h, m] = a.time.split(':').map(Number);
-            const aptMinutes = h * 60 + m;
-            return currentMinutes >= aptMinutes && currentMinutes <= aptMinutes + 30;
-          });
+  ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.isAdmin = user.role === 'admin';
+    this.loadAll();
+  }
 
-          return { ...u, status: isBusy ? 'busy' : 'available' };
-        });
+  ngAfterViewInit(): void {
+    // Chart renders after data loads
+  }
 
+  emptyUser(): any {
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      role: 'doctor',
+      specialization: ''
+    };
+  }
+
+  loadAll(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
+    // Try to load stats and activity in parallel
+    let statsLoaded = false;
+    let activityLoaded = false;
+
+    const tryRenderChart = () => {
+      if (statsLoaded && activityLoaded) {
         this.isLoading = false;
         this.cdr.detectChanges();
-      },
-      error: () => { this.isLoading = false; this.cdr.detectChanges(); }
-    });
-  }
-
-  get generatedEmail(): string {
-    if (!this.form.firstName || !this.form.lastName) return '';
-    const first = this.transliterate(this.form.firstName.toLowerCase().trim());
-    const last = this.transliterate(this.form.lastName.toLowerCase().trim());
-    return `${first}.${last}@med.com`;
-  }
-
-  updateEmail(): void { this.cdr.detectChanges(); }
-
-  transliterate(text: string): string {
-    const map: Record<string, string> = {
-      'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh',
-      'з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o',
-      'п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts',
-      'ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+        setTimeout(() => this.renderChart(), 100);
+      }
     };
-    return text.split('').map(c => map[c] || c).join('');
-  }
 
-  get filteredStaff(): StaffMember[] {
-    if (this.filter === 'all') return this.staff;
-    return this.staff.filter(s => s.role === this.filter);
-  }
-
-  save(): void {
-    if (!this.form.firstName || !this.form.lastName || !this.form.password || this.isSaving) return;
-    if (this.form.password.length < 6) { this.errorMsg = 'Пароль должен быть минимум 6 символов'; return; }
-    this.isSaving = true;
-    this.errorMsg = '';
-    this.api.post<any>('/auth/register', {
-      firstName: this.form.firstName, lastName: this.form.lastName,
-      email: this.generatedEmail, password: this.form.password,
-      role: this.form.role, phone: this.form.phone
-    }).subscribe({
-      next: () => {
-        this.isSaving = false; this.showForm = false;
-        this.form = { firstName: '', lastName: '', password: '', role: 'doctor', phone: '' };
-        this.successMsg = 'Сотрудник успешно добавлен!';
-        setTimeout(() => { this.successMsg = ''; this.cdr.detectChanges(); }, 4000);
-        this.load(); this.cdr.detectChanges();
+    this.api.get<any>('/users/stats').subscribe({
+      next: (res) => {
+        this.stats = res.data || res;
+        statsLoaded = true;
+        tryRenderChart();
       },
-      error: err => { this.isSaving = false; this.errorMsg = err?.error?.error?.message || 'Ошибка при добавлении'; this.cdr.detectChanges(); }
+      error: () => {
+        statsLoaded = true;
+        tryRenderChart();
+      }
+    });
+
+    this.api.get<any>('/users/with-activity').subscribe({
+      next: (res) => {
+        this.staff = res.data || res || [];
+        this.applyFilter();
+        activityLoaded = true;
+        tryRenderChart();
+      },
+      error: () => {
+        // Fallback to basic /users
+        this.api.get<any>('/users').subscribe({
+          next: (r) => {
+            this.staff = r.data || [];
+            this.calculateStatsLocally();
+            this.applyFilter();
+            activityLoaded = true;
+            tryRenderChart();
+          },
+          error: () => {
+            activityLoaded = true;
+            this.toast.error('Ошибка загрузки персонала');
+            tryRenderChart();
+          }
+        });
+      }
     });
   }
 
-  editUser(user: StaffMember): void {
-    this.editingUser = user;
-    this.editForm = { firstName: user.firstName, lastName: user.lastName, role: user.role, phone: user.phone || '', password: '' };
-    this.showEditModal = true;
+  calculateStatsLocally(): void {
+    this.stats.total = this.staff.length;
+    this.stats.active = this.staff.filter(u => u.isActive !== false).length;
+    this.stats.inactive = this.staff.filter(u => u.isActive === false).length;
+    this.stats.byRole = {};
+    for (const u of this.staff) {
+      this.stats.byRole[u.role] = (this.stats.byRole[u.role] || 0) + 1;
+    }
   }
 
-  saveEdit(): void {
-    if (!this.editingUser || this.isSaving) return;
-    this.isSaving = true;
-    const payload: any = { firstName: this.editForm.firstName, lastName: this.editForm.lastName, role: this.editForm.role, phone: this.editForm.phone };
-    if (this.editForm.password && this.editForm.password.length >= 6) payload.password = this.editForm.password;
-    this.api.patch<any>(`/users/${this.editingUser.id}`, payload).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.showEditModal = false;
-        this.toast.success('Сотрудник обновлён');
-        this.load();
-        this.cdr.detectChanges();
-      },
-      error: () => { this.isSaving = false; this.toast.error('Ошибка при обновлении'); this.cdr.detectChanges(); }
-    });
-  }
+  applyFilter(): void {
+    let result = [...this.staff];
 
-  delete(id: number): void {
-    if (!confirm('Удалить сотрудника?')) return;
-    this.staff = this.staff.filter(s => s.id !== id);
+    if (this.selectedRole !== 'all') {
+      result = result.filter(u => u.role === this.selectedRole);
+    }
+
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter(u =>
+        u.firstName?.toLowerCase().includes(term) ||
+        u.lastName?.toLowerCase().includes(term) ||
+        u.email?.toLowerCase().includes(term) ||
+        u.specialization?.toLowerCase().includes(term)
+      );
+    }
+
+    this.filtered = result;
     this.cdr.detectChanges();
-    this.api.delete<any>(`/users/${id}`).subscribe({ error: () => this.load() });
   }
 
-  getInitials(s: StaffMember): string { return `${s.firstName?.[0] || ''}${s.lastName?.[0] || ''}`; }
+  setRole(role: string): void {
+    this.selectedRole = role;
+    this.applyFilter();
+  }
 
-  getRoleLabel(role: string): string {
-    const keys: Record<string, string> = {
-      doctor: 'STAFF.ROLE_DOCTOR', receptionist: 'STAFF.ROLE_RECEPTIONIST',
-      admin: 'STAFF.ROLE_ADMIN', radiologist: 'STAFF.ROLE_RADIOLOGIST',
-      lab_technician: 'STAFF.ROLE_LAB_TECHNICIAN'
-    };
-    const key = keys[role];
-    return key ? this.translate.instant(key) : role;
+  goToProfile(userId: number): void {
+    this.router.navigate(['/profile'], { queryParams: { userId } });
+  }
+
+  openCreate(): void {
+    if (!this.isAdmin) return;
+    this.newUser = this.emptyUser();
+    this.showCreateModal = true;
+    this.cdr.detectChanges();
+  }
+
+  createUser(): void {
+    if (!this.newUser.firstName || !this.newUser.lastName || !this.newUser.email || !this.newUser.password) {
+      this.toast.error('Заполни все обязательные поля');
+      return;
+    }
+    if (this.newUser.password.length < 6) {
+      this.toast.error('Пароль минимум 6 символов');
+      return;
+    }
+
+    this.isCreating = true;
+    this.cdr.detectChanges();
+
+    this.api.post<any>('/users', this.newUser).subscribe({
+      next: () => {
+        this.toast.success('Сотрудник создан');
+        this.showCreateModal = false;
+        this.isCreating = false;
+        this.loadAll();
+      },
+      error: (err) => {
+        this.isCreating = false;
+        this.toast.error(err?.error?.error?.message || 'Ошибка создания');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  getRoleInfo(role: string): any {
+    return this.roles.find(r => r.value === role) || { value: role, label: role, icon: 'person', color: '#64748b' };
+  }
+
+  getInitials(u: any): string {
+    return (u.firstName?.[0] || '') + (u.lastName?.[0] || '');
+  }
+
+  getActivityLevel(u: any): string {
+    const count = u.todayCount || 0;
+    if (count >= 5) return 'high';
+    if (count >= 2) return 'medium';
+    if (count >= 1) return 'low';
+    return 'none';
+  }
+
+  renderChart(): void {
+    if (!this.activityChartRef?.nativeElement) return;
+    if (this.activityChart) { this.activityChart.destroy(); this.activityChart = null; }
+
+    const topStaff = [...this.staff]
+      .filter(u => u.role !== 'admin' && u.role !== 'receptionist')
+      .sort((a, b) => (b.weekCount || 0) - (a.weekCount || 0))
+      .slice(0, 5);
+
+    if (topStaff.length === 0) return;
+
+    this.activityChart = new Chart(this.activityChartRef.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: topStaff.map(u => `${u.firstName} ${u.lastName?.[0] || ''}.`),
+        datasets: [{
+          label: 'За неделю',
+          data: topStaff.map(u => u.weekCount || 0),
+          backgroundColor: topStaff.map(u => this.getRoleInfo(u.role).color + 'cc'),
+          borderColor: topStaff.map(u => this.getRoleInfo(u.role).color),
+          borderWidth: 1.5,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
   }
 }

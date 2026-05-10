@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -53,7 +54,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private api: ApiService,
     private toast: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +80,10 @@ export class ProfileComponent implements OnInit {
 
     if (this.isAdmin) {
       this.loadAllStaff();
-      this.selectUser(stored.id);
+      // If navigated from /staff with ?userId=X, open that user
+      const queryUserId = this.route.snapshot.queryParamMap.get('userId');
+      const targetId = queryUserId ? +queryUserId : stored.id;
+      this.selectUser(targetId);
     } else {
       this.loadOwnProfile();
     }
