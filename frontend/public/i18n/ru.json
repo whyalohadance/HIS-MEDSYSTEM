@@ -143,7 +143,11 @@
     "FREE": "Свободен",
     "BUSY": "Занят",
     "TODAY_QUEUE": "Очередь на сегодня",
-    "BOOK": "Записать"
+    "BOOK": "Записать",
+    "ACTIVE_FILTER": "Активные",
+    "COMPLETED_FILTER": "Завершённые",
+    "IN_PROGRESS_STATUS": "Идёт · {m} мин",
+    "STARTS_IN": "Через {m} мин"
   },
   "PATIENTS": {
     "TITLE": "Пациенты",

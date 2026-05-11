@@ -143,7 +143,11 @@
     "FREE": "Free",
     "BUSY": "Busy",
     "TODAY_QUEUE": "Today queue",
-    "BOOK": "Book"
+    "BOOK": "Book",
+    "ACTIVE_FILTER": "Active",
+    "COMPLETED_FILTER": "Completed",
+    "IN_PROGRESS_STATUS": "In progress · {m} min",
+    "STARTS_IN": "In {m} min"
   },
   "PATIENTS": {
     "TITLE": "Patients",

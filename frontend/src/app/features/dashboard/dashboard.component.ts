@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   adminStats: any = null;
   risStats: any = null;
+  labStats: any = null;
   allAppointments: any[] = [];
 
   doctorPatients = 0;
@@ -143,11 +144,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       appointments: this.appointmentsService.getAll(),
       patients: this.patientsService.getAll(),
       doctors: this.api.get<any>('/users/doctors').pipe(map(r => r.data)),
-      risStats: this.api.get<any>('/studies/stats').pipe(map(r => r.data))
+      risStats: this.api.get<any>('/studies/stats').pipe(map(r => r.data)),
+      labStats: this.api.get<any>('/lab/stats').pipe(map(r => r.data))
     }).subscribe({
-      next: ({ stats, appointments, patients, doctors, risStats }) => {
+      next: ({ stats, appointments, patients, doctors, risStats, labStats }) => {
         this.adminStats = stats;
         this.risStats = risStats;
+        this.labStats = labStats;
         this.allPatients = patients;
         this.allDoctors = doctors;
         this.allAppointments = appointments;
@@ -224,8 +227,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const start   = h * 60 + m;
     const end     = start + (apt.duration || 30);
     const current = now.getHours() * 60 + now.getMinutes();
-    if (current >= start && current < end) return { label: `Идёт · ${end - current} мин`, color: '#10b981' };
-    if (current < start && start - current <= 30) return { label: `Через ${start - current} мин`, color: '#f59e0b' };
+    if (current >= start && current < end) {
+      const label = this.translate.instant('DASHBOARD.IN_PROGRESS_STATUS', { m: end - current });
+      return { label, color: '#10b981' };
+    }
+    if (current < start && start - current <= 30) {
+      const label = this.translate.instant('DASHBOARD.STARTS_IN', { m: start - current });
+      return { label, color: '#f59e0b' };
+    }
     return { label: '', color: '' };
   }
 
@@ -481,9 +490,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get greeting(): string {
     const h = new Date().getHours();
-    if (h < 12) return 'Доброе утро';
-    if (h < 18) return 'Добрый день';
-    return 'Добрый вечер';
+    if (h < 12) return this.translate.instant('DASHBOARD.GREETING_MORNING');
+    if (h < 18) return this.translate.instant('DASHBOARD.GREETING_DAY');
+    return this.translate.instant('DASHBOARD.GREETING_EVENING');
   }
 
   formatDate(date: string): string {

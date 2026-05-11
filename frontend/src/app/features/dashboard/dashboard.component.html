@@ -46,6 +46,23 @@
           </div>
         </div>
 
+        <!-- LIS Stats -->
+        <div class="section-title" *ngIf="labStats">{{ 'LIS.DASHBOARD.HEADER_TITLE' | translate }}</div>
+        <div class="stats-grid-3" *ngIf="labStats">
+          <div class="stat-card blue">
+            <div class="stat-icon"><span class="material-icons">science</span></div>
+            <div class="stat-info"><div class="stat-value">{{ labStats.total }}</div><div class="stat-label">{{ 'LIS.DASHBOARD.TOTAL' | translate }}</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><span class="material-icons">pending_actions</span></div>
+            <div class="stat-info"><div class="stat-value">{{ labStats.pending }}</div><div class="stat-label">{{ 'LIS.DASHBOARD.PENDING' | translate }}</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon"><span class="material-icons">check_circle</span></div>
+            <div class="stat-info"><div class="stat-value">{{ labStats.completed }}</div><div class="stat-label">{{ 'LIS.DASHBOARD.COMPLETED' | translate }}</div></div>
+          </div>
+        </div>
+
         <div class="section-title">{{ 'DASHBOARD.STATUS_DISTRIBUTION' | translate }}</div>
         <div class="stats-grid-3">
           <div class="stat-card green">
@@ -125,10 +142,10 @@
           <span class="section-title">{{ 'DASHBOARD.TODAY_APPOINTMENTS' | translate }}</span>
           <div class="today-toggle" *ngIf="completedTodayAppointments.length > 0">
             <button class="toggle-sm" [class.active]="!showCompletedToday" (click)="showCompletedToday = false">
-              Активные ({{ todayAppointments.length }})
+              {{ 'DASHBOARD.ACTIVE_FILTER' | translate }} ({{ todayAppointments.length }})
             </button>
             <button class="toggle-sm" [class.active]="showCompletedToday" (click)="showCompletedToday = true">
-              Завершённые ({{ completedTodayAppointments.length }})
+              {{ 'DASHBOARD.COMPLETED_FILTER' | translate }} ({{ completedTodayAppointments.length }})
             </button>
           </div>
         </div>
