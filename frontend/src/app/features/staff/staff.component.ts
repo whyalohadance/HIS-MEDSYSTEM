@@ -40,12 +40,12 @@ export class StaffComponent implements OnInit, AfterViewInit {
   private activityChart: any;
 
   roles = [
-    { value: 'all', label: 'Все', icon: 'apps', color: '#64748b' },
-    { value: 'admin', label: 'Админы', icon: 'admin_panel_settings', color: '#1a73e8' },
-    { value: 'doctor', label: 'Врачи', icon: 'medical_services', color: '#10b981' },
-    { value: 'receptionist', label: 'Ресепшн', icon: 'support_agent', color: '#f59e0b' },
-    { value: 'radiologist', label: 'Радиологи', icon: 'medical_information', color: '#7c3aed' },
-    { value: 'lab_technician', label: 'Лаборанты', icon: 'biotech', color: '#06b6d4' }
+    { value: 'all', label: 'Все', labelKey: 'STAFF.ROLES.ALL', icon: 'apps', color: '#64748b' },
+    { value: 'admin', label: 'Админы', labelKey: 'STAFF.ROLES.ADMIN', icon: 'admin_panel_settings', color: '#1a73e8' },
+    { value: 'doctor', label: 'Врачи', labelKey: 'STAFF.ROLES.DOCTOR', icon: 'medical_services', color: '#10b981' },
+    { value: 'receptionist', label: 'Ресепшн', labelKey: 'STAFF.ROLES.RECEPTIONIST', icon: 'support_agent', color: '#f59e0b' },
+    { value: 'radiologist', label: 'Радиологи', labelKey: 'STAFF.ROLES.RADIOLOGIST', icon: 'medical_information', color: '#7c3aed' },
+    { value: 'lab_technician', label: 'Лаборанты', labelKey: 'STAFF.ROLES.LAB_TECHNICIAN', icon: 'biotech', color: '#06b6d4' }
   ];
 
   constructor(

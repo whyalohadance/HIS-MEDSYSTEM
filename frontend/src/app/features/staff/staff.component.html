@@ -5,14 +5,14 @@
     <div class="header-left">
       <h1>
         <span class="material-icons">groups</span>
-        <span>Персонал</span>
+        <span>{{ 'STAFF.TITLE' | translate }}</span>
       </h1>
-      <p class="page-subtitle">Обзор активности и загруженности</p>
+      <p class="page-subtitle">{{ 'STAFF.SUBTITLE' | translate }}</p>
     </div>
     <div class="header-right" *ngIf="isAdmin">
       <button class="btn-primary" (click)="openCreate()">
         <span class="material-icons">person_add</span>
-        <span>Нанять сотрудника</span>
+        <span>{{ 'STAFF.HIRE' | translate }}</span>
       </button>
     </div>
   </header>
@@ -23,28 +23,28 @@
       <div class="stat-icon"><span class="material-icons">groups</span></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.total }}</div>
-        <div class="stat-label">Всего сотрудников</div>
+        <div class="stat-label">{{ 'STAFF.TOTAL' | translate }}</div>
       </div>
     </div>
     <div class="stat-card success">
       <div class="stat-icon"><span class="material-icons">check_circle</span></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.active }}</div>
-        <div class="stat-label">Активных</div>
+        <div class="stat-label">{{ 'STAFF.ACTIVE_STAT' | translate }}</div>
       </div>
     </div>
     <div class="stat-card doctor">
       <div class="stat-icon"><span class="material-icons">medical_services</span></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.byRole?.doctor || 0 }}</div>
-        <div class="stat-label">Врачей</div>
+        <div class="stat-label">{{ 'STAFF.DOCTORS_STAT' | translate }}</div>
       </div>
     </div>
     <div class="stat-card warn" *ngIf="stats.inactive > 0">
       <div class="stat-icon"><span class="material-icons">block</span></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats.inactive }}</div>
-        <div class="stat-label">Неактивных</div>
+        <div class="stat-label">{{ 'STAFF.INACTIVE_STAT' | translate }}</div>
       </div>
     </div>
   </div>
@@ -53,7 +53,7 @@
   <div class="chart-section" *ngIf="!isLoading && staff.length > 0">
     <h2>
       <span class="material-icons">leaderboard</span>
-      <span>Топ-5 по активности за неделю</span>
+      <span>{{ 'STAFF.TOP_ACTIVITY' | translate }}</span>
     </h2>
     <div class="chart-container">
       <canvas #activityChart></canvas>
@@ -68,7 +68,7 @@
         type="text"
         [(ngModel)]="searchTerm"
         (input)="applyFilter()"
-        placeholder="Поиск по имени, email, специализации...">
+        [placeholder]="'STAFF.SEARCH_PLACEHOLDER' | translate">
     </div>
     <div class="role-tabs">
       <button
@@ -79,7 +79,7 @@
         [style.--c]="r.color"
         (click)="setRole(r.value)">
         <span class="material-icons">{{ r.icon }}</span>
-        <span class="role-tab-label">{{ r.label }}</span>
+        <span class="role-tab-label">{{ r.labelKey | translate }}</span>
         <span class="role-tab-count" *ngIf="r.value !== 'all'">{{ stats.byRole?.[r.value] || 0 }}</span>
         <span class="role-tab-count" *ngIf="r.value === 'all'">{{ stats.total }}</span>
       </button>
@@ -101,7 +101,7 @@
              [class.status-medium]="getActivityLevel(u) === 'medium'"
              [class.status-low]="getActivityLevel(u) === 'low'"
              [class.status-none]="getActivityLevel(u) === 'none'"
-             [title]="'Сегодня: ' + (u.todayCount || 0)">
+             [title]="('STAFF.TODAY' | translate) + ': ' + (u.todayCount || 0)">
         </div>
       </div>
 
@@ -110,7 +110,7 @@
 
         <div class="card-role">
           <span class="material-icons" [style.color]="getRoleInfo(u.role).color">{{ getRoleInfo(u.role).icon }}</span>
-          <span>{{ getRoleInfo(u.role).label }}</span>
+          <span>{{ getRoleInfo(u.role).labelKey | translate }}</span>
         </div>
 
         <div class="card-spec" *ngIf="u.specialization">
@@ -131,7 +131,7 @@
 
         <div class="card-activity" *ngIf="u.role !== 'admin'">
           <div class="activity-row">
-            <span class="activity-label">Сегодня</span>
+            <span class="activity-label">{{ 'STAFF.TODAY' | translate }}</span>
             <span class="activity-value"
                   [class.level-high]="getActivityLevel(u) === 'high'"
                   [class.level-medium]="getActivityLevel(u) === 'medium'"
@@ -140,7 +140,7 @@
             </span>
           </div>
           <div class="activity-row">
-            <span class="activity-label">За неделю</span>
+            <span class="activity-label">{{ 'STAFF.WEEK' | translate }}</span>
             <span class="activity-value">{{ u.weekCount || 0 }}</span>
           </div>
         </div>
@@ -148,7 +148,7 @@
         <div class="card-footer">
           <span class="status-badge" [class.active]="u.isActive" [class.inactive]="!u.isActive">
             <span class="material-icons">{{ u.isActive ? 'check_circle' : 'block' }}</span>
-            <span>{{ u.isActive ? 'Активен' : 'Неактивен' }}</span>
+            <span>{{ (u.isActive ? 'STAFF.STATUS.ACTIVE' : 'STAFF.STATUS.INACTIVE') | translate }}</span>
           </span>
           <span class="goto-arrow">
             <span class="material-icons">arrow_forward</span>
@@ -161,13 +161,13 @@
   <!-- EMPTY -->
   <div class="empty-state" *ngIf="!isLoading && filtered.length === 0">
     <span class="material-icons">person_search</span>
-    <p>Сотрудников не найдено</p>
+    <p>{{ 'STAFF.EMPTY' | translate }}</p>
   </div>
 
   <!-- LOADING -->
   <div class="loading-state" *ngIf="isLoading">
     <div class="spinner"></div>
-    <span>Загрузка...</span>
+    <span>{{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <!-- MODAL: Создание сотрудника -->
@@ -176,7 +176,7 @@
       <div class="modal-header">
         <h2>
           <span class="material-icons">person_add</span>
-          <span>Новый сотрудник</span>
+          <span>{{ 'STAFF.CREATE_MODAL.TITLE' | translate }}</span>
         </h2>
         <button class="btn-close" (click)="showCreateModal = false">
           <span class="material-icons">close</span>
@@ -186,54 +186,54 @@
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group">
-            <label>Имя *</label>
+            <label>{{ 'STAFF.CREATE_MODAL.FIRST_NAME' | translate }} *</label>
             <input type="text" [(ngModel)]="newUser.firstName" placeholder="Ion">
           </div>
           <div class="form-group">
-            <label>Фамилия *</label>
+            <label>{{ 'STAFF.CREATE_MODAL.LAST_NAME' | translate }} *</label>
             <input type="text" [(ngModel)]="newUser.lastName" placeholder="Popescu">
           </div>
         </div>
 
         <div class="form-group">
-          <label>Email *</label>
+          <label>{{ 'STAFF.CREATE_MODAL.EMAIL' | translate }} *</label>
           <input type="email" [(ngModel)]="newUser.email" placeholder="user@med.com">
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Пароль * (мин. 6)</label>
+            <label>{{ 'STAFF.CREATE_MODAL.PASSWORD' | translate }} *</label>
             <input type="password" [(ngModel)]="newUser.password" placeholder="••••••">
           </div>
           <div class="form-group">
-            <label>Телефон</label>
+            <label>{{ 'STAFF.CREATE_MODAL.PHONE' | translate }}</label>
             <input type="tel" [(ngModel)]="newUser.phone" placeholder="+373...">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Роль *</label>
+            <label>{{ 'STAFF.CREATE_MODAL.ROLE' | translate }} *</label>
             <select [(ngModel)]="newUser.role">
-              <option value="admin">Администратор</option>
-              <option value="doctor">Врач</option>
-              <option value="receptionist">Ресепшн</option>
-              <option value="radiologist">Радиолог</option>
-              <option value="lab_technician">Лаборант</option>
+              <option value="admin">{{ 'STAFF.ROLES.ADMIN' | translate }}</option>
+              <option value="doctor">{{ 'STAFF.ROLES.DOCTOR' | translate }}</option>
+              <option value="receptionist">{{ 'STAFF.ROLES.RECEPTIONIST' | translate }}</option>
+              <option value="radiologist">{{ 'STAFF.ROLES.RADIOLOGIST' | translate }}</option>
+              <option value="lab_technician">{{ 'STAFF.ROLES.LAB_TECHNICIAN' | translate }}</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Специализация</label>
-            <input type="text" [(ngModel)]="newUser.specialization" placeholder="Терапевт">
+            <label>{{ 'STAFF.CREATE_MODAL.SPECIALIZATION' | translate }}</label>
+            <input type="text" [(ngModel)]="newUser.specialization" [placeholder]="'PROFILE.SPEC_PLACEHOLDER' | translate">
           </div>
         </div>
       </div>
 
       <div class="modal-footer">
-        <button class="btn-cancel" (click)="showCreateModal = false">Отмена</button>
+        <button class="btn-cancel" (click)="showCreateModal = false">{{ 'COMMON.CANCEL' | translate }}</button>
         <button class="btn-save" (click)="createUser()" [disabled]="isCreating">
           <span class="material-icons">{{ isCreating ? 'hourglass_empty' : 'check' }}</span>
-          <span>{{ isCreating ? 'Создание...' : 'Создать' }}</span>
+          <span>{{ (isCreating ? 'STAFF.CREATE_MODAL.CREATING' : 'STAFF.CREATE_MODAL.CREATE') | translate }}</span>
         </button>
       </div>
     </div>

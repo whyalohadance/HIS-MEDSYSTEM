@@ -6,7 +6,7 @@
     <div class="sidebar-header">
       <h2>
         <span class="material-icons">groups</span>
-        <span>Персонал</span>
+        <span>{{ 'PROFILE.STAFF_LIST' | translate }}</span>
       </h2>
       <span class="staff-count">{{ allStaff.length }}</span>
     </div>
@@ -18,7 +18,7 @@
         type="text"
         [(ngModel)]="searchTerm"
         (input)="applyFilter()"
-        placeholder="Поиск...">
+        [placeholder]="'PROFILE.SEARCH' | translate">
     </div>
 
     <!-- Фильтр по ролям -->
@@ -31,7 +31,7 @@
         [style.--c]="r.color"
         (click)="setRole(r.value)">
         <span class="material-icons">{{ r.icon }}</span>
-        <span class="role-label">{{ r.label }}</span>
+        <span class="role-label">{{ r.labelKey | translate }}</span>
         <span class="role-count" *ngIf="r.value !== 'all'">{{ countByRole(r.value) }}</span>
         <span class="role-count" *ngIf="r.value === 'all'">{{ allStaff.length }}</span>
       </button>
@@ -56,7 +56,7 @@
           <div class="staff-meta">
             <span class="role-pill" [style.color]="getRoleInfo(u.role).color">
               <span class="material-icons">{{ getRoleInfo(u.role).icon }}</span>
-              {{ getRoleInfo(u.role).label }}
+              {{ getRoleInfo(u.role).labelKey | translate }}
             </span>
           </div>
         </div>
@@ -66,7 +66,7 @@
 
       <div class="empty-staff" *ngIf="filteredStaff.length === 0 && !isLoading">
         <span class="material-icons">person_search</span>
-        <p>Никого не найдено</p>
+        <p>{{ 'PROFILE.EMPTY_SEARCH' | translate }}</p>
       </div>
     </div>
   </aside>
@@ -82,7 +82,7 @@
           <div class="big-name">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</div>
           <div class="big-role">
             <span class="material-icons">{{ getRoleInfo(selectedUser.role).icon }}</span>
-            <span>{{ getRoleInfo(selectedUser.role).label }}</span>
+            <span>{{ getRoleInfo(selectedUser.role).labelKey | translate }}</span>
           </div>
           <div class="big-email">
             <span class="material-icons">mail</span>
@@ -93,11 +93,11 @@
         <div class="profile-badges">
           <span class="badge" *ngIf="isMyProfile()">
             <span class="material-icons">person</span>
-            Это вы
+            {{ 'PROFILE.ITS_YOU' | translate }}
           </span>
           <span class="badge" [class.inactive]="!selectedUser.isActive">
             <span class="material-icons">{{ selectedUser.isActive ? 'check_circle' : 'block' }}</span>
-            {{ selectedUser.isActive ? 'Активен' : 'Неактивен' }}
+            {{ (selectedUser.isActive ? 'PROFILE.ACTIVE' : 'PROFILE.INACTIVE') | translate }}
           </span>
         </div>
       </div>
@@ -106,8 +106,8 @@
       <div class="readonly-warning" *ngIf="!canEdit()">
         <span class="material-icons">lock</span>
         <div>
-          <strong>Только просмотр</strong>
-          <p>Для изменения данных профиля обратитесь к администратору</p>
+          <strong>{{ 'PROFILE.READONLY' | translate }}</strong>
+          <p>{{ 'PROFILE.READONLY_HINT' | translate }}</p>
         </div>
       </div>
 
@@ -116,12 +116,12 @@
 
         <h3>
           <span class="material-icons">badge</span>
-          <span>Личные данные</span>
+          <span>{{ 'PROFILE.PERSONAL_DATA' | translate }}</span>
         </h3>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Имя *</label>
+            <label>{{ 'PROFILE.FIRST_NAME' | translate }} *</label>
             <input
               type="text"
               [(ngModel)]="formData.firstName"
@@ -129,7 +129,7 @@
               placeholder="Ion">
           </div>
           <div class="form-group">
-            <label>Фамилия *</label>
+            <label>{{ 'PROFILE.LAST_NAME' | translate }} *</label>
             <input
               type="text"
               [(ngModel)]="formData.lastName"
@@ -142,7 +142,7 @@
           <div class="form-group">
             <label>
               <span class="material-icons">mail</span>
-              <span>Email *</span>
+              <span>{{ 'PROFILE.EMAIL' | translate }} *</span>
             </label>
             <input
               type="email"
@@ -153,7 +153,7 @@
           <div class="form-group">
             <label>
               <span class="material-icons">phone</span>
-              <span>Телефон</span>
+              <span>{{ 'PROFILE.PHONE' | translate }}</span>
             </label>
             <input
               type="tel"
@@ -167,26 +167,26 @@
           <div class="form-group">
             <label>
               <span class="material-icons">work</span>
-              <span>Роль</span>
+              <span>{{ 'PROFILE.ROLE' | translate }}</span>
             </label>
             <select
               [(ngModel)]="formData.role"
               [disabled]="!canEdit() || isMyProfile()">
-              <option value="admin">Админы</option>
-              <option value="doctor">Врачи</option>
-              <option value="receptionist">Ресепшн</option>
-              <option value="radiologist">Радиологи</option>
-              <option value="lab_technician">Лаборанты</option>
+              <option value="admin">{{ 'STAFF.ROLES.ADMIN' | translate }}</option>
+              <option value="doctor">{{ 'STAFF.ROLES.DOCTOR' | translate }}</option>
+              <option value="receptionist">{{ 'STAFF.ROLES.RECEPTIONIST' | translate }}</option>
+              <option value="radiologist">{{ 'STAFF.ROLES.RADIOLOGIST' | translate }}</option>
+              <option value="lab_technician">{{ 'STAFF.ROLES.LAB_TECHNICIAN' | translate }}</option>
             </select>
-            <small class="hint" *ngIf="isMyProfile()">Свою роль изменить нельзя</small>
+            <small class="hint" *ngIf="isMyProfile()">{{ 'PROFILE.ROLE_HINT' | translate }}</small>
           </div>
           <div class="form-group">
-            <label>Специализация</label>
+            <label>{{ 'PROFILE.SPECIALIZATION' | translate }}</label>
             <input
               type="text"
               [(ngModel)]="formData.specialization"
               [disabled]="!canEdit()"
-              placeholder="Терапевт, Кардиолог...">
+              [placeholder]="'PROFILE.SPEC_PLACEHOLDER' | translate">
           </div>
         </div>
 
@@ -198,7 +198,7 @@
             [class.deactivate]="formData.isActive"
             (click)="toggleActive()">
             <span class="material-icons">{{ formData.isActive ? 'block' : 'check_circle' }}</span>
-            <span>{{ formData.isActive ? 'Деактивировать' : 'Активировать' }}</span>
+            <span>{{ (formData.isActive ? 'PROFILE.DEACTIVATE' : 'PROFILE.ACTIVATE') | translate }}</span>
           </button>
 
           <button
@@ -207,7 +207,7 @@
             (click)="save()"
             [disabled]="isSaving">
             <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'save' }}</span>
-            <span>{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</span>
+            <span>{{ (isSaving ? 'PROFILE.SAVING' : 'PROFILE.SAVE') | translate }}</span>
           </button>
         </div>
       </div>
@@ -216,7 +216,7 @@
       <div class="profile-form password-section" *ngIf="canEdit()">
         <h3>
           <span class="material-icons">lock</span>
-          <span>Безопасность</span>
+          <span>{{ 'PROFILE.SECURITY' | translate }}</span>
         </h3>
 
         <button
@@ -225,24 +225,24 @@
           *ngIf="!changingPassword"
           (click)="toggleChangePassword()">
           <span class="material-icons">key</span>
-          <span>Изменить пароль</span>
+          <span>{{ 'PROFILE.CHANGE_PASSWORD' | translate }}</span>
         </button>
 
         <div class="password-form" *ngIf="changingPassword">
           <div class="form-group">
-            <label>Новый пароль</label>
+            <label>{{ 'PROFILE.NEW_PASSWORD' | translate }}</label>
             <input
               type="password"
               [(ngModel)]="passwordData.newPassword"
-              placeholder="Минимум 6 символов"
+              [placeholder]="'PROFILE.PASSWORD_HINT' | translate"
               autocomplete="new-password">
           </div>
           <div class="form-group">
-            <label>Подтвердите пароль</label>
+            <label>{{ 'PROFILE.CONFIRM_PASSWORD' | translate }}</label>
             <input
               type="password"
               [(ngModel)]="passwordData.confirmPassword"
-              placeholder="Повторите пароль"
+              [placeholder]="'PROFILE.PASSWORD_REPEAT' | translate"
               autocomplete="new-password">
           </div>
 
@@ -251,7 +251,7 @@
               type="button"
               class="btn-cancel"
               (click)="toggleChangePassword()">
-              Отмена
+              {{ 'PROFILE.CANCEL' | translate }}
             </button>
             <button
               type="button"
@@ -259,7 +259,7 @@
               (click)="savePassword()"
               [disabled]="isSaving">
               <span class="material-icons">save</span>
-              <span>Сохранить пароль</span>
+              <span>{{ 'PROFILE.SAVE_PASSWORD' | translate }}</span>
             </button>
           </div>
         </div>
@@ -268,15 +268,15 @@
       <!-- Метаданные -->
       <div class="profile-meta">
         <div class="meta-row">
-          <span class="meta-label">ID пользователя</span>
+          <span class="meta-label">{{ 'PROFILE.USER_ID' | translate }}</span>
           <span class="meta-value">#{{ selectedUser.id }}</span>
         </div>
         <div class="meta-row" *ngIf="selectedUser.createdAt">
-          <span class="meta-label">Создан</span>
+          <span class="meta-label">{{ 'PROFILE.CREATED' | translate }}</span>
           <span class="meta-value">{{ selectedUser.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
         </div>
         <div class="meta-row" *ngIf="selectedUser.updatedAt">
-          <span class="meta-label">Последнее обновление</span>
+          <span class="meta-label">{{ 'PROFILE.LAST_UPDATE' | translate }}</span>
           <span class="meta-value">{{ selectedUser.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</span>
         </div>
       </div>
@@ -284,7 +284,7 @@
 
     <div class="loading-state" *ngIf="!selectedUser && isLoading">
       <div class="spinner"></div>
-      <span>Загрузка...</span>
+      <span>{{ 'COMMON.LOADING' | translate }}</span>
     </div>
   </main>
 </div>
