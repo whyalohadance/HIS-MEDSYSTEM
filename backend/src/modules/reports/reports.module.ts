@@ -7,11 +7,13 @@ import { Appointment } from '../appointments/appointment.entity';
 import { Patient } from '../patients/patient.entity';
 import { User } from '../users/user.entity';
 import { Room } from '../rooms/room.entity';
+import { LabOrder } from '../lab/lab-order.entity';
+import { Study } from '../studies/study.entity';
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Appointment, Patient, User, Room]),
+    TypeOrmModule.forFeature([Appointment, Patient, User, Room, LabOrder, Study]),
     NotificationsModule,
   ],
   providers: [ReportsService, ReportsCronService],

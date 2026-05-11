@@ -28,6 +28,21 @@ export class ReportsController {
     return this.service.getReportData(m, y);
   }
 
+  @Get('stats')
+  async getStats(@Query('year') year: string, @Query('month') month: string) {
+    const y = parseInt(year) || new Date().getFullYear();
+    const m = parseInt(month) || new Date().getMonth() + 1;
+    const data = await this.service.getMonthlyStats(y, m);
+    return { success: true, data };
+  }
+
+  @Get('yearly-stats')
+  async getYearlyStats(@Query('year') year: string) {
+    const y = parseInt(year) || new Date().getFullYear();
+    const data = await this.service.getYearlyStats(y);
+    return { success: true, data };
+  }
+
   @Get('pdf')
   async downloadPDF(
     @Query('month') month: string,

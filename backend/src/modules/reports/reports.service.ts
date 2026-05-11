@@ -10,6 +10,8 @@ import { Appointment } from '../appointments/appointment.entity';
 import { Patient } from '../patients/patient.entity';
 import { User } from '../users/user.entity';
 import { Room } from '../rooms/room.entity';
+import { LabOrder } from '../lab/lab-order.entity';
+import { Study } from '../studies/study.entity';
 import { getTranslations } from './translations';
 
 const FONTS_DIR = path.join(process.cwd(), 'fonts');
@@ -40,6 +42,8 @@ export class ReportsService {
     @InjectRepository(Patient) private patientsRepo: Repository<Patient>,
     @InjectRepository(User) private usersRepo: Repository<User>,
     @InjectRepository(Room) private roomsRepo: Repository<Room>,
+    @InjectRepository(LabOrder) private labOrderRepo: Repository<LabOrder>,
+    @InjectRepository(Study) private studyRepo: Repository<Study>,
   ) {}
 
   async getReportData(month: number, year: number): Promise<ReportData> {
@@ -77,6 +81,100 @@ export class ReportsService {
       cancelledAppointments: appointments.filter(a => a.status === 'cancelled').length,
       newPatients: newPatients.length,
     };
+  }
+
+  async getMonthlyStats(year: number, month: number) {
+    const startStr = `${year}-${String(month).padStart(2, '0')}-01`;
+    const endDay = new Date(year, month, 0).getDate();
+    const endStr = `${year}-${String(month).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`;
+
+    const dailyData: any[] = [];
+    for (let day = 1; day <= endDay; day++) {
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dayStart = new Date(`${dateStr}T00:00:00`);
+      const dayEnd = new Date(`${dateStr}T23:59:59`);
+
+      const [appts, labs, studies] = await Promise.all([
+        this.appointmentsRepo.count({ where: { date: dateStr } }),
+        this.labOrderRepo.count({ where: { createdAt: Between(dayStart, dayEnd) } }),
+        this.studyRepo.count({ where: { createdAt: Between(dayStart, dayEnd) } }),
+      ]);
+
+      dailyData.push({ day, date: dateStr, appointments: appts, labOrders: labs, studies });
+    }
+
+    const statusBreakdown = await this.appointmentsRepo
+      .createQueryBuilder('a')
+      .select('a.status', 'status')
+      .addSelect('COUNT(*)', 'count')
+      .where('a.date BETWEEN :start AND :end', { start: startStr, end: endStr })
+      .groupBy('a.status')
+      .getRawMany();
+
+    const topServices = await this.appointmentsRepo
+      .createQueryBuilder('a')
+      .select('a.examination', 'name')
+      .addSelect('COUNT(*)', 'count')
+      .addSelect('SUM(a.price)', 'revenue')
+      .where('a.date BETWEEN :start AND :end', { start: startStr, end: endStr })
+      .andWhere('a.examination IS NOT NULL')
+      .groupBy('a.examination')
+      .orderBy('count', 'DESC')
+      .limit(5)
+      .getRawMany();
+
+    const totalRevRaw = await this.appointmentsRepo
+      .createQueryBuilder('a')
+      .select('SUM(a.price)', 'sum')
+      .where('a.date BETWEEN :start AND :end', { start: startStr, end: endStr })
+      .andWhere('a.status = :status', { status: 'completed' })
+      .getRawOne();
+
+    return {
+      period: { year, month, startDate: startStr, endDate: endStr },
+      summary: {
+        totalAppointments: dailyData.reduce((s, d) => s + d.appointments, 0),
+        totalRevenue: parseFloat(totalRevRaw?.sum || '0'),
+        totalLabOrders: dailyData.reduce((s, d) => s + d.labOrders, 0),
+        totalStudies: dailyData.reduce((s, d) => s + d.studies, 0),
+      },
+      daily: dailyData,
+      statusBreakdown,
+      topServices,
+    };
+  }
+
+  async getYearlyStats(year: number) {
+    const months: any[] = [];
+    for (let m = 1; m <= 12; m++) {
+      const startStr = `${year}-${String(m).padStart(2, '0')}-01`;
+      const endDay = new Date(year, m, 0).getDate();
+      const endStr = `${year}-${String(m).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`;
+      const mStart = new Date(`${startStr}T00:00:00`);
+      const mEnd = new Date(`${endStr}T23:59:59`);
+
+      const [appts, labs, studies, revenueRaw] = await Promise.all([
+        this.appointmentsRepo.count({ where: { date: Between(startStr, endStr) } }),
+        this.labOrderRepo.count({ where: { createdAt: Between(mStart, mEnd) } }),
+        this.studyRepo.count({ where: { createdAt: Between(mStart, mEnd) } }),
+        this.appointmentsRepo
+          .createQueryBuilder('a')
+          .select('SUM(a.price)', 'sum')
+          .where('a.date BETWEEN :start AND :end', { start: startStr, end: endStr })
+          .andWhere('a.status = :status', { status: 'completed' })
+          .getRawOne(),
+      ]);
+
+      months.push({
+        month: m,
+        monthName: new Date(year, m - 1, 1).toLocaleDateString('ro-RO', { month: 'long' }),
+        appointments: appts,
+        labOrders: labs,
+        studies,
+        revenue: parseFloat(revenueRaw?.sum || '0'),
+      });
+    }
+    return { year, months };
   }
 
   /** Build doctor stats map from appointments list */
