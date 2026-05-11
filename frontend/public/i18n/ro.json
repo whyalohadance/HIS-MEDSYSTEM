@@ -717,7 +717,22 @@
       "CRITICAL_RESULTS": "Rezultate critice",
       "BY_CATEGORY": "După categorie",
       "WEEKLY_ACTIVITY": "Activitate săptămânală",
-      "URGENT_ORDERS": "Comenzi urgente"
+      "URGENT_ORDERS": "Comenzi urgente",
+      "HEADER_TITLE": "Laborator",
+      "WELCOME": "Bun venit",
+      "QUEUE_BTN": "Coadă",
+      "ALL_ORDERS_BTN": "Toate comenzile",
+      "TOTAL": "Total",
+      "COMPLETED": "Finalizat",
+      "WORKLIST_TITLE": "Lista de lucru",
+      "SEE_ALL": "Toate →",
+      "QUEUE_EMPTY": "Coada e goală",
+      "TODAY_TITLE": "Astăzi",
+      "SCHEDULED": "Planificat",
+      "IN_PROGRESS_SHORT": "În procesare",
+      "READY": "Gata",
+      "CATEGORIES_TITLE": "Categorii teste",
+      "TECHNICIAN": "Laborant"
     },
     "WORKLIST": {
       "TITLE": "Worklist laborant",

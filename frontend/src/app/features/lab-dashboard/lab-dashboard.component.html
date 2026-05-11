@@ -4,16 +4,18 @@
     <div class="ld-header-left">
       <div class="ld-avatar"><span class="material-icons">biotech</span></div>
       <div>
-        <h1 class="ld-title">Лаборатория</h1>
-        <p class="ld-subtitle">Добро пожаловать, {{ auth.currentUser?.firstName || 'Лаборант' }}</p>
+        <h1 class="ld-title">{{ 'LIS.DASHBOARD.HEADER_TITLE' | translate }}</h1>
+        <p class="ld-subtitle">{{ 'LIS.DASHBOARD.WELCOME' | translate }}, {{ auth.currentUser?.firstName || ('LIS.DASHBOARD.TECHNICIAN' | translate) }}</p>
       </div>
     </div>
     <div class="ld-actions">
       <a routerLink="/lab/worklist" class="ld-btn ld-btn-primary">
-        <span class="material-icons">queue</span><span>Очередь</span>
+        <span class="material-icons">queue</span>
+        <span>{{ 'LIS.DASHBOARD.QUEUE_BTN' | translate }}</span>
       </a>
       <a routerLink="/lab/orders" class="ld-btn ld-btn-outline">
-        <span class="material-icons">receipt_long</span><span>Все заказы</span>
+        <span class="material-icons">receipt_long</span>
+        <span>{{ 'LIS.DASHBOARD.ALL_ORDERS_BTN' | translate }}</span>
       </a>
     </div>
   </div>
@@ -23,22 +25,22 @@
     <div class="ld-stat-card">
       <span class="material-icons">receipt_long</span>
       <div class="ld-stat-num">{{ stats.total }}</div>
-      <div class="ld-stat-lbl">Всего</div>
+      <div class="ld-stat-lbl">{{ 'LIS.DASHBOARD.TOTAL' | translate }}</div>
     </div>
     <div class="ld-stat-card pending">
       <span class="material-icons">pending_actions</span>
       <div class="ld-stat-num">{{ stats.pending }}</div>
-      <div class="ld-stat-lbl">Ожидают</div>
+      <div class="ld-stat-lbl">{{ 'LIS.DASHBOARD.PENDING' | translate }}</div>
     </div>
     <div class="ld-stat-card progress">
       <span class="material-icons">autorenew</span>
       <div class="ld-stat-num">{{ stats.inProgress }}</div>
-      <div class="ld-stat-lbl">В работе</div>
+      <div class="ld-stat-lbl">{{ 'LIS.DASHBOARD.IN_PROGRESS' | translate }}</div>
     </div>
     <div class="ld-stat-card done">
       <span class="material-icons">check_circle</span>
       <div class="ld-stat-num">{{ stats.completed }}</div>
-      <div class="ld-stat-lbl">Выполнено</div>
+      <div class="ld-stat-lbl">{{ 'LIS.DASHBOARD.COMPLETED' | translate }}</div>
     </div>
   </div>
 
@@ -46,22 +48,26 @@
     <!-- Worklist -->
     <div class="ld-section">
       <div class="ld-section-header">
-        <h2><span class="material-icons">queue</span><span>Очередь работ</span></h2>
-        <a routerLink="/lab/worklist" class="ld-link">Все →</a>
+        <h2>
+          <span class="material-icons">queue</span>
+          <span>{{ 'LIS.DASHBOARD.WORKLIST_TITLE' | translate }}</span>
+        </h2>
+        <a routerLink="/lab/worklist" class="ld-link">{{ 'LIS.DASHBOARD.SEE_ALL' | translate }}</a>
       </div>
       <div class="ld-loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
+        <span class="material-icons spin">autorenew</span>
+        <span>{{ 'COMMON.LOADING' | translate }}</span>
       </div>
       <div class="ld-empty" *ngIf="!isLoading && worklist.length === 0">
         <span class="material-icons">check_circle_outline</span>
-        <p>Очередь пуста</p>
+        <p>{{ 'LIS.DASHBOARD.QUEUE_EMPTY' | translate }}</p>
       </div>
       <div class="ld-worklist" *ngIf="!isLoading && worklist.length > 0">
         <a class="ld-wl-item" *ngFor="let order of worklist" [routerLink]="['/lab/order', order.id]">
           <div class="ld-wl-num">{{ order.orderNumber }}</div>
           <div class="ld-wl-info">
             <span class="ld-priority-badge" [class]="getPriorityClass(order.priority)">
-              {{ getPriorityLabel(order.priority) }}
+              {{ getPriorityLabelKey(order.priority) | translate }}
             </span>
             <span class="ld-wl-date">{{ order.createdAt | date:'dd.MM HH:mm' }}</span>
           </div>
@@ -73,21 +79,33 @@
     <!-- Сегодня -->
     <div class="ld-section" *ngIf="todayOrders.length > 0 || weeklyStats.length > 0">
       <div class="ld-section-header">
-        <h2><span class="material-icons">today</span><span>Сегодня</span></h2>
+        <h2>
+          <span class="material-icons">today</span>
+          <span>{{ 'LIS.DASHBOARD.TODAY_TITLE' | translate }}</span>
+        </h2>
         <span class="ld-badge-count">{{ todayOrders.length }}</span>
       </div>
       <div class="ld-today-summary">
         <div class="ld-today-card" style="--c:#fef3c7;--t:#d97706">
           <span class="ld-today-icon"><span class="material-icons">schedule</span></span>
-          <div><div class="ld-today-num">{{ getTodayPending() }}</div><div class="ld-today-lbl">Запланировано</div></div>
+          <div>
+            <div class="ld-today-num">{{ getTodayPending() }}</div>
+            <div class="ld-today-lbl">{{ 'LIS.DASHBOARD.SCHEDULED' | translate }}</div>
+          </div>
         </div>
         <div class="ld-today-card" style="--c:#dbeafe;--t:#1e40af">
           <span class="ld-today-icon"><span class="material-icons">play_circle</span></span>
-          <div><div class="ld-today-num">{{ getTodayInProgress() }}</div><div class="ld-today-lbl">В процессе</div></div>
+          <div>
+            <div class="ld-today-num">{{ getTodayInProgress() }}</div>
+            <div class="ld-today-lbl">{{ 'LIS.DASHBOARD.IN_PROGRESS_SHORT' | translate }}</div>
+          </div>
         </div>
         <div class="ld-today-card" style="--c:#d1fae5;--t:#047857">
           <span class="ld-today-icon"><span class="material-icons">check_circle</span></span>
-          <div><div class="ld-today-num">{{ getTodayCompleted() }}</div><div class="ld-today-lbl">Готово</div></div>
+          <div>
+            <div class="ld-today-num">{{ getTodayCompleted() }}</div>
+            <div class="ld-today-lbl">{{ 'LIS.DASHBOARD.READY' | translate }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -96,7 +114,10 @@
   <!-- Недельная активность -->
   <div class="ld-section" *ngIf="weeklyStats.length > 0">
     <div class="ld-section-header">
-      <h2><span class="material-icons">show_chart</span><span>Активность за неделю</span></h2>
+      <h2>
+        <span class="material-icons">show_chart</span>
+        <span>{{ 'LIS.DASHBOARD.WEEKLY_ACTIVITY' | translate }}</span>
+      </h2>
     </div>
     <div class="ld-weekly-chart">
       <div class="ld-day-bar" *ngFor="let day of weeklyStats" [class.today]="day.isToday">
@@ -105,6 +126,25 @@
           <div class="ld-bar-fill" [style.height.%]="day.count > 0 ? (day.count / getMaxDayCount()) * 100 : 4"></div>
         </div>
         <div class="ld-bar-label">{{ day.date }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- По категориям -->
+  <div class="ld-section ld-categories-section">
+    <div class="ld-section-header">
+      <h2>
+        <span class="material-icons">category</span>
+        <span>{{ 'LIS.DASHBOARD.CATEGORIES_TITLE' | translate }}</span>
+      </h2>
+    </div>
+    <div class="ld-categories-grid">
+      <div class="ld-category-card" *ngFor="let cat of categories" [style.--cat-color]="cat.color">
+        <span class="material-icons ld-cat-icon">{{ cat.icon }}</span>
+        <div class="ld-cat-info">
+          <div class="ld-cat-name">{{ cat.labelKey | translate }}</div>
+          <div class="ld-cat-count">{{ categoryStats[cat.value] || 0 }}</div>
+        </div>
       </div>
     </div>
   </div>

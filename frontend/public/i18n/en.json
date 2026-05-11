@@ -717,7 +717,22 @@
       "CRITICAL_RESULTS": "Critical Results",
       "BY_CATEGORY": "By Category",
       "WEEKLY_ACTIVITY": "Weekly Activity",
-      "URGENT_ORDERS": "Urgent Orders"
+      "URGENT_ORDERS": "Urgent Orders",
+      "HEADER_TITLE": "Laboratory",
+      "WELCOME": "Welcome",
+      "QUEUE_BTN": "Queue",
+      "ALL_ORDERS_BTN": "All Orders",
+      "TOTAL": "Total",
+      "COMPLETED": "Completed",
+      "WORKLIST_TITLE": "Work Queue",
+      "SEE_ALL": "All →",
+      "QUEUE_EMPTY": "Queue is empty",
+      "TODAY_TITLE": "Today",
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS_SHORT": "In progress",
+      "READY": "Ready",
+      "CATEGORIES_TITLE": "Test Categories",
+      "TECHNICIAN": "Lab Technician"
     },
     "WORKLIST": {
       "TITLE": "Lab Worklist",

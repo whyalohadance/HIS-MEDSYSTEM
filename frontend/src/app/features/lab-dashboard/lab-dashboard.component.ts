@@ -20,6 +20,25 @@ export class LabDashboardComponent implements OnInit {
   todayOrders: any[] = [];
   weeklyStats: { date: string; count: number; isToday: boolean }[] = [];
 
+  categories = [
+    { value: 'hematology',   labelKey: 'LIS.CATALOG.CATEGORIES.HEMATOLOGY',   icon: 'opacity',     color: '#ef4444' },
+    { value: 'biochemistry', labelKey: 'LIS.CATALOG.CATEGORIES.BIOCHEMISTRY',  icon: 'science',     color: '#3b82f6' },
+    { value: 'urine',        labelKey: 'LIS.CATALOG.CATEGORIES.URINE',         icon: 'water_drop',  color: '#f59e0b' },
+    { value: 'hormones',     labelKey: 'LIS.CATALOG.CATEGORIES.HORMONES',      icon: 'biotech',     color: '#7c3aed' },
+    { value: 'immunology',   labelKey: 'LIS.CATALOG.CATEGORIES.IMMUNOLOGY',    icon: 'shield',      color: '#10b981' },
+    { value: 'microbiology', labelKey: 'LIS.CATALOG.CATEGORIES.MICROBIOLOGY',  icon: 'bug_report',  color: '#06b6d4' },
+    { value: 'coagulation',  labelKey: 'LIS.CATALOG.CATEGORIES.COAGULATION',   icon: 'bloodtype',   color: '#dc2626' },
+    { value: 'cardiac',      labelKey: 'LIS.CATALOG.CATEGORIES.CARDIAC',       icon: 'favorite',    color: '#ec4899' },
+  ];
+
+  priorities = [
+    { value: 'routine', labelKey: 'LIS.PRIORITIES.ROUTINE', color: '#10b981', cls: 'priority-routine' },
+    { value: 'urgent',  labelKey: 'LIS.PRIORITIES.URGENT',  color: '#f59e0b', cls: 'priority-urgent'  },
+    { value: 'stat',    labelKey: 'LIS.PRIORITIES.STAT',    color: '#ef4444', cls: 'priority-stat'    },
+  ];
+
+  categoryStats: Record<string, number> = {};
+
   constructor(
     private api: ApiService,
     public auth: AuthService,
@@ -34,7 +53,11 @@ export class LabDashboardComponent implements OnInit {
 
   loadStats(): void {
     this.api.get<any>('/lab/stats').subscribe({
-      next: (res) => { this.stats = res.data || this.stats; this.cdr.detectChanges(); },
+      next: (res) => {
+        this.stats = res.data || this.stats;
+        this.categoryStats = this.stats.byCategory || {};
+        this.cdr.detectChanges();
+      },
       error: () => {}
     });
   }
@@ -87,11 +110,13 @@ export class LabDashboardComponent implements OnInit {
   getTodayInProgress(): number { return this.todayOrders.filter(o => o.status === 'in_progress').length; }
   getTodayCompleted():  number { return this.todayOrders.filter(o => o.status === 'completed').length; }
 
-  getPriorityLabel(p: string): string {
-    return ({ stat: 'STAT', urgent: 'Срочно', routine: 'Плановый' } as any)[p] || p;
+  getPriorityLabelKey(p: string): string {
+    const found = this.priorities.find(pr => pr.value === p);
+    return found ? found.labelKey : p;
   }
 
   getPriorityClass(p: string): string {
-    return ({ stat: 'priority-stat', urgent: 'priority-urgent', routine: 'priority-routine' } as any)[p] || '';
+    const found = this.priorities.find(pr => pr.value === p);
+    return found ? found.cls : '';
   }
 }

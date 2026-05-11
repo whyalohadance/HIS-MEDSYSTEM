@@ -717,7 +717,22 @@
       "CRITICAL_RESULTS": "Критические результаты",
       "BY_CATEGORY": "По категориям",
       "WEEKLY_ACTIVITY": "Активность за неделю",
-      "URGENT_ORDERS": "Срочные заказы"
+      "URGENT_ORDERS": "Срочные заказы",
+      "HEADER_TITLE": "Лаборатория",
+      "WELCOME": "Добро пожаловать",
+      "QUEUE_BTN": "Очередь",
+      "ALL_ORDERS_BTN": "Все заказы",
+      "TOTAL": "Всего",
+      "COMPLETED": "Выполнено",
+      "WORKLIST_TITLE": "Очередь работ",
+      "SEE_ALL": "Все →",
+      "QUEUE_EMPTY": "Очередь пуста",
+      "TODAY_TITLE": "Сегодня",
+      "SCHEDULED": "Запланировано",
+      "IN_PROGRESS_SHORT": "В процессе",
+      "READY": "Готово",
+      "CATEGORIES_TITLE": "Категории тестов",
+      "TECHNICIAN": "Лаборант"
     },
     "WORKLIST": {
       "TITLE": "Worklist лаборанта",
