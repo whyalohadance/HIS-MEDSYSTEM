@@ -820,7 +820,8 @@
         "MICROBIOLOGY": "Микробиология",
         "COAGULATION": "Коагуляция",
         "CARDIAC": "Кардиомаркеры"
-      }
+      },
+      "TESTS_COUNT": "тестов"
     },
     "FLAGS": {
       "NORMAL": "Норма",

@@ -820,7 +820,8 @@
         "MICROBIOLOGY": "Microbiologie",
         "COAGULATION": "Coagulare",
         "CARDIAC": "Markeri cardiaci"
-      }
+      },
+      "TESTS_COUNT": "teste"
     },
     "FLAGS": {
       "NORMAL": "Normal",

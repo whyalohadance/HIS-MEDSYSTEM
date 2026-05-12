@@ -1,40 +1,41 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 
 const CATEGORIES = [
-  { value: 'all',           label: 'Все',              icon: 'apps' },
-  { value: 'hematology',   label: 'Гематология',       icon: 'opacity' },
-  { value: 'biochemistry', label: 'Биохимия',          icon: 'science' },
-  { value: 'urine',        label: 'Анализ мочи',       icon: 'water_drop' },
-  { value: 'hormones',     label: 'Гормоны',           icon: 'biotech' },
-  { value: 'immunology',   label: 'Иммунология',       icon: 'shield' },
-  { value: 'microbiology', label: 'Микробиология',     icon: 'bug_report' },
-  { value: 'coagulation',  label: 'Коагуляция',        icon: 'bloodtype' },
-  { value: 'cardiac',      label: 'Кардиомаркеры',     icon: 'favorite' },
+  { value: 'all',           labelKey: 'LIS.CATALOG.CATEGORIES.ALL',          icon: 'apps' },
+  { value: 'hematology',   labelKey: 'LIS.CATALOG.CATEGORIES.HEMATOLOGY',    icon: 'opacity' },
+  { value: 'biochemistry', labelKey: 'LIS.CATALOG.CATEGORIES.BIOCHEMISTRY',  icon: 'science' },
+  { value: 'urine',        labelKey: 'LIS.CATALOG.CATEGORIES.URINE',         icon: 'water_drop' },
+  { value: 'hormones',     labelKey: 'LIS.CATALOG.CATEGORIES.HORMONES',      icon: 'biotech' },
+  { value: 'immunology',   labelKey: 'LIS.CATALOG.CATEGORIES.IMMUNOLOGY',    icon: 'shield' },
+  { value: 'microbiology', labelKey: 'LIS.CATALOG.CATEGORIES.MICROBIOLOGY',  icon: 'bug_report' },
+  { value: 'coagulation',  labelKey: 'LIS.CATALOG.CATEGORIES.COAGULATION',   icon: 'bloodtype' },
+  { value: 'cardiac',      labelKey: 'LIS.CATALOG.CATEGORIES.CARDIAC',       icon: 'favorite' },
 ];
 
 @Component({
   selector: 'app-lab-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title"><span class="material-icons">biotech</span> Каталог тестов</h1>
-          <p class="page-sub">{{ tests.length }} тестов</p>
+          <h1 class="page-title"><span class="material-icons">biotech</span> {{ 'LIS.CATALOG.TITLE' | translate }}</h1>
+          <p class="page-sub">{{ tests.length }} {{ 'LIS.CATALOG.TESTS_COUNT' | translate }}</p>
         </div>
         <button class="btn-primary" (click)="openCreate()">
-          <span class="material-icons">add</span> Добавить тест
+          <span class="material-icons">add</span> {{ 'LIS.CATALOG.ADD_TEST' | translate }}
         </button>
       </div>
 
       <div class="search-bar">
         <span class="material-icons">search</span>
-        <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Поиск по названию или коду...">
+        <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" [placeholder]="'LIS.CATALOG.SEARCH' | translate">
       </div>
 
       <div class="cat-tabs">
@@ -42,12 +43,12 @@ const CATEGORIES = [
           [class.active]="selectedCategory === c.value"
           (click)="selectCategory(c.value)">
           <span class="material-icons">{{ c.icon }}</span>
-          {{ c.label }}
+          {{ c.labelKey | translate }}
         </button>
       </div>
 
       <div class="loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span> Загрузка...
+        <span class="material-icons spin">autorenew</span> {{ 'COMMON.LOADING' | translate }}
       </div>
 
       <div class="tests-grid" *ngIf="!isLoading && filtered.length > 0">
@@ -65,7 +66,7 @@ const CATEGORIES = [
             <span class="meta-item"><span class="material-icons">payments</span> {{ t.price }} MDL</span>
             <span class="meta-item"><span class="material-icons">schedule</span> {{ t.turnaroundTime }}ч</span>
             <span class="meta-item" *ngIf="t.parameters?.length">
-              <span class="material-icons">analytics</span> {{ t.parameters.length }} парам.
+              <span class="material-icons">analytics</span> {{ t.parameters.length }}
             </span>
           </div>
           <div class="test-actions">
@@ -77,76 +78,76 @@ const CATEGORIES = [
 
       <div class="empty-state" *ngIf="!isLoading && filtered.length === 0">
         <span class="material-icons">science</span>
-        <p>Тестов не найдено</p>
+        <p>{{ 'LIS.CATALOG.EMPTY' | translate }}</p>
       </div>
 
       <!-- Modal -->
       <div class="modal-backdrop" *ngIf="showModal" (click)="showModal = false">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h2>{{ editingTest ? 'Редактировать тест' : 'Новый тест' }}</h2>
+            <h2>{{ (editingTest ? 'LIS.CATALOG.EDIT_TEST' : 'LIS.CATALOG.NEW_TEST') | translate }}</h2>
             <button class="btn-close" (click)="showModal = false"><span class="material-icons">close</span></button>
           </div>
           <div class="modal-body">
             <div class="form-row">
               <div class="form-group">
-                <label>Название</label>
-                <input type="text" [(ngModel)]="newTest.name" placeholder="Глюкоза">
+                <label>{{ 'LIS.CATALOG.TEST_NAME' | translate }}</label>
+                <input type="text" [(ngModel)]="newTest.name" [placeholder]="'LIS.CATALOG.TEST_NAME' | translate">
               </div>
               <div class="form-group">
-                <label>Код</label>
+                <label>{{ 'LIS.CATALOG.CODE' | translate }}</label>
                 <input type="text" [(ngModel)]="newTest.code" placeholder="GLU">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label>Категория</label>
+                <label>{{ 'LIS.CATALOG.CATEGORY' | translate }}</label>
                 <select [(ngModel)]="newTest.category">
-                  <option *ngFor="let c of categories" [value]="c.value" [disabled]="c.value === 'all'">{{ c.label }}</option>
+                  <option *ngFor="let c of categories" [value]="c.value" [disabled]="c.value === 'all'">{{ c.labelKey | translate }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Цена (MDL)</label>
+                <label>{{ 'LIS.CATALOG.PRICE' | translate }}</label>
                 <input type="number" [(ngModel)]="newTest.price">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label>Срок выполнения (ч)</label>
+                <label>{{ 'LIS.CATALOG.TURNAROUND' | translate }}</label>
                 <input type="number" [(ngModel)]="newTest.turnaroundTime">
               </div>
               <div class="form-group">
-                <label>Тип образца</label>
+                <label>{{ 'LIS.CATALOG.SAMPLE_TYPE' | translate }}</label>
                 <select [(ngModel)]="newTest.sampleType">
-                  <option value="blood">Кровь</option>
-                  <option value="urine">Моча</option>
-                  <option value="stool">Кал</option>
-                  <option value="saliva">Слюна</option>
-                  <option value="other">Другое</option>
+                  <option value="blood">{{ 'LIS.CATALOG.SAMPLE_TYPES.BLOOD' | translate }}</option>
+                  <option value="urine">{{ 'LIS.CATALOG.SAMPLE_TYPES.URINE' | translate }}</option>
+                  <option value="stool">{{ 'LIS.CATALOG.SAMPLE_TYPES.STOOL' | translate }}</option>
+                  <option value="saliva">{{ 'LIS.CATALOG.SAMPLE_TYPES.SALIVA' | translate }}</option>
+                  <option value="other">{{ 'LIS.CATALOG.SAMPLE_TYPES.OTHER' | translate }}</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label>Описание</label>
+              <label>{{ 'LIS.CATALOG.DESCRIPTION' | translate }}</label>
               <textarea [(ngModel)]="newTest.description" rows="2"></textarea>
             </div>
             <div class="params-block">
               <div class="params-header">
-                <span class="params-label">Параметры теста</span>
+                <span class="params-label">{{ 'LIS.CATALOG.PARAMETERS' | translate }}</span>
                 <button class="btn-mini" (click)="addParameter()">
-                  <span class="material-icons">add</span> Параметр
+                  <span class="material-icons">add</span> {{ 'LIS.CATALOG.ADD_PARAMETER' | translate }}
                 </button>
               </div>
               <div class="params-hint" *ngIf="newTest.parameters?.length">
                 <span class="material-icons">info</span>
-                <span>Мин/Макс — референсные значения (нормы). Результат вне диапазона будет автоматически отмечен как ↑ высокий или ↓ низкий.</span>
+                <span>{{ 'LIS.CATALOG.HINT_NORMS' | translate }}</span>
               </div>
               <div class="params-list">
                 <div class="param-row" *ngFor="let p of newTest.parameters; let i = index">
-                  <input type="text" [(ngModel)]="p.name" placeholder="Название">
-                  <input type="text" [(ngModel)]="p.unit" placeholder="Ед.">
-                  <input type="number" [(ngModel)]="p.refMin" placeholder="Мин">
-                  <input type="number" [(ngModel)]="p.refMax" placeholder="Макс">
+                  <input type="text" [(ngModel)]="p.name" [placeholder]="'LIS.CATALOG.PARAM_NAME' | translate">
+                  <input type="text" [(ngModel)]="p.unit" [placeholder]="'LIS.CATALOG.PARAM_UNIT' | translate">
+                  <input type="number" [(ngModel)]="p.refMin" [placeholder]="'LIS.CATALOG.REF_MIN' | translate">
+                  <input type="number" [(ngModel)]="p.refMax" [placeholder]="'LIS.CATALOG.REF_MAX' | translate">
                   <button class="btn-icon-sm danger" (click)="removeParameter(i)">
                     <span class="material-icons">delete</span>
                   </button>
@@ -155,10 +156,10 @@ const CATEGORIES = [
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn-cancel" (click)="showModal = false">Отмена</button>
+            <button class="btn-cancel" (click)="showModal = false">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="btn-save" (click)="saveTest()">
               <span class="material-icons">check</span>
-              {{ editingTest ? 'Сохранить' : 'Создать' }}
+              {{ (editingTest ? 'COMMON.SAVE' : 'COMMON.CREATE') | translate }}
             </button>
           </div>
         </div>
@@ -253,7 +254,8 @@ export class LabCatalogComponent implements OnInit {
   constructor(
     private api: ApiService,
     private toast: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void { this.loadTests(); }
@@ -293,18 +295,27 @@ export class LabCatalogComponent implements OnInit {
   removeParameter(i: number): void { this.newTest.parameters.splice(i, 1); }
 
   saveTest(): void {
-    if (!this.newTest.name || !this.newTest.code) { this.toast.error('Заполни название и код'); return; }
+    if (!this.newTest.name || !this.newTest.code) {
+      this.toast.error(this.translate.instant('COMMON.REQUIRED'));
+      return;
+    }
     const url = this.editingTest ? `/lab/tests/${this.editingTest.id}` : '/lab/tests';
     const req = this.editingTest ? this.api.patch<any>(url, this.newTest) : this.api.post<any>(url, this.newTest);
     req.subscribe({
-      next: () => { this.toast.success(this.editingTest ? 'Тест обновлён' : 'Тест создан'); this.showModal = false; this.loadTests(); },
-      error: () => this.toast.error('Ошибка')
+      next: () => {
+        this.toast.success(this.translate.instant(this.editingTest ? 'LIS.CATALOG.TEST_UPDATED' : 'LIS.CATALOG.TEST_CREATED'));
+        this.showModal = false;
+        this.loadTests();
+      },
+      error: () => this.toast.error(this.translate.instant('COMMON.ERROR'))
     });
   }
 
   deleteTest(id: number): void {
-    if (!confirm('Удалить тест?')) return;
-    this.api.delete(`/lab/tests/${id}`).subscribe({ next: () => { this.toast.success('Удалён'); this.loadTests(); } });
+    if (!confirm(this.translate.instant('LIS.CATALOG.DELETE_CONFIRM'))) return;
+    this.api.delete(`/lab/tests/${id}`).subscribe({
+      next: () => { this.toast.success(this.translate.instant('LIS.CATALOG.TEST_DELETED')); this.loadTests(); }
+    });
   }
 
   getCategoryIcon(cat: string): string { return CATEGORIES.find(c => c.value === cat)?.icon || 'science'; }

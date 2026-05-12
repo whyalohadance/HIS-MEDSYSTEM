@@ -820,7 +820,8 @@
         "MICROBIOLOGY": "Microbiology",
         "COAGULATION": "Coagulation",
         "CARDIAC": "Cardiac markers"
-      }
+      },
+      "TESTS_COUNT": "tests"
     },
     "FLAGS": {
       "NORMAL": "Normal",
