@@ -34,12 +34,12 @@
               [disabled]="isDownloadingReport" title="Скачать PDF заключение">
         <span class="material-icons" *ngIf="!isDownloadingReport">picture_as_pdf</span>
         <div class="spinner-tiny" *ngIf="isDownloadingReport"></div>
-        <span>{{ isDownloadingReport ? 'Скачивание...' : 'PDF' }}</span>
+        <span>{{ isDownloadingReport ? ('DICOM.DOWNLOADING' | translate) : 'PDF' }}</span>
       </button>
       <button class="btn-report" *ngIf="study && isRadiologist()" (click)="toggleReportPanel()"
               [class.has-report]="study.conclusion">
         <span class="material-icons">{{ study.conclusion ? 'edit_note' : 'note_add' }}</span>
-        {{ study.conclusion ? 'Редактировать заключение' : 'Написать заключение' }}
+        {{ study.conclusion ? ('DICOM.EDIT_CONCLUSION' | translate) : ('DICOM.WRITE_CONCLUSION' | translate) }}
       </button>
       <span class="status-badge" *ngIf="study" [class]="'status-' + study.status">
         {{ getStatusLabel(study.status) }}
@@ -65,35 +65,35 @@
       <div class="hierarchy-panel" *ngIf="hierarchy">
         <div class="hierarchy-title">
           <span class="material-icons">account_tree</span>
-          Иерархия DICOM
+          {{ 'DICOM.HIERARCHY' | translate }}
         </div>
         <div class="hier-patient">
           <span class="material-icons hier-icon">person</span>
           <div class="hier-info">
-            <span class="hier-label">Пациент</span>
+            <span class="hier-label">{{ 'DICOM.PATIENT' | translate }}</span>
             <span class="hier-value">{{ study?.patientId }}</span>
           </div>
         </div>
         <div class="hier-study">
           <span class="material-icons hier-icon">folder</span>
           <div class="hier-info">
-            <span class="hier-label">Исследование</span>
+            <span class="hier-label">{{ 'DICOM.STUDY' | translate }}</span>
             <span class="hier-value">{{ study?.studyId }}</span>
             <span class="hier-sub">{{ study?.type | uppercase }}</span>
           </div>
         </div>
         <div class="hier-series-list">
           <div *ngIf="seriesList.length === 0" style="font-size:11px;color:#334155;padding:6px 8px 2px 24px">
-            Серии не загружены
+            {{ 'DICOM.SERIES_NOT_LOADED' | translate }}
           </div>
           <div class="hier-series" *ngFor="let s of seriesList; let i = index"
                [class.active]="selectedSeries === i"
                (click)="selectSeries(i)">
             <span class="material-icons hier-icon">perm_media</span>
             <div class="hier-info">
-              <span class="hier-label">Серия {{ i + 1 }}</span>
+              <span class="hier-label">{{ 'DICOM.SERIES' | translate }} {{ i + 1 }}</span>
               <span class="hier-value">{{ s.seriesDescription || s.modality || '—' }}</span>
-              <span class="hier-sub">{{ s.numberOfImages }} изображений</span>
+              <span class="hier-sub">{{ s.numberOfImages }} {{ 'DICOM.IMAGES' | translate }}</span>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@
       <div class="info-card" *ngIf="measurements && measurements.length > 0">
         <h3 class="info-card-title">
           <span class="material-icons">straighten</span>
-          Измерения ({{ measurements.length }})
+          {{ 'DICOM.MEASUREMENTS' | translate }} ({{ measurements.length }})
         </h3>
         <div class="measurements-list">
           <div class="measurement-row" *ngFor="let m of measurements; let i = index">
@@ -144,7 +144,7 @@
       <div class="info-card report-card" *ngIf="study?.conclusion">
         <h3 class="info-card-title">
           <span class="material-icons">description</span>
-          Заключение радиолога
+          {{ 'DICOM.CONCLUSION_TITLE' | translate }}
         </h3>
         <div class="report-display">
           <div class="report-section" *ngIf="study.findings">
@@ -152,7 +152,7 @@
             <p>{{ study.findings }}</p>
           </div>
           <div class="report-section conclusion" *ngIf="study.conclusion">
-            <div class="report-section-title">ЗАКЛЮЧЕНИЕ</div>
+            <div class="report-section-title">{{ 'DICOM.CONCLUSION_SECTION' | translate }}</div>
             <p>{{ study.conclusion }}</p>
           </div>
           <div class="report-meta" *ngIf="study.reportedAt">
@@ -190,7 +190,7 @@
       <div class="templates-section">
         <label class="section-label">
           <span class="material-icons">auto_awesome</span>
-          Быстрые шаблоны
+          {{ 'DICOM.QUICK_TEMPLATES' | translate }}
         </label>
         <div class="templates-grid">
           <button class="template-btn" *ngFor="let t of templates" (click)="applyTemplate(t)">
@@ -206,7 +206,7 @@
       <div class="form-section">
         <label class="form-label">
           <span class="material-icons">visibility</span>
-          Findings (что видно на снимке)
+          {{ 'DICOM.FINDINGS_LABEL' | translate }}
         </label>
         <textarea
           class="report-textarea"
@@ -221,7 +221,7 @@
       <div class="form-section">
         <label class="form-label">
           <span class="material-icons">medical_services</span>
-          Заключение (диагностический вывод)
+          {{ 'DICOM.CONCLUSION_LABEL' | translate }}
         </label>
         <textarea
           class="report-textarea conclusion"
@@ -235,18 +235,18 @@
 
       <div class="report-info" *ngIf="study?.reportedAt">
         <span class="material-icons">history</span>
-        Последнее обновление: {{ study.reportedAt | date: 'dd.MM.yyyy HH:mm' }}
+        {{ 'DICOM.LAST_UPDATE' | translate }}: {{ study.reportedAt | date: 'dd.MM.yyyy HH:mm' }}
       </div>
     </div>
 
     <div class="report-footer">
       <button class="btn-cancel-report" (click)="showReportPanel = false" [disabled]="isSavingReport">
-        Отмена
+        {{ 'COMMON.CANCEL' | translate }}
       </button>
       <button class="btn-save-report" (click)="saveReport()" [disabled]="isSavingReport">
         <span class="material-icons" *ngIf="!isSavingReport">save</span>
         <div class="spinner-mini" *ngIf="isSavingReport"></div>
-        {{ isSavingReport ? 'Сохранение...' : 'Сохранить и завершить' }}
+        {{ isSavingReport ? ('COMMON.SAVING' | translate) : ('DICOM.SAVE_FINISH' | translate) }}
       </button>
     </div>
   </div>

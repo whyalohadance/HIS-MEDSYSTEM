@@ -319,7 +319,15 @@
     "SEP": "Сентябрь",
     "OCT": "Октябрь",
     "NOV": "Ноябрь",
-    "DEC": "Декабрь"
+    "DEC": "Декабрь",
+    "PERIOD_ANALYTICS": "Аналитика за период",
+    "DAILY_ACTIVITY": "Активность по дням месяца",
+    "STATUS_BREAKDOWN": "Статусы приёмов",
+    "TOP_SERVICES": "Топ услуг",
+    "YEARLY_DYNAMICS": "Годовая динамика",
+    "LAB_ORDERS_COUNT": "Анализов",
+    "STUDIES_COUNT": "Исследований",
+    "REVENUE": "Выручка"
   },
   "PROFILE": {
     "TITLE": "Профиль",
@@ -424,7 +432,8 @@
     "TAB_INFO": "Документы",
     "TAB_APPOINTMENTS": "Приёмы",
     "TAB_LAB": "Анализы",
-    "TAB_STUDIES": "Исследования"
+    "TAB_STUDIES": "Исследования",
+    "TAB_DYNAMICS": "Динамика"
   },
   "ROOMS": {
     "TITLE": "Управление кабинетами",
@@ -463,7 +472,9 @@
     "SERVICE_NAME": "Название услуги",
     "PRICE": "Цена",
     "DURATION": "Длительность (мин)",
-    "DELETE_CONFIRM": "Удалить кабинет?"
+    "DELETE_CONFIRM": "Удалить кабинет?",
+    "NO_SERVICES": "Нет услуг",
+    "NO_STAFF": "Нет персонала"
   },
   "LAB_CATALOG": {
     "TITLE": "Каталог анализов",
@@ -520,7 +531,22 @@
     "COMPLETE": "Завершить",
     "NO_APPOINTMENTS": "Приёмов сегодня нет",
     "TOTAL_MONTH": "Всего за месяц",
-    "COMPLETED_MONTH": "Завершено за месяц"
+    "COMPLETED_MONTH": "Завершено за месяц",
+    "TOTAL_APPOINTMENTS": "Всего приёмов",
+    "THIS_MONTH": "В этом месяце",
+    "COMPLETED": "Завершено",
+    "CANCELLED": "Отменено",
+    "PATIENTS_EMPTY": "Пациентов не найдено",
+    "PATIENT_CARD_BTN": "Карточка",
+    "RECENT_RESULTS": "Последние результаты",
+    "RESULTS_EMPTY": "Результатов нет",
+    "EDIT_PROFILE": "Редактировать профиль",
+    "SAVED": "Сохранено!",
+    "RESULT_SAVED": "Результат сохранён!",
+    "SCHEDULE_EMPTY": "Расписание не назначено",
+    "SCHEDULE_DAY": "День",
+    "SCHEDULE_TIME": "Время работы",
+    "SCHEDULE_ROOM": "Кабинет"
   },
   "DATE": {
     "DAY": "День",
@@ -607,7 +633,27 @@
     "PRIORITY": "Приоритет",
     "PRICE": "Цена",
     "BACK": "Назад",
-    "ACCESS_DENIED": "Доступ только для Admin и Радиолога"
+    "ACCESS_DENIED": "Доступ только для Admin и Радиолога",
+    "UPLOAD_HINT": "Загрузите .dcm файл — поддерживаются одиночные и multi-frame снимки",
+    "UPLOAD_SINGLE": "Один .dcm — обычный снимок",
+    "UPLOAD_MULTI": "Один .dcm с кадрами — МРТ/КТ серия",
+    "HIERARCHY": "Иерархия DICOM",
+    "PATIENT": "Пациент",
+    "STUDY": "Исследование",
+    "SERIES": "Серия",
+    "SERIES_NOT_LOADED": "Серии не загружены",
+    "IMAGES": "изображений",
+    "MEASUREMENTS": "Измерения",
+    "CONCLUSION_TITLE": "Заключение радиолога",
+    "CONCLUSION_SECTION": "ЗАКЛЮЧЕНИЕ",
+    "LAST_UPDATE": "Последнее обновление",
+    "QUICK_TEMPLATES": "Быстрые шаблоны",
+    "FINDINGS_LABEL": "Findings (что видно на снимке)",
+    "CONCLUSION_LABEL": "Заключение (диагностический вывод)",
+    "DOWNLOADING": "Скачивание...",
+    "EDIT_CONCLUSION": "Редактировать заключение",
+    "WRITE_CONCLUSION": "Написать заключение",
+    "SAVE_FINISH": "Сохранить и завершить"
   },
   "LAB": {
     "ORDER": "Заказ",
@@ -633,7 +679,20 @@
       "URGENT": "Срочные",
       "BY_MODALITY": "По модальностям",
       "WEEKLY_ACTIVITY": "Активность за неделю",
-      "RECENT_STUDIES": "Последние исследования"
+      "RECENT_STUDIES": "Последние исследования",
+      "TITLE_SHORT": "Радиология",
+      "WELCOME": "Добро пожаловать",
+      "DEFAULT_ROLE": "Радиолог",
+      "PENDING_LABEL": "Назначено",
+      "PROGRESS_LABEL": "В работе",
+      "DONE_LABEL": "Завершено",
+      "PENDING_SECTION": "Ожидают обработки",
+      "TODAY_SECTION": "Сегодня",
+      "ALL_LINK": "Все →",
+      "NO_PENDING": "Нет ожидающих исследований",
+      "SCHEDULED_LABEL": "Назначено",
+      "IN_PROGRESS_LABEL": "В работе",
+      "DONE_TODAY_LABEL": "Готово"
     },
     "WORKLIST": {
       "TITLE": "Worklist радиолога",
@@ -835,5 +894,66 @@
       "URGENT": "Срочный",
       "STAT": "СТАТ"
     }
+  },
+  "CABINET": {
+    "SUBTITLE": "Персональная рабочая область врача",
+    "DOCTOR_ROLE": "Врач",
+    "PHONE_NOT_SET": "Телефон не указан",
+    "EMAIL_NOT_SET": "Email не указан",
+    "SPECIALIZATION_NOT_SET": "Специализация не указана"
+  },
+  "APPOINTMENT": {
+    "SELECT_ROOM": "Выберите кабинет...",
+    "SELECT_SERVICE": "Выберите услугу...",
+    "SERVICE_LABEL": "Услуга",
+    "TYPE": "Тип",
+    "DURATION": "Длительность",
+    "PRICE_LABEL": "Стоимость",
+    "MIN": "мин",
+    "NOTES": "Примечания",
+    "NO_NOTES": "Нет примечаний"
+  },
+  "RESULTS": {
+    "TITLE": "Результаты",
+    "SUBTITLE": "Медицинские результаты и анализы пациентов",
+    "ADD_RESULT": "Добавить результат",
+    "NEW_RESULT": "Новый результат",
+    "EMPTY": "Результатов пока нет",
+    "PARAMETER": "Параметр",
+    "VALUE": "Значение",
+    "PATIENT_LABEL": "Пациент",
+    "NAME_LABEL": "Название",
+    "DESC_LABEL": "Описание / Заключение",
+    "FILE_LABEL": "Файл (PDF, Word, изображение)",
+    "UPLOAD_CLICK": "Нажмите чтобы загрузить файл",
+    "NO_PATIENTS": "У вас нет прикреплённых пациентов. Попросите регистратуру назначить пациентов.",
+    "SELECTED": "Выбран"
+  },
+  "REVIEWS": {
+    "TITLE": "Отзывы",
+    "AVERAGE_RATING": "Средний рейтинг",
+    "EMPTY": "Отзывов пока нет",
+    "PATIENT_PREFIX": "Пациент #",
+    "LOADING": "Загрузка..."
+  },
+  "EDIT_PATIENT": {
+    "TITLE": "Редактирование пациента",
+    "LOADING": "Загрузка...",
+    "ADMIN_ONLY": "Только администратор может редактировать данные пациента",
+    "CREATED_LABEL": "Создан",
+    "GENDER_LABEL": "Пол",
+    "MALE": "Мужской",
+    "FEMALE": "Женский",
+    "DOB_LABEL": "Дата рождения",
+    "AGE_YEARS": "лет",
+    "ADDRESS_LABEL": "Адрес",
+    "BLOOD_TYPE_LABEL": "Группа крови",
+    "FIRST_NAME": "Имя",
+    "LAST_NAME": "Фамилия"
+  },
+  "HEADER": {
+    "NO_NOTIFICATIONS": "Нет уведомлений",
+    "NOTIFICATIONS": "Уведомления",
+    "MARK_ALL_READ": "Прочитать всё"
   }
 }

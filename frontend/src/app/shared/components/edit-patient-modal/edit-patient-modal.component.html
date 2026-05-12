@@ -4,7 +4,7 @@
     <div class="modal-header">
       <h2>
         <span class="material-icons">edit</span>
-        <span>Редактирование пациента</span>
+        <span>{{ 'EDIT_PATIENT.TITLE' | translate }}</span>
       </h2>
       <button class="btn-close" (click)="onClose()">
         <span class="material-icons">close</span>
@@ -15,14 +15,14 @@
 
       <div class="loading-state" *ngIf="isLoading">
         <div class="spinner"></div>
-        <span>Загрузка...</span>
+        <span>{{ 'EDIT_PATIENT.LOADING' | translate }}</span>
       </div>
 
       <ng-container *ngIf="!isLoading">
 
         <div class="warning-box" *ngIf="!isAdmin">
           <span class="material-icons">lock</span>
-          <span>Только администратор может редактировать данные пациента</span>
+          <span>{{ 'EDIT_PATIENT.ADMIN_ONLY' | translate }}</span>
         </div>
 
         <div class="readonly-info" *ngIf="patient">
@@ -31,19 +31,19 @@
             <span class="info-value">#{{ patient.id }}</span>
           </div>
           <div class="info-row" *ngIf="patient.createdAt">
-            <span class="info-label">Создан:</span>
+            <span class="info-label">{{ 'EDIT_PATIENT.CREATED_LABEL' | translate }}:</span>
             <span class="info-value">{{ patient.createdAt | date:'dd.MM.yyyy' }}</span>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Имя *</label>
-            <input type="text" [(ngModel)]="formData.firstName" [disabled]="!isAdmin" placeholder="Имя">
+            <label>{{ 'EDIT_PATIENT.FIRST_NAME' | translate }} *</label>
+            <input type="text" [(ngModel)]="formData.firstName" [disabled]="!isAdmin" [placeholder]="'EDIT_PATIENT.FIRST_NAME' | translate">
           </div>
           <div class="form-group">
-            <label>Фамилия *</label>
-            <input type="text" [(ngModel)]="formData.lastName" [disabled]="!isAdmin" placeholder="Фамилия">
+            <label>{{ 'EDIT_PATIENT.LAST_NAME' | translate }} *</label>
+            <input type="text" [(ngModel)]="formData.lastName" [disabled]="!isAdmin" [placeholder]="'EDIT_PATIENT.LAST_NAME' | translate">
           </div>
         </div>
 
@@ -51,7 +51,7 @@
           <div class="form-group">
             <label>
               <span class="material-icons">wc</span>
-              <span>Пол</span>
+              <span>{{ 'EDIT_PATIENT.GENDER_LABEL' | translate }}</span>
             </label>
             <div class="gender-toggle">
               <button type="button" class="gender-btn"
@@ -59,14 +59,14 @@
                 [disabled]="!isAdmin"
                 (click)="isAdmin && (formData.gender = 'male')">
                 <span class="material-icons">male</span>
-                <span>Мужской</span>
+                <span>{{ 'EDIT_PATIENT.MALE' | translate }}</span>
               </button>
               <button type="button" class="gender-btn"
                 [class.active]="formData.gender === 'female'"
                 [disabled]="!isAdmin"
                 (click)="isAdmin && (formData.gender = 'female')">
                 <span class="material-icons">female</span>
-                <span>Женский</span>
+                <span>{{ 'EDIT_PATIENT.FEMALE' | translate }}</span>
               </button>
             </div>
           </div>
@@ -74,7 +74,7 @@
           <div class="form-group">
             <label>
               <span class="material-icons">cake</span>
-              <span>Дата рождения{{ getAge() ? ' (' + getAge() + ' лет)' : '' }}</span>
+              <span>{{ 'EDIT_PATIENT.DOB_LABEL' | translate }}{{ getAge() ? ' (' + getAge() + ' ' + ('EDIT_PATIENT.AGE_YEARS' | translate) + ')' : '' }}</span>
             </label>
             <input type="date" [(ngModel)]="formData.dateOfBirth" [disabled]="!isAdmin">
           </div>
@@ -84,7 +84,7 @@
           <div class="form-group">
             <label>
               <span class="material-icons">phone</span>
-              <span>Телефон</span>
+              <span>{{ 'PATIENT_CARD.PHONE' | translate }}</span>
             </label>
             <input type="tel" [(ngModel)]="formData.phone" [disabled]="!isAdmin" placeholder="+373...">
           </div>
@@ -100,7 +100,7 @@
         <div class="form-group">
           <label>
             <span class="material-icons">home</span>
-            <span>Адрес</span>
+            <span>{{ 'EDIT_PATIENT.ADDRESS_LABEL' | translate }}</span>
           </label>
           <input type="text" [(ngModel)]="formData.address" [disabled]="!isAdmin"
             placeholder="Bd. Stefan cel Mare 100, Chisinau">
@@ -109,7 +109,7 @@
         <div class="form-group">
           <label>
             <span class="material-icons">bloodtype</span>
-            <span>Группа крови</span>
+            <span>{{ 'EDIT_PATIENT.BLOOD_TYPE_LABEL' | translate }}</span>
           </label>
           <select [(ngModel)]="formData.bloodType" [disabled]="!isAdmin">
             <option *ngFor="let bt of bloodTypes" [value]="bt.value">{{ bt.label }}</option>
@@ -121,11 +121,11 @@
 
     <div class="modal-footer">
       <button class="btn-cancel" (click)="onClose()">
-        <span>Отмена</span>
+        <span>{{ 'COMMON.CANCEL' | translate }}</span>
       </button>
       <button class="btn-save" (click)="save()" *ngIf="isAdmin" [disabled]="isSaving">
         <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'check' }}</span>
-        <span>{{ isSaving ? 'Сохранение...' : 'Сохранить' }}</span>
+        <span>{{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</span>
       </button>
     </div>
 

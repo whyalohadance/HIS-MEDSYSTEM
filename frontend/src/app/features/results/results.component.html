@@ -1,12 +1,12 @@
 <div class="results-page">
   <div class="page-header">
     <div>
-      <h1 class="page-title">Результаты</h1>
-      <p class="page-sub">Медицинские результаты и анализы пациентов</p>
+      <h1 class="page-title">{{ 'RESULTS.TITLE' | translate }}</h1>
+      <p class="page-sub">{{ 'RESULTS.SUBTITLE' | translate }}</p>
     </div>
     <button class="btn-primary" (click)="showForm = !showForm" *ngIf="authService.isDoctor || authService.isAdmin">
       <span class="material-icons">add</span>
-      <span>Добавить результат</span>
+      <span>{{ 'RESULTS.ADD_RESULT' | translate }}</span>
     </button>
   </div>
 
@@ -15,42 +15,42 @@
   </div>
 
   <div class="form-card" *ngIf="showForm">
-    <h3>Новый результат</h3>
+    <h3>{{ 'RESULTS.NEW_RESULT' | translate }}</h3>
     <div class="warn-msg" *ngIf="authService.isDoctor && myPatients.length === 0">
       <span class="material-icons">info</span>
-      У вас нет прикреплённых пациентов. Попросите регистратуру назначить пациентов.
+      {{ 'RESULTS.NO_PATIENTS' | translate }}
     </div>
     <div class="form-row">
       <div class="form-field">
-        <label>Пациент *</label>
+        <label>{{ 'RESULTS.PATIENT_LABEL' | translate }} *</label>
         <select [(ngModel)]="form.patientId">
-          <option [value]="0" disabled>Выберите пациента</option>
+          <option [value]="0" disabled>{{ 'APPOINTMENT.SELECT_PATIENT' | translate }}</option>
           <option *ngFor="let p of myPatients" [value]="p.id">{{ p.lastName }} {{ p.firstName }}</option>
         </select>
       </div>
       <div class="form-field">
-        <label>Название *</label>
+        <label>{{ 'RESULTS.NAME_LABEL' | translate }} *</label>
         <input [(ngModel)]="form.title" placeholder="Общий анализ крови">
       </div>
     </div>
     <div class="form-field desc-field">
-      <label>Описание / Заключение</label>
+      <label>{{ 'RESULTS.DESC_LABEL' | translate }}</label>
       <input [(ngModel)]="form.description" placeholder="Результаты в норме...">
     </div>
     <div class="form-field upload-field">
-      <label>Файл (PDF, Word, изображение)</label>
+      <label>{{ 'RESULTS.FILE_LABEL' | translate }}</label>
       <div class="upload-area" (click)="fileInput.click()">
         <input #fileInput type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" (change)="onFileSelected($event)" style="display:none">
         <span class="material-icons">upload_file</span>
-        <span *ngIf="!uploadProgress">Нажмите чтобы загрузить файл</span>
+        <span *ngIf="!uploadProgress">{{ 'RESULTS.UPLOAD_CLICK' | translate }}</span>
         <span *ngIf="uploadProgress" [class.uploading]="isUploading">{{ uploadProgress }}</span>
       </div>
     </div>
     <div class="form-actions">
       <button class="btn-primary" (click)="saveResult()" [disabled]="isSaving || !form.title || !form.patientId">
-        {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
+        {{ isSaving ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}
       </button>
-      <button class="btn-secondary" (click)="showForm = false">Отмена</button>
+      <button class="btn-secondary" (click)="showForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
 
   <div class="empty-state" *ngIf="!isLoading && results.length === 0">
     <span class="material-icons">assignment</span>
-    <p>Результатов пока нет</p>
+    <p>{{ 'RESULTS.EMPTY' | translate }}</p>
   </div>
 
   <div class="results-grid" *ngIf="!isLoading && results.length > 0">

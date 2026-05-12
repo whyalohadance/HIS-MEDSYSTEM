@@ -58,7 +58,7 @@
           {{ 'APPOINTMENTS.ROOM' | translate }}
         </label>
         <select [(ngModel)]="form.roomId" (change)="onRoomChange()">
-          <option [value]="0">Выберите кабинет...</option>
+          <option [value]="0">{{ 'APPOINTMENT.SELECT_ROOM' | translate }}</option>
           <ng-container *ngFor="let type of ['consultation','radiology','laboratory','procedure','surgery']">
             <optgroup *ngIf="getRoomsByType(type).length > 0" [label]="getRoomTypeLabel(type)">
               <option *ngFor="let r of getRoomsByType(type)" [value]="r.id">
@@ -79,10 +79,10 @@
       <div class="form-field" style="grid-column: 1/-1">
         <label>
           <span class="material-icons" style="font-size:14px;vertical-align:middle">medical_services</span>
-          Услуга
+          {{ 'APPOINTMENT.SERVICE_LABEL' | translate }}
         </label>
         <select [(ngModel)]="form.examination" (change)="onServiceChange()">
-          <option value="">Выберите услугу...</option>
+          <option value="">{{ 'APPOINTMENT.SELECT_SERVICE' | translate }}</option>
           <option *ngFor="let s of availableServices" [value]="s.name">
             {{ s.name }} — {{ s.price }} MDL ({{ s.duration }} мин)
           </option>
@@ -95,21 +95,21 @@
       <div class="summary-item">
         <span class="material-icons">{{ getRoomTypeIcon(selectedRoom.type || '') }}</span>
         <div>
-          <div class="summary-label">Тип</div>
+          <div class="summary-label">{{ 'APPOINTMENT.TYPE' | translate }}</div>
           <div class="summary-value">{{ getRoomTypeLabel(selectedRoom.type || '') }}</div>
         </div>
       </div>
       <div class="summary-item">
         <span class="material-icons">schedule</span>
         <div>
-          <div class="summary-label">Длительность</div>
-          <div class="summary-value">{{ selectedService.duration }} мин</div>
+          <div class="summary-label">{{ 'APPOINTMENT.DURATION' | translate }}</div>
+          <div class="summary-value">{{ selectedService.duration }} {{ 'APPOINTMENT.MIN' | translate }}</div>
         </div>
       </div>
       <div class="summary-item highlight">
         <span class="material-icons">payments</span>
         <div>
-          <div class="summary-label">Стоимость</div>
+          <div class="summary-label">{{ 'APPOINTMENT.PRICE_LABEL' | translate }}</div>
           <div class="summary-value">{{ selectedService.price }} MDL</div>
         </div>
       </div>

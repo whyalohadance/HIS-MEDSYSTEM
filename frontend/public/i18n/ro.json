@@ -319,7 +319,15 @@
     "SEP": "Septembrie",
     "OCT": "Octombrie",
     "NOV": "Noiembrie",
-    "DEC": "Decembrie"
+    "DEC": "Decembrie",
+    "PERIOD_ANALYTICS": "Analiza perioadei",
+    "DAILY_ACTIVITY": "Activitate pe zilele lunii",
+    "STATUS_BREAKDOWN": "Statusuri programări",
+    "TOP_SERVICES": "Top servicii",
+    "YEARLY_DYNAMICS": "Dinamica anuală",
+    "LAB_ORDERS_COUNT": "Analize",
+    "STUDIES_COUNT": "Investigații",
+    "REVENUE": "Venituri"
   },
   "PROFILE": {
     "TITLE": "Profil",
@@ -424,7 +432,8 @@
     "TAB_INFO": "Documente",
     "TAB_APPOINTMENTS": "Programări",
     "TAB_LAB": "Analize",
-    "TAB_STUDIES": "Investigații"
+    "TAB_STUDIES": "Investigații",
+    "TAB_DYNAMICS": "Dinamică"
   },
   "ROOMS": {
     "TITLE": "Gestiunea cabinetelor",
@@ -463,7 +472,9 @@
     "SERVICE_NAME": "Nume serviciu",
     "PRICE": "Preț",
     "DURATION": "Durată (min)",
-    "DELETE_CONFIRM": "Ștergi cabinetul?"
+    "DELETE_CONFIRM": "Ștergi cabinetul?",
+    "NO_SERVICES": "Fără servicii",
+    "NO_STAFF": "Fără personal"
   },
   "LAB_CATALOG": {
     "TITLE": "Catalog analize",
@@ -520,7 +531,22 @@
     "COMPLETE": "Finalizează",
     "NO_APPOINTMENTS": "Nu există programări azi",
     "TOTAL_MONTH": "Total luna aceasta",
-    "COMPLETED_MONTH": "Finalizate luna aceasta"
+    "COMPLETED_MONTH": "Finalizate luna aceasta",
+    "TOTAL_APPOINTMENTS": "Total programări",
+    "THIS_MONTH": "Luna aceasta",
+    "COMPLETED": "Finalizate",
+    "CANCELLED": "Anulate",
+    "PATIENTS_EMPTY": "Pacienți nu au fost găsiți",
+    "PATIENT_CARD_BTN": "Fișă",
+    "RECENT_RESULTS": "Rezultate recente",
+    "RESULTS_EMPTY": "Nu sunt rezultate",
+    "EDIT_PROFILE": "Editare profil",
+    "SAVED": "Salvat!",
+    "RESULT_SAVED": "Rezultat salvat!",
+    "SCHEDULE_EMPTY": "Program nealocat",
+    "SCHEDULE_DAY": "Zi",
+    "SCHEDULE_TIME": "Program de lucru",
+    "SCHEDULE_ROOM": "Cabinet"
   },
   "DATE": {
     "DAY": "Zi",
@@ -607,7 +633,27 @@
     "PRIORITY": "Prioritate",
     "PRICE": "Preț",
     "BACK": "Înapoi",
-    "ACCESS_DENIED": "Acces permis doar pentru Admin și Radiolog"
+    "ACCESS_DENIED": "Acces permis doar pentru Admin și Radiolog",
+    "UPLOAD_HINT": "Încărcați fișierul .dcm — sunt suportate imagini simple și multi-frame",
+    "UPLOAD_SINGLE": "Un .dcm — imagine simplă",
+    "UPLOAD_MULTI": "Un .dcm cu cadre — serie RMN/CT",
+    "HIERARCHY": "Ierarhie DICOM",
+    "PATIENT": "Pacient",
+    "STUDY": "Investigație",
+    "SERIES": "Serie",
+    "SERIES_NOT_LOADED": "Serii neîncărcate",
+    "IMAGES": "imagini",
+    "MEASUREMENTS": "Măsurători",
+    "CONCLUSION_TITLE": "Concluzia radiologului",
+    "CONCLUSION_SECTION": "CONCLUZIE",
+    "LAST_UPDATE": "Ultima actualizare",
+    "QUICK_TEMPLATES": "Șabloane rapide",
+    "FINDINGS_LABEL": "Findings (ce se vede pe imagine)",
+    "CONCLUSION_LABEL": "Concluzie (diagnostic)",
+    "DOWNLOADING": "Se descarcă...",
+    "EDIT_CONCLUSION": "Editare concluzie",
+    "WRITE_CONCLUSION": "Scriere concluzie",
+    "SAVE_FINISH": "Salvează și finalizează"
   },
   "LAB": {
     "ORDER": "Comanda",
@@ -633,7 +679,20 @@
       "URGENT": "Urgente",
       "BY_MODALITY": "După modalitate",
       "WEEKLY_ACTIVITY": "Activitate săptămânală",
-      "RECENT_STUDIES": "Investigații recente"
+      "RECENT_STUDIES": "Investigații recente",
+      "TITLE_SHORT": "Radiologie",
+      "WELCOME": "Bine ați venit",
+      "DEFAULT_ROLE": "Radiolog",
+      "PENDING_LABEL": "Programat",
+      "PROGRESS_LABEL": "În lucru",
+      "DONE_LABEL": "Finalizat",
+      "PENDING_SECTION": "Așteaptă procesare",
+      "TODAY_SECTION": "Azi",
+      "ALL_LINK": "Toate →",
+      "NO_PENDING": "Nu sunt investigații în așteptare",
+      "SCHEDULED_LABEL": "Programat",
+      "IN_PROGRESS_LABEL": "În lucru",
+      "DONE_TODAY_LABEL": "Gata"
     },
     "WORKLIST": {
       "TITLE": "Worklist radiolog",
@@ -835,5 +894,66 @@
       "URGENT": "Urgent",
       "STAT": "STAT"
     }
+  },
+  "CABINET": {
+    "SUBTITLE": "Spațiul de lucru personal al medicului",
+    "DOCTOR_ROLE": "Medic",
+    "PHONE_NOT_SET": "Telefonul nu este indicat",
+    "EMAIL_NOT_SET": "Email-ul nu este indicat",
+    "SPECIALIZATION_NOT_SET": "Specializarea nu este indicată"
+  },
+  "APPOINTMENT": {
+    "SELECT_ROOM": "Alege cabinet...",
+    "SELECT_SERVICE": "Alege serviciu...",
+    "SERVICE_LABEL": "Serviciu",
+    "TYPE": "Tip",
+    "DURATION": "Durată",
+    "PRICE_LABEL": "Cost",
+    "MIN": "min",
+    "NOTES": "Note",
+    "NO_NOTES": "Fără note"
+  },
+  "RESULTS": {
+    "TITLE": "Rezultate",
+    "SUBTITLE": "Rezultate medicale și analize ale pacienților",
+    "ADD_RESULT": "Adaugă rezultat",
+    "NEW_RESULT": "Rezultat nou",
+    "EMPTY": "Nu sunt rezultate",
+    "PARAMETER": "Parametru",
+    "VALUE": "Valoare",
+    "PATIENT_LABEL": "Pacient",
+    "NAME_LABEL": "Denumire",
+    "DESC_LABEL": "Descriere / Concluzie",
+    "FILE_LABEL": "Fișier (PDF, Word, imagine)",
+    "UPLOAD_CLICK": "Apăsați pentru a încărca",
+    "NO_PATIENTS": "Nu aveți pacienți atașați. Rugați registratura să vă aloce pacienți.",
+    "SELECTED": "Selectat"
+  },
+  "REVIEWS": {
+    "TITLE": "Recenzii",
+    "AVERAGE_RATING": "Rating mediu",
+    "EMPTY": "Nu sunt recenzii încă",
+    "PATIENT_PREFIX": "Pacient #",
+    "LOADING": "Se încarcă..."
+  },
+  "EDIT_PATIENT": {
+    "TITLE": "Editare pacient",
+    "LOADING": "Se încarcă...",
+    "ADMIN_ONLY": "Doar administratorul poate edita datele pacientului",
+    "CREATED_LABEL": "Creat",
+    "GENDER_LABEL": "Gen",
+    "MALE": "Masculin",
+    "FEMALE": "Feminin",
+    "DOB_LABEL": "Data nașterii",
+    "AGE_YEARS": "ani",
+    "ADDRESS_LABEL": "Adresă",
+    "BLOOD_TYPE_LABEL": "Grupă sanguină",
+    "FIRST_NAME": "Prenume",
+    "LAST_NAME": "Nume"
+  },
+  "HEADER": {
+    "NO_NOTIFICATIONS": "Fără notificări",
+    "NOTIFICATIONS": "Notificări",
+    "MARK_ALL_READ": "Marchează toate citite"
   }
 }

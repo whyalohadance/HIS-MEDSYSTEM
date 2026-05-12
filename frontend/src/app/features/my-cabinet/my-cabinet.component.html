@@ -3,25 +3,25 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">{{ 'MY_CABINET.TITLE' | translate }}</h1>
-      <p class="page-sub">Персональная рабочая область врача</p>
+      <p class="page-sub">{{ 'CABINET.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
   <!-- СЕКЦИЯ 1: Профиль -->
   <div class="section-card profile-card">
-    <div class="section-title"><span class="material-icons">person</span><span> Профиль</span></div>
+    <div class="section-title"><span class="material-icons">person</span><span> {{ 'MY_CABINET.MY_PROFILE' | translate }}</span></div>
     <div class="profile-body" *ngIf="profile">
       <div class="profile-avatar">{{ getInitials() }}</div>
       <div class="profile-info">
         <div class="profile-name">{{ profile.lastName }} {{ profile.firstName }}</div>
-        <div class="profile-role">Врач</div>
+        <div class="profile-role">{{ 'CABINET.DOCTOR_ROLE' | translate }}</div>
         <div class="profile-detail" *ngIf="profile.email"><span class="material-icons">email</span><span>{{ profile.email }}</span></div>
         <div class="profile-detail" *ngIf="profile.phone"><span class="material-icons">phone</span><span>{{ profile.phone }}</span></div>
-        <div class="profile-detail" *ngIf="!profile.phone" style="color:#a0aec0"><span class="material-icons">phone</span><span>Телефон не указан</span></div>
+        <div class="profile-detail" *ngIf="!profile.phone" style="color:#a0aec0"><span class="material-icons">phone</span><span>{{ 'CABINET.PHONE_NOT_SET' | translate }}</span></div>
       </div>
       <button class="btn-edit" (click)="openEditModal()">
         <span class="material-icons">edit</span>
-        <span>Редактировать</span>
+        <span>{{ 'COMMON.EDIT' | translate }}</span>
       </button>
     </div>
     <div class="skeleton" *ngIf="isLoadingProfile"></div>
@@ -30,7 +30,7 @@
   <!-- СЕКЦИЯ 2: Приёмы на сегодня -->
   <div class="section-card">
     <div class="section-title"><span class="material-icons">today</span><span> {{ 'MY_CABINET.APPOINTMENTS_TODAY' | translate }}</span></div>
-    <div class="loading-row" *ngIf="isLoadingApts"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
+    <div class="loading-row" *ngIf="isLoadingApts"><span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span></div>
     <div class="empty-row" *ngIf="!isLoadingApts && todayAppointments.length === 0">
       <span class="material-icons">event_busy</span><span> {{ 'MY_CABINET.NO_APPOINTMENTS' | translate }}</span>
     </div>
@@ -53,11 +53,11 @@
     <div class="section-title"><span class="material-icons">people</span><span> {{ 'MY_CABINET.MY_PATIENTS' | translate }}</span></div>
     <div class="search-wrap" *ngIf="!isLoadingPatients && myPatients.length > 0 || patientSearch">
       <span class="material-icons">search</span>
-      <input [(ngModel)]="patientSearch" placeholder="Поиск по имени...">
+      <input [(ngModel)]="patientSearch" [placeholder]="'PATIENTS.SEARCH_PLACEHOLDER' | translate">
     </div>
     <div class="loading-row" *ngIf="isLoadingPatients"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingPatients && myPatients.length === 0">
-      <span class="material-icons">person_off</span><span> Пациентов не найдено</span>
+      <span class="material-icons">person_off</span><span> {{ 'MY_CABINET.PATIENTS_EMPTY' | translate }}</span>
     </div>
     <div class="patient-list" *ngIf="!isLoadingPatients && myPatients.length > 0">
       <div class="patient-row" *ngFor="let p of myPatients">
@@ -71,7 +71,7 @@
         </div>
         <button class="btn-card" (click)="goToPatient(p.id)">
           <span class="material-icons">open_in_new</span>
-          <span>Карточка</span>
+          <span>{{ 'MY_CABINET.PATIENT_CARD_BTN' | translate }}</span>
         </button>
       </div>
     </div>
@@ -80,15 +80,15 @@
   <!-- СЕКЦИЯ 4: Последние результаты -->
   <div class="section-card">
     <div class="section-title-row">
-      <div class="section-title"><span class="material-icons">assignment</span><span> Последние результаты</span></div>
+      <div class="section-title"><span class="material-icons">assignment</span><span> {{ 'MY_CABINET.RECENT_RESULTS' | translate }}</span></div>
       <button class="btn-add-result" (click)="openResultModal()">
         <span class="material-icons">add</span>
-        <span>Добавить результат</span>
+        <span>{{ 'RESULTS.ADD_RESULT' | translate }}</span>
       </button>
     </div>
-    <div class="loading-row" *ngIf="isLoadingResults"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
+    <div class="loading-row" *ngIf="isLoadingResults"><span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span></div>
     <div class="empty-row" *ngIf="!isLoadingResults && results.length === 0">
-      <span class="material-icons">assignment_late</span><span> Результатов нет</span>
+      <span class="material-icons">assignment_late</span><span> {{ 'MY_CABINET.RESULTS_EMPTY' | translate }}</span>
     </div>
     <div class="result-list" *ngIf="!isLoadingResults && results.length > 0">
       <div class="result-row" *ngFor="let r of results">
@@ -107,19 +107,19 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-val">{{ stats.total }}</div>
-        <div class="stat-label">Всего приёмов</div>
+        <div class="stat-label">{{ 'MY_CABINET.TOTAL_APPOINTMENTS' | translate }}</div>
       </div>
       <div class="stat-card blue">
         <div class="stat-val">{{ stats.thisMonth }}</div>
-        <div class="stat-label">В этом месяце</div>
+        <div class="stat-label">{{ 'MY_CABINET.THIS_MONTH' | translate }}</div>
       </div>
       <div class="stat-card green">
         <div class="stat-val">{{ stats.completed }}</div>
-        <div class="stat-label">Завершено</div>
+        <div class="stat-label">{{ 'MY_CABINET.COMPLETED' | translate }}</div>
       </div>
       <div class="stat-card red">
         <div class="stat-val">{{ stats.cancelled }}</div>
-        <div class="stat-label">Отменено</div>
+        <div class="stat-label">{{ 'MY_CABINET.CANCELLED' | translate }}</div>
       </div>
     </div>
   </div>
@@ -129,11 +129,11 @@
     <div class="section-title"><span class="material-icons">calendar_month</span><span> {{ 'MY_CABINET.MY_SCHEDULE' | translate }}</span></div>
     <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
     <div class="empty-row" *ngIf="!isLoadingSchedules && schedules.length === 0">
-      <span class="material-icons">event_busy</span><span> Расписание не назначено</span>
+      <span class="material-icons">event_busy</span><span> {{ 'MY_CABINET.SCHEDULE_EMPTY' | translate }}</span>
     </div>
     <div class="schedule-table" *ngIf="!isLoadingSchedules && schedules.length > 0">
       <div class="schedule-header">
-        <span>День</span><span>Время работы</span><span>Кабинет</span>
+        <span>{{ 'MY_CABINET.SCHEDULE_DAY' | translate }}</span><span>{{ 'MY_CABINET.SCHEDULE_TIME' | translate }}</span><span>{{ 'MY_CABINET.SCHEDULE_ROOM' | translate }}</span>
       </div>
       <div class="schedule-row" *ngFor="let s of schedules">
         <span class="day-label">{{ DAY_LABELS[s.dayOfWeek] || s.dayOfWeek }}</span>
@@ -149,32 +149,32 @@
 <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Редактировать профиль</h3>
+      <h3>{{ 'MY_CABINET.EDIT_PROFILE' | translate }}</h3>
       <button class="btn-close" (click)="closeEditModal()"><span class="material-icons">close</span></button>
     </div>
     <div class="modal-body">
       <div class="form-field">
-        <label>Имя</label>
-        <input [(ngModel)]="editForm.firstName" placeholder="Имя">
+        <label>{{ 'EDIT_PATIENT.FIRST_NAME' | translate }}</label>
+        <input [(ngModel)]="editForm.firstName" [placeholder]="'EDIT_PATIENT.FIRST_NAME' | translate">
       </div>
       <div class="form-field">
-        <label>Фамилия</label>
-        <input [(ngModel)]="editForm.lastName" placeholder="Фамилия">
+        <label>{{ 'EDIT_PATIENT.LAST_NAME' | translate }}</label>
+        <input [(ngModel)]="editForm.lastName" [placeholder]="'EDIT_PATIENT.LAST_NAME' | translate">
       </div>
       <div class="form-field">
-        <label>Телефон</label>
+        <label>{{ 'PATIENT_CARD.PHONE' | translate }}</label>
         <input [(ngModel)]="editForm.phone" placeholder="+373...">
       </div>
       <div class="success-inline" *ngIf="profileSaved">
-        <span class="material-icons">check_circle</span><span> Сохранено!</span>
+        <span class="material-icons">check_circle</span><span> {{ 'MY_CABINET.SAVED' | translate }}</span>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" (click)="saveProfile()" [disabled]="isSavingProfile">
         <span class="material-icons">save</span>
-        <span>{{ isSavingProfile ? 'Сохранение...' : 'Сохранить' }}</span>
+        <span>{{ isSavingProfile ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</span>
       </button>
-      <button class="btn-secondary" (click)="closeEditModal()">Отмена</button>
+      <button class="btn-secondary" (click)="closeEditModal()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 </div>
@@ -183,33 +183,33 @@
 <div class="modal-overlay" *ngIf="showResultModal" (click)="closeResultModal()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Добавить результат</h3>
+      <h3>{{ 'RESULTS.ADD_RESULT' | translate }}</h3>
       <button class="btn-close" (click)="closeResultModal()"><span class="material-icons">close</span></button>
     </div>
     <div class="modal-body">
       <div class="form-field">
-        <label>Название *</label>
+        <label>{{ 'RESULTS.NAME_LABEL' | translate }} *</label>
         <input [(ngModel)]="resultForm.title" placeholder="Анализ крови, МРТ...">
       </div>
       <div class="form-field">
-        <label>Описание</label>
-        <textarea [(ngModel)]="resultForm.description" rows="3" placeholder="Заключение..."></textarea>
+        <label>{{ 'RESULTS.DESC_LABEL' | translate }}</label>
+        <textarea [(ngModel)]="resultForm.description" rows="3" [placeholder]="'RESULTS.DESC_LABEL' | translate"></textarea>
       </div>
       <div class="form-field">
-        <label>Файл (PDF, Word, изображение)</label>
+        <label>{{ 'RESULTS.FILE_LABEL' | translate }}</label>
         <input type="file" (change)="onResultFileChange($event)" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-        <small *ngIf="resultFile">Выбран: {{ resultFile.name }}</small>
+        <small *ngIf="resultFile">{{ 'RESULTS.SELECTED' | translate }}: {{ resultFile.name }}</small>
       </div>
       <div class="success-inline" *ngIf="resultSuccess">
-        <span class="material-icons">check_circle</span><span> Результат сохранён!</span>
+        <span class="material-icons">check_circle</span><span> {{ 'MY_CABINET.RESULT_SAVED' | translate }}</span>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-primary" (click)="saveResult()" [disabled]="isSavingResult || !resultForm.title">
         <span class="material-icons">save</span>
-        <span>{{ isSavingResult ? 'Сохранение...' : 'Сохранить' }}</span>
+        <span>{{ isSavingResult ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</span>
       </button>
-      <button class="btn-secondary" (click)="closeResultModal()">Отмена</button>
+      <button class="btn-secondary" (click)="closeResultModal()">{{ 'COMMON.CANCEL' | translate }}</button>
     </div>
   </div>
 </div>

@@ -27,7 +27,7 @@
   <!-- Loading -->
   <div class="loading" *ngIf="isLoading">
     <span class="material-icons spin">autorenew</span>
-    <span>Загрузка...</span>
+    <span>{{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <!-- Empty State -->
@@ -47,8 +47,8 @@
         <div class="room-info">
           <div class="room-name">{{ r.name }}</div>
           <div class="room-sub">
-            <span *ngIf="r.number">Каб. {{ r.number }}</span>
-            <span *ngIf="r.floor"> · Эт. {{ r.floor }}</span>
+            <span *ngIf="r.number">{{ 'ROOMS.ROOM_NUMBER_SHORT' | translate }} {{ r.number }}</span>
+            <span *ngIf="r.floor"> · {{ 'ROOMS.FLOOR_SHORT' | translate }} {{ r.floor }}</span>
           </div>
         </div>
         <div class="room-badges">
@@ -56,7 +56,7 @@
             {{ getTypeMeta(r.type).label }}
           </span>
           <span class="status-badge" [class.active]="r.isActive" [class.inactive]="!r.isActive">
-            {{ r.isActive ? 'Активен' : 'Неактивен' }}
+            {{ r.isActive ? ('COMMON.ACTIVE' | translate) : ('COMMON.INACTIVE' | translate) }}
           </span>
         </div>
       </div>
@@ -70,7 +70,7 @@
       </div>
       <div class="no-services" *ngIf="!r.services?.length">
         <span class="material-icons">info_outline</span>
-        <span>Нет услуг</span>
+        <span>{{ 'ROOMS.NO_SERVICES' | translate }}</span>
       </div>
 
       <!-- Staff Chips -->

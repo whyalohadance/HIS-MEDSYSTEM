@@ -81,12 +81,12 @@
     </div>
 
     <!-- Графики аналитики -->
-    <div class="section-title">Аналитика за период</div>
+    <div class="section-title">{{ 'REPORTS.PERIOD_ANALYTICS' | translate }}</div>
     <div class="charts-grid" *ngIf="!isStatsLoading && monthlyStats">
       <div class="chart-card large">
         <div class="chart-heading">
           <span class="material-icons">show_chart</span>
-          <span>Активность по дням месяца</span>
+          <span>{{ 'REPORTS.DAILY_ACTIVITY' | translate }}</span>
         </div>
         <div class="chart-wrap" style="height:280px">
           <canvas #dailyChart></canvas>
@@ -96,7 +96,7 @@
       <div class="chart-card">
         <div class="chart-heading">
           <span class="material-icons">donut_large</span>
-          <span>Статусы приёмов</span>
+          <span>{{ 'REPORTS.STATUS_BREAKDOWN' | translate }}</span>
         </div>
         <div class="chart-wrap" style="height:240px">
           <canvas #statusChart></canvas>
@@ -106,7 +106,7 @@
       <div class="chart-card">
         <div class="chart-heading">
           <span class="material-icons">leaderboard</span>
-          <span>Топ-5 услуг</span>
+          <span>{{ 'REPORTS.TOP_SERVICES' | translate }}</span>
         </div>
         <div class="chart-wrap" style="height:240px">
           <canvas #servicesChart></canvas>
@@ -116,7 +116,7 @@
       <div class="chart-card large">
         <div class="chart-heading">
           <span class="material-icons">bar_chart</span>
-          <span>Годовая динамика {{ selectedYear }}</span>
+          <span>{{ 'REPORTS.YEARLY_DYNAMICS' | translate }} {{ selectedYear }}</span>
         </div>
         <div class="chart-wrap" style="height:280px">
           <canvas #yearlyChart></canvas>
@@ -126,15 +126,15 @@
     <div class="chart-stats-summary" *ngIf="!isStatsLoading && monthlyStats?.summary">
       <div class="chart-stat-pill">
         <span class="material-icons">biotech</span>
-        <span>Анализов: <strong>{{ monthlyStats.summary.totalLabOrders }}</strong></span>
+        <span>{{ 'REPORTS.LAB_ORDERS_COUNT' | translate }}: <strong>{{ monthlyStats.summary.totalLabOrders }}</strong></span>
       </div>
       <div class="chart-stat-pill ris">
         <span class="material-icons">radiology</span>
-        <span>Исследований: <strong>{{ monthlyStats.summary.totalStudies }}</strong></span>
+        <span>{{ 'REPORTS.STUDIES_COUNT' | translate }}: <strong>{{ monthlyStats.summary.totalStudies }}</strong></span>
       </div>
       <div class="chart-stat-pill success">
         <span class="material-icons">payments</span>
-        <span>Выручка: <strong>{{ monthlyStats.summary.totalRevenue | number:'1.0-0' }} MDL</strong></span>
+        <span>{{ 'REPORTS.REVENUE' | translate }}: <strong>{{ monthlyStats.summary.totalRevenue | number:'1.0-0' }} MDL</strong></span>
       </div>
     </div>
 

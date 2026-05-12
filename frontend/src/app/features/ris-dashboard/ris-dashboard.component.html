@@ -4,8 +4,8 @@
     <div class="rd-header-left">
       <div class="rd-avatar"><span class="material-icons">radiology</span></div>
       <div>
-        <h1 class="rd-title">Радиология</h1>
-        <p class="rd-subtitle">Добро пожаловать, {{ auth.currentUser?.firstName || 'Радиолог' }}</p>
+        <h1 class="rd-title">{{ 'RIS.DASHBOARD.TITLE_SHORT' | translate }}</h1>
+        <p class="rd-subtitle">{{ 'RIS.DASHBOARD.WELCOME' | translate }}, {{ auth.currentUser?.firstName || ('RIS.DASHBOARD.DEFAULT_ROLE' | translate) }}</p>
       </div>
     </div>
     <div class="rd-actions">
@@ -13,7 +13,7 @@
         <span class="material-icons">fact_check</span><span>Worklist</span>
       </a>
       <a routerLink="/studies" class="rd-btn rd-btn-outline">
-        <span class="material-icons">biotech</span><span>Исследования</span>
+        <span class="material-icons">biotech</span><span>{{ 'NAV.STUDIES' | translate }}</span>
       </a>
     </div>
   </div>
@@ -23,22 +23,22 @@
     <div class="rd-stat-card">
       <span class="material-icons">folder_open</span>
       <div class="rd-stat-num">{{ stats.total }}</div>
-      <div class="rd-stat-lbl">Всего</div>
+      <div class="rd-stat-lbl">{{ 'COMMON.ALL' | translate }}</div>
     </div>
     <div class="rd-stat-card pending">
       <span class="material-icons">schedule</span>
       <div class="rd-stat-num">{{ stats.pending }}</div>
-      <div class="rd-stat-lbl">Назначено</div>
+      <div class="rd-stat-lbl">{{ 'RIS.DASHBOARD.PENDING_LABEL' | translate }}</div>
     </div>
     <div class="rd-stat-card progress">
       <span class="material-icons">autorenew</span>
       <div class="rd-stat-num">{{ stats.inProgress }}</div>
-      <div class="rd-stat-lbl">В работе</div>
+      <div class="rd-stat-lbl">{{ 'RIS.DASHBOARD.PROGRESS_LABEL' | translate }}</div>
     </div>
     <div class="rd-stat-card done">
       <span class="material-icons">check_circle</span>
       <div class="rd-stat-num">{{ stats.completed }}</div>
-      <div class="rd-stat-lbl">Завершено</div>
+      <div class="rd-stat-lbl">{{ 'RIS.DASHBOARD.DONE_LABEL' | translate }}</div>
     </div>
   </div>
 
@@ -46,15 +46,15 @@
     <!-- Pending Studies -->
     <div class="rd-section">
       <div class="rd-section-header">
-        <h2><span class="material-icons">pending_actions</span><span>Ожидают обработки</span></h2>
-        <a routerLink="/worklist" class="rd-link">Все →</a>
+        <h2><span class="material-icons">pending_actions</span><span>{{ 'RIS.DASHBOARD.PENDING_SECTION' | translate }}</span></h2>
+        <a routerLink="/worklist" class="rd-link">{{ 'RIS.DASHBOARD.ALL_LINK' | translate }}</a>
       </div>
       <div class="rd-loading" *ngIf="isLoading">
-        <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
+        <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span>
       </div>
       <div class="rd-empty" *ngIf="!isLoading && pendingStudies.length === 0">
         <span class="material-icons">check_circle_outline</span>
-        <p>Нет ожидающих исследований</p>
+        <p>{{ 'RIS.DASHBOARD.NO_PENDING' | translate }}</p>
       </div>
       <div class="rd-studies" *ngIf="!isLoading && pendingStudies.length > 0">
         <a class="rd-study-item" *ngFor="let s of pendingStudies" [routerLink]="['/dicom', s.id]">
@@ -74,21 +74,21 @@
     <!-- Сегодня -->
     <div class="rd-section">
       <div class="rd-section-header">
-        <h2><span class="material-icons">today</span><span>Сегодня</span></h2>
+        <h2><span class="material-icons">today</span><span>{{ 'RIS.DASHBOARD.TODAY_SECTION' | translate }}</span></h2>
         <span class="rd-badge-count">{{ todayStudies.length }}</span>
       </div>
       <div class="rd-today-summary">
         <div class="rd-today-card" style="--c:#fef3c7;--t:#d97706">
           <span class="rd-today-icon"><span class="material-icons">schedule</span></span>
-          <div><div class="rd-today-num">{{ getTodayPending() }}</div><div class="rd-today-lbl">Назначено</div></div>
+          <div><div class="rd-today-num">{{ getTodayPending() }}</div><div class="rd-today-lbl">{{ 'RIS.DASHBOARD.SCHEDULED_LABEL' | translate }}</div></div>
         </div>
         <div class="rd-today-card" style="--c:#f5f3ff;--t:#7c3aed">
           <span class="rd-today-icon"><span class="material-icons">play_circle</span></span>
-          <div><div class="rd-today-num">{{ getTodayInProgress() }}</div><div class="rd-today-lbl">В работе</div></div>
+          <div><div class="rd-today-num">{{ getTodayInProgress() }}</div><div class="rd-today-lbl">{{ 'RIS.DASHBOARD.IN_PROGRESS_LABEL' | translate }}</div></div>
         </div>
         <div class="rd-today-card" style="--c:#d1fae5;--t:#047857">
           <span class="rd-today-icon"><span class="material-icons">check_circle</span></span>
-          <div><div class="rd-today-num">{{ getTodayCompleted() }}</div><div class="rd-today-lbl">Готово</div></div>
+          <div><div class="rd-today-num">{{ getTodayCompleted() }}</div><div class="rd-today-lbl">{{ 'RIS.DASHBOARD.DONE_TODAY_LABEL' | translate }}</div></div>
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@
   <!-- Недельная активность -->
   <div class="rd-section" *ngIf="weeklyStats.length > 0">
     <div class="rd-section-header">
-      <h2><span class="material-icons">show_chart</span><span>Активность за неделю</span></h2>
+      <h2><span class="material-icons">show_chart</span><span>{{ 'RIS.DASHBOARD.WEEKLY_ACTIVITY' | translate }}</span></h2>
     </div>
     <div class="rd-weekly-chart">
       <div class="rd-day-bar" *ngFor="let day of weeklyStats" [class.today]="day.isToday">

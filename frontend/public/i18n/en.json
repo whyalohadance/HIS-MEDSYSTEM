@@ -319,7 +319,15 @@
     "SEP": "September",
     "OCT": "October",
     "NOV": "November",
-    "DEC": "December"
+    "DEC": "December",
+    "PERIOD_ANALYTICS": "Period Analytics",
+    "DAILY_ACTIVITY": "Daily activity",
+    "STATUS_BREAKDOWN": "Appointment statuses",
+    "TOP_SERVICES": "Top services",
+    "YEARLY_DYNAMICS": "Yearly dynamics",
+    "LAB_ORDERS_COUNT": "Lab orders",
+    "STUDIES_COUNT": "Studies",
+    "REVENUE": "Revenue"
   },
   "PROFILE": {
     "TITLE": "Profile",
@@ -424,7 +432,8 @@
     "TAB_INFO": "Documents",
     "TAB_APPOINTMENTS": "Appointments",
     "TAB_LAB": "Lab Results",
-    "TAB_STUDIES": "Studies"
+    "TAB_STUDIES": "Studies",
+    "TAB_DYNAMICS": "Dynamics"
   },
   "ROOMS": {
     "TITLE": "Rooms Management",
@@ -463,7 +472,9 @@
     "SERVICE_NAME": "Service Name",
     "PRICE": "Price",
     "DURATION": "Duration (min)",
-    "DELETE_CONFIRM": "Delete room?"
+    "DELETE_CONFIRM": "Delete room?",
+    "NO_SERVICES": "No services",
+    "NO_STAFF": "No staff"
   },
   "LAB_CATALOG": {
     "TITLE": "Test Catalog",
@@ -520,7 +531,22 @@
     "COMPLETE": "Complete",
     "NO_APPOINTMENTS": "No appointments today",
     "TOTAL_MONTH": "Total this month",
-    "COMPLETED_MONTH": "Completed this month"
+    "COMPLETED_MONTH": "Completed this month",
+    "TOTAL_APPOINTMENTS": "Total appointments",
+    "THIS_MONTH": "This month",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled",
+    "PATIENTS_EMPTY": "No patients found",
+    "PATIENT_CARD_BTN": "Card",
+    "RECENT_RESULTS": "Recent results",
+    "RESULTS_EMPTY": "No results",
+    "EDIT_PROFILE": "Edit profile",
+    "SAVED": "Saved!",
+    "RESULT_SAVED": "Result saved!",
+    "SCHEDULE_EMPTY": "No schedule assigned",
+    "SCHEDULE_DAY": "Day",
+    "SCHEDULE_TIME": "Working hours",
+    "SCHEDULE_ROOM": "Room"
   },
   "DATE": {
     "DAY": "Day",
@@ -607,7 +633,27 @@
     "PRIORITY": "Priority",
     "PRICE": "Price",
     "BACK": "Back",
-    "ACCESS_DENIED": "Access only for Admin and Radiologist"
+    "ACCESS_DENIED": "Access only for Admin and Radiologist",
+    "UPLOAD_HINT": "Upload .dcm file — single and multi-frame images supported",
+    "UPLOAD_SINGLE": "Single .dcm — regular image",
+    "UPLOAD_MULTI": "Single .dcm with frames — MRI/CT series",
+    "HIERARCHY": "DICOM Hierarchy",
+    "PATIENT": "Patient",
+    "STUDY": "Study",
+    "SERIES": "Series",
+    "SERIES_NOT_LOADED": "Series not loaded",
+    "IMAGES": "images",
+    "MEASUREMENTS": "Measurements",
+    "CONCLUSION_TITLE": "Radiologist conclusion",
+    "CONCLUSION_SECTION": "CONCLUSION",
+    "LAST_UPDATE": "Last update",
+    "QUICK_TEMPLATES": "Quick templates",
+    "FINDINGS_LABEL": "Findings (what is visible on the image)",
+    "CONCLUSION_LABEL": "Conclusion (diagnostic result)",
+    "DOWNLOADING": "Downloading...",
+    "EDIT_CONCLUSION": "Edit conclusion",
+    "WRITE_CONCLUSION": "Write conclusion",
+    "SAVE_FINISH": "Save and finish"
   },
   "LAB": {
     "ORDER": "Order",
@@ -633,7 +679,20 @@
       "URGENT": "Urgent",
       "BY_MODALITY": "By Modality",
       "WEEKLY_ACTIVITY": "Weekly Activity",
-      "RECENT_STUDIES": "Recent Studies"
+      "RECENT_STUDIES": "Recent Studies",
+      "TITLE_SHORT": "Radiology",
+      "WELCOME": "Welcome",
+      "DEFAULT_ROLE": "Radiologist",
+      "PENDING_LABEL": "Scheduled",
+      "PROGRESS_LABEL": "In progress",
+      "DONE_LABEL": "Completed",
+      "PENDING_SECTION": "Pending processing",
+      "TODAY_SECTION": "Today",
+      "ALL_LINK": "All →",
+      "NO_PENDING": "No pending studies",
+      "SCHEDULED_LABEL": "Scheduled",
+      "IN_PROGRESS_LABEL": "In progress",
+      "DONE_TODAY_LABEL": "Done"
     },
     "WORKLIST": {
       "TITLE": "Radiologist Worklist",
@@ -835,5 +894,66 @@
       "URGENT": "Urgent",
       "STAT": "STAT"
     }
+  },
+  "CABINET": {
+    "SUBTITLE": "Doctor's personal workspace",
+    "DOCTOR_ROLE": "Doctor",
+    "PHONE_NOT_SET": "Phone not set",
+    "EMAIL_NOT_SET": "Email not set",
+    "SPECIALIZATION_NOT_SET": "Specialization not set"
+  },
+  "APPOINTMENT": {
+    "SELECT_ROOM": "Select room...",
+    "SELECT_SERVICE": "Select service...",
+    "SERVICE_LABEL": "Service",
+    "TYPE": "Type",
+    "DURATION": "Duration",
+    "PRICE_LABEL": "Cost",
+    "MIN": "min",
+    "NOTES": "Notes",
+    "NO_NOTES": "No notes"
+  },
+  "RESULTS": {
+    "TITLE": "Results",
+    "SUBTITLE": "Medical results and patient analyses",
+    "ADD_RESULT": "Add Result",
+    "NEW_RESULT": "New result",
+    "EMPTY": "No results yet",
+    "PARAMETER": "Parameter",
+    "VALUE": "Value",
+    "PATIENT_LABEL": "Patient",
+    "NAME_LABEL": "Name",
+    "DESC_LABEL": "Description / Conclusion",
+    "FILE_LABEL": "File (PDF, Word, image)",
+    "UPLOAD_CLICK": "Click to upload file",
+    "NO_PATIENTS": "You have no attached patients. Ask the reception to assign patients.",
+    "SELECTED": "Selected"
+  },
+  "REVIEWS": {
+    "TITLE": "Reviews",
+    "AVERAGE_RATING": "Average rating",
+    "EMPTY": "No reviews yet",
+    "PATIENT_PREFIX": "Patient #",
+    "LOADING": "Loading..."
+  },
+  "EDIT_PATIENT": {
+    "TITLE": "Edit patient",
+    "LOADING": "Loading...",
+    "ADMIN_ONLY": "Only administrator can edit patient data",
+    "CREATED_LABEL": "Created",
+    "GENDER_LABEL": "Gender",
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "DOB_LABEL": "Date of birth",
+    "AGE_YEARS": "years",
+    "ADDRESS_LABEL": "Address",
+    "BLOOD_TYPE_LABEL": "Blood type",
+    "FIRST_NAME": "First name",
+    "LAST_NAME": "Last name"
+  },
+  "HEADER": {
+    "NO_NOTIFICATIONS": "No notifications",
+    "NOTIFICATIONS": "Notifications",
+    "MARK_ALL_READ": "Mark all read"
   }
 }

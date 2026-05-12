@@ -38,17 +38,17 @@
         <div class="notif-panel-header">
           <h3>
             <span class="material-icons">notifications</span>
-            Уведомления
+            {{ 'HEADER.NOTIFICATIONS' | translate }}
           </h3>
           <button class="btn-mark-all" *ngIf="unreadCount > 0" (click)="markAllRead()">
-            Прочитать всё
+            {{ 'HEADER.MARK_ALL_READ' | translate }}
           </button>
         </div>
 
         <div class="notif-list">
           <div class="notif-empty" *ngIf="notifications.length === 0">
             <span class="material-icons">notifications_none</span>
-            <p>Нет уведомлений</p>
+            <p>{{ 'HEADER.NO_NOTIFICATIONS' | translate }}</p>
           </div>
 
           <div class="notif-item"
