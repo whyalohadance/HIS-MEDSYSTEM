@@ -55,7 +55,7 @@
       <span class="material-icons">search</span>
       <input [(ngModel)]="patientSearch" [placeholder]="'PATIENTS.SEARCH_PLACEHOLDER' | translate">
     </div>
-    <div class="loading-row" *ngIf="isLoadingPatients"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
+    <div class="loading-row" *ngIf="isLoadingPatients"><span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span></div>
     <div class="empty-row" *ngIf="!isLoadingPatients && myPatients.length === 0">
       <span class="material-icons">person_off</span><span> {{ 'MY_CABINET.PATIENTS_EMPTY' | translate }}</span>
     </div>
@@ -127,7 +127,7 @@
   <!-- СЕКЦИЯ 6: Расписание -->
   <div class="section-card">
     <div class="section-title"><span class="material-icons">calendar_month</span><span> {{ 'MY_CABINET.MY_SCHEDULE' | translate }}</span></div>
-    <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span><span> Загрузка...</span></div>
+    <div class="loading-row" *ngIf="isLoadingSchedules"><span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span></div>
     <div class="empty-row" *ngIf="!isLoadingSchedules && schedules.length === 0">
       <span class="material-icons">event_busy</span><span> {{ 'MY_CABINET.SCHEDULE_EMPTY' | translate }}</span>
     </div>

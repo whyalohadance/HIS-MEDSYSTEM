@@ -85,7 +85,7 @@
       <div class="room-actions">
         <button class="btn-edit" (click)="openEdit(r)">
           <span class="material-icons">edit</span>
-          <span>Изменить</span>
+          <span>{{ 'COMMON.EDIT' | translate }}</span>
         </button>
         <button class="btn-delete" (click)="deleteRoom(r.id)">
           <span class="material-icons">delete</span>
@@ -112,24 +112,24 @@
       <!-- Number & Floor -->
       <div class="form-row">
         <div class="form-group">
-          <label>Номер кабинета</label>
+          <label>{{ 'ROOMS.ROOM_NUMBER' | translate }}</label>
           <input type="text" [(ngModel)]="form.number" placeholder="101">
         </div>
         <div class="form-group">
-          <label>Этаж</label>
+          <label>{{ 'ROOMS.FLOOR' | translate }}</label>
           <input type="number" [(ngModel)]="form.floor" min="0" max="20">
         </div>
       </div>
 
       <!-- Name -->
       <div class="form-group">
-        <label>Название кабинета *</label>
-        <input type="text" [(ngModel)]="form.name" placeholder="Кабинет терапевта">
+        <label>{{ 'ROOMS.ROOM_NAME_LABEL' | translate }} *</label>
+        <input type="text" [(ngModel)]="form.name" [placeholder]="'ROOMS.ROOM_NAME_LABEL' | translate">
       </div>
 
       <!-- Type -->
       <div class="form-group">
-        <label>Тип кабинета</label>
+        <label>{{ 'ROOMS.ROOM_TYPE_LABEL' | translate }}</label>
         <div class="type-selector">
           <label
             class="type-option"
@@ -145,7 +145,7 @@
 
       <!-- Staff -->
       <div class="form-group">
-        <label>Привязанный персонал</label>
+        <label>{{ 'ROOMS.ASSIGNED_STAFF' | translate }}</label>
         <div class="staff-list" *ngIf="getAvailableStaff().length > 0; else noStaff">
           <label
             class="staff-cb"
@@ -159,27 +159,27 @@
           </label>
         </div>
         <ng-template #noStaff>
-          <div class="empty-staff">Нет персонала для типа "{{ form.type }}"</div>
+          <div class="empty-staff">{{ 'ROOMS.NO_STAFF_FOR_TYPE' | translate }} "{{ form.type }}"</div>
         </ng-template>
       </div>
 
       <!-- Services -->
       <div class="form-group">
-        <label>Услуги и цены</label>
+        <label>{{ 'ROOMS.SERVICES_PRICES' | translate }}</label>
         <div class="services-list" *ngIf="form.services.length > 0">
           <div class="svc-row" *ngFor="let s of form.services; let i = index">
             <span class="svc-n">{{ s.name }}</span>
             <span class="svc-p">{{ s.price }} MDL</span>
-            <span class="svc-d">{{ s.duration }} мин</span>
+            <span class="svc-d">{{ s.duration }} {{ 'ROOMS.MIN_SUFFIX' | translate }}</span>
             <button class="btn-icon-sm danger" (click)="removeService(i)">
               <span class="material-icons">delete</span>
             </button>
           </div>
         </div>
         <div class="add-svc-row">
-          <input type="text" [(ngModel)]="newSvc.name" placeholder="Название услуги">
-          <input type="number" [(ngModel)]="newSvc.price" placeholder="Цена">
-          <input type="number" [(ngModel)]="newSvc.duration" placeholder="Мин">
+          <input type="text" [(ngModel)]="newSvc.name" [placeholder]="'ROOMS.SERVICE_NAME_PH' | translate">
+          <input type="number" [(ngModel)]="newSvc.price" [placeholder]="'ROOMS.PRICE_PH' | translate">
+          <input type="number" [(ngModel)]="newSvc.duration" [placeholder]="'ROOMS.MIN_PH' | translate">
           <button class="btn-add-svc" (click)="addService()">
             <span class="material-icons">add</span>
           </button>
@@ -189,18 +189,18 @@
       <!-- Active toggle -->
       <div class="form-group toggle-row">
         <label>
-          <input type="checkbox" [(ngModel)]="form.isActive"> Активен
+          <input type="checkbox" [(ngModel)]="form.isActive"> {{ 'ROOMS.ACTIVE_LABEL' | translate }}
         </label>
       </div>
     </div>
 
     <div class="modal-footer">
       <button class="btn-cancel" (click)="showModal = false">
-        <span>Отмена</span>
+        <span>{{ 'COMMON.CANCEL' | translate }}</span>
       </button>
       <button class="btn-save" (click)="saveRoom()" [disabled]="isSaving">
         <span class="material-icons">{{ isSaving ? 'hourglass_empty' : 'check' }}</span>
-        <span>{{ editingRoom ? 'Сохранить' : 'Создать' }}</span>
+        <span>{{ editingRoom ? ('COMMON.SAVE' | translate) : ('ROOMS.CREATE' | translate) }}</span>
       </button>
     </div>
   </div>

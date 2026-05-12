@@ -312,33 +312,33 @@
     <div class="studies-header">
       <h2>
         <span class="material-icons">radiology</span>
-        История исследований
+        {{ 'PATIENT_CARD.STUDIES_HISTORY' | translate }}
       </h2>
       <div class="studies-stats" *ngIf="studies.length > 0">
         <div class="stat">
           <span class="stat-num">{{ studies.length }}</span>
-          <span class="stat-label">Всего</span>
+          <span class="stat-label">{{ 'PATIENT_CARD.STUDIES_TOTAL' | translate }}</span>
         </div>
         <div class="stat completed">
           <span class="stat-num">{{ getCompletedStudiesCount() }}</span>
-          <span class="stat-label">Завершено</span>
+          <span class="stat-label">{{ 'PATIENT_CARD.STUDIES_COMPLETED' | translate }}</span>
         </div>
         <div class="stat pending">
           <span class="stat-num">{{ getPendingStudiesCount() }}</span>
-          <span class="stat-label">В работе</span>
+          <span class="stat-label">{{ 'PATIENT_CARD.STUDIES_IN_PROGRESS' | translate }}</span>
         </div>
       </div>
     </div>
 
     <div class="studies-loading" *ngIf="isLoadingStudies">
       <div class="spinner-purple"></div>
-      <p>Загрузка исследований...</p>
+      <p>{{ 'PATIENT_CARD.STUDIES_LOADING' | translate }}</p>
     </div>
 
     <div class="studies-empty" *ngIf="!isLoadingStudies && studies.length === 0">
       <span class="material-icons">radiology</span>
-      <h3>Нет исследований</h3>
-      <p>У этого пациента ещё не было радиологических исследований</p>
+      <h3>{{ 'PATIENT_CARD.STUDIES_EMPTY_TITLE' | translate }}</h3>
+      <p>{{ 'PATIENT_CARD.STUDIES_EMPTY_DESC' | translate }}</p>
     </div>
 
     <div class="studies-grid" *ngIf="!isLoadingStudies && studies.length > 0">
@@ -361,7 +361,7 @@
         </div>
 
         <div class="study-card-body">
-          <h3 class="study-body-part">{{ study.bodyPart || 'Без указания' }}</h3>
+          <h3 class="study-body-part">{{ study.bodyPart || ('PATIENT_CARD.NO_BODY_PART' | translate) }}</h3>
           <p class="study-description" *ngIf="study.description">{{ study.description }}</p>
 
           <div class="study-meta">
@@ -384,8 +384,8 @@
                [class.priority-urgent]="study.priority === 'urgent'"
                [class.priority-stat]="study.priority === 'stat'">
             <span class="material-icons">priority_high</span>
-            <span *ngIf="study.priority === 'urgent'">Срочно</span>
-            <span *ngIf="study.priority === 'stat'">КРИТИЧНО</span>
+            <span *ngIf="study.priority === 'urgent'">{{ 'PATIENT_CARD.PRIORITY_URGENT' | translate }}</span>
+            <span *ngIf="study.priority === 'stat'">{{ 'PATIENT_CARD.PRIORITY_STAT' | translate }}</span>
           </div>
 
           <div class="study-clinical" *ngIf="study.clinicalInfo">
@@ -396,7 +396,7 @@
           <div class="study-conclusion" *ngIf="study.conclusion">
             <div class="conclusion-label">
               <span class="material-icons">description</span>
-              Заключение
+              {{ 'PATIENT_CARD.CONCLUSION_LABEL' | translate }}
             </div>
             <p>{{ study.conclusion }}</p>
           </div>
@@ -405,7 +405,7 @@
         <div class="study-card-footer">
           <button class="btn-open-dicom" (click)="openStudy(study.id); $event.stopPropagation()">
             <span class="material-icons">visibility</span>
-            Открыть DICOM
+            {{ 'PATIENT_CARD.OPEN_DICOM' | translate }}
           </button>
           <button class="btn-pdf-study" *ngIf="study.conclusion"
                   (click)="downloadStudyPDF(study); $event.stopPropagation()">
@@ -423,20 +423,20 @@
     <div class="dynamics-header">
       <h2>
         <span class="material-icons">trending_up</span>
-        Динамика показателей
+        {{ 'PATIENT_CARD.DYNAMICS_TITLE' | translate }}
       </h2>
-      <p class="dynamics-subtitle">История изменений показателей анализов во времени</p>
+      <p class="dynamics-subtitle">{{ 'PATIENT_CARD.DYNAMICS_SUBTITLE' | translate }}</p>
     </div>
 
     <div class="dynamics-loading" *ngIf="isLoadingHistory">
       <div class="spinner-blue"></div>
-      <p>Загрузка истории...</p>
+      <p>{{ 'PATIENT_CARD.DYNAMICS_LOADING' | translate }}</p>
     </div>
 
     <div class="dynamics-empty" *ngIf="!isLoadingHistory && parameterHistory.length === 0">
       <span class="material-icons">show_chart</span>
-      <h3>Нет данных для графика</h3>
-      <p>У пациента ещё нет завершённых анализов с числовыми показателями</p>
+      <h3>{{ 'PATIENT_CARD.DYNAMICS_EMPTY_TITLE' | translate }}</h3>
+      <p>{{ 'PATIENT_CARD.DYNAMICS_EMPTY_DESC' | translate }}</p>
     </div>
 
     <div class="dynamics-content" *ngIf="!isLoadingHistory && parameterHistory.length > 0">
@@ -445,7 +445,7 @@
       <div class="parameters-sidebar">
         <div class="sidebar-header">
           <span class="material-icons">list</span>
-          Показатели ({{ parameterHistory.length }})
+          {{ 'PATIENT_CARD.PARAMETERS' | translate }} ({{ parameterHistory.length }})
         </div>
         <div class="parameters-list">
           <button class="param-btn" *ngFor="let param of parameterHistory"
@@ -488,11 +488,11 @@
               </span>
               <span class="meta-tag" *ngIf="selectedParameter.referenceRange">
                 <span class="material-icons">check_circle</span>
-                Норма: {{ selectedParameter.referenceRange }}
+                {{ 'PATIENT_CARD.NORM_LABEL' | translate }}: {{ selectedParameter.referenceRange }}
               </span>
               <span class="meta-tag">
                 <span class="material-icons">timeline</span>
-                {{ selectedParameter.points.length }} измерений
+                {{ selectedParameter.points.length }} {{ 'PATIENT_CARD.MEASUREMENTS_SUFFIX' | translate }}
               </span>
             </div>
           </div>
@@ -508,7 +508,7 @@
               </span>
             </div>
             <div class="trend-info">
-              <div class="trend-label">Тренд</div>
+              <div class="trend-label">{{ 'PATIENT_CARD.TREND_LABEL' | translate }}</div>
               <div class="trend-value">
                 {{ getTrend(selectedParameter).percent > 0 ? '+' : '' }}{{ getTrend(selectedParameter).percent | number: '1.0-1' }}%
               </div>
@@ -522,7 +522,7 @@
 
         <!-- История измерений -->
         <div class="measurements-history">
-          <div class="history-header">История измерений</div>
+          <div class="history-header">{{ 'PATIENT_CARD.MEASUREMENT_HISTORY' | translate }}</div>
           <div class="history-list">
             <div class="history-item" *ngFor="let p of selectedParameter.points; let i = index"
                  [class]="'flag-' + p.flag">

@@ -128,12 +128,12 @@
 
     <!-- Выбор доктора — только для consultation -->
     <div class="doctor-picker" *ngIf="selectedRoom?.type === 'consultation' && form.date">
-      <label><span class="material-icons">person</span> Доступные врачи на {{ form.date }}<span *ngIf="form.time"> в {{ form.time }}</span></label>
+      <label><span class="material-icons">person</span> {{ 'APPOINTMENTS.AVAILABLE_DOCTORS_ON' | translate }} {{ form.date }}<span *ngIf="form.time"> {{ 'APPOINTMENTS.AVAILABLE_DOCTORS_AT' | translate }} {{ form.time }}</span></label>
       <div class="doctors-loading" *ngIf="isLoadingDoctors">
-        <div class="spinner-mini"></div> Загрузка...
+        <div class="spinner-mini"></div> {{ 'COMMON.LOADING' | translate }}
       </div>
       <div class="doctors-empty" *ngIf="!isLoadingDoctors && availableDoctors.length === 0">
-        <span class="material-icons">person_off</span> К этому кабинету не привязаны врачи
+        <span class="material-icons">person_off</span> {{ 'APPOINTMENTS.NO_DOCTORS' | translate }}
       </div>
       <div class="doctors-list" *ngIf="!isLoadingDoctors && availableDoctors.length > 0">
         <button type="button" class="doctor-card"
@@ -149,12 +149,12 @@
             <div class="doctor-name">{{ doc.firstName }} {{ doc.lastName }}</div>
             <div class="doctor-status">
               <span *ngIf="doc.isAvailable" class="status-free">
-                <span class="material-icons">check_circle</span> Свободен · {{ doc.busyCount }}/8 приёмов
+                <span class="material-icons">check_circle</span> {{ 'APPOINTMENTS.DOCTOR_FREE' | translate }} · {{ doc.busyCount }}/8
               </span>
               <span *ngIf="!doc.isAvailable" class="status-busy">
                 <span class="material-icons">block</span>
-                <span *ngIf="form.time">Занят в {{ form.time }}</span>
-                <span *ngIf="!form.time">День занят полностью</span>
+                <span *ngIf="form.time">{{ 'APPOINTMENTS.DOCTOR_BUSY_TIME' | translate }} {{ form.time }}</span>
+                <span *ngIf="!form.time">{{ 'APPOINTMENTS.DOCTOR_BUSY_DAY' | translate }}</span>
               </span>
             </div>
           </div>
@@ -166,17 +166,17 @@
     <!-- Инфо для радиологии -->
     <div class="info-box info-radiology" *ngIf="selectedRoom?.type === 'radiology' && form.doctorId">
       <span class="material-icons">info</span>
-      <span>Радиолог назначен автоматически: {{ getSelectedDoctorName() }}</span>
+      <span>{{ 'APPOINTMENTS.RADIOLOGIST_AUTO' | translate }}: {{ getSelectedDoctorName() }}</span>
     </div>
     <div class="info-box info-radiology" *ngIf="selectedRoom?.type === 'radiology' && !form.doctorId && form.date">
       <span class="material-icons">warning</span>
-      <span>Нет доступных радиологов на эту дату. Сначала привяжите врача к кабинету.</span>
+      <span>{{ 'APPOINTMENTS.NO_RADIOLOGISTS' | translate }}</span>
     </div>
 
     <!-- Инфо для лаборатории -->
     <div class="info-box info-lab" *ngIf="selectedRoom?.type === 'laboratory'">
       <span class="material-icons">biotech</span>
-      <span>Анализы будут переданы в лабораторию автоматически — врач не требуется</span>
+      <span>{{ 'APPOINTMENTS.LAB_AUTO' | translate }}</span>
     </div>
     <div class="form-field notes-field">
       <label>{{ 'APPOINTMENTS.NOTES' | translate }}</label>
