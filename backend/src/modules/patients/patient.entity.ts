@@ -21,7 +21,7 @@ export class Patient {
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })

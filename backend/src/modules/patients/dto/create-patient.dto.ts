@@ -1,41 +1,47 @@
-import { IsString, IsEmail, IsEnum, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsOptional, IsNumber, IsNotEmpty, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePatientDto {
   @IsString()
-  @IsOptional()
-  firstName?: string;
+  @IsNotEmpty()
+  @MaxLength(100)
+  firstName: string;
 
   @IsString()
-  @IsOptional()
-  lastName?: string;
+  @IsNotEmpty()
+  @MaxLength(100)
+  lastName: string;
 
   @IsString()
-  @IsOptional()
-  dateOfBirth?: string;
+  @IsNotEmpty()
+  dateOfBirth: string;
 
   @IsEnum(['male', 'female'])
-  @IsOptional()
-  gender?: 'male' | 'female';
+  gender: 'male' | 'female';
 
   @IsString()
-  @IsOptional()
-  phone?: string;
+  @IsNotEmpty()
+  @MaxLength(30)
+  phone: string;
 
   @IsEmail()
   @IsOptional()
+  @MaxLength(150)
   email?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(255)
   address?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(100)
   city?: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(100)
   country?: string;
 
   @IsNumber()
