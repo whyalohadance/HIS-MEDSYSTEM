@@ -856,7 +856,10 @@
       "ACTIONS": "Acțiuni",
       "START": "Începe",
       "OPEN": "Deschide",
-      "EMPTY": "Nu sunt comenzi"
+      "EMPTY": "Nu sunt comenzi",
+      "NO_DATE": "fără dată",
+      "ENTER_RESULTS": "Introdu rezultate",
+      "EMPTY_SUB": "Toate analizele sunt finalizate"
     },
     "ORDER": {
       "TITLE": "Comandă",
@@ -874,7 +877,21 @@
       "COMPLETE_ORDER": "Finalizează comanda",
       "DOWNLOAD_PDF": "Descarcă PDF",
       "LABORATORY_TECH": "Laborant",
-      "COMPLETED_AT": "Finalizată"
+      "COMPLETED_AT": "Finalizată",
+      "NEW": "Comandă nouă",
+      "NEW_TITLE": "Comandă nouă de laborator",
+      "EMPTY": "Nu sunt comenzi de laborator",
+      "ALL_STATUSES": "Toate statusurile",
+      "ALL_PRIORITIES": "Toate prioritățile",
+      "PATIENT_ID": "ID pacient",
+      "TEST": "Analiză",
+      "SELECT_TEST": "Alege analiza",
+      "CLINICAL_PLACEHOLDER": "Simptome, motivul indicației...",
+      "COLLECTION_DATE": "Data prelevării",
+      "CANCELLED": "Anulată",
+      "FILL_REQUIRED": "Completați câmpurile obligatorii",
+      "CREATED": "Comandă creată",
+      "CREATE_ERROR": "Eroare la crearea comenzii"
     },
     "CATALOG": {
       "TITLE": "Catalog analize",

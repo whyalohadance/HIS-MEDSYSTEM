@@ -856,7 +856,10 @@
       "ACTIONS": "Действия",
       "START": "Начать",
       "OPEN": "Открыть",
-      "EMPTY": "Нет заказов"
+      "EMPTY": "Нет заказов",
+      "NO_DATE": "без даты",
+      "ENTER_RESULTS": "Ввести результаты",
+      "EMPTY_SUB": "Все анализы выполнены"
     },
     "ORDER": {
       "TITLE": "Заказ",
@@ -874,7 +877,21 @@
       "COMPLETE_ORDER": "Завершить заказ",
       "DOWNLOAD_PDF": "Скачать PDF",
       "LABORATORY_TECH": "Лаборант",
-      "COMPLETED_AT": "Завершён"
+      "COMPLETED_AT": "Завершён",
+      "NEW": "Новый заказ",
+      "NEW_TITLE": "Новый лабораторный заказ",
+      "EMPTY": "Нет лабораторных заказов",
+      "ALL_STATUSES": "Все статусы",
+      "ALL_PRIORITIES": "Все приоритеты",
+      "PATIENT_ID": "ID пациента",
+      "TEST": "Анализ",
+      "SELECT_TEST": "Выберите анализ",
+      "CLINICAL_PLACEHOLDER": "Симптомы, причина назначения...",
+      "COLLECTION_DATE": "Дата сбора",
+      "CANCELLED": "Отменён",
+      "FILL_REQUIRED": "Заполните обязательные поля",
+      "CREATED": "Заказ создан",
+      "CREATE_ERROR": "Ошибка создания заказа"
     },
     "CATALOG": {
       "TITLE": "Каталог анализов",

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 
@@ -14,27 +14,30 @@ import { ToastService } from '../../core/services/toast.service';
     <div class="lab-page">
       <div class="page-header">
         <div class="header-title">
-          <h1><span class="material-icons">biotech</span> Лабораторные заказы</h1>
+          <h1>
+            <span class="material-icons">biotech</span>
+            {{ 'NAV.LAB_ORDERS' | translate }}
+          </h1>
           <span class="lab-badge">LIS</span>
         </div>
         <button class="btn-add" (click)="showAddForm = true" *ngIf="role === 'admin' || role === 'doctor'">
           <span class="material-icons">add</span>
-          Новый заказ
+          {{ 'LIS.ORDER.NEW' | translate }}
         </button>
       </div>
 
       <div class="filters">
         <select [(ngModel)]="filterStatus" (change)="loadOrders()" class="filter-select">
-          <option value="">Все статусы</option>
-          <option value="pending">Ожидают</option>
-          <option value="in_progress">В процессе</option>
-          <option value="completed">Завершены</option>
+          <option value="">{{ 'LIS.ORDER.ALL_STATUSES' | translate }}</option>
+          <option value="pending">{{ 'LIS.WORKLIST.FILTER_PENDING' | translate }}</option>
+          <option value="in_progress">{{ 'LIS.WORKLIST.FILTER_IN_PROGRESS' | translate }}</option>
+          <option value="completed">{{ 'LIS.WORKLIST.FILTER_COMPLETED' | translate }}</option>
         </select>
         <select [(ngModel)]="filterPriority" (change)="loadOrders()" class="filter-select">
-          <option value="">Все приоритеты</option>
-          <option value="routine">Плановые</option>
-          <option value="urgent">Срочные</option>
-          <option value="stat">Критические</option>
+          <option value="">{{ 'LIS.ORDER.ALL_PRIORITIES' | translate }}</option>
+          <option value="routine">{{ 'LIS.PRIORITIES.ROUTINE' | translate }}</option>
+          <option value="urgent">{{ 'LIS.PRIORITIES.URGENT' | translate }}</option>
+          <option value="stat">{{ 'LIS.PRIORITIES.STAT' | translate }}</option>
         </select>
       </div>
 
@@ -47,14 +50,14 @@ import { ToastService } from '../../core/services/toast.service';
           <div class="order-header">
             <span class="order-number">{{ order.orderNumber }}</span>
             <span class="priority-badge" [class]="'priority-' + order.priority">
-              {{ getPriorityLabel(order.priority) }}
+              {{ getPriorityLabelKey(order.priority) | translate }}
             </span>
           </div>
           <div class="order-body">
             <div class="order-test">{{ getTestName(order.testId) }}</div>
             <div class="order-patient">
               <span class="material-icons">person</span>
-              Пациент ID: {{ order.patientId }}
+              {{ 'LIS.WORKLIST.PATIENT' | translate }} ID: {{ order.patientId }}
             </div>
             <div class="order-date" *ngIf="order.scheduledAt">
               <span class="material-icons">event</span>
@@ -66,7 +69,7 @@ import { ToastService } from '../../core/services/toast.service';
           </div>
           <div class="order-footer">
             <span class="status-badge" [class]="'status-' + order.status">
-              {{ getStatusLabel(order.status) }}
+              {{ getStatusLabelKey(order.status) | translate }}
             </span>
             <button class="btn-view" [routerLink]="['/lab/order', order.id]">
               <span class="material-icons">arrow_forward</span>
@@ -77,23 +80,23 @@ import { ToastService } from '../../core/services/toast.service';
 
       <div class="empty-state" *ngIf="!isLoading && orders.length === 0">
         <span class="material-icons">science</span>
-        <p>Нет лабораторных заказов</p>
+        <p>{{ 'LIS.ORDER.EMPTY' | translate }}</p>
       </div>
 
-      <!-- Форма добавления заказа -->
       <div class="modal-overlay" *ngIf="showAddForm" (click)="showAddForm = false">
         <div class="modal" (click)="$event.stopPropagation()">
-          <h2>Новый лабораторный заказ</h2>
+          <h2>{{ 'LIS.ORDER.NEW_TITLE' | translate }}</h2>
 
           <div class="form-group">
-            <label>Пациент</label>
-            <input type="number" [(ngModel)]="newOrder.patientId" placeholder="ID пациента" class="form-input">
+            <label>{{ 'LIS.WORKLIST.PATIENT' | translate }}</label>
+            <input type="number" [(ngModel)]="newOrder.patientId"
+              [placeholder]="'LIS.ORDER.PATIENT_ID' | translate" class="form-input">
           </div>
 
           <div class="form-group">
-            <label>Анализ</label>
+            <label>{{ 'LIS.ORDER.TEST' | translate }}</label>
             <select [(ngModel)]="newOrder.testId" class="form-input">
-              <option [ngValue]="null">Выберите анализ</option>
+              <option [ngValue]="null">{{ 'LIS.ORDER.SELECT_TEST' | translate }}</option>
               <option *ngFor="let test of tests" [ngValue]="test.id">
                 {{ test.name }} ({{ test.price }} MDL)
               </option>
@@ -101,28 +104,28 @@ import { ToastService } from '../../core/services/toast.service';
           </div>
 
           <div class="form-group">
-            <label>Приоритет</label>
+            <label>{{ 'LIS.WORKLIST.PRIORITY' | translate }}</label>
             <select [(ngModel)]="newOrder.priority" class="form-input">
-              <option value="routine">Плановый</option>
-              <option value="urgent">Срочный</option>
-              <option value="stat">Критический</option>
+              <option value="routine">{{ 'LIS.PRIORITIES.ROUTINE' | translate }}</option>
+              <option value="urgent">{{ 'LIS.PRIORITIES.URGENT' | translate }}</option>
+              <option value="stat">{{ 'LIS.PRIORITIES.STAT' | translate }}</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Клиническая информация</label>
+            <label>{{ 'LIS.ORDER.CLINICAL_INFO' | translate }}</label>
             <textarea [(ngModel)]="newOrder.clinicalInfo" rows="3" class="form-input"
-              placeholder="Симптомы, причина назначения..."></textarea>
+              [placeholder]="'LIS.ORDER.CLINICAL_PLACEHOLDER' | translate"></textarea>
           </div>
 
           <div class="form-group">
-            <label>Дата сбора</label>
+            <label>{{ 'LIS.ORDER.COLLECTION_DATE' | translate }}</label>
             <input type="date" [(ngModel)]="newOrder.scheduledAt" class="form-input">
           </div>
 
           <div class="modal-actions">
-            <button class="btn-cancel" (click)="showAddForm = false">Отмена</button>
-            <button class="btn-save" (click)="createOrder()">Создать</button>
+            <button class="btn-cancel" (click)="showAddForm = false">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="btn-save" (click)="createOrder()">{{ 'COMMON.CREATE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -181,7 +184,6 @@ import { ToastService } from '../../core/services/toast.service';
     .btn-cancel { background: #f1f5f9; color: #64748b; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; }
     .btn-save { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; }
     .btn-save:hover { background: #059669; }
-
     :host-context(body.dark-theme) .lab-page { background: transparent; }
     :host-context(body.dark-theme) .header-title h1 { color: #e2e8f0; }
     :host-context(body.dark-theme) .order-card { background: #1e293b; border-color: #334155; }
@@ -212,6 +214,7 @@ export class LabOrdersComponent implements OnInit {
   constructor(
     private api: ApiService,
     private toast: ToastService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -254,33 +257,37 @@ export class LabOrdersComponent implements OnInit {
 
   createOrder(): void {
     if (!this.newOrder.patientId || !this.newOrder.testId) {
-      this.toast.error('Заполните обязательные поля');
+      this.toast.error(this.translate.instant('LIS.ORDER.FILL_REQUIRED'));
       return;
     }
 
     this.api.post<any>('/lab/orders', this.newOrder).subscribe({
       next: () => {
-        this.toast.success('Заказ создан');
+        this.toast.success(this.translate.instant('LIS.ORDER.CREATED'));
         this.showAddForm = false;
         this.newOrder = { patientId: null, testId: null, priority: 'routine', clinicalInfo: '', scheduledAt: '' };
         this.loadOrders();
       },
-      error: () => this.toast.error('Ошибка создания заказа')
+      error: () => this.toast.error(this.translate.instant('LIS.ORDER.CREATE_ERROR'))
     });
   }
 
   getTestName(testId: number): string {
     const test = this.tests.find(t => t.id === testId);
-    return test?.name || `Тест #${testId}`;
+    return test?.name || `Test #${testId}`;
   }
 
-  getPriorityLabel(p: string): string {
-    const map: Record<string, string> = { routine: 'Плановый', urgent: 'Срочный', stat: 'КРИТ' };
-    return map[p] || p;
+  getPriorityLabelKey(p: string): string {
+    return `LIS.PRIORITIES.${(p || 'routine').toUpperCase()}`;
   }
 
-  getStatusLabel(s: string): string {
-    const map: Record<string, string> = { pending: 'Ожидает', in_progress: 'В процессе', completed: 'Завершён', cancelled: 'Отменён' };
+  getStatusLabelKey(s: string): string {
+    const map: Record<string, string> = {
+      'pending': 'LIS.WORKLIST.FILTER_PENDING',
+      'in_progress': 'LIS.WORKLIST.FILTER_IN_PROGRESS',
+      'completed': 'LIS.WORKLIST.FILTER_COMPLETED',
+      'cancelled': 'LIS.ORDER.CANCELLED'
+    };
     return map[s] || s;
   }
 }

@@ -856,7 +856,10 @@
       "ACTIONS": "Actions",
       "START": "Start",
       "OPEN": "Open",
-      "EMPTY": "No orders"
+      "EMPTY": "No orders",
+      "NO_DATE": "no date",
+      "ENTER_RESULTS": "Enter Results",
+      "EMPTY_SUB": "All analyses completed"
     },
     "ORDER": {
       "TITLE": "Order",
@@ -874,7 +877,21 @@
       "COMPLETE_ORDER": "Complete Order",
       "DOWNLOAD_PDF": "Download PDF",
       "LABORATORY_TECH": "Lab Technician",
-      "COMPLETED_AT": "Completed"
+      "COMPLETED_AT": "Completed",
+      "NEW": "New Order",
+      "NEW_TITLE": "New Lab Order",
+      "EMPTY": "No lab orders",
+      "ALL_STATUSES": "All statuses",
+      "ALL_PRIORITIES": "All priorities",
+      "PATIENT_ID": "Patient ID",
+      "TEST": "Test",
+      "SELECT_TEST": "Select test",
+      "CLINICAL_PLACEHOLDER": "Symptoms, reason for order...",
+      "COLLECTION_DATE": "Collection date",
+      "CANCELLED": "Cancelled",
+      "FILL_REQUIRED": "Fill required fields",
+      "CREATED": "Order created",
+      "CREATE_ERROR": "Error creating order"
     },
     "CATALOG": {
       "TITLE": "Test Catalog",

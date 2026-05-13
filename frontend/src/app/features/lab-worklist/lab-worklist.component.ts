@@ -1,32 +1,36 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { EditPatientModalComponent } from '../../shared/components/edit-patient-modal/edit-patient-modal.component';
 
 @Component({
   selector: 'app-lab-worklist',
   standalone: true,
-  imports: [CommonModule, RouterLink, EditPatientModalComponent],
+  imports: [CommonModule, RouterLink, TranslateModule, EditPatientModalComponent],
   template: `
     <div class="worklist-page">
       <div class="page-header">
         <div class="header-left">
-          <h1><span class="material-icons">fact_check</span> Лабораторный Worklist</h1>
+          <h1>
+            <span class="material-icons">fact_check</span>
+            {{ 'LIS.WORKLIST.TITLE' | translate }}
+          </h1>
           <span class="lis-badge">LIS</span>
         </div>
         <div class="stats" *ngIf="stats">
           <div class="stat-item pending">
             <span class="material-icons">pending</span>
-            <span>{{ stats.pending }} ожидают</span>
+            <span>{{ stats.pending }} {{ 'LIS.WORKLIST.FILTER_PENDING' | translate }}</span>
           </div>
           <div class="stat-item in-progress">
             <span class="material-icons">play_circle</span>
-            <span>{{ stats.inProgress }} в работе</span>
+            <span>{{ stats.inProgress }} {{ 'LIS.WORKLIST.FILTER_IN_PROGRESS' | translate }}</span>
           </div>
           <div class="stat-item completed">
             <span class="material-icons">check_circle</span>
-            <span>{{ stats.completed }} завершено</span>
+            <span>{{ stats.completed }} {{ 'LIS.WORKLIST.FILTER_COMPLETED' | translate }}</span>
           </div>
         </div>
       </div>
@@ -39,21 +43,21 @@ import { EditPatientModalComponent } from '../../shared/components/edit-patient-
             <div class="work-test">{{ getTestName(o.testId) }}</div>
             <div class="work-meta">
               <span class="material-icons">person</span>
-              Пациент #{{ o.patientId }}
-              <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(o.patientId)" title="Редактировать пациента">
+              {{ 'LIS.WORKLIST.PATIENT' | translate }} #{{ o.patientId }}
+              <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(o.patientId)" [title]="'COMMON.EDIT' | translate">
                 <span class="material-icons">edit</span>
               </button>
               <span class="dot">•</span>
-              {{ o.scheduledAt || 'без даты' }}
+              {{ o.scheduledAt || ('LIS.WORKLIST.NO_DATE' | translate) }}
             </div>
           </div>
           <div class="work-right">
             <span class="status-badge" [class]="'status-' + o.status">
-              {{ o.status === 'pending' ? 'Ожидает' : 'В процессе' }}
+              {{ getStatusLabelKey(o.status) | translate }}
             </span>
             <button class="btn-work" [routerLink]="['/lab/order', o.id]">
               <span class="material-icons">assignment</span>
-              Ввести результаты
+              {{ 'LIS.WORKLIST.ENTER_RESULTS' | translate }}
             </button>
           </div>
         </div>
@@ -61,8 +65,8 @@ import { EditPatientModalComponent } from '../../shared/components/edit-patient-
 
       <div class="empty" *ngIf="orders.length === 0 && !isLoading">
         <span class="material-icons">task_alt</span>
-        <p>Нет заказов в работе</p>
-        <span class="empty-sub">Все анализы выполнены</span>
+        <p>{{ 'LIS.WORKLIST.EMPTY' | translate }}</p>
+        <span class="empty-sub">{{ 'LIS.WORKLIST.EMPTY_SUB' | translate }}</span>
       </div>
 
       <div class="loading" *ngIf="isLoading">
@@ -116,11 +120,9 @@ import { EditPatientModalComponent } from '../../shared/components/edit-patient-
     .loading { text-align: center; padding: 60px; color: #94a3b8; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinning { animation: spin 1s linear infinite; font-size: 36px; }
-
     .btn-edit-patient { display: inline-flex; align-items: center; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 2px 6px; cursor: pointer; color: #1a73e8; transition: all 0.15s; }
     .btn-edit-patient:hover { background: #dbeafe; }
     .btn-edit-patient .material-icons { font-size: 13px; }
-
     :host-context(body.dark-theme) h1 { color: #e2e8f0; }
     :host-context(body.dark-theme) .work-item { background: #1e293b; border-color: #334155; }
     :host-context(body.dark-theme) .work-test { color: #e2e8f0; }
@@ -134,7 +136,6 @@ export class LabWorklistComponent implements OnInit {
   tests: any[] = [];
   stats: any = null;
   isLoading = false;
-
   showEditPatient = false;
   editingPatientId = 0;
 
@@ -198,6 +199,15 @@ export class LabWorklistComponent implements OnInit {
 
   getTestName(testId: number): string {
     const t = this.tests.find(x => x.id === testId);
-    return t?.name || `Тест #${testId}`;
+    return t?.name || `Test #${testId}`;
+  }
+
+  getStatusLabelKey(s: string): string {
+    const map: Record<string, string> = {
+      'pending': 'LIS.WORKLIST.FILTER_PENDING',
+      'in_progress': 'LIS.WORKLIST.FILTER_IN_PROGRESS',
+      'completed': 'LIS.WORKLIST.FILTER_COMPLETED'
+    };
+    return map[s] || s;
   }
 }
