@@ -1,0 +1,8 @@
+{
+  "name": "his-e2e-tests",
+  "version": "1.0.0",
+  "description": "Puppeteer E2E tests for HIS-MedSystem",
+  "dependencies": {
+    "puppeteer": "^21.11.0"
+  }
+}
