@@ -75,7 +75,8 @@
     "SAVE_SUCCESS": "Успешно сохранено",
     "SAVE_ERROR": "Ошибка сохранения",
     "DELETE_SUCCESS": "Успешно удалено",
-    "DELETE_ERROR": "Ошибка удаления"
+    "DELETE_ERROR": "Ошибка удаления",
+    "EDIT_PATIENT": "Редактировать пациента"
   },
   "AUTH": {
     "LOGIN": "Вход",
@@ -694,7 +695,19 @@
     "DOWNLOADING": "Скачивание...",
     "EDIT_CONCLUSION": "Редактировать заключение",
     "WRITE_CONCLUSION": "Написать заключение",
-    "SAVE_FINISH": "Сохранить и завершить"
+    "SAVE_FINISH": "Сохранить и завершить",
+    "DOWNLOAD_PDF": "Скачать PDF заключение",
+    "INST_SLICES": "Срезы",
+    "INST_ZOOM": "Зум",
+    "INST_LMB": "ЛКМ",
+    "INST_PAN": "Перемещение",
+    "INST_RMB": "ПКМ",
+    "INST_BRIGHTNESS": "Яркость",
+    "INST_NAVIGATE": "Навигация",
+    "INST_SWIPE": "Свайп",
+    "INST_MOBILE": "Мобильный",
+    "UPLOAD_SERIES": "Несколько .dcm — серия срезов",
+    "SELECT_FILES": "Выбрать файлы (серия)"
   },
   "LAB": {
     "ORDER": "Заказ",
@@ -753,7 +766,9 @@
       "ACTIONS": "Действия",
       "OPEN_VIEWER": "Открыть DICOM",
       "ADD_REPORT": "Заключение",
-      "EMPTY": "Нет исследований"
+      "EMPTY": "Нет исследований",
+      "START": "Начать",
+      "COMPLETE": "Завершить"
     },
     "STUDY": {
       "TITLE": "Исследование",
@@ -800,7 +815,9 @@
       "DELETE_MEASUREMENT": "Удалить измерение",
       "HU_VALUE": "HU значение",
       "EXPORT_PNG": "Экспорт PNG",
-      "FULLSCREEN": "Полный экран"
+      "FULLSCREEN": "Полный экран",
+      "CLEAR_ALL": "Очистить всё",
+      "INVERT": "Инверсия"
     },
     "MODALITIES": {
       "CT": "КТ",
@@ -951,6 +968,23 @@
       "ROUTINE": "Плановый",
       "URGENT": "Срочный",
       "STAT": "СТАТ"
+    },
+    "RESULT": {
+      "INDICATORS": "Показатели",
+      "COL_NAME": "Показатель",
+      "COL_VALUE": "Значение",
+      "COL_UNIT": "Ед.",
+      "COL_REF": "Норма",
+      "COL_FLAG": "Статус",
+      "SAVING": "Сохранение...",
+      "SAVE_AND_COMPLETE": "Сохранить и завершить",
+      "COMPLETED_AT": "Анализ завершён",
+      "SUMMARY": "Заключение",
+      "FLAG_NORMAL": "В норме",
+      "FLAG_LOW": "Ниже нормы",
+      "FLAG_HIGH": "Выше нормы",
+      "SAVED": "Результаты сохранены",
+      "SAVE_ERROR": "Ошибка сохранения"
     }
   },
   "CABINET": {
@@ -985,7 +1019,10 @@
     "FILE_LABEL": "Файл (PDF, Word, изображение)",
     "UPLOAD_CLICK": "Нажмите чтобы загрузить файл",
     "NO_PATIENTS": "У вас нет прикреплённых пациентов. Попросите регистратуру назначить пациентов.",
-    "SELECTED": "Выбран"
+    "SELECTED": "Выбран",
+    "NAME_PLACEHOLDER": "Общий анализ крови",
+    "DESC_PLACEHOLDER": "Результаты в норме...",
+    "OPEN_FILE": "Открыть файл"
   },
   "REVIEWS": {
     "TITLE": "Отзывы",

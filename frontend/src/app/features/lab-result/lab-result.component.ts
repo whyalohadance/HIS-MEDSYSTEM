@@ -2,26 +2,27 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-lab-result',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="result-page" *ngIf="order && test">
       <div class="page-header">
         <button class="btn-back" (click)="goBack()">
           <span class="material-icons">arrow_back</span>
-          Назад
+          {{ 'COMMON.BACK' | translate }}
         </button>
         <div class="header-info">
           <h1>{{ test.name }}</h1>
           <div class="meta">
             <span class="order-num">{{ order.orderNumber }}</span>
-            <span class="priority-badge" [class]="'priority-' + order.priority">{{ getPriorityLabel(order.priority) }}</span>
-            <span class="status-badge" [class]="'status-' + order.status">{{ getStatusLabel(order.status) }}</span>
+            <span class="priority-badge" [class]="'priority-' + order.priority">{{ getPriorityLabelKey(order.priority) | translate }}</span>
+            <span class="status-badge" [class]="'status-' + order.status">{{ getStatusLabelKey(order.status) | translate }}</span>
           </div>
         </div>
       </div>
@@ -33,17 +34,17 @@ import { ToastService } from '../../core/services/toast.service';
 
       <div class="results-card">
         <div class="card-header">
-          <h2>Показатели</h2>
+          <h2>{{ 'LIS.RESULT.INDICATORS' | translate }}</h2>
           <span class="test-price">{{ test.price }} MDL</span>
         </div>
 
         <div class="params-table">
           <div class="param-row param-header">
-            <div class="col-name">Показатель</div>
-            <div class="col-value">Значение</div>
-            <div class="col-unit">Ед.</div>
-            <div class="col-ref">Норма</div>
-            <div class="col-flag">Статус</div>
+            <div class="col-name">{{ 'LIS.RESULT.COL_NAME' | translate }}</div>
+            <div class="col-value">{{ 'LIS.RESULT.COL_VALUE' | translate }}</div>
+            <div class="col-unit">{{ 'LIS.RESULT.COL_UNIT' | translate }}</div>
+            <div class="col-ref">{{ 'LIS.RESULT.COL_REF' | translate }}</div>
+            <div class="col-flag">{{ 'LIS.RESULT.COL_FLAG' | translate }}</div>
           </div>
 
           <div class="param-row" *ngFor="let p of parameters" [class]="'flag-row-' + (p.flag || 'normal')">
@@ -57,7 +58,7 @@ import { ToastService } from '../../core/services/toast.service';
             <div class="col-ref">{{ p.referenceRange || '—' }}</div>
             <div class="col-flag">
               <span class="flag-badge" [class]="'flag-' + (p.flag || 'normal')" *ngIf="p.value">
-                {{ getFlagLabel(p.flag) }}
+                {{ getFlagLabelKey(p.flag) | translate }}
               </span>
             </div>
           </div>
@@ -66,30 +67,30 @@ import { ToastService } from '../../core/services/toast.service';
         <div class="actions" *ngIf="order.status !== 'completed' && (role === 'lab_technician' || role === 'admin')">
           <button class="btn-save" (click)="saveResults()" [disabled]="isSaving">
             <span class="material-icons">check_circle</span>
-            {{ isSaving ? 'Сохранение...' : 'Сохранить и завершить' }}
+            {{ (isSaving ? 'LIS.RESULT.SAVING' : 'LIS.RESULT.SAVE_AND_COMPLETE') | translate }}
           </button>
         </div>
 
         <div class="completed-info" *ngIf="order.status === 'completed'">
           <span class="material-icons">verified</span>
-          Анализ завершён {{ order.completedAt | date:'dd.MM.yyyy HH:mm' }}
+          {{ 'LIS.RESULT.COMPLETED_AT' | translate }} {{ order.completedAt | date:'dd.MM.yyyy HH:mm' }}
         </div>
       </div>
 
       <div class="summary-card" *ngIf="order.status === 'completed' && parameters.length > 0">
-        <h3>Заключение</h3>
+        <h3>{{ 'LIS.RESULT.SUMMARY' | translate }}</h3>
         <div class="summary-stats">
           <div class="stat">
             <span class="stat-value normal">{{ countByFlag('normal') }}</span>
-            <span class="stat-label">В норме</span>
+            <span class="stat-label">{{ 'LIS.RESULT.FLAG_NORMAL' | translate }}</span>
           </div>
           <div class="stat">
             <span class="stat-value warn">{{ countByFlag('low') + countByFlag('critical_low') }}</span>
-            <span class="stat-label">Ниже нормы</span>
+            <span class="stat-label">{{ 'LIS.RESULT.FLAG_LOW' | translate }}</span>
           </div>
           <div class="stat">
             <span class="stat-value danger">{{ countByFlag('high') + countByFlag('critical_high') }}</span>
-            <span class="stat-label">Выше нормы</span>
+            <span class="stat-label">{{ 'LIS.RESULT.FLAG_HIGH' | translate }}</span>
           </div>
         </div>
       </div>
@@ -97,7 +98,7 @@ import { ToastService } from '../../core/services/toast.service';
 
     <div class="loading-state" *ngIf="!order">
       <span class="material-icons spinning">refresh</span>
-      <p>Загрузка...</p>
+      <p>{{ 'COMMON.LOADING' | translate }}</p>
     </div>
   `,
   styles: [`
@@ -176,6 +177,7 @@ export class LabResultComponent implements OnInit {
     private router: Router,
     private api: ApiService,
     private toast: ToastService,
+    private translate: TranslateService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -251,12 +253,12 @@ export class LabResultComponent implements OnInit {
       results: this.parameters
     }).subscribe({
       next: () => {
-        this.toast.success('Результаты сохранены');
+        this.toast.success(this.translate.instant('LIS.RESULT.SAVED'));
         this.isSaving = false;
         this.loadOrder(this.order.id);
       },
       error: () => {
-        this.toast.error('Ошибка сохранения');
+        this.toast.error(this.translate.instant('LIS.RESULT.SAVE_ERROR'));
         this.isSaving = false;
         this.cdr.detectChanges();
       }
@@ -267,25 +269,29 @@ export class LabResultComponent implements OnInit {
     this.router.navigate(['/lab/orders']);
   }
 
-  getPriorityLabel(p: string): string {
-    const map: Record<string, string> = { routine: 'Плановый', urgent: 'Срочный', stat: 'КРИТ' };
-    return map[p] || p;
+  getPriorityLabelKey(p: string): string {
+    return `LIS.PRIORITIES.${(p || 'routine').toUpperCase()}`;
   }
 
-  getStatusLabel(s: string): string {
-    const map: Record<string, string> = { pending: 'Ожидает', in_progress: 'В процессе', completed: 'Завершён', cancelled: 'Отменён' };
+  getStatusLabelKey(s: string): string {
+    const map: Record<string, string> = {
+      'pending': 'LIS.WORKLIST.FILTER_PENDING',
+      'in_progress': 'LIS.WORKLIST.FILTER_IN_PROGRESS',
+      'completed': 'LIS.WORKLIST.FILTER_COMPLETED',
+      'cancelled': 'LIS.ORDER.CANCELLED'
+    };
     return map[s] || s;
   }
 
-  getFlagLabel(flag: string): string {
+  getFlagLabelKey(flag: string): string {
     const map: Record<string, string> = {
-      normal: 'НОРМА',
-      low: '↓ НИЖЕ',
-      high: '↑ ВЫШЕ',
-      critical_low: '↓↓ КРИТ',
-      critical_high: '↑↑ КРИТ'
+      normal: 'LIS.FLAGS.NORMAL',
+      low: 'LIS.FLAGS.LOW',
+      high: 'LIS.FLAGS.HIGH',
+      critical_low: 'LIS.FLAGS.CRITICAL_LOW',
+      critical_high: 'LIS.FLAGS.CRITICAL_HIGH'
     };
-    return map[flag] || '—';
+    return map[flag] || 'LIS.FLAGS.NORMAL';
   }
 
   countByFlag(flag: string): number {

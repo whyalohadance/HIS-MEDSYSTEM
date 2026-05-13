@@ -75,7 +75,8 @@
     "SAVE_SUCCESS": "Salvat cu succes",
     "SAVE_ERROR": "Eroare la salvare",
     "DELETE_SUCCESS": "Șters cu succes",
-    "DELETE_ERROR": "Eroare la ștergere"
+    "DELETE_ERROR": "Eroare la ștergere",
+    "EDIT_PATIENT": "Editează pacientul"
   },
   "AUTH": {
     "LOGIN": "Autentificare",
@@ -694,7 +695,19 @@
     "DOWNLOADING": "Se descarcă...",
     "EDIT_CONCLUSION": "Editare concluzie",
     "WRITE_CONCLUSION": "Scriere concluzie",
-    "SAVE_FINISH": "Salvează și finalizează"
+    "SAVE_FINISH": "Salvează și finalizează",
+    "DOWNLOAD_PDF": "Descarcă PDF concluzie",
+    "INST_SLICES": "Secțiuni",
+    "INST_ZOOM": "Zoom",
+    "INST_LMB": "CLM",
+    "INST_PAN": "Deplasare",
+    "INST_RMB": "CRM",
+    "INST_BRIGHTNESS": "Luminozitate",
+    "INST_NAVIGATE": "Navigare",
+    "INST_SWIPE": "Glisare",
+    "INST_MOBILE": "Mobil",
+    "UPLOAD_SERIES": "Mai multe .dcm — serie de secțiuni",
+    "SELECT_FILES": "Selectează fișierele (serie)"
   },
   "LAB": {
     "ORDER": "Comanda",
@@ -753,7 +766,9 @@
       "ACTIONS": "Acțiuni",
       "OPEN_VIEWER": "Deschide DICOM",
       "ADD_REPORT": "Concluzie",
-      "EMPTY": "Nu sunt investigații"
+      "EMPTY": "Nu sunt investigații",
+      "START": "Începe",
+      "COMPLETE": "Finalizează"
     },
     "STUDY": {
       "TITLE": "Investigație",
@@ -800,7 +815,9 @@
       "DELETE_MEASUREMENT": "Șterge măsurătoarea",
       "HU_VALUE": "Valoare HU",
       "EXPORT_PNG": "Export PNG",
-      "FULLSCREEN": "Ecran complet"
+      "FULLSCREEN": "Ecran complet",
+      "CLEAR_ALL": "Șterge toate",
+      "INVERT": "Inversare"
     },
     "MODALITIES": {
       "CT": "CT",
@@ -951,6 +968,23 @@
       "ROUTINE": "De rutină",
       "URGENT": "Urgent",
       "STAT": "STAT"
+    },
+    "RESULT": {
+      "INDICATORS": "Indicatori",
+      "COL_NAME": "Indicator",
+      "COL_VALUE": "Valoare",
+      "COL_UNIT": "U.M.",
+      "COL_REF": "Normal",
+      "COL_FLAG": "Statut",
+      "SAVING": "Salvare...",
+      "SAVE_AND_COMPLETE": "Salvează și finalizează",
+      "COMPLETED_AT": "Analiză finalizată",
+      "SUMMARY": "Concluzie",
+      "FLAG_NORMAL": "Normal",
+      "FLAG_LOW": "Sub normă",
+      "FLAG_HIGH": "Peste normă",
+      "SAVED": "Rezultate salvate",
+      "SAVE_ERROR": "Eroare la salvare"
     }
   },
   "CABINET": {
@@ -985,7 +1019,10 @@
     "FILE_LABEL": "Fișier (PDF, Word, imagine)",
     "UPLOAD_CLICK": "Apăsați pentru a încărca",
     "NO_PATIENTS": "Nu aveți pacienți atașați. Rugați registratura să vă aloce pacienți.",
-    "SELECTED": "Selectat"
+    "SELECTED": "Selectat",
+    "NAME_PLACEHOLDER": "Hemogramă completă",
+    "DESC_PLACEHOLDER": "Rezultate în normă...",
+    "OPEN_FILE": "Deschide fișierul"
   },
   "REVIEWS": {
     "TITLE": "Recenzii",

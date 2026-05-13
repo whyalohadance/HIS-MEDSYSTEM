@@ -16,15 +16,15 @@
 
       <!-- Инструменты -->
       <button class="tool-btn" [class.active]="activeTool === 'pan'"
-        (click)="setTool('pan')" title="Перемещение">
+        (click)="setTool('pan')" [title]="'RIS.VIEWER.PAN' | translate">
         <span class="material-icons">pan_tool</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'length'"
-        (click)="setTool('length')" title="Линейка">
+        (click)="setTool('length')" [title]="'RIS.VIEWER.RULER' | translate">
         <span class="material-icons">straighten</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'annotation'"
-        (click)="setTool('annotation')" title="Замечание">
+        (click)="setTool('annotation')" [title]="'RIS.VIEWER.ANNOTATION' | translate">
         <span class="material-icons">label_important</span>
       </button>
       <button class="tool-btn" [class.active]="activeTool === 'probe'"
@@ -37,7 +37,7 @@
       <!-- Пресеты Window/Level -->
       <div class="presets-dropdown">
         <button class="tool-btn preset-btn" (click)="togglePresets()"
-          [class.active]="activePreset !== 'Default'" title="Window/Level пресеты">
+          [class.active]="activePreset !== 'Default'" [title]="'RIS.VIEWER.PRESETS' | translate">
           <span class="material-icons">tune</span>
           <span class="preset-label">{{ activePreset }}</span>
         </button>
@@ -61,7 +61,7 @@
       <!-- Cine Mode -->
       <button class="tool-btn cine-btn" *ngIf="totalSlices > 1"
         [class.active]="isPlaying"
-        (click)="toggleCine()" [title]="isPlaying ? 'Стоп' : 'Play серия'">
+        (click)="toggleCine()" [title]="isPlaying ? ('RIS.VIEWER.PAUSE' | translate) : ('RIS.VIEWER.PLAY' | translate)">
         <span class="material-icons">{{ isPlaying ? 'pause' : 'play_arrow' }}</span>
       </button>
       <div class="cine-speed" *ngIf="totalSlices > 1">
@@ -76,19 +76,19 @@
 
       <!-- Остальные -->
       <button class="tool-btn" *ngIf="measurements.length > 0 || annotations.length > 0"
-        (click)="clearAll()" title="Очистить всё">
+        (click)="clearAll()" [title]="'RIS.VIEWER.CLEAR_ALL' | translate">
         <span class="material-icons">delete_sweep</span>
       </button>
-      <button class="tool-btn" (click)="resetViewport()" title="Сброс" [disabled]="!imageLoaded">
+      <button class="tool-btn" (click)="resetViewport()" [title]="'RIS.VIEWER.RESET' | translate" [disabled]="!imageLoaded">
         <span class="material-icons">refresh</span>
       </button>
-      <button class="tool-btn" [class.active]="inverted" (click)="invertImage()" title="Инверсия" [disabled]="!imageLoaded">
+      <button class="tool-btn" [class.active]="inverted" (click)="invertImage()" [title]="'RIS.VIEWER.INVERT' | translate" [disabled]="!imageLoaded">
         <span class="material-icons">invert_colors</span>
       </button>
-      <button class="tool-btn" (click)="toggleFullscreen()" title="Полный экран">
+      <button class="tool-btn" (click)="toggleFullscreen()" [title]="'RIS.VIEWER.FULLSCREEN' | translate">
         <span class="material-icons">fullscreen</span>
       </button>
-      <button class="tool-btn export-btn" *ngIf="imageLoaded" (click)="exportSnapshot()" title="Экспорт PNG">
+      <button class="tool-btn export-btn" *ngIf="imageLoaded" (click)="exportSnapshot()" [title]="'RIS.VIEWER.EXPORT_PNG' | translate">
         <span class="material-icons">download</span>
       </button>
     </div>
@@ -119,13 +119,13 @@
           </div>
           <div class="upload-tip">
             <span class="material-icons">photo_library</span>
-            <span>Несколько .dcm — серия срезов</span>
+            <span>{{ 'DICOM.UPLOAD_SERIES' | translate }}</span>
           </div>
         </div>
 
         <label class="btn-upload" for="dicomFileInput">
           <span class="material-icons">folder_open</span>
-          Выбрать файлы (серия)
+          {{ 'DICOM.SELECT_FILES' | translate }}
         </label>
         <input
           id="dicomFileInput"

@@ -30,12 +30,12 @@
       </div>
       <div class="form-field">
         <label>{{ 'RESULTS.NAME_LABEL' | translate }} *</label>
-        <input [(ngModel)]="form.title" placeholder="Общий анализ крови">
+        <input [(ngModel)]="form.title" [placeholder]="'RESULTS.NAME_PLACEHOLDER' | translate">
       </div>
     </div>
     <div class="form-field desc-field">
       <label>{{ 'RESULTS.DESC_LABEL' | translate }}</label>
-      <input [(ngModel)]="form.description" placeholder="Результаты в норме...">
+      <input [(ngModel)]="form.description" [placeholder]="'RESULTS.DESC_PLACEHOLDER' | translate">
     </div>
     <div class="form-field upload-field">
       <label>{{ 'RESULTS.FILE_LABEL' | translate }}</label>
@@ -55,7 +55,7 @@
   </div>
 
   <div class="loading" *ngIf="isLoading">
-    <span class="material-icons spin">autorenew</span><span> Загрузка...</span>
+    <span class="material-icons spin">autorenew</span><span> {{ 'COMMON.LOADING' | translate }}</span>
   </div>
 
   <div class="empty-state" *ngIf="!isLoading && results.length === 0">
@@ -87,10 +87,10 @@
           {{ formatDate(r.createdAt) }}
         </div>
         <div class="result-actions">
-          <a class="action-btn view" *ngIf="r.fileUrl" [href]="r.fileUrl" target="_blank" title="Открыть файл">
+          <a class="action-btn view" *ngIf="r.fileUrl" [href]="r.fileUrl" target="_blank" [title]="'RESULTS.OPEN_FILE' | translate">
             <span class="material-icons">open_in_new</span>
           </a>
-          <button class="action-btn delete" (click)="deleteResult(r.id, $event)" title="Удалить">
+          <button class="action-btn delete" (click)="deleteResult(r.id, $event)" [title]="'COMMON.DELETE' | translate">
             <span class="material-icons">delete</span>
           </button>
         </div>

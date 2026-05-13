@@ -17,6 +17,7 @@ export class StudiesController {
   constructor(private readonly studiesService: StudiesService) {}
 
   @Get()
+  @Roles(UserRole.ADMIN, UserRole.RADIOLOGIST, UserRole.DOCTOR)
   async findAll(@Query() filters: any) {
     const data = await this.studiesService.findAll(filters);
     return { success: true, data };

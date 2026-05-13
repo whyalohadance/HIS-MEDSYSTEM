@@ -75,7 +75,8 @@
     "SAVE_SUCCESS": "Saved successfully",
     "SAVE_ERROR": "Error saving",
     "DELETE_SUCCESS": "Deleted successfully",
-    "DELETE_ERROR": "Error deleting"
+    "DELETE_ERROR": "Error deleting",
+    "EDIT_PATIENT": "Edit patient"
   },
   "AUTH": {
     "LOGIN": "Login",
@@ -694,7 +695,19 @@
     "DOWNLOADING": "Downloading...",
     "EDIT_CONCLUSION": "Edit conclusion",
     "WRITE_CONCLUSION": "Write conclusion",
-    "SAVE_FINISH": "Save and finish"
+    "SAVE_FINISH": "Save and finish",
+    "DOWNLOAD_PDF": "Download PDF report",
+    "INST_SLICES": "Slices",
+    "INST_ZOOM": "Zoom",
+    "INST_LMB": "LMB",
+    "INST_PAN": "Pan",
+    "INST_RMB": "RMB",
+    "INST_BRIGHTNESS": "Brightness",
+    "INST_NAVIGATE": "Navigate",
+    "INST_SWIPE": "Swipe",
+    "INST_MOBILE": "Mobile",
+    "UPLOAD_SERIES": "Multiple .dcm — slice series",
+    "SELECT_FILES": "Select files (series)"
   },
   "LAB": {
     "ORDER": "Order",
@@ -753,7 +766,9 @@
       "ACTIONS": "Actions",
       "OPEN_VIEWER": "Open DICOM",
       "ADD_REPORT": "Report",
-      "EMPTY": "No studies"
+      "EMPTY": "No studies",
+      "START": "Start",
+      "COMPLETE": "Complete"
     },
     "STUDY": {
       "TITLE": "Study",
@@ -800,7 +815,9 @@
       "DELETE_MEASUREMENT": "Delete measurement",
       "HU_VALUE": "HU Value",
       "EXPORT_PNG": "Export PNG",
-      "FULLSCREEN": "Fullscreen"
+      "FULLSCREEN": "Fullscreen",
+      "CLEAR_ALL": "Clear all",
+      "INVERT": "Invert"
     },
     "MODALITIES": {
       "CT": "CT",
@@ -951,6 +968,23 @@
       "ROUTINE": "Routine",
       "URGENT": "Urgent",
       "STAT": "STAT"
+    },
+    "RESULT": {
+      "INDICATORS": "Indicators",
+      "COL_NAME": "Indicator",
+      "COL_VALUE": "Value",
+      "COL_UNIT": "Unit",
+      "COL_REF": "Reference",
+      "COL_FLAG": "Flag",
+      "SAVING": "Saving...",
+      "SAVE_AND_COMPLETE": "Save & Complete",
+      "COMPLETED_AT": "Analysis completed",
+      "SUMMARY": "Summary",
+      "FLAG_NORMAL": "Normal",
+      "FLAG_LOW": "Below normal",
+      "FLAG_HIGH": "Above normal",
+      "SAVED": "Results saved",
+      "SAVE_ERROR": "Save error"
     }
   },
   "CABINET": {
@@ -985,7 +1019,10 @@
     "FILE_LABEL": "File (PDF, Word, image)",
     "UPLOAD_CLICK": "Click to upload file",
     "NO_PATIENTS": "You have no attached patients. Ask the reception to assign patients.",
-    "SELECTED": "Selected"
+    "SELECTED": "Selected",
+    "NAME_PLACEHOLDER": "Complete blood count",
+    "DESC_PLACEHOLDER": "Results within normal range...",
+    "OPEN_FILE": "Open file"
   },
   "REVIEWS": {
     "TITLE": "Reviews",

@@ -31,7 +31,7 @@
     </div>
     <div class="header-right">
       <button class="btn-download-report" *ngIf="study" (click)="downloadReportPDF()"
-              [disabled]="isDownloadingReport" title="Скачать PDF заключение">
+              [disabled]="isDownloadingReport" [title]="'DICOM.DOWNLOAD_PDF' | translate">
         <span class="material-icons" *ngIf="!isDownloadingReport">picture_as_pdf</span>
         <div class="spinner-tiny" *ngIf="isDownloadingReport"></div>
         <span>{{ isDownloadingReport ? ('DICOM.DOWNLOADING' | translate) : 'PDF' }}</span>
@@ -133,7 +133,7 @@
           <div class="measurement-row" *ngFor="let m of measurements; let i = index">
             <span class="measurement-num">{{ i + 1 }}</span>
             <span class="measurement-dist">{{ m.distance }}</span>
-            <button class="measurement-delete" (click)="deleteMeasurement(m, i)" title="Удалить">
+            <button class="measurement-delete" (click)="deleteMeasurement(m, i)" [title]="'COMMON.DELETE' | translate">
               <span class="material-icons">close</span>
             </button>
           </div>
@@ -174,7 +174,7 @@
       <div>
         <h2>
           <span class="material-icons">description</span>
-          Заключение радиолога
+          {{ 'DICOM.CONCLUSION_TITLE' | translate }}
         </h2>
         <p class="report-study" *ngIf="study">
           {{ study.studyId }} · {{ study.bodyPart }}
@@ -212,7 +212,7 @@
           class="report-textarea"
           rows="6"
           [(ngModel)]="reportData.findings"
-          placeholder="Опишите визуальные находки: расположение, размеры, характеристики структур..."
+          [placeholder]="'DICOM.FINDINGS_PLACEHOLDER' | translate"
           [disabled]="isSavingReport">
         </textarea>
         <div class="char-count">{{ reportData.findings.length }} / 1000</div>
@@ -227,7 +227,7 @@
           class="report-textarea conclusion"
           rows="5"
           [(ngModel)]="reportData.conclusion"
-          placeholder="Сформулируйте диагностический вывод и рекомендации..."
+          [placeholder]="'DICOM.CONCLUSION_PLACEHOLDER' | translate"
           [disabled]="isSavingReport">
         </textarea>
         <div class="char-count">{{ reportData.conclusion.length }} / 500</div>
@@ -255,27 +255,27 @@
   <div class="instructions-bar">
     <div class="inst-item">
       <span class="inst-key">Scroll</span>
-      <span class="inst-desc">Срезы</span>
+      <span class="inst-desc">{{ 'DICOM.INST_SLICES' | translate }}</span>
     </div>
     <div class="inst-item">
       <span class="inst-key">Ctrl+Scroll</span>
-      <span class="inst-desc">Зум</span>
+      <span class="inst-desc">{{ 'DICOM.INST_ZOOM' | translate }}</span>
     </div>
     <div class="inst-item">
-      <span class="inst-key">ЛКМ</span>
-      <span class="inst-desc">Перемещение</span>
+      <span class="inst-key">{{ 'DICOM.INST_LMB' | translate }}</span>
+      <span class="inst-desc">{{ 'DICOM.INST_PAN' | translate }}</span>
     </div>
     <div class="inst-item">
-      <span class="inst-key">ПКМ</span>
-      <span class="inst-desc">Яркость</span>
+      <span class="inst-key">{{ 'DICOM.INST_RMB' | translate }}</span>
+      <span class="inst-desc">{{ 'DICOM.INST_BRIGHTNESS' | translate }}</span>
     </div>
     <div class="inst-item">
       <span class="inst-key">← →</span>
-      <span class="inst-desc">Навигация</span>
+      <span class="inst-desc">{{ 'DICOM.INST_NAVIGATE' | translate }}</span>
     </div>
     <div class="inst-item">
-      <span class="inst-key">Свайп</span>
-      <span class="inst-desc">Мобильный</span>
+      <span class="inst-key">{{ 'DICOM.INST_SWIPE' | translate }}</span>
+      <span class="inst-desc">{{ 'DICOM.INST_MOBILE' | translate }}</span>
     </div>
   </div>
 

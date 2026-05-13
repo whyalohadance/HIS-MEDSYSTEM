@@ -35,7 +35,7 @@
         <div class="item-patient">
           <span class="material-icons">person</span>
           {{ getPatientName(study.patientId) }}
-          <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(study.patientId)" title="Редактировать пациента">
+          <button *ngIf="isAdmin()" class="btn-edit-patient" (click)="openEditPatient(study.patientId)" [title]="'COMMON.EDIT_PATIENT' | translate">
             <span class="material-icons">edit</span>
           </button>
         </div>
@@ -61,17 +61,17 @@
       <div class="item-actions">
         <button class="action-btn start"
           *ngIf="study.status === 'pending' || study.status === 'scheduled'"
-          (click)="start(study)" title="Начать">
+          (click)="start(study)" [title]="'RIS.WORKLIST.START' | translate">
           <span class="material-icons">play_arrow</span>
         </button>
         <button class="action-btn finish"
           *ngIf="study.status === 'in_progress'"
-          (click)="complete(study)" title="Завершить">
+          (click)="complete(study)" [title]="'RIS.WORKLIST.COMPLETE' | translate">
           <span class="material-icons">check_circle</span>
         </button>
         <button class="action-btn cancel-btn"
           *ngIf="study.status !== 'completed' && study.status !== 'cancelled'"
-          (click)="cancel(study)" title="Отменить">
+          (click)="cancel(study)" [title]="'COMMON.CANCEL' | translate">
           <span class="material-icons">cancel</span>
         </button>
       </div>
