@@ -1,0 +1,675 @@
+{
+  "startTime": "2026-05-14T10:29:17.482Z",
+  "results": [
+    {
+      "url": "/auth/login",
+      "scores": {
+        "performance": 52,
+        "accessibility": 95,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 7911,
+        "LCP": 7936,
+        "TBT": 0,
+        "CLS": 0.118,
+        "SI": 7911,
+        "TTI": 7936
+      },
+      "failedAudits": [
+        {
+          "id": "first-contentful-paint",
+          "title": "First Contentful Paint",
+          "score": 0,
+          "displayValue": "7.9 s",
+          "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-c"
+        },
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.01,
+          "displayValue": "7.9 s",
+          "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/l"
+        },
+        {
+          "id": "speed-index",
+          "title": "Speed Index",
+          "score": 0,
+          "displayValue": "7.9 s",
+          "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more about the Speed Index metric](https://developer.chrome.com/docs/lighthouse/performance/speed-index/)."
+        },
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.118",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.11,
+          "displayValue": "7.9 s",
+          "description": "Time to Interactive is the amount of time it takes for the page to become fully interactive. [Learn more about the Time to Interactive metric](https://developer.chrome.com/docs/lighthouse/performance/"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 70 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/dashboard",
+      "scores": {
+        "performance": 96,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 337,
+        "LCP": 351,
+        "TBT": 0,
+        "CLS": 0.116,
+        "SI": 496,
+        "TTI": 352
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.116",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 80 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/patients",
+      "scores": {
+        "performance": 96,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 241,
+        "LCP": 350,
+        "TBT": 0,
+        "CLS": 0.118,
+        "SI": 674,
+        "TTI": 350
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.118",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 580 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/appointments",
+      "scores": {
+        "performance": 96,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 298,
+        "LCP": 354,
+        "TBT": 0,
+        "CLS": 0.118,
+        "SI": 711,
+        "TTI": 354
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.118",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 80 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/staff",
+      "scores": {
+        "performance": 96,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 234,
+        "LCP": 341,
+        "TBT": 0,
+        "CLS": 0.119,
+        "SI": 663,
+        "TTI": 341
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.119",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 580 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/profile",
+      "scores": {
+        "performance": 97,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 375,
+        "LCP": 388,
+        "TBT": 0,
+        "CLS": 0.113,
+        "SI": 462,
+        "TTI": 388
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.86,
+          "displayValue": "0.113",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 60 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/lab-catalog",
+      "scores": {
+        "performance": 100,
+        "accessibility": 85,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 44,
+        "LCP": 458,
+        "TBT": 0,
+        "CLS": 0,
+        "SI": 47,
+        "TTI": 458
+      },
+      "failedAudits": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "landmark-one-main",
+          "title": "Document does not have a main landmark.",
+          "score": 0,
+          "displayValue": "",
+          "description": "One main landmark helps screen reader users navigate a web page. [Learn more about landmarks](https://dequeuniversity.com/rules/axe/4.11/landmark-one-main)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 32 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 80 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    },
+    {
+      "url": "/reports",
+      "scores": {
+        "performance": 96,
+        "accessibility": 95,
+        "bestPractices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": 305,
+        "LCP": 363,
+        "TBT": 0,
+        "CLS": 0.119,
+        "SI": 533,
+        "TTI": 363
+      },
+      "failedAudits": [
+        {
+          "id": "cumulative-layout-shift",
+          "title": "Cumulative Layout Shift",
+          "score": 0.85,
+          "displayValue": "0.119",
+          "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0,
+          "displayValue": "",
+          "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://de"
+        },
+        {
+          "id": "layout-shifts",
+          "title": "Avoid large layout shifts",
+          "score": 0,
+          "displayValue": "15 layout shifts found",
+          "description": "These are the largest layout shifts observed on the page. Each table item represents a single layout shift, and shows the element that shifted the most. Below each item are possible root causes that l"
+        },
+        {
+          "id": "color-contrast",
+          "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+          "score": 0,
+          "displayValue": "",
+          "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.11/color-contrast)."
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "displayValue": "Est savings of 25 KiB",
+          "description": "Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activity. [Learn how to reduce unused JavaScript](https://developer.chrome.com/docs/lig"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "displayValue": "2 failure reasons",
+          "description": "Many navigations are performed by going back to a previous page, or forwards again. The back/forward cache (bfcache) can speed up these return navigations. [Learn more about the bfcache](https://devel"
+        },
+        {
+          "id": "cls-culprits-insight",
+          "title": "Layout shift culprits",
+          "score": 0,
+          "displayValue": "",
+          "description": "Layout shifts occur when elements move absent any user interaction. [Investigate the causes of layout shifts](https://developer.chrome.com/docs/performance/insights/cls-culprit), such as elements bein"
+        },
+        {
+          "id": "font-display-insight",
+          "title": "Font display",
+          "score": 0,
+          "displayValue": "Est savings of 100 ms",
+          "description": "Consider setting [font-display](https://developer.chrome.com/docs/performance/insights/font-display) to swap or optional to ensure text is consistently visible. swap can be further optimized to mitiga"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0,
+          "displayValue": "",
+          "description": "[Avoid chaining critical requests](https://developer.chrome.com/docs/performance/insights/network-dependency-tree) by reducing the length of chains, reducing the download size of resources, or deferri"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "performance": 91,
+    "accessibility": 94,
+    "bestPractices": 97,
+    "seo": 100
+  },
+  "endTime": "2026-05-14T10:30:34.924Z"
+}

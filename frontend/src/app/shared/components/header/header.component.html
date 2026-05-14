@@ -23,8 +23,8 @@
     </div>
 
     <!-- Dark theme toggle -->
-    <button class="theme-btn" (click)="toggleTheme()" [title]="isDarkTheme ? 'Светлая тема' : 'Тёмная тема'">
-      <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
+    <button class="theme-btn" (click)="toggleTheme()" [attr.aria-label]="isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'">
+      <span class="material-icons" aria-hidden="true">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
     </button>
 
     <!-- Notifications bell + inline panel -->
@@ -67,8 +67,8 @@
               <div class="notif-time">{{ getTimeAgo(n.createdAt) }}</div>
             </div>
 
-            <button class="notif-close" (click)="deleteNotif(n.id, $event)" title="Удалить">
-              <span class="material-icons">close</span>
+            <button class="notif-close" (click)="deleteNotif(n.id, $event)" aria-label="Delete notification">
+              <span class="material-icons" aria-hidden="true">close</span>
             </button>
           </div>
         </div>

@@ -4,5 +4,10 @@
   "description": "Puppeteer E2E tests for HIS-MedSystem",
   "dependencies": {
     "puppeteer": "^21.11.0"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.3.0",
+    "playwright": "^1.60.0"
   }
 }

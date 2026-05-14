@@ -1,4 +1,4 @@
-<div class="login-page" [ngClass]="animState">
+<main class="login-page" [ngClass]="animState" role="main">
   <div class="bg-overlay"></div>
 
   <!-- Логотип 1: В центре экрана во время анимации -->
@@ -74,19 +74,19 @@
       </div>
       <form class="login-form" (ngSubmit)="login()">
         <div class="form-group fg-1">
-          <label>{{ 'AUTH.EMAIL' | translate }}</label>
+          <label for="login-email">{{ 'AUTH.EMAIL' | translate }}</label>
           <div class="input-wrapper">
-            <span class="material-icons input-icon">mail_outline</span>
-            <input type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required>
+            <span class="material-icons input-icon" aria-hidden="true">mail_outline</span>
+            <input id="login-email" type="email" [(ngModel)]="form.email" name="email" autocomplete="email" required>
           </div>
         </div>
         <div class="form-group fg-2">
-          <label>{{ 'AUTH.PASSWORD' | translate }}</label>
+          <label for="login-password">{{ 'AUTH.PASSWORD' | translate }}</label>
           <div class="input-wrapper">
-            <span class="material-icons input-icon">lock_outline</span>
-            <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="form.password" name="password" autocomplete="current-password" required>
-            <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
-              <span class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+            <span class="material-icons input-icon" aria-hidden="true">lock_outline</span>
+            <input id="login-password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="form.password" name="password" autocomplete="current-password" required>
+            <button type="button" class="toggle-password" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+              <span class="material-icons" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
             </button>
           </div>
         </div>
@@ -121,4 +121,4 @@
       </div>
     </div>
   </div>
-</div>
+</main>
