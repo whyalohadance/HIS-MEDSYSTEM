@@ -1,0 +1,373 @@
+═══════════════════════════════════════════
+💾 DATABASE INTEGRITY TESTS
+═══════════════════════════════════════════
+Container: his_postgres
+User: medical_user, DB: medical_db
+
+══ 1. ТАБЛИЦЫ ══
+Найденные таблицы:
+  • annotations
+  • appointments
+  • dicom_images
+  • examinations
+  • lab_orders
+  • lab_results
+  • lab_tests
+  • measurements
+  • modalities
+  • notifications
+  • patients
+  • results
+  • reviews
+  • rooms
+  • schedules
+  • series
+  • studies
+  • users
+  ✅ Таблица patients существует
+  ✅ Таблица users существует
+  ✅ Таблица appointments существует
+  ✅ Таблица rooms существует
+  ✅ Таблица studies существует
+  ✅ Таблица lab_tests существует
+  ✅ Таблица lab_orders существует
+  ✅ Таблица notifications существует
+
+══ 2. КОЛИЧЕСТВО ЗАПИСЕЙ ══
+  📊 annotations: 0 записей
+  📊 appointments: 25 записей
+  📊 dicom_images: 0 записей
+  📊 examinations: 0 записей
+  📊 lab_orders: 11 записей
+  📊 lab_results: 0 записей
+  📊 lab_tests: 14 записей
+  📊 measurements: 0 записей
+  📊 modalities: 0 записей
+  📊 notifications: 5 записей
+  📊 patients: 11 записей
+  📊 results: 0 записей
+  📊 reviews: 0 записей
+  📊 rooms: 4 записей
+  📊 schedules: 0 записей
+  📊 series: 0 записей
+  📊 studies: 11 записей
+  📊 users: 5 записей
+
+══ 3. FOREIGN KEYS ══
+Найдено FK связей: 3
+FK связи:
+  🔗 appointments.patientId → patients.id
+  🔗 appointments.doctorId → users.id
+  🔗 patients.doctorId → users.id
+
+══ 4. ORPHAN ЗАПИСИ ══
+  ✅ Appointments без пациентов: 0
+  ✅ Studies без пациентов: 0
+  ❌ Lab orders без пациентов: 2
+  ✅ Appointments без докторов: 0
+  ✅ Lab orders без lab_tests: 0
+  ✅ Notifications без users: 0
+
+══ 5. ИНДЕКСЫ ══
+Всего индексов: 27
+
+Полный список:
+  📌 public.annotations.PK_d5b59b40ef7ee54b4309c2e89b2
+  📌 public.appointments.PK_4a437a9a27e948726b8bb3e36ad
+  📌 public.dicom_images.PK_9c6cd30c9cde73eec9bf23edd15
+  📌 public.dicom_images.UQ_e9f1555fa24d052dd044f6b718c
+  📌 public.examinations.PK_7694851ac6eaf734b64fcf06c28
+  📌 public.lab_orders.PK_a488d533e758e6ba02958198f1c
+  📌 public.lab_orders.UQ_3bed40012bc1f5da8608ad8b87d
+  📌 public.lab_results.PK_4f1c5b3b5813c98fb531e5db738
+  📌 public.lab_tests.PK_400d229da68540bf586c0f4a20f
+  📌 public.lab_tests.UQ_b7756de508bcd61121c5aa28b56
+  📌 public.measurements.PK_3c0e7812563f27fd68e8271661b
+  📌 public.modalities.PK_4135bf3c2e5bb971c20b08bbef1
+  📌 public.notifications.IDX_692a909ee0fa9383e7859f9b40
+  📌 public.notifications.IDX_831a5a06f879fb0bebf8965871
+  📌 public.notifications.IDX_8ba28344602d583583b9ea1a50
+  📌 public.notifications.PK_6a72c3c0f683f6462415e653c3a
+  📌 public.patients.PK_a7f0b9fcbb3469d5ec0b0aceaa7
+  📌 public.results.PK_e8f2a9191c61c15b627c117a678
+  📌 public.reviews.PK_231ae565c273ee700b283f15c1d
+  📌 public.rooms.PK_0368a2d7c215f2d0458a54933f2
+  📌 public.schedules.PK_7e33fc2ea755a5765e3564e66dd
+  📌 public.series.PK_e725676647382eb54540d7128ba
+  📌 public.series.UQ_26ffad4a105868c4a2870f9f314
+  📌 public.studies.PK_b100ff0c4a0ad02a9c2270d45b6
+  📌 public.studies.UQ_e0a0642e9736dd46997306a6079
+  📌 public.users.PK_a3ffb1c0c8416b9fc6f907b7433
+  📌 public.users.UQ_97672ac88f789774dd47f7c8be3
+
+Ключевые индексы (проверка):
+  ⚠️  appointments.date — нет индекса (медленные запросы!)
+  ⚠️  appointments.patientId — нет индекса (медленные запросы!)
+  ⚠️  appointments.doctorId — нет индекса (медленные запросы!)
+  ⚠️  appointments.status — нет индекса (медленные запросы!)
+  ⚠️  lab_orders.patientId — нет индекса (медленные запросы!)
+  ⚠️  lab_orders.status — нет индекса (медленные запросы!)
+  ⚠️  studies.patientId — нет индекса (медленные запросы!)
+  ✅ users.email — индекс есть
+  ⚠️  users.role — нет индекса (медленные запросы!)
+
+══ 6. РАЗМЕР ТАБЛИЦ ══
+Топ-10 по размеру:
+  table_name   | total_size | data_size  | rows 
+---------------+------------+------------+------
+ notifications | 80 kB      | 8192 bytes |    0
+ lab_tests     | 48 kB      | 8192 bytes |    0
+ studies       | 48 kB      | 8192 bytes |    0
+ users         | 48 kB      | 8192 bytes |    0
+ lab_orders    | 48 kB      | 8192 bytes |    3
+ patients      | 32 kB      | 8192 bytes |    0
+ appointments  | 32 kB      | 8192 bytes |    1
+ rooms         | 32 kB      | 8192 bytes |    0
+ dicom_images  | 24 kB      | 0 bytes    |    0
+ series        | 24 kB      | 0 bytes    |    0
+(10 rows)
+
+
+══ 7. КАЧЕСТВО ДАННЫХ ══
+  Пациенты без email: 0
+  Пациенты без даты рождения: 0
+  Активных пользователей: 5
+  Деактивированных: 0
+
+  Распределение приёмов по статусам:
+  status   | count 
+-----------+-------
+ completed |    24
+ scheduled |     1
+(2 rows)
+
+
+  Распределение ролей пользователей:
+      role      | count 
+----------------+-------
+ doctor         |     1
+ radiologist    |     1
+ lab_technician |     1
+ admin          |     1
+ receptionist   |     1
+(5 rows)
+
+  Непрочитанных уведомлений: 4
+
+  Lab orders по статусам:
+   status    | count 
+-------------+-------
+ pending     |     9
+ in_progress |     2
+(2 rows)
+
+
+══ 8. ПРОВЕРКА УНИКАЛЬНОСТИ ══
+  ✅ Дубликаты email в users: 0
+  ✅ Дубликаты email в patients: 0
+  ✅ Дублирующихся приёмов: 0
+
+══ 9. КАСКАДНЫЕ УДАЛЕНИЯ ══
+Правила каскадного удаления:
+  appointments.patientId|NO ACTION|NO ACTION
+  appointments.doctorId|NO ACTION|NO ACTION
+  patients.doctorId|NO ACTION|NO ACTION
+
+══ 10. ENUM ТИПЫ ══
+Найденные ENUM типы:
+  📌 appointments_status_enum: scheduled, in_progress, completed, cancelled
+  📌 lab_orders_priority_enum: routine, urgent, stat
+  📌 lab_orders_status_enum: pending, in_progress, completed, cancelled
+  📌 lab_results_flag_enum: normal, low, high, critical_low, critical_high
+  📌 lab_tests_category_enum: hematology, biochemistry, urine, hormones, immunology, microbiology, coagulation, cardiac
+  📌 measurements_type_enum: length, angle, ellipse, annotation
+  📌 modalities_type_enum: mri, ct, xray, ultrasound, pet, mammography
+  📌 notifications_priority_enum: low, normal, high, critical
+  📌 notifications_type_enum: appointment_reminder, lab_result_ready, lab_critical, study_report_ready, monthly_report, system
+  📌 rooms_type_enum: consultation, radiology, laboratory, procedure, surgery
+  📌 studies_priority_enum: routine, urgent, stat
+  📌 studies_status_enum: pending, scheduled, in_progress, completed, cancelled
+  📌 studies_type_enum: mri, ct, xray, ultrasound, pet, mammography
+  📌 users_role_enum: admin, doctor, patient, receptionist, radiologist, lab_technician
+
+══ 11. ПОСЛЕДНЯЯ АКТИВНОСТЬ ══
+  table_name  |        last_created        
+--------------+----------------------------
+ lab_orders   | 2026-05-13 14:31:56.981753
+ appointments | 2026-05-13 09:09:11.896515
+ studies      | 2026-05-09 11:49:04.371769
+ patients     | 2026-05-08 09:30:09.625797
+(4 rows)
+
+
+══ 12. CHECK CONSTRAINTS ══
+CHECK constraints:
+  ✅ annotations: 2200_16646_4_not_null
+  ✅ annotations: 2200_16646_5_not_null
+  ✅ annotations: 2200_16646_1_not_null
+  ✅ annotations: 2200_16646_2_not_null
+  ✅ annotations: 2200_16646_11_not_null
+  ✅ annotations: 2200_16646_9_not_null
+  ✅ annotations: 2200_16646_8_not_null
+  ✅ appointments: 2200_16428_2_not_null
+  ✅ appointments: 2200_16428_12_not_null
+  ✅ appointments: 2200_16428_11_not_null
+  ✅ appointments: 2200_16428_10_not_null
+  ✅ appointments: 2200_16428_7_not_null
+  ✅ appointments: 2200_16428_6_not_null
+  ✅ appointments: 2200_16428_5_not_null
+  ✅ appointments: 2200_16428_3_not_null
+  ✅ appointments: 2200_16428_1_not_null
+  ✅ dicom_images: 2200_16612_3_not_null
+  ✅ dicom_images: 2200_16612_4_not_null
+  ✅ dicom_images: 2200_16612_18_not_null
+  ✅ dicom_images: 2200_16612_2_not_null
+  ✅ dicom_images: 2200_16612_1_not_null
+  ✅ examinations: 2200_16483_2_not_null
+  ✅ examinations: 2200_16483_6_not_null
+  ✅ examinations: 2200_16483_5_not_null
+  ✅ examinations: 2200_16483_1_not_null
+  ✅ lab_orders: 2200_16706_3_not_null
+  ✅ lab_orders: 2200_16706_9_not_null
+  ✅ lab_orders: 2200_16706_8_not_null
+  ✅ lab_orders: 2200_16706_7_not_null
+  ✅ lab_orders: 2200_16706_1_not_null
+  ✅ lab_orders: 2200_16706_2_not_null
+  ✅ lab_orders: 2200_16706_5_not_null
+  ✅ lab_orders: 2200_16706_16_not_null
+  ✅ lab_orders: 2200_16706_15_not_null
+  ✅ lab_results: 2200_16732_4_not_null
+  ✅ lab_results: 2200_16732_10_not_null
+  ✅ lab_results: 2200_16732_12_not_null
+  ✅ lab_results: 2200_16732_3_not_null
+  ✅ lab_results: 2200_16732_2_not_null
+  ✅ lab_results: 2200_16732_1_not_null
+  ✅ lab_tests: 2200_16674_2_not_null
+  ✅ lab_tests: 2200_16674_10_not_null
+  ✅ lab_tests: 2200_16674_8_not_null
+  ✅ lab_tests: 2200_16674_7_not_null
+  ✅ lab_tests: 2200_16674_6_not_null
+  ✅ lab_tests: 2200_16674_4_not_null
+  ✅ lab_tests: 2200_16674_3_not_null
+  ✅ lab_tests: 2200_16674_1_not_null
+  ✅ measurements: 2200_16634_2_not_null
+  ✅ measurements: 2200_16634_4_not_null
+  ✅ measurements: 2200_16634_5_not_null
+  ✅ measurements: 2200_16634_6_not_null
+  ✅ measurements: 2200_16634_7_not_null
+  ✅ measurements: 2200_16634_8_not_null
+  ✅ measurements: 2200_16634_9_not_null
+  ✅ measurements: 2200_16634_13_not_null
+  ✅ measurements: 2200_16634_12_not_null
+  ✅ measurements: 2200_16634_1_not_null
+  ✅ modalities: 2200_16588_7_not_null
+  ✅ modalities: 2200_16588_9_not_null
+  ✅ modalities: 2200_16588_1_not_null
+  ✅ modalities: 2200_16588_2_not_null
+  ✅ modalities: 2200_16588_3_not_null
+  ✅ notifications: 2200_16451_8_not_null
+  ✅ notifications: 2200_16451_7_not_null
+  ✅ notifications: 2200_16451_6_not_null
+  ✅ notifications: 2200_16451_5_not_null
+  ✅ notifications: 2200_16451_3_not_null
+  ✅ notifications: 2200_16451_2_not_null
+  ✅ notifications: 2200_16451_1_not_null
+  ✅ notifications: 2200_16451_12_not_null
+  ✅ patients: 2200_16410_2_not_null
+  ✅ patients: 2200_16410_5_not_null
+  ✅ patients: 2200_16410_6_not_null
+  ✅ patients: 2200_16410_11_not_null
+  ✅ patients: 2200_16410_12_not_null
+  ✅ patients: 2200_16410_4_not_null
+  ✅ patients: 2200_16410_3_not_null
+  ✅ patients: 2200_16410_1_not_null
+  ✅ results: 2200_16441_1_not_null
+  ✅ results: 2200_16441_2_not_null
+  ✅ results: 2200_16441_3_not_null
+  ✅ results: 2200_16441_4_not_null
+  ✅ results: 2200_16441_8_not_null
+  ✅ reviews: 2200_16462_4_not_null
+  ✅ reviews: 2200_16462_3_not_null
+  ✅ reviews: 2200_16462_2_not_null
+  ✅ reviews: 2200_16462_1_not_null
+  ✅ reviews: 2200_16462_6_not_null
+  ✅ reviews: 2200_16462_5_not_null
+  ✅ rooms: 2200_16472_7_not_null
+  ✅ rooms: 2200_16472_6_not_null
+  ✅ rooms: 2200_16472_2_not_null
+  ✅ rooms: 2200_16472_1_not_null
+  ✅ rooms: 2200_16472_12_not_null
+  ✅ rooms: 2200_16472_8_not_null
+  ✅ schedules: 2200_16494_3_not_null
+  ✅ schedules: 2200_16494_2_not_null
+  ✅ schedules: 2200_16494_1_not_null
+  ✅ schedules: 2200_16494_8_not_null
+  ✅ schedules: 2200_16494_7_not_null
+  ✅ schedules: 2200_16494_6_not_null
+  ✅ schedules: 2200_16494_5_not_null
+  ✅ schedules: 2200_16494_4_not_null
+  ✅ series: 2200_16599_3_not_null
+  ✅ series: 2200_16599_1_not_null
+  ✅ series: 2200_16599_8_not_null
+  ✅ series: 2200_16599_12_not_null
+  ✅ series: 2200_16599_2_not_null
+  ✅ studies: 2200_16558_8_not_null
+  ✅ studies: 2200_16558_32_not_null
+  ✅ studies: 2200_16558_31_not_null
+  ✅ studies: 2200_16558_30_not_null
+  ✅ studies: 2200_16558_29_not_null
+  ✅ studies: 2200_16558_9_not_null
+  ✅ studies: 2200_16558_7_not_null
+  ✅ studies: 2200_16558_3_not_null
+  ✅ studies: 2200_16558_2_not_null
+  ✅ studies: 2200_16558_1_not_null
+  ✅ users: 2200_16396_1_not_null
+  ✅ users: 2200_16396_2_not_null
+  ✅ users: 2200_16396_3_not_null
+  ✅ users: 2200_16396_4_not_null
+  ✅ users: 2200_16396_5_not_null
+  ✅ users: 2200_16396_6_not_null
+  ✅ users: 2200_16396_9_not_null
+  ✅ users: 2200_16396_10_not_null
+  ✅ users: 2200_16396_12_not_null
+
+══ 13. NULLABLE COLUMNS АНАЛИЗ ══
+Nullable колонки в ключевых таблицах:
+  table_name  |    column_name     | is_nullable |          data_type          
+--------------+--------------------+-------------+-----------------------------
+ appointments | completedAt        | YES         | text
+ appointments | examination        | YES         | character varying
+ appointments | price              | YES         | numeric
+ appointments | roomId             | YES         | integer
+ lab_orders   | appointmentId      | YES         | integer
+ lab_orders   | clinicalInfo       | YES         | text
+ lab_orders   | collectedAt        | YES         | character varying
+ lab_orders   | completedAt        | YES         | character varying
+ lab_orders   | labTechnicianId    | YES         | integer
+ lab_orders   | scheduledAt        | YES         | character varying
+ studies      | accessionNumber    | YES         | character varying
+ studies      | appointmentId      | YES         | integer
+ studies      | bodyPart           | YES         | character varying
+ studies      | clinicalInfo       | YES         | text
+ studies      | completedAt        | YES         | character varying
+ studies      | fileUrl            | YES         | character varying
+ studies      | findings           | YES         | text
+ studies      | modalityId         | YES         | integer
+ studies      | price              | YES         | numeric
+ studies      | radiologistId      | YES         | integer
+ studies      | referringDoctorId  | YES         | integer
+ studies      | referringPhysician | YES         | character varying
+ studies      | reportedAt         | YES         | timestamp without time zone
+ studies      | reportedById       | YES         | integer
+ studies      | roomId             | YES         | integer
+ studies      | scheduledAt        | YES         | character varying
+ studies      | scheduledTime      | YES         | character varying
+ studies      | studyDate          | YES         | character varying
+ studies      | studyInstanceUID   | YES         | character varying
+ studies      | studyTime          | YES         | character varying
+(30 rows)
+
+
+═══════════════════════════════════════════
+✅ ТЕСТ ЗАВЕРШЁН
+═══════════════════════════════════════════
