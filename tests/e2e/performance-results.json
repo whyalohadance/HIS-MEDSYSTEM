@@ -1,0 +1,215 @@
+{
+  "startTime": "2026-05-14T09:00:08.949Z",
+  "api": {
+    "/patients": {
+      "avg": 3,
+      "min": 3,
+      "max": 4,
+      "samples": 5
+    },
+    "/appointments": {
+      "avg": 5,
+      "min": 4,
+      "max": 6,
+      "samples": 5
+    },
+    "/rooms": {
+      "avg": 3,
+      "min": 2,
+      "max": 3,
+      "samples": 5
+    },
+    "/users": {
+      "avg": 2,
+      "min": 2,
+      "max": 3,
+      "samples": 5
+    },
+    "/studies": {
+      "avg": 3,
+      "min": 3,
+      "max": 5,
+      "samples": 5
+    },
+    "/lab/tests": {
+      "avg": 3,
+      "min": 2,
+      "max": 4,
+      "samples": 5
+    },
+    "/lab/orders": {
+      "avg": 3,
+      "min": 3,
+      "max": 3,
+      "samples": 5
+    },
+    "/notifications": {
+      "avg": 3,
+      "min": 3,
+      "max": 4,
+      "samples": 5
+    },
+    "/reports/summary": {
+      "avg": 7,
+      "min": 6,
+      "max": 8,
+      "samples": 5
+    },
+    "/health": {
+      "avg": 1,
+      "min": 0,
+      "max": 1,
+      "samples": 5
+    }
+  },
+  "frontend": {
+    "/dashboard": {
+      "loadTime": 580,
+      "domContentLoaded": 17,
+      "loadComplete": 17,
+      "firstPaint": 32,
+      "firstContentfulPaint": 0
+    },
+    "/patients": {
+      "loadTime": 569,
+      "domContentLoaded": 16,
+      "loadComplete": 17,
+      "firstPaint": 36,
+      "firstContentfulPaint": 0
+    },
+    "/appointments": {
+      "loadTime": 574,
+      "domContentLoaded": 13,
+      "loadComplete": 14,
+      "firstPaint": 36,
+      "firstContentfulPaint": 0
+    },
+    "/rooms": {
+      "loadTime": 581,
+      "domContentLoaded": 18,
+      "loadComplete": 19,
+      "firstPaint": 48,
+      "firstContentfulPaint": 0
+    },
+    "/staff": {
+      "loadTime": 565,
+      "domContentLoaded": 12,
+      "loadComplete": 13,
+      "firstPaint": 28,
+      "firstContentfulPaint": 0
+    },
+    "/lab-catalog": {
+      "loadTime": 891,
+      "domContentLoaded": 13,
+      "loadComplete": 14,
+      "firstPaint": 36,
+      "firstContentfulPaint": 52
+    },
+    "/reports": {
+      "loadTime": 571,
+      "domContentLoaded": 18,
+      "loadComplete": 19,
+      "firstPaint": 36,
+      "firstContentfulPaint": 0
+    },
+    "/notifications": {
+      "loadTime": 562,
+      "domContentLoaded": 13,
+      "loadComplete": 15,
+      "firstPaint": 36,
+      "firstContentfulPaint": 0
+    },
+    "/profile": {
+      "loadTime": 577,
+      "domContentLoaded": 16,
+      "loadComplete": 17,
+      "firstPaint": 36,
+      "firstContentfulPaint": 0
+    }
+  },
+  "bundleSize": {
+    "jsKB": 470,
+    "cssKB": 55,
+    "totalKB": 525,
+    "files": 15,
+    "details": [
+      {
+        "name": "chunk-IXZBVNGN.js",
+        "sizeKB": 204,
+        "type": "JS"
+      },
+      {
+        "name": "main-3FHH6CJL.js",
+        "sizeKB": 111,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-R2MEBPQ2.js",
+        "sizeKB": 74,
+        "type": "JS"
+      },
+      {
+        "name": "styles-SFHAS7CA.css",
+        "sizeKB": 55,
+        "type": "CSS"
+      },
+      {
+        "name": "chunk-MCZFB6UU.js",
+        "sizeKB": 39,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-OV3Z5MYL.js",
+        "sizeKB": 22,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-DCIE5UMN.js",
+        "sizeKB": 13,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-ZQOIEU4J.js",
+        "sizeKB": 4,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-4ZO2CVDO.js",
+        "sizeKB": 1,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-CRSRID4L.js",
+        "sizeKB": 1,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-5H76LSXT.js",
+        "sizeKB": 1,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-NW4J6LCC.js",
+        "sizeKB": 1,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-Y7AIXOMU.js",
+        "sizeKB": 1,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-ZKVJ2DG4.js",
+        "sizeKB": 0,
+        "type": "JS"
+      },
+      {
+        "name": "chunk-YCMZOG5D.js",
+        "sizeKB": 0,
+        "type": "JS"
+      }
+    ]
+  },
+  "recommendations": [],
+  "endTime": "2026-05-14T09:00:36.204Z"
+}

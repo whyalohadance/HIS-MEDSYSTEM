@@ -502,6 +502,25 @@ input[type="file"] {
   .service-summary { grid-template-columns: 1fr !important; }
 }
 
+/* ── Laptop breakpoint: prevent horizontal scroll at ~1024px ── */
+@media (max-width: 1100px) {
+  .apt-card { flex-wrap: wrap !important; }
+  .apt-patient, .apt-doctor { min-width: 120px !important; flex: 1 1 120px !important; }
+  .apt-datetime { min-width: 120px !important; flex: 1 1 120px !important; }
+  .apt-actions { margin-left: 0 !important; width: 100% !important; justify-content: flex-end !important; }
+}
+
+/* ── Mobile: larger tap targets for icon buttons ── */
+@media (max-width: 414px) {
+  .btn-complete, .btn-cancel, .btn-delete, .btn-add-result {
+    padding: 10px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+  }
+  .filter-btn { min-height: 44px !important; padding: 0 14px !important; }
+}
+
 /* Doctor picker */
 .doctor-picker {
   margin-bottom: 16px;

@@ -129,6 +129,16 @@ import { EditPatientModalComponent } from '../../shared/components/edit-patient-
     :host-context(body.dark-theme) .stat-item.pending { background: rgba(254,243,199,0.15); }
     :host-context(body.dark-theme) .stat-item.in-progress { background: rgba(219,234,254,0.15); }
     :host-context(body.dark-theme) .stat-item.completed { background: rgba(209,250,229,0.15); }
+
+    @media (max-width: 600px) {
+      .worklist-page { padding: 16px; }
+      .work-item { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; }
+      .work-right { flex-direction: row !important; justify-content: space-between !important; align-items: center !important; flex-wrap: wrap !important; gap: 8px !important; overflow: hidden !important; max-width: 100% !important; }
+      .btn-work { justify-content: center !important; min-height: 44px !important; padding: 10px 16px !important; flex: 1 !important; }
+      .status-badge { flex-shrink: 0 !important; }
+      .stats { flex-direction: column !important; }
+      .stat-item { justify-content: flex-start !important; min-height: 44px !important; }
+    }
   `]
 })
 export class LabWorklistComponent implements OnInit {

@@ -671,3 +671,8 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (max-width: 414px) {
+  button { min-height: 44px !important; }
+  .btn-delete { min-width: 44px !important; justify-content: center !important; }
+}

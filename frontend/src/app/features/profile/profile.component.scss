@@ -588,3 +588,7 @@
   .form-actions { flex-direction: column; }
   .form-actions button { width: 100%; }
 }
+
+@media (max-width: 414px) {
+  button { min-height: 44px !important; }
+}

@@ -169,7 +169,7 @@ import { ToastService } from '../../core/services/toast.service';
     .status-in_progress { background: #dbeafe; color: #1e40af; }
     .status-completed { background: #d1fae5; color: #047857; }
     .status-cancelled { background: #fee2e2; color: #dc2626; }
-    .btn-view { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-view { background: #f1f5f9; border: none; width: 32px; height: 44px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; min-width: 44px; }
     .btn-view:hover { background: #1a73e8; color: white; }
     .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
     .empty-state .material-icons { font-size: 64px; opacity: 0.3; display: block; margin-bottom: 12px; }
@@ -192,6 +192,12 @@ import { ToastService } from '../../core/services/toast.service';
     :host-context(body.dark-theme) .modal { background: #1e293b; }
     :host-context(body.dark-theme) .modal h2 { color: #e2e8f0; }
     :host-context(body.dark-theme) .form-input { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+    @media (max-width: 414px) {
+      .lab-page { padding: 16px !important; }
+      button { min-height: 44px !important; }
+      .filter-row { flex-direction: column !important; gap: 8px !important; }
+      .filter-select { width: 100% !important; }
+    }
   `]
 })
 export class LabOrdersComponent implements OnInit {

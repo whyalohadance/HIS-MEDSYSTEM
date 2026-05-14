@@ -588,3 +588,7 @@
   .filters-section { flex-direction: column; align-items: stretch; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 414px) {
+  button { min-height: 44px !important; }
+}
