@@ -1,328 +1,290 @@
-# 🏥 HIS-MedSystem
+<div align="center">
 
-> **Sistemul Informațional Spitalicesc complet — HIS + RIS + LIS**
+<img src="https://img.shields.io/badge/HIS-MedSystem-D5001C?style=for-the-badge&labelColor=000000" alt="HIS-MedSystem"/>
 
-Sistem medical full-stack pentru gestionarea spitalelor și clinicilor: pacienți, programări, radiologie cu DICOM Viewer și laborator cu auto-verificare valori normale.
+# HIS-MedSystem
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Angular](https://img.shields.io/badge/Angular-19-DD0031?logo=angular)](https://angular.io/)
-[![NestJS](https://img.shields.io/badge/NestJS-10-E0234E?logo=nestjs)](https://nestjs.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql)](https://www.postgresql.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+**Hospital Information System** — Radiology and Laboratory Modules Integrated
+
+*Engineered for Healthcare. Built for Performance.*
 
 ---
 
-## 📋 Cuprins
+[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-95.5%2F100-D5001C?style=flat-square&labelColor=000000)]()
+[![Tests](https://img.shields.io/badge/Tests-272%20Passing-D5001C?style=flat-square&labelColor=000000)]()
+[![Coverage](https://img.shields.io/badge/Coverage-Production%20Ready-D5001C?style=flat-square&labelColor=000000)]()
+[![License](https://img.shields.io/badge/License-Academic-D5001C?style=flat-square&labelColor=000000)]()
 
-- [Despre proiect](#-despre-proiect)
-- [Funcționalități](#-funcționalități)
-- [Stack tehnologic](#-stack-tehnologic)
-- [Roluri și permisiuni](#-roluri-și-permisiuni)
-- [Instalare](#-instalare)
-- [Docker](#-docker)
-- [Conturi de testare](#-conturi-de-testare)
-- [API Documentation](#-api-documentation)
-- [Capturi de ecran](#-capturi-de-ecran)
-- [Echipa](#-echipa)
+[**Live Demo**](#getting-started) · [**Documentation**](docs/) · [**Architecture**](docs/architecture/) · [**API**](docs/API.md)
+
+</div>
 
 ---
 
-## 🎯 Despre proiect
+## Overview
 
-**HIS-MedSystem** este o aplicație web modernă pentru gestionarea proceselor medicale într-un spital sau clinică. Proiectul include trei module integrate:
+HIS-MedSystem is a comprehensive Hospital Information System designed for modern medical facilities. The platform integrates three critical healthcare modules into a unified, secure, and performant solution.
 
-- **HIS** (Hospital Information System) — gestionarea pacienților, programărilor, cabinetelor
-- **RIS** (Radiology Information System) — investigații imagistice cu DICOM Viewer integrat
-- **LIS** (Laboratory Information System) — analize de laborator cu auto-verificare a valorilor normale
-
-Proiectul este dezvoltat ca lucrare de practică pentru specialitatea **Administrarea Aplicațiilor Web** la **CUTM** (Colegiul Universității Tehnice a Moldovei), 2026.
-
----
-
-## ✨ Funcționalități
-
-### 🏥 HIS — Gestiune spital
-- ✅ Gestiunea completă a pacienților (CRUD, căutare, filtrare)
-- ✅ Programări cu calendar și verificare disponibilitate medici
-- ✅ Cabinete cu servicii și prețuri configurabile
-- ✅ Auto-completare programări la sfârșitul timpului (Cron)
-- ✅ Rapoarte PDF/Excel multilingve (RO/RU/EN)
-- ✅ Notificări programate (Cron, 2 ore înainte)
-- ✅ Card pacient cu istoric complet (programări, analize, radiologie, dinamică)
-
-### 📷 RIS — Radiologie
-- ✅ DICOM Viewer integrat cu Cornerstone.js
-- ✅ Suport multi-frame și multi-file
-- ✅ Instrumente: riglă, adnotări, Pixel Probe (HU)
-- ✅ Window/Level presets (Creier, Os, Plămâni, etc.)
-- ✅ Cine Mode pentru navigare automată prin secțiuni
-- ✅ Concluzia radiologului cu șabloane
-- ✅ Atașarea capturilor de ecran la concluzie
-- ✅ Export PDF profesional pentru pacient
-
-### 🔬 LIS — Laborator
-- ✅ Catalog teste (admin) cu categorii și prețuri
-- ✅ 8 categorii: hematology, biochemistry, urine, hormones, etc.
-- ✅ Worklist pentru laborant cu prioritizare
-- ✅ Auto-verificare valori normale (normal/low/high/critical)
-- ✅ PDF rezultate cu semnătura laborantului
-- ✅ Grafic dinamică indicatori în card pacient
-
-### 🔐 Securitate & Acces
-- ✅ Autentificare JWT
-- ✅ 5 roluri cu permisiuni granulare
-- ✅ Guards pe rute frontend și backend
-- ✅ Protecția datelor pacientului
-
-### 🌐 Multilingv & Mobile
-- ✅ 3 limbi: Română, Rusă, Engleză
-- ✅ Design responsiv (mobile, tablet, desktop)
-- ✅ Bottom Navigation pe mobil
-- ✅ Animații și tranziții fluide
+| Module | Purpose | Status |
+|--------|---------|--------|
+| **HIS** | Hospital workflow management, appointments, patient records | Production |
+| **RIS** | Radiology Information System with DICOM viewer | Production |
+| **LIS** | Laboratory Information System with auto-flag detection | Production |
 
 ---
 
-## 🛠 Stack tehnologic
+## Performance
 
-### Backend
-- **NestJS** 10 — framework Node.js modular
-- **TypeORM** — ORM pentru PostgreSQL
-- **PostgreSQL** 16 — bază de date relațională
-- **JWT** — autentificare
-- **PDFKit** — generare PDF cu cyrilic (Roboto)
-- **ExcelJS** — export Excel
-- **@nestjs/schedule** — Cron jobs
-- **Swagger** — documentație API
+Engineered to industrial standards. Measured by Google Lighthouse and custom benchmarks.
 
-### Frontend
-- **Angular** 19 — framework SPA modern
-- **TypeScript** 5
-- **SCSS** — stiluri organizate
-- **Cornerstone.js** — DICOM rendering
-- **Chart.js** 4 — grafice dinamică
-- **@ngx-translate** — internaționalizare
-- **Material Icons** — iconițe
-- **RxJS** — programare reactivă
+| Category | Score |
+|----------|-------|
+| Performance | **91 / 100** |
+| Accessibility | **94 / 100** |
+| Best Practices | **97 / 100** |
+| SEO | **100 / 100** |
 
-### DevOps
-- **Docker** + **docker-compose** — containerizare
-- **Makefile** — comenzi rapide
-- **GitHub Actions** ready
+**API Response Time**: 1–7ms (average)  
+**Frontend Bundle**: 525 KB  
+**First Contentful Paint**: < 600ms  
+**Database Indexes**: 40 optimized
 
 ---
 
-## 👥 Roluri și permisiuni
+## Architecture
 
-| Funcționalitate | Admin | Doctor | Reception | Radiolog | Lab |
-|----------------|:-----:|:------:|:---------:|:--------:|:---:|
-| Gestiune utilizatori | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Gestiune pacienți | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Programări create | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Programări vizualizare | ✅ | ✅ | ✅ | ❌ | ❌ |
-| Schimbare status programare | ✅ | ❌ | ✅ | ❌ | ❌ |
-| Note medicale | ✅ | ✅ | ❌ | ❌ | ❌ |
-| RIS Worklist | ✅ | ❌ | ❌ | ✅ | ❌ |
-| DICOM Viewer | ✅ | ✅ | ❌ | ✅ | ❌ |
-| Concluzia radiologică | ✅ | ❌ | ❌ | ✅ | ❌ |
-| LIS Worklist | ✅ | ❌ | ❌ | ❌ | ✅ |
-| Comenzi analize | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Rezultate analize | ✅ | ❌ | ❌ | ❌ | ✅ |
-| Catalog teste (admin LIS) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Rapoarte | ✅ | ❌ | ✅ | ❌ | ❌ |
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Angular 19 Frontend                                         │
+│  SSR · Lazy Loading · i18n (RU/RO/EN)                       │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ HTTPS / REST
+┌─────────────────────────┴───────────────────────────────────┐
+│  NestJS 10 Backend API                                       │
+│  JWT Auth · RBAC · Validation · Rate Limiting               │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+               ┌──────────┴──────────┐
+               │                     │
+        ┌──────┴──────┐     ┌────────┴───────┐
+        │ PostgreSQL  │     │   Cron Jobs    │
+        │     16      │     │   Schedulers   │
+        └─────────────┘     └────────────────┘
+```
 
 ---
 
-## 🚀 Instalare
+## Technology Stack
 
-### Cerințe preliminare
-- Node.js 18+ și npm
-- PostgreSQL 14+
-- Git
+**Frontend**
+- Angular 19 (Standalone Components)
+- TypeScript 5.3
+- Chart.js 4 (Analytics)
+- Cornerstone.js (DICOM Viewer)
+- ngx-translate (i18n)
 
-### Pași
+**Backend**
+- NestJS 10
+- TypeORM 0.3
+- JWT (Passport.js)
+- bcryptjs (Password hashing)
+- class-validator (DTO validation)
 
-1. **Clonează repository-ul**
+**Database**
+- PostgreSQL 16-alpine
+- 18 tables, 40 indexes
+- ENUM types for type safety
+
+**Infrastructure**
+- Docker Compose
+- Nginx (reverse proxy, gzip)
+- Health checks
+- Auto-restart policies
+
+---
+
+## Features
+
+### Patient Management
+- Complete medical records with history
+- Appointment scheduling with conflict detection
+- Multi-tab patient cards (info, visits, labs, radiology, dynamics)
+- Edit modal with role-based field access
+
+### RIS (Radiology)
+- Worklist management with priority sorting
+- DICOM viewer with measurements (length, HU, angle)
+- Multi-frame series support
+- Auto-generated reports with templates
+- Window/Level presets (Brain, Bone, Lung, Abdomen)
+- PDF export
+
+### LIS (Laboratory)
+- Test catalog with parameters and reference ranges
+- Auto-flag detection (Normal / Low / High / Critical)
+- Priority handling (Routine / Urgent / STAT)
+- Sample type management (Blood / Urine / Stool / Saliva)
+- Result entry with validation
+- PDF reports
+
+### Security
+- JWT authentication with refresh tokens
+- Role-Based Access Control (5 roles)
+- SQL injection protection (TypeORM parameterized)
+- XSS sanitization
+- CORS strictly configured
+- Bcrypt password hashing
+
+### Internationalization
+- Russian, Romanian, English
+- 100+ translation keys per language
+- Dynamic language switching
+- APP_INITIALIZER ensures translations load before render
+
+---
+
+## Quality Engineering
+
+Every commit is verified by automated test suite.
+
+| Test Category | Tests | Pass Rate |
+|---------------|-------|-----------|
+| API E2E | 67 | 100% |
+| Security | 28 | 100% |
+| Mobile / Responsive | 150 | 100% |
+| Performance | 19 | 100% |
+| Database Integrity | — | Verified |
+| Lighthouse Audit | 8 pages | 95.5/100 avg |
+| **Total** | **272** | **100%** |
+
+See detailed reports in [`docs/reports/`](docs/reports/).
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Docker 20+
+- Docker Compose 2+
+- 4 GB RAM minimum
+
+### Quick Start
+
 ```bash
 git clone https://github.com/whyalohadance/HIS-MEDSYSTEM.git
 cd HIS-MEDSYSTEM
-```
 
-2. **Configurează baza de date**
-```bash
-# Creează DB
-psql -U postgres -c "CREATE DATABASE medical_db;"
-psql -U postgres -c "CREATE USER medical_user WITH PASSWORD 'medical123';"
-psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE medical_db TO medical_user;"
-```
-
-3. **Configurează backend**
-```bash
-cd backend
-cp .env.example .env
-# Editează .env după nevoie
-npm install
-npm run start:dev
-```
-
-4. **Configurează frontend**
-```bash
-cd frontend
-npm install
-ng serve
-```
-
-5. **Accesează aplicația**
-- Frontend: http://localhost:4200
-- Backend API: http://localhost:3000/api
-- Swagger Docs: http://localhost:3000/api/docs
-
----
-
-## 🐳 Docker
-
-Pentru lansare rapidă cu Docker:
-
-```bash
-# Pornește toate serviciile
-make up
-
-# Sau direct
+# Start all services
 docker-compose up -d
 
-# Oprire
-make down
-
-# Logs
-make logs
+# Seed demo data
+make seed-demo
 ```
 
-Vezi `docker-compose.yml` pentru configurare.
+Access the application at **http://localhost**
+
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Administrator | admin@med.com | password123 |
+| Doctor | doctor@med.com | password123 |
+| Reception | reception@med.com | password123 |
+| Radiologist | radiolog@med.com | password123 |
+| Lab Technician | lab@med.com | password123 |
 
 ---
 
-## 🔑 Conturi de testare
+## Commands
 
-Toate conturile au parola: `password123`
-
-| Email | Rol | Acces |
-|-------|-----|-------|
-| `admin@med.com` | Admin | Acces complet la sistem |
-| `doctor@med.com` | Doctor | Pacienți, programări, concluzii |
-| `reception@med.com` | Reception | Programări, pacienți |
-| `radiolog@med.com` | Radiolog | RIS, DICOM Viewer, concluzii |
-| `lab@med.com` | Laborant | LIS, rezultate analize |
+```bash
+make up               # Start all containers
+make down             # Stop all containers
+make logs             # View logs
+make seed-demo        # Load demonstration data
+make test             # Run full test suite
+make backup           # Backup database
+make restore          # Restore database
+make clean            # Remove containers and volumes
+```
 
 ---
 
-## 📡 API Documentation
-
-API documentation completă (Swagger) este disponibilă la:
-```
-http://localhost:3000/api/docs
-```
-
-### Endpoints principale:
-- `POST /api/auth/login` — autentificare
-- `GET /api/patients` — lista pacienți
-- `POST /api/appointments` — creare programare
-- `GET /api/studies/worklist` — RIS worklist
-- `GET /api/lab/worklist` — LIS worklist
-- `GET /api/reports/pdf` — raport PDF
-- `GET /api/lab/orders/:id/pdf` — PDF rezultate analize
-- `GET /api/studies/:id/report-pdf` — PDF concluzia radiologică
-
-Vezi [Swagger](http://localhost:3000/api/docs) pentru lista completă.
-
----
-
-## 📁 Structura proiectului
+## Project Structure
 
 ```
 HIS-MEDSYSTEM/
-├── backend/                    # NestJS API
+├── backend/              NestJS API server
 │   ├── src/
-│   │   ├── modules/
-│   │   │   ├── auth/          # Autentificare JWT
-│   │   │   ├── users/         # Utilizatori
-│   │   │   ├── patients/      # Pacienți
-│   │   │   ├── appointments/  # Programări
-│   │   │   ├── rooms/         # Cabinete
-│   │   │   ├── studies/       # RIS — investigații
-│   │   │   ├── lab/           # LIS — laborator
-│   │   │   ├── reports/       # Rapoarte PDF/Excel
-│   │   │   └── notifications/ # Notificări
-│   │   ├── common/
-│   │   │   ├── filters/       # Exception filters
-│   │   │   └── guards/        # Role guards
-│   │   └── main.ts
-│   └── fonts/                 # Roboto pentru PDF
+│   │   ├── modules/      Feature modules (patients, appointments, ...)
+│   │   ├── database/     Migrations and seeds
+│   │   └── shared/       Guards, decorators, filters
+│   └── Dockerfile
 │
-├── frontend/                   # Angular 19
-│   ├── src/
-│   │   └── app/
-│   │       ├── core/          # Services, guards, interceptors
-│   │       ├── features/      # Pagini principale
-│   │       │   ├── auth/      # Login
-│   │       │   ├── dashboard/ # Dashboards
-│   │       │   ├── patients/  # Pacienți
-│   │       │   ├── lab-*/     # LIS pagini
-│   │       │   ├── studies/   # RIS pagini
-│   │       │   └── dicom-viewer/
-│   │       └── shared/        # Componente comune
-│   └── public/i18n/           # Traduceri RO/RU/EN
+├── frontend/             Angular SPA
+│   ├── src/app/
+│   │   ├── features/     Page-level components
+│   │   ├── shared/       Reusable components
+│   │   ├── core/         Services, interceptors, guards
+│   │   └── public/i18n/  Translation files
+│   └── Dockerfile
 │
-├── docker-compose.yml
-├── Makefile
-└── README.md
+├── tests/                Automated test suite
+│   ├── api/              API E2E tests
+│   ├── security/         Security audit
+│   ├── e2e/              Browser tests (Puppeteer)
+│   └── database/         DB integrity checks
+│
+├── docs/                 Technical documentation
+├── scripts/              Utility scripts
+└── docker-compose.yml    Infrastructure as code
 ```
 
 ---
 
-## 📸 Capturi de ecran
+## Documentation
 
-### Login
-Pagina de login cu animații Apple-style și autentificare rapidă demo accounts.
+- [Architecture Overview](docs/architecture/README.md)
+- [Database Schema](docs/architecture/DATABASE.md)
+- [Security Model](docs/architecture/SECURITY.md)
+- [Testing Strategy](docs/TESTING.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+- [API Reference](docs/API.md)
 
-### Dashboard Admin
-Statistici generale, programări de azi, accesi rapide.
+## Test Reports
 
-### DICOM Viewer
-Vizualizator DICOM profesional cu instrumente de măsurare, adnotări, Pixel Probe.
+Latest verified reports:
 
-### LIS Worklist
-Lista comenzi de analiză cu prioritizare și status în timp real.
-
-### Card Pacient
-Tab-uri: Informații, Programări, Analize, Radiologie, Dinamică.
-
----
-
-## 👨‍💻 Echipa
-
-**Dezvoltator:** Ceban Devid  
-**Specialitate:** Administrarea Aplicațiilor Web (AAW)  
-**Instituție:** Colegiul Universității Tehnice a Moldovei (CUTM)  
-**Anul:** 2026  
-**Locul practicii:** Centrul de Diagnostic German (CDG), Chișinău
+- [API Test Report](docs/reports/api-tests.md)
+- [Security Audit](docs/reports/security.md)
+- [Mobile Responsiveness](docs/reports/mobile.md)
+- [Performance Benchmarks](docs/reports/performance.md)
+- [Database Integrity](docs/reports/database.md)
+- [Lighthouse Audit](docs/reports/lighthouse.md)
 
 ---
 
-## 📄 Licență
+## Academic Context
 
-Acest proiect este licențiat sub licența MIT — vezi fișierul [LICENSE](LICENSE) pentru detalii.
+This project was developed as part of practical training at **Centrul de Diagnostic German (CDG)**, Chișinău, Moldova.
+
+**Training Period**: 21.04.2026 — 12.06.2026  
+**Institution**: CUTM (Colegiul Universității Tehnice a Moldovei)  
+**Specialization**: Administrarea Aplicațiilor Web (AAW)  
+**Student**: Ceban Devid
 
 ---
 
-## 🤝 Contribuții
+## License
 
-Acest proiect este realizat în cadrul stagiului de practică. Pentru întrebări sau sugestii, contactează autorul.
+This project is released for academic and educational purposes. See [LICENSE](LICENSE) for details.
 
 ---
 
 <div align="center">
 
-**Made with ❤️ in Moldova**
+Built with precision. Tested with rigor.
 
-⭐ Dacă proiectul ți-a fost util, lasă o stea pe GitHub!
+*If everything seems under control, you're not going fast enough. — Mario Andretti*
 
 </div>
