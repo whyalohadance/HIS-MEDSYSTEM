@@ -41,6 +41,7 @@ import { Measurement } from './modules/studies/measurement.entity';
 import { Annotation } from './modules/studies/annotation.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SetupModule } from './modules/setup/setup.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { AppService } from './app.service';
     ReportsModule,
     StudiesModule,
     LabModule,
+    SetupModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],

@@ -2,12 +2,22 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { setupGuard } from './core/guards/setup.guard';
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'auth/login', loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent) },
+  {
+    path: 'setup',
+    loadComponent: () => import('./features/setup/setup.component').then(m => m.SetupComponent),
+    canActivate: [setupGuard]
+  },
+  {
+    path: 'auth/login',
+    loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent),
+    canActivate: [setupGuard]
+  },
   { path: 'access-denied', loadComponent: () => import('./features/access-denied/access-denied.component').then(m => m.AccessDeniedComponent) },
 
   {
