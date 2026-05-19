@@ -42,6 +42,7 @@ import { Annotation } from './modules/studies/annotation.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SetupModule } from './modules/setup/setup.module';
+import { WelcomeModule } from './modules/dashboard/welcome.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { SetupModule } from './modules/setup/setup.module';
     StudiesModule,
     LabModule,
     SetupModule,
+    WelcomeModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],

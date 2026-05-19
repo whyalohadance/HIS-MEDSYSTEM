@@ -28,7 +28,8 @@
     "RIS_STUDIES": "Studies",
     "LAB_DASHBOARD": "Lab Dashboard",
     "LAB_WORKLIST_NAV": "Lab Worklist",
-    "DICOM_VIEWER": "DICOM Viewer"
+    "DICOM_VIEWER": "DICOM Viewer",
+    "WELCOME": "Start"
   },
   "COMMON": {
     "SAVE": "Save",

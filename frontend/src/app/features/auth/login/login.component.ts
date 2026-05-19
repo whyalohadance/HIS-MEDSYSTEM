@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     public langService: LanguageService,
     private translate: TranslateService
@@ -102,7 +103,12 @@ export class LoginComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         const role = res?.data?.user?.role || this.authService.role;
-        this.router.navigate([this.getRoleRoute(role)]);
+        const firstLogin = this.route.snapshot.queryParams['firstLogin'];
+        if (firstLogin === 'true' && role === 'admin') {
+          this.router.navigate(['/welcome']);
+        } else {
+          this.router.navigate([this.getRoleRoute(role)]);
+        }
       },
       error: () => {
         this.isLoading = false;

@@ -1186,7 +1186,9 @@ export class SetupComponent implements OnInit {
       this.cdr.detectChanges();
 
       setTimeout(() => {
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/auth/login'], {
+          queryParams: { firstLogin: 'true' }
+        });
       }, 3000);
     } catch (err: any) {
       this.isSubmitting = false;

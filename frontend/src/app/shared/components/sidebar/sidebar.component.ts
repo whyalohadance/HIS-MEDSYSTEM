@@ -30,6 +30,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private adminNav: NavItem[] = [
     { key: 'section-main',        divider: true, sectionKey: 'NAV.SECTION_MAIN' },
     { key: 'NAV.DASHBOARD',       icon: 'dashboard',     route: '/dashboard' },
+    { key: 'NAV.WELCOME',         icon: 'waving_hand',   route: '/welcome' },
     { key: 'NAV.STAFF',           icon: 'badge',         route: '/staff' },
     { key: 'NAV.PATIENTS',        icon: 'people',        route: '/patients' },
     { key: 'NAV.APPOINTMENTS',    icon: 'event',         route: '/appointments' },

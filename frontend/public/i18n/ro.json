@@ -28,7 +28,8 @@
     "RIS_STUDIES": "Investigații",
     "LAB_DASHBOARD": "Panou Lab",
     "LAB_WORKLIST_NAV": "Worklist Lab",
-    "DICOM_VIEWER": "DICOM Viewer"
+    "DICOM_VIEWER": "DICOM Viewer",
+    "WELCOME": "Start"
   },
   "COMMON": {
     "SAVE": "Salvează",
