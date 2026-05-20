@@ -1,0 +1,210 @@
+{
+  "startTime": "2026-05-20T10:07:36.851Z",
+  "results": {
+    "admin": {
+      "tests": [
+        {
+          "name": "Login",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /health",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /patients",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /appointments",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /rooms",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /users",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /studies",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /lab/tests",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /lab/orders",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /reports/stats",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/list",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/progress",
+          "status": "PASS"
+        },
+        {
+          "name": "POST /tutorials/complete/system-overview",
+          "status": "PASS"
+        }
+      ],
+      "token": "ok"
+    },
+    "doctor": {
+      "tests": [
+        {
+          "name": "Login",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /health",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /patients",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /appointments",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/list",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/progress",
+          "status": "PASS"
+        },
+        {
+          "name": "Forbidden: /users",
+          "status": "PASS"
+        },
+        {
+          "name": "POST /tutorials/complete/system-overview",
+          "status": "PASS"
+        }
+      ],
+      "token": "ok"
+    },
+    "reception": {
+      "tests": [
+        {
+          "name": "Login",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /health",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /patients",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /appointments",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/list",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/progress",
+          "status": "PASS"
+        },
+        {
+          "name": "Forbidden: /users",
+          "status": "PASS"
+        },
+        {
+          "name": "POST /tutorials/complete/system-overview",
+          "status": "PASS"
+        }
+      ],
+      "token": "ok"
+    },
+    "radiolog": {
+      "tests": [
+        {
+          "name": "Login",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /health",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /studies",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/list",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/progress",
+          "status": "PASS"
+        },
+        {
+          "name": "Forbidden: /users",
+          "status": "PASS"
+        },
+        {
+          "name": "POST /tutorials/complete/system-overview",
+          "status": "PASS"
+        }
+      ],
+      "token": "ok"
+    },
+    "lab": {
+      "tests": [
+        {
+          "name": "Login",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /health",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /lab/orders",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /lab/tests",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/list",
+          "status": "PASS"
+        },
+        {
+          "name": "GET /tutorials/progress",
+          "status": "PASS"
+        },
+        {
+          "name": "Forbidden: /users",
+          "status": "PASS"
+        },
+        {
+          "name": "POST /tutorials/complete/system-overview",
+          "status": "PASS"
+        }
+      ],
+      "token": "ok"
+    }
+  },
+  "totalTests": 44,
+  "passed": 44,
+  "failed": 0,
+  "endTime": "2026-05-20T10:07:37.471Z"
+}
