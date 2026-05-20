@@ -49,6 +49,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
     { key: 'NAV.REPORTS',         icon: 'assessment',    route: '/reports' },
+    { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
@@ -60,6 +61,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.MY_CABINET',      icon: 'meeting_room',  route: '/my-cabinet' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
@@ -71,6 +73,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.LAB_WORKLIST',    icon: 'biotech',       route: '/lab/worklist' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
@@ -84,6 +87,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.EXAMINATIONS',    icon: 'science',       route: '/examinations' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 
@@ -97,6 +101,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'NAV.DICOM',           icon: 'monitor_heart', route: '/dicom' },
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
+    { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];
 

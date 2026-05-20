@@ -29,7 +29,8 @@
     "LAB_DASHBOARD": "Lab Dashboard",
     "LAB_WORKLIST_NAV": "Lab Worklist",
     "DICOM_VIEWER": "DICOM Viewer",
-    "WELCOME": "Start"
+    "WELCOME": "Start",
+    "TUTORIALS": "Learn"
   },
   "COMMON": {
     "SAVE": "Save",
@@ -1051,5 +1052,19 @@
     "NO_NOTIFICATIONS": "No notifications",
     "NOTIFICATIONS": "Notifications",
     "MARK_ALL_READ": "Mark all read"
+  },
+  "TUTORIALS": {
+    "SUBTITLE": "Learn the system step by step. All guides are always available.",
+    "DONE": "done",
+    "FILTER_ALL": "All",
+    "MIN": "min",
+    "COMPLETED": "Completed",
+    "START": "Start",
+    "TIP_TITLE": "Tip",
+    "TIP_TEXT": "Tutorials are always available. Come back whenever you need to review the material.",
+    "BACK": "All tutorials",
+    "MARK_COMPLETE": "Mark as studied",
+    "COMPLETED_MSG": "Tutorial completed!",
+    "IN_DEVELOPMENT": "Tutorial in development."
   }
 }

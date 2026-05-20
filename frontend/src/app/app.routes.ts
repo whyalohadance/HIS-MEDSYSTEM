@@ -55,6 +55,10 @@ export const routes: Routes = [
       { path: 'schedules', loadComponent: () => import('./features/schedules/schedules.component').then(m => m.SchedulesComponent), canActivate: [adminGuard] },
       { path: 'examinations', loadComponent: () => import('./features/examinations/examinations.component').then(m => m.ExaminationsComponent), canActivate: [adminGuard] },
       { path: 'reports', loadComponent: () => import('./features/reports/reports.component').then(m => m.ReportsComponent), canActivate: [adminGuard] },
+
+      // Tutorial Center (all roles)
+      { path: 'tutorials', loadComponent: () => import('./features/tutorials/tutorials-list.component').then(m => m.TutorialsListComponent) },
+      { path: 'tutorials/:id', loadComponent: () => import('./features/tutorials/tutorial-detail.component').then(m => m.TutorialDetailComponent) },
     ]
   },
 

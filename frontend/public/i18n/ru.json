@@ -29,7 +29,8 @@
     "LAB_DASHBOARD": "Лаб. панель",
     "LAB_WORKLIST_NAV": "Worklist Lab",
     "DICOM_VIEWER": "DICOM Viewer",
-    "WELCOME": "Старт"
+    "WELCOME": "Старт",
+    "TUTORIALS": "Обучение"
   },
   "COMMON": {
     "SAVE": "Сохранить",
@@ -1051,5 +1052,19 @@
     "NO_NOTIFICATIONS": "Нет уведомлений",
     "NOTIFICATIONS": "Уведомления",
     "MARK_ALL_READ": "Прочитать всё"
+  },
+  "TUTORIALS": {
+    "SUBTITLE": "Изучите систему пошагово. Все гайды доступны всегда.",
+    "DONE": "пройдено",
+    "FILTER_ALL": "Все",
+    "MIN": "мин",
+    "COMPLETED": "Пройдено",
+    "START": "Начать",
+    "TIP_TITLE": "Совет",
+    "TIP_TEXT": "Туториалы доступны всегда. Возвращайтесь когда нужно перечитать материал.",
+    "BACK": "К списку туториалов",
+    "MARK_COMPLETE": "Отметить как изученное",
+    "COMPLETED_MSG": "Туториал пройден!",
+    "IN_DEVELOPMENT": "Туториал в разработке."
   }
 }

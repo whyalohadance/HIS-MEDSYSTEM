@@ -43,6 +43,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SetupModule } from './modules/setup/setup.module';
 import { WelcomeModule } from './modules/dashboard/welcome.module';
+import { TutorialsModule } from './modules/tutorials/tutorials.module';
+import { TutorialProgress } from './modules/tutorials/tutorial-progress.entity';
 
 @Module({
   imports: [
@@ -57,7 +59,7 @@ import { WelcomeModule } from './modules/dashboard/welcome.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
-        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult],
+        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress],
         synchronize: config.get('DB_SYNCHRONIZE', 'true') !== 'false',
         logging: false,
       }),
@@ -87,6 +89,7 @@ import { WelcomeModule } from './modules/dashboard/welcome.module';
     LabModule,
     SetupModule,
     WelcomeModule,
+    TutorialsModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],

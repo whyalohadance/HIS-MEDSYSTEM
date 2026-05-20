@@ -29,7 +29,8 @@
     "LAB_DASHBOARD": "Panou Lab",
     "LAB_WORKLIST_NAV": "Worklist Lab",
     "DICOM_VIEWER": "DICOM Viewer",
-    "WELCOME": "Start"
+    "WELCOME": "Start",
+    "TUTORIALS": "Învățare"
   },
   "COMMON": {
     "SAVE": "Salvează",
@@ -1051,5 +1052,19 @@
     "NO_NOTIFICATIONS": "Fără notificări",
     "NOTIFICATIONS": "Notificări",
     "MARK_ALL_READ": "Marchează toate citite"
+  },
+  "TUTORIALS": {
+    "SUBTITLE": "Studiați sistemul pas cu pas. Toate ghidurile sunt disponibile întotdeauna.",
+    "DONE": "finalizat",
+    "FILTER_ALL": "Toate",
+    "MIN": "min",
+    "COMPLETED": "Finalizat",
+    "START": "Începe",
+    "TIP_TITLE": "Sfat",
+    "TIP_TEXT": "Tutorialele sunt disponibile oricând. Reveniți când doriți să recititi materialul.",
+    "BACK": "Lista tutorialelor",
+    "MARK_COMPLETE": "Marchează ca studiat",
+    "COMPLETED_MSG": "Tutorial finalizat!",
+    "IN_DEVELOPMENT": "Tutorial în dezvoltare."
   }
 }
