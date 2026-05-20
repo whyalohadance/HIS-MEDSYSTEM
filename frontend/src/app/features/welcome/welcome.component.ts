@@ -19,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
         <div class="header-content">
           <h1>
             <span class="wave">👋</span>
-            Добро пожаловать, <span class="user-name">{{ userName }}</span>!
+            {{ 'WELCOME.GREETING' | translate }} <span class="user-name">{{ userName }}</span>!
           </h1>
           <p class="welcome-subtitle" *ngIf="clinicName">
             <span class="material-icons">business</span>
@@ -29,7 +29,7 @@ import { firstValueFrom } from 'rxjs';
         </div>
 
         <button class="btn-skip-to-work" (click)="skipToWork()">
-          <span>К работе</span>
+          <span>{{ 'WELCOME.TO_WORK' | translate }}</span>
           <span class="material-icons">arrow_forward</span>
         </button>
       </header>
@@ -38,15 +38,15 @@ import { firstValueFrom } from 'rxjs';
       <section class="progress-section">
         <div class="progress-header">
           <div class="progress-info">
-            <h2>Настройка системы</h2>
-            <p>{{ progress?.completed || 0 }} из {{ progress?.total || 7 }} шагов завершено</p>
+            <h2>{{ 'WELCOME.SETUP_TITLE' | translate }}</h2>
+            <p>{{ progress?.completed || 0 }} {{ 'WELCOME.OF' | translate }} {{ progress?.total || 7 }} {{ 'WELCOME.STEPS_DONE' | translate }}</p>
           </div>
           <div class="progress-percent" [class.complete]="progress?.isComplete">
             <div class="percent-value">{{ progress?.percent || 0 }}%</div>
-            <div class="percent-label" *ngIf="!progress?.isComplete">прогресс</div>
+            <div class="percent-label" *ngIf="!progress?.isComplete">{{ 'WELCOME.PROGRESS' | translate }}</div>
             <div class="percent-label complete-label" *ngIf="progress?.isComplete">
               <span class="material-icons">verified</span>
-              Готово!
+              {{ 'WELCOME.DONE' | translate }}
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@ import { firstValueFrom } from 'rxjs';
       <section class="checklist-section">
         <h2>
           <span class="material-icons">checklist</span>
-          Что нужно сделать
+          {{ 'WELCOME.WHAT_TO_DO' | translate }}
         </h2>
 
         <div class="checklist">

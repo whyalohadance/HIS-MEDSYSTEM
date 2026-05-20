@@ -709,7 +709,8 @@
     "INST_SWIPE": "Swipe",
     "INST_MOBILE": "Mobile",
     "UPLOAD_SERIES": "Multiple .dcm — slice series",
-    "SELECT_FILES": "Select files (series)"
+    "SELECT_FILES": "Select files (series)",
+    "MEASURE_HINT": "Click and drag on the image"
   },
   "LAB": {
     "ORDER": "Order",
@@ -1066,5 +1067,15 @@
     "MARK_COMPLETE": "Mark as studied",
     "COMPLETED_MSG": "Tutorial completed!",
     "IN_DEVELOPMENT": "Tutorial in development."
+  },
+  "WELCOME": {
+    "GREETING": "Welcome,",
+    "TO_WORK": "Go to work",
+    "SETUP_TITLE": "System setup",
+    "OF": "of",
+    "STEPS_DONE": "steps completed",
+    "PROGRESS": "progress",
+    "DONE": "Done!",
+    "WHAT_TO_DO": "What to do"
   }
 }

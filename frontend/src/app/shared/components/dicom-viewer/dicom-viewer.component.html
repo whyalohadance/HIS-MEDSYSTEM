@@ -320,7 +320,7 @@
       <!-- Measure hint -->
       <div class="measure-hint" *ngIf="imageLoaded && activeTool === 'length'">
         <span class="material-icons">straighten</span>
-        <span>Кликни и тяни на снимке</span>
+        <span>{{ 'DICOM.MEASURE_HINT' | translate }}</span>
         <span *ngIf="pixelSpacing" style="color:#6ee7b7"> · Точность мм</span>
         <span *ngIf="!pixelSpacing" style="color:#fbbf24"> · В пикселях</span>
       </div>

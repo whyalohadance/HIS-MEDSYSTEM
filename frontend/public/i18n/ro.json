@@ -709,7 +709,8 @@
     "INST_SWIPE": "Glisare",
     "INST_MOBILE": "Mobil",
     "UPLOAD_SERIES": "Mai multe .dcm — serie de secțiuni",
-    "SELECT_FILES": "Selectează fișierele (serie)"
+    "SELECT_FILES": "Selectează fișierele (serie)",
+    "MEASURE_HINT": "Apasă și trage pe imagine"
   },
   "LAB": {
     "ORDER": "Comanda",
@@ -1066,5 +1067,15 @@
     "MARK_COMPLETE": "Marchează ca studiat",
     "COMPLETED_MSG": "Tutorial finalizat!",
     "IN_DEVELOPMENT": "Tutorial în dezvoltare."
+  },
+  "WELCOME": {
+    "GREETING": "Bine ați venit,",
+    "TO_WORK": "La lucru",
+    "SETUP_TITLE": "Configurarea sistemului",
+    "OF": "din",
+    "STEPS_DONE": "pași finalizați",
+    "PROGRESS": "progres",
+    "DONE": "Gata!",
+    "WHAT_TO_DO": "Ce trebuie făcut"
   }
 }
