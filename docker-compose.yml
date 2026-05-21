@@ -55,7 +55,7 @@ services:
       DB_USERNAME: ${DB_USERNAME:-medical_user}
       DB_PASSWORD: ${DB_PASSWORD:-medical123}
       DB_DATABASE: ${DB_DATABASE:-medical_db}
-      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-false}
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}
       JWT_SECRET: ${JWT_SECRET:-medical_super_secret_key_2024}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       PORT: 3000
