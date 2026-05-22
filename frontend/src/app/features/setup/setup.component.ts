@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
 
 interface WizardStep {
   id: string;
-  title: string;
+  titleKey: string;
   icon: string;
 }
 
@@ -32,13 +32,15 @@ interface WizardStep {
 
       <!-- Progress bar -->
       <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="progress"></div>
+        <div class="progress-fill" [style.width.%]="progressPct"></div>
       </div>
 
       <!-- Step indicator -->
       <div class="step-indicator">
         <span class="material-icons">{{ steps[currentStep].icon }}</span>
-        <span class="step-label">Step {{ currentStep + 1 }} / {{ steps.length }}</span>
+        <span class="step-label">
+          {{ 'SETUP.STEP_OF' | translate: {current: currentStep + 1, total: steps.length} }}
+        </span>
       </div>
 
       <!-- Wizard card -->
@@ -50,59 +52,57 @@ interface WizardStep {
             <div class="hero-logo">
               <span class="material-icons">local_hospital</span>
             </div>
-            <h1>HIS-MedSystem</h1>
-            <p class="hero-subtitle">Hospital Information System</p>
-            <p class="hero-tagline">Engineered for Healthcare. Built for Performance.</p>
+            <h1>{{ 'SETUP.WELCOME.TITLE' | translate }}</h1>
+            <p class="hero-subtitle">{{ 'SETUP.WELCOME.SUBTITLE' | translate }}</p>
+            <p class="hero-tagline">{{ 'SETUP.WELCOME.TAGLINE' | translate }}</p>
           </div>
 
           <div class="welcome-features">
             <div class="feature">
               <span class="material-icons">verified</span>
-              <span>272 automated tests</span>
+              <span>{{ 'SETUP.WELCOME.FEATURE_TESTS' | translate }}</span>
             </div>
             <div class="feature">
               <span class="material-icons">speed</span>
-              <span>Lighthouse 95.5/100</span>
+              <span>{{ 'SETUP.WELCOME.FEATURE_LIGHTHOUSE' | translate }}</span>
             </div>
             <div class="feature">
               <span class="material-icons">shield</span>
-              <span>Production-grade security</span>
+              <span>{{ 'SETUP.WELCOME.FEATURE_SECURITY' | translate }}</span>
             </div>
             <div class="feature">
               <span class="material-icons">language</span>
-              <span>3 languages (RU/RO/EN)</span>
+              <span>{{ 'SETUP.WELCOME.FEATURE_LANGS' | translate }}</span>
             </div>
           </div>
 
-          <p class="welcome-text">
-            First launch detected.<br>
-            Let's configure your clinic in 2 minutes.
-          </p>
+          <p class="welcome-text">{{ 'SETUP.WELCOME.TEXT' | translate }}</p>
         </div>
 
         <!-- STEP 1: ABOUT -->
         <div class="step-content" *ngIf="currentStep === 1">
-          <h2><span class="material-icons">info</span> About the system</h2>
+          <h2><span class="material-icons">info</span> {{ 'SETUP.ABOUT.TITLE' | translate }}</h2>
 
           <div class="info-grid">
             <div class="info-card">
               <span class="material-icons">people</span>
               <h3>HIS</h3>
-              <p>Patient management, appointments, scheduling</p>
+              <p>{{ 'SETUP.ABOUT.HIS_DESC' | translate }}</p>
             </div>
             <div class="info-card">
               <span class="material-icons">medical_information</span>
               <h3>RIS</h3>
-              <p>Radiology with DICOM viewer and reports</p>
+              <p>{{ 'SETUP.ABOUT.RIS_DESC' | translate }}</p>
             </div>
             <div class="info-card">
               <span class="material-icons">biotech</span>
               <h3>LIS</h3>
-              <p>Laboratory with auto-flag interpretation</p>
+              <p>{{ 'SETUP.ABOUT.LIS_DESC' | translate }}</p>
             </div>
           </div>
 
           <div class="tech-stack">
+            <p class="tech-label">{{ 'SETUP.ABOUT.TECH_STACK' | translate }}</p>
             <div class="tech-badges">
               <span class="tech-badge">Angular 19</span>
               <span class="tech-badge">NestJS 10</span>
@@ -116,34 +116,34 @@ interface WizardStep {
 
         <!-- STEP 2: SCENARIO -->
         <div class="step-content" *ngIf="currentStep === 2">
-          <h2><span class="material-icons">tune</span> Setup mode</h2>
+          <h2><span class="material-icons">tune</span> {{ 'SETUP.MODE.TITLE' | translate }}</h2>
 
           <div class="option-grid">
             <button class="option-card"
               [class.selected]="scenario === 'demo'"
               (click)="scenario = 'demo'">
               <span class="material-icons option-icon">science</span>
-              <h3>Demo mode</h3>
-              <p>Full system with sample data:</p>
+              <h3>{{ 'SETUP.MODE.DEMO_TITLE' | translate }}</h3>
+              <p>{{ 'SETUP.MODE.DEMO_DESC' | translate }}</p>
               <ul>
-                <li>12 patients</li>
-                <li>3 cabinets</li>
-                <li>15 lab tests</li>
-                <li>20+ appointments</li>
+                <li>{{ 'SETUP.MODE.DEMO_F1' | translate }}</li>
+                <li>{{ 'SETUP.MODE.DEMO_F2' | translate }}</li>
+                <li>{{ 'SETUP.MODE.DEMO_F3' | translate }}</li>
+                <li>{{ 'SETUP.MODE.DEMO_F4' | translate }}</li>
               </ul>
-              <span class="badge-recommended">Recommended</span>
+              <span class="badge-recommended">{{ 'SETUP.MODE.DEMO_RECOMMENDED' | translate }}</span>
             </button>
 
             <button class="option-card"
               [class.selected]="scenario === 'clean'"
               (click)="scenario = 'clean'">
               <span class="material-icons option-icon">construction</span>
-              <h3>Clean install</h3>
-              <p>Admin account only, no data:</p>
+              <h3>{{ 'SETUP.MODE.CLEAN_TITLE' | translate }}</h3>
+              <p>{{ 'SETUP.MODE.CLEAN_DESC' | translate }}</p>
               <ul>
-                <li>For production</li>
-                <li>Clean start</li>
-                <li>No demo records</li>
+                <li>{{ 'SETUP.MODE.CLEAN_F1' | translate }}</li>
+                <li>{{ 'SETUP.MODE.CLEAN_F2' | translate }}</li>
+                <li>{{ 'SETUP.MODE.CLEAN_F3' | translate }}</li>
               </ul>
             </button>
           </div>
@@ -151,8 +151,8 @@ interface WizardStep {
 
         <!-- STEP 3: ROLES -->
         <div class="step-content" *ngIf="currentStep === 3">
-          <h2><span class="material-icons">school</span> System roles</h2>
-          <p class="step-description">Learn about roles (can be skipped)</p>
+          <h2><span class="material-icons">school</span> {{ 'SETUP.ROLES.TITLE' | translate }}</h2>
+          <p class="step-description">{{ 'SETUP.ROLES.DESC' | translate }}</p>
 
           <div class="role-grid">
             <button class="role-card" *ngFor="let role of roles"
@@ -162,110 +162,137 @@ interface WizardStep {
               <h3>{{ role.title }}</h3>
               <p>{{ role.description }}</p>
               <span class="view-tour" *ngIf="!viewedRoles.includes(role.id)">
-                Learn more →
+                {{ 'SETUP.ROLES.LEARN' | translate }}
               </span>
               <span class="viewed-badge" *ngIf="viewedRoles.includes(role.id)">
-                <span class="material-icons">check_circle</span> Done
+                <span class="material-icons">check_circle</span>
+                {{ 'SETUP.ROLES.DONE' | translate }}
               </span>
             </button>
           </div>
 
           <button class="btn-skip" (click)="nextStep()">
             <span class="material-icons">skip_next</span>
-            Skip and continue
+            {{ 'SETUP.ROLES.SKIP' | translate }}
           </button>
         </div>
 
         <!-- STEP 4: CLINIC -->
         <div class="step-content" *ngIf="currentStep === 4">
-          <h2><span class="material-icons">business</span> Clinic settings</h2>
+          <h2><span class="material-icons">business</span> {{ 'SETUP.CLINIC.TITLE' | translate }}</h2>
 
           <div class="form-group">
-            <label>Clinic name *</label>
+            <label>{{ 'SETUP.CLINIC.COUNTRY' | translate }}</label>
+            <div class="select-wrap">
+              <select [(ngModel)]="clinic.country" (ngModelChange)="onCountryChange()">
+                <option *ngFor="let c of countries" [value]="c.code">
+                  {{ c.name }} ({{ c.phone }})
+                </option>
+              </select>
+              <span class="material-icons select-arrow">expand_more</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'SETUP.CLINIC.NAME' | translate }}</label>
             <input type="text" [(ngModel)]="clinic.name"
-              placeholder="e.g. Medical Center Vita">
+              (ngModelChange)="onClinicNameChange()"
+              [placeholder]="'SETUP.CLINIC.NAME_PH' | translate">
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>City</label>
-              <input type="text" [(ngModel)]="clinic.city" placeholder="Chișinău">
+              <label>{{ 'SETUP.CLINIC.CITY' | translate }}</label>
+              <input type="text" [(ngModel)]="clinic.city"
+                [placeholder]="'SETUP.CLINIC.CITY_PH' | translate">
             </div>
             <div class="form-group">
-              <label>Timezone</label>
-              <select [(ngModel)]="clinic.timezone">
-                <option value="Europe/Chisinau">Chișinău (EET)</option>
-                <option value="Europe/Bucharest">Bucharest (EET)</option>
-                <option value="Europe/Moscow">Moscow (MSK)</option>
-                <option value="UTC">UTC</option>
-              </select>
+              <label>{{ 'SETUP.CLINIC.TIMEZONE' | translate }}</label>
+              <div class="select-wrap">
+                <select [(ngModel)]="clinic.timezone">
+                  <option *ngFor="let tz of timezones" [value]="tz.value">{{ tz.label }}</option>
+                </select>
+                <span class="material-icons select-arrow">expand_more</span>
+              </div>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Default language</label>
-              <select [(ngModel)]="clinic.defaultLanguage">
-                <option value="ru">Русский</option>
-                <option value="ro">Română</option>
-                <option value="en">English</option>
-              </select>
+              <label>{{ 'SETUP.CLINIC.LANGUAGE' | translate }}</label>
+              <div class="select-wrap">
+                <select [(ngModel)]="clinic.defaultLanguage">
+                  <option value="ru">Русский</option>
+                  <option value="ro">Română</option>
+                  <option value="en">English</option>
+                </select>
+                <span class="material-icons select-arrow">expand_more</span>
+              </div>
             </div>
             <div class="form-group">
-              <label>Currency</label>
-              <select [(ngModel)]="clinic.currency">
-                <option value="MDL">MDL (Moldovan leu)</option>
-                <option value="RON">RON (Romanian leu)</option>
-                <option value="EUR">EUR</option>
-                <option value="USD">USD</option>
-              </select>
+              <label>{{ 'SETUP.CLINIC.CURRENCY' | translate }}</label>
+              <div class="select-wrap">
+                <select [(ngModel)]="clinic.currency">
+                  <option value="MDL">MDL — Leu moldovenesc</option>
+                  <option value="RON">RON — Leu românesc</option>
+                  <option value="EUR">EUR — Euro</option>
+                  <option value="USD">USD — US Dollar</option>
+                  <option value="RUB">RUB — Рубль</option>
+                  <option value="UAH">UAH — Гривна</option>
+                  <option value="GBP">GBP — Pound</option>
+                </select>
+                <span class="material-icons select-arrow">expand_more</span>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- STEP 5: ADMIN -->
         <div class="step-content" *ngIf="currentStep === 5">
-          <h2><span class="material-icons">admin_panel_settings</span> Administrator account</h2>
-          <p class="step-description">Create the main account to manage the system</p>
+          <h2><span class="material-icons">admin_panel_settings</span> {{ 'SETUP.ADMIN.TITLE' | translate }}</h2>
+          <p class="step-description">{{ 'SETUP.ADMIN.DESC' | translate }}</p>
 
           <div class="form-row">
             <div class="form-group">
-              <label>First name *</label>
-              <input type="text" [(ngModel)]="admin.firstName" placeholder="Ion">
+              <label>{{ 'SETUP.ADMIN.FIRST_NAME' | translate }}</label>
+              <input type="text" [(ngModel)]="admin.firstName"
+                [placeholder]="'SETUP.ADMIN.FIRST_PH' | translate">
             </div>
             <div class="form-group">
-              <label>Last name *</label>
-              <input type="text" [(ngModel)]="admin.lastName" placeholder="Popescu">
+              <label>{{ 'SETUP.ADMIN.LAST_NAME' | translate }}</label>
+              <input type="text" [(ngModel)]="admin.lastName"
+                [placeholder]="'SETUP.ADMIN.LAST_PH' | translate">
             </div>
           </div>
 
           <div class="form-group">
-            <label>Email *</label>
+            <label>{{ 'SETUP.ADMIN.EMAIL' | translate }}</label>
             <input type="email" [(ngModel)]="admin.email"
-              placeholder="admin@yourclinic.com">
+              [placeholder]="emailPlaceholder">
           </div>
 
           <div class="form-group">
-            <label>Phone</label>
-            <input type="tel" [(ngModel)]="admin.phone" placeholder="+373 ...">
+            <label>{{ 'SETUP.ADMIN.PHONE' | translate }}</label>
+            <input type="tel" [(ngModel)]="admin.phone"
+              [placeholder]="phonePlaceholder">
           </div>
 
           <div class="form-group">
-            <label>Password * (min 6 characters)</label>
+            <label>{{ 'SETUP.ADMIN.PASSWORD' | translate }}</label>
             <input type="password" [(ngModel)]="admin.password"
-              placeholder="Strong password">
+              [placeholder]="'SETUP.ADMIN.PASSWORD_PH' | translate">
             <small class="password-strength" *ngIf="admin.password">
-              {{ getPasswordStrength() }}
+              {{ getPasswordStrengthKey() | translate }}
             </small>
           </div>
 
           <div class="form-group">
-            <label>Confirm password *</label>
+            <label>{{ 'SETUP.ADMIN.PASSWORD_CONFIRM' | translate }}</label>
             <input type="password" [(ngModel)]="admin.passwordConfirm"
-              placeholder="Repeat password">
+              [placeholder]="'SETUP.ADMIN.PASSWORD_CONFIRM_PH' | translate">
             <small class="error"
               *ngIf="admin.passwordConfirm && admin.password !== admin.passwordConfirm">
-              Passwords do not match
+              {{ 'SETUP.ADMIN.PASS_MISMATCH' | translate }}
             </small>
           </div>
         </div>
@@ -273,16 +300,17 @@ interface WizardStep {
         <!-- STEP 6: FINISH -->
         <div class="step-content" *ngIf="currentStep === 6">
           <div class="success-screen">
-            <div class="success-icon" [class.blue]="isSubmitting" [class.green]="setupComplete">
-              <span class="material-icons"
-                [class.spinning]="isSubmitting">
+            <div class="success-icon"
+              [class.blue]="isSubmitting"
+              [class.green]="setupComplete">
+              <span class="material-icons" [class.spinning]="isSubmitting">
                 {{ setupComplete ? 'check_circle' : isSubmitting ? 'autorenew' : 'rocket_launch' }}
               </span>
             </div>
 
-            <h2 *ngIf="!isSubmitting && !setupComplete">Ready to launch</h2>
-            <h2 *ngIf="isSubmitting">Configuring system...</h2>
-            <h2 *ngIf="setupComplete">Complete!</h2>
+            <h2 *ngIf="!isSubmitting && !setupComplete">{{ 'SETUP.FINISH.READY' | translate }}</h2>
+            <h2 *ngIf="isSubmitting">{{ 'SETUP.FINISH.CONFIGURING' | translate }}</h2>
+            <h2 *ngIf="setupComplete">{{ 'SETUP.FINISH.DONE' | translate }}</h2>
 
             <div class="setup-summary" *ngIf="!isSubmitting && !setupComplete">
               <div class="summary-item">
@@ -302,15 +330,14 @@ interface WizardStep {
               <div class="summary-item">
                 <span class="material-icons">{{ scenario === 'demo' ? 'science' : 'construction' }}</span>
                 <div>
-                  <strong>{{ scenario === 'demo' ? 'Demo mode' : 'Clean install' }}</strong>
-                  <small>{{ scenario === 'demo' ? 'With sample data' : 'Empty database' }}</small>
+                  <strong>{{ (scenario === 'demo' ? 'SETUP.FINISH.MODE_DEMO' : 'SETUP.FINISH.MODE_CLEAN') | translate }}</strong>
+                  <small>{{ (scenario === 'demo' ? 'SETUP.FINISH.DEMO_DATA' : 'SETUP.FINISH.CLEAN_DATA') | translate }}</small>
                 </div>
               </div>
             </div>
 
             <p class="setup-message" *ngIf="setupComplete">
-              Redirecting to login page...<br>
-              Use the email and password you just created.
+              {{ 'SETUP.FINISH.REDIRECT' | translate }}
             </p>
           </div>
         </div>
@@ -321,14 +348,14 @@ interface WizardStep {
             (click)="prevStep()"
             [disabled]="currentStep === 0">
             <span class="material-icons">arrow_back</span>
-            Back
+            {{ 'SETUP.BACK' | translate }}
           </button>
 
           <button class="btn-next"
             *ngIf="currentStep < steps.length - 1"
             (click)="nextStep()"
             [disabled]="!canProceed()">
-            Next
+            {{ 'SETUP.NEXT' | translate }}
             <span class="material-icons">arrow_forward</span>
           </button>
 
@@ -337,14 +364,14 @@ interface WizardStep {
             (click)="completeSetup()"
             [disabled]="!canFinish()">
             <span class="material-icons">check</span>
-            Launch system
+            {{ 'SETUP.FINISH.LAUNCH' | translate }}
           </button>
         </div>
       </div>
 
       <!-- Footer -->
       <div class="setup-footer">
-        Built with precision · Tested with rigor
+        {{ 'SETUP.FOOTER' | translate }}
       </div>
 
       <!-- Role modal -->
@@ -354,7 +381,8 @@ interface WizardStep {
             <span class="material-icons">close</span>
           </button>
 
-          <div class="role-modal-header" [style.border-bottom]="'2px solid ' + (selectedRole?.color || '#D5001C')">
+          <div class="role-modal-header"
+            [style.border-bottom]="'2px solid ' + (selectedRole?.color || '#1a73e8')">
             <span class="material-icons" [style.color]="selectedRole?.color">{{ selectedRole?.icon }}</span>
             <h2>{{ selectedRole?.title }}</h2>
           </div>
@@ -362,7 +390,7 @@ interface WizardStep {
           <div class="role-modal-body">
             <p>{{ selectedRole?.fullDescription }}</p>
 
-            <h3>Key features</h3>
+            <h3>{{ 'SETUP.ROLES.KEY_FEATURES' | translate }}</h3>
             <ul class="role-features">
               <li *ngFor="let f of selectedRole?.features">
                 <span class="material-icons">check_circle</span>
@@ -370,16 +398,16 @@ interface WizardStep {
               </li>
             </ul>
 
-            <h3>Pages</h3>
+            <h3>{{ 'SETUP.ROLES.PAGES' | translate }}</h3>
             <div class="role-pages">
               <span class="page-badge" *ngFor="let p of selectedRole?.pages">{{ p }}</span>
             </div>
           </div>
 
           <div class="role-modal-footer">
-            <button class="btn-primary" (click)="markRoleViewed(); closeRoleModal()">
+            <button class="btn-modal-primary" (click)="markRoleViewed(); closeRoleModal()">
               <span class="material-icons">check</span>
-              Got it
+              {{ 'SETUP.ROLES.GOT_IT' | translate }}
             </button>
           </div>
         </div>
@@ -392,27 +420,28 @@ interface WizardStep {
 
     .setup-page {
       min-height: 100vh;
-      background: #0a0e1a;
-      color: #e2e8f0;
+      background: linear-gradient(150deg, #eef2ff 0%, #f0f4ff 50%, #e8f0fe 100%);
+      color: #1f2937;
       position: relative;
       overflow-x: hidden;
       padding: 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     .bg-gradient {
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(circle at 20% 30%, rgba(213,0,28,0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(26,115,232,0.06) 0%, transparent 50%);
+        radial-gradient(circle at 15% 25%, rgba(26,115,232,0.07) 0%, transparent 55%),
+        radial-gradient(circle at 85% 75%, rgba(99,102,241,0.05) 0%, transparent 55%);
       pointer-events: none;
       z-index: 0;
     }
 
+    /* LANGUAGE SELECTOR */
     .lang-selector {
       position: absolute;
       top: 20px;
@@ -424,10 +453,10 @@ interface WizardStep {
 
     .lang-selector button {
       padding: 6px 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: white;
+      border: 1.5px solid #e2e8f0;
       border-radius: 8px;
-      color: #64748b;
+      color: #718096;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
@@ -437,58 +466,66 @@ interface WizardStep {
     }
 
     .lang-selector button.active {
-      background: #D5001C;
-      border-color: #D5001C;
+      background: #1a73e8;
+      border-color: #1a73e8;
       color: white;
     }
 
+    .lang-selector button:hover:not(.active) {
+      border-color: #1a73e8;
+      color: #1a73e8;
+    }
+
+    /* PROGRESS BAR */
     .progress-bar {
       width: 100%;
       max-width: 720px;
-      height: 2px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 2px;
-      margin: 44px 0 14px;
+      height: 3px;
+      background: rgba(26,115,232,0.12);
+      border-radius: 3px;
+      margin: 52px 0 14px;
       position: relative;
       z-index: 1;
     }
 
     .progress-fill {
       height: 100%;
-      background: #D5001C;
-      border-radius: 2px;
+      background: linear-gradient(90deg, #1a73e8, #6366f1);
+      border-radius: 3px;
       transition: width 0.4s ease;
-      box-shadow: 0 0 10px rgba(213,0,28,0.5);
+      box-shadow: 0 0 8px rgba(26,115,232,0.3);
     }
 
+    /* STEP INDICATOR */
     .step-indicator {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 5px 14px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: white;
+      border: 1px solid #e2e8f0;
       border-radius: 20px;
       font-size: 12px;
-      color: #64748b;
+      color: #718096;
       margin-bottom: 20px;
       position: relative;
       z-index: 1;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
 
-    .step-indicator .material-icons { font-size: 16px; color: #D5001C; }
+    .step-indicator .material-icons { font-size: 16px; color: #1a73e8; }
 
+    /* WIZARD CARD */
     .wizard-card {
-      background: rgba(16,22,38,0.9);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: white;
+      border: 1px solid #e2e8f0;
       border-radius: 20px;
       padding: 48px;
       max-width: 720px;
       width: 100%;
       position: relative;
       z-index: 1;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     }
 
     .step-content { min-height: 360px; }
@@ -500,12 +537,12 @@ interface WizardStep {
       width: 76px;
       height: 76px;
       margin: 0 auto 20px;
-      background: linear-gradient(135deg, #D5001C, #8B0000);
+      background: linear-gradient(135deg, #1a73e8, #1557b0);
       border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 28px rgba(213,0,28,0.35);
+      box-shadow: 0 8px 28px rgba(26,115,232,0.3);
     }
 
     .hero-logo .material-icons { font-size: 42px; color: white; }
@@ -514,15 +551,12 @@ interface WizardStep {
       font-size: 34px;
       font-weight: 800;
       margin: 0 0 6px;
-      background: linear-gradient(135deg, #fff 50%, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #0f2d52;
       letter-spacing: -1px;
     }
 
-    .hero-subtitle { font-size: 15px; color: #94a3b8; margin: 0 0 4px; }
-
-    .hero-tagline { font-size: 12px; color: #475569; margin: 0; font-style: italic; }
+    .hero-subtitle { font-size: 15px; color: #718096; margin: 0 0 4px; }
+    .hero-tagline { font-size: 12px; color: #94a3b8; margin: 0; font-style: italic; }
 
     .welcome-features {
       display: grid;
@@ -536,16 +570,21 @@ interface WizardStep {
       align-items: center;
       gap: 10px;
       padding: 12px 14px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 10px;
       font-size: 13px;
-      color: #cbd5e1;
+      color: #475569;
     }
 
-    .feature .material-icons { font-size: 18px; color: #D5001C; }
+    .feature .material-icons { font-size: 18px; color: #1a73e8; }
 
-    .welcome-text { text-align: center; font-size: 14px; color: #94a3b8; line-height: 1.7; }
+    .welcome-text {
+      text-align: center;
+      font-size: 14px;
+      color: #718096;
+      line-height: 1.7;
+    }
 
     /* HEADINGS */
     h2 {
@@ -554,51 +593,58 @@ interface WizardStep {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      color: #f1f5f9;
+      color: #0f2d52;
     }
-    h2 .material-icons { color: #D5001C; font-size: 24px; }
 
-    .step-description { color: #64748b; font-size: 13px; margin: -14px 0 20px; }
+    h2 .material-icons { color: #1a73e8; font-size: 24px; }
+
+    .step-description { color: #718096; font-size: 13px; margin: -14px 0 20px; }
 
     /* INFO GRID */
     .info-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
       gap: 12px;
       margin-bottom: 20px;
     }
 
     .info-card {
       padding: 18px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.05);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
       text-align: center;
     }
 
-    .info-card .material-icons { font-size: 30px; color: #D5001C; margin-bottom: 8px; }
-    .info-card h3 { margin: 0 0 6px; font-size: 16px; color: #fff; }
-    .info-card p { margin: 0; font-size: 11px; color: #94a3b8; line-height: 1.5; }
+    .info-card .material-icons { font-size: 30px; color: #1a73e8; margin-bottom: 8px; }
+    .info-card h3 { margin: 0 0 6px; font-size: 16px; color: #0f2d52; }
+    .info-card p { margin: 0; font-size: 11px; color: #718096; line-height: 1.5; }
 
     .tech-stack { margin-top: 8px; }
+    .tech-label { font-size: 12px; color: #718096; margin: 0 0 8px; font-weight: 600; }
     .tech-badges { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .tech-badge {
       padding: 4px 10px;
-      background: rgba(213,0,28,0.08);
-      border: 1px solid rgba(213,0,28,0.18);
-      color: #f87171;
+      background: rgba(26,115,232,0.08);
+      border: 1px solid rgba(26,115,232,0.18);
+      color: #1557b0;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
     }
 
     /* OPTIONS */
-    .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: 16px;
+      width: 100%;
+    }
 
     .option-card {
-      background: rgba(255,255,255,0.025);
-      border: 2px solid rgba(255,255,255,0.05);
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
       border-radius: 14px;
       padding: 22px;
       cursor: pointer;
@@ -607,15 +653,17 @@ interface WizardStep {
       position: relative;
       color: inherit;
       font-family: inherit;
+      min-width: 0;
+      overflow: hidden;
     }
 
-    .option-card:hover { border-color: rgba(213,0,28,0.3); transform: translateY(-2px); }
-    .option-card.selected { border-color: #D5001C; background: rgba(213,0,28,0.06); }
+    .option-card:hover { border-color: #1a73e8; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(26,115,232,0.12); }
+    .option-card.selected { border-color: #1a73e8; background: rgba(26,115,232,0.06); }
 
-    .option-icon { font-size: 30px !important; color: #D5001C; margin-bottom: 10px; display: block; }
-    .option-card h3 { margin: 0 0 8px; color: #fff; font-size: 17px; }
-    .option-card p { margin: 0 0 10px; color: #94a3b8; font-size: 12px; }
-    .option-card ul { margin: 0; padding-left: 18px; color: #cbd5e1; font-size: 12px; }
+    .option-icon { font-size: 30px !important; color: #1a73e8; margin-bottom: 10px; display: block; }
+    .option-card h3 { margin: 0 0 8px; color: #0f2d52; font-size: 17px; }
+    .option-card p { margin: 0 0 10px; color: #718096; font-size: 12px; }
+    .option-card ul { margin: 0; padding-left: 18px; color: #475569; font-size: 12px; }
     .option-card ul li { margin: 3px 0; }
 
     .badge-recommended {
@@ -623,7 +671,7 @@ interface WizardStep {
       top: 10px;
       right: 10px;
       padding: 3px 8px;
-      background: #D5001C;
+      background: #1a73e8;
       color: white;
       border-radius: 8px;
       font-size: 10px;
@@ -633,11 +681,17 @@ interface WizardStep {
     }
 
     /* ROLES */
-    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+      width: 100%;
+    }
 
     .role-card {
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.05);
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
       border-radius: 12px;
       padding: 16px;
       cursor: pointer;
@@ -645,14 +699,16 @@ interface WizardStep {
       transition: all 0.15s;
       color: inherit;
       font-family: inherit;
+      min-width: 0;
+      overflow: hidden;
     }
 
-    .role-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-1px); }
-    .role-card.viewed { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.04); }
+    .role-card:hover { border-color: #1a73e8; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(26,115,232,0.1); }
+    .role-card.viewed { border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.05); }
     .role-card .material-icons { font-size: 26px; margin-bottom: 8px; display: block; }
-    .role-card h3 { margin: 0 0 4px; font-size: 13px; color: #fff; }
-    .role-card p { margin: 0 0 10px; font-size: 11px; color: #94a3b8; }
-    .view-tour { font-size: 11px; color: #D5001C; font-weight: 600; }
+    .role-card h3 { margin: 0 0 4px; font-size: 13px; color: #0f2d52; }
+    .role-card p { margin: 0 0 10px; font-size: 11px; color: #718096; }
+    .view-tour { font-size: 11px; color: #1a73e8; font-weight: 600; }
 
     .viewed-badge {
       display: inline-flex;
@@ -671,53 +727,111 @@ interface WizardStep {
       gap: 6px;
       padding: 10px 16px;
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1.5px solid #e2e8f0;
       border-radius: 10px;
-      color: #64748b;
+      color: #718096;
       font-size: 13px;
       cursor: pointer;
       font-family: inherit;
       transition: all 0.15s;
     }
 
-    .btn-skip:hover { background: rgba(255,255,255,0.04); color: #94a3b8; }
+    .btn-skip:hover { background: #f8fafc; color: #475569; border-color: #cbd5e1; }
 
     /* FORMS */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
     .form-group { margin-bottom: 16px; }
 
     .form-group label {
       display: block;
       font-size: 11px;
       font-weight: 700;
-      color: #64748b;
+      color: #4a5568;
       margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.6px;
     }
 
-    .form-group input,
-    .form-group select {
+    .form-group input {
       width: 100%;
-      padding: 11px 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1.5px solid rgba(255,255,255,0.07);
+      height: 42px;
+      padding: 0 14px;
+      background: white;
+      border: 1.5px solid #e2e8f0;
       border-radius: 10px;
-      color: #f1f5f9;
+      color: #0f2d52;
       font-size: 14px;
       font-family: inherit;
       outline: none;
       box-sizing: border-box;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .form-group select option { background: #1a2238; }
+    .form-group input:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+    }
 
-    .form-group input:focus,
-    .form-group select:focus { border-color: #D5001C; }
+    /* Custom select wrapper */
+    .select-wrap {
+      position: relative;
+      display: block;
+    }
 
-    .password-strength { display: block; margin-top: 5px; font-size: 11px; color: #22c55e; }
-    .error { display: block; margin-top: 5px; font-size: 11px; color: #ef4444; }
+    .select-wrap select {
+      width: 100%;
+      height: 42px;
+      padding: 0 36px 0 14px;
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      color: #0f2d52;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      box-sizing: border-box;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .select-wrap select:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px !important;
+      color: #718096;
+      pointer-events: none;
+    }
+
+    .password-strength {
+      display: block;
+      margin-top: 5px;
+      font-size: 11px;
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .error {
+      display: block;
+      margin-top: 5px;
+      font-size: 11px;
+      color: #ef4444;
+      font-weight: 600;
+    }
 
     /* SUCCESS */
     .success-screen { text-align: center; padding: 24px 0; }
@@ -726,18 +840,24 @@ interface WizardStep {
       width: 76px;
       height: 76px;
       margin: 0 auto 20px;
-      background: linear-gradient(135deg, #D5001C, #8B0000);
+      background: linear-gradient(135deg, #1a73e8, #6366f1);
       border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 8px 28px rgba(26,115,232,0.25);
     }
 
     .success-icon.blue { background: linear-gradient(135deg, #1a73e8, #1557b0); }
-    .success-icon.green { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 8px 28px rgba(34,197,94,0.4); }
+    .success-icon.green {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 8px 28px rgba(34,197,94,0.3);
+    }
 
     .success-icon .material-icons { font-size: 42px; color: white; }
     .success-icon .material-icons.spinning { animation: spin 1s linear infinite; }
+
+    .success-screen h2 { color: #0f2d52; margin: 0 0 16px; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -748,24 +868,25 @@ interface WizardStep {
       align-items: center;
       gap: 14px;
       padding: 12px 16px;
-      background: rgba(255,255,255,0.025);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 10px;
       margin-bottom: 8px;
     }
 
-    .summary-item .material-icons { font-size: 22px; color: #D5001C; }
-    .summary-item strong { display: block; color: #fff; font-size: 13px; }
-    .summary-item small { display: block; color: #94a3b8; font-size: 11px; margin-top: 2px; }
+    .summary-item .material-icons { font-size: 22px; color: #1a73e8; }
+    .summary-item strong { display: block; color: #0f2d52; font-size: 13px; }
+    .summary-item small { display: block; color: #718096; font-size: 11px; margin-top: 2px; }
 
-    .setup-message { color: #94a3b8; font-size: 14px; line-height: 1.7; margin-top: 16px; }
+    .setup-message { color: #718096; font-size: 14px; line-height: 1.7; margin-top: 16px; }
 
-    /* FOOTER */
+    /* FOOTER BUTTONS */
     .wizard-footer {
       display: flex;
       justify-content: space-between;
       margin-top: 32px;
       padding-top: 22px;
-      border-top: 1px solid rgba(255,255,255,0.04);
+      border-top: 1px solid #f0f4f8;
     }
 
     .btn-back, .btn-next, .btn-finish {
@@ -783,42 +904,44 @@ interface WizardStep {
     }
 
     .btn-back {
-      background: transparent;
-      color: #64748b;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #f4f6f9;
+      color: #718096;
+      border: 1.5px solid #e2e8f0;
     }
 
-    .btn-back:hover:not(:disabled) { background: rgba(255,255,255,0.04); color: #94a3b8; }
-    .btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-back:hover:not(:disabled) { background: #e2e8f0; color: #475569; }
+    .btn-back:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .btn-next, .btn-finish {
-      background: #D5001C;
+      background: #1a73e8;
       color: white;
-      box-shadow: 0 4px 16px rgba(213,0,28,0.3);
+      box-shadow: 0 4px 12px rgba(26,115,232,0.3);
     }
 
     .btn-next:hover:not(:disabled), .btn-finish:hover:not(:disabled) {
-      background: #b8001a;
+      background: #1557b0;
       transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(26,115,232,0.35);
     }
 
-    .btn-next:disabled, .btn-finish:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-next:disabled, .btn-finish:disabled { opacity: 0.4; cursor: not-allowed; }
 
+    /* PAGE FOOTER */
     .setup-footer {
       margin-top: 28px;
-      color: #334155;
+      color: #94a3b8;
       font-size: 11px;
       letter-spacing: 0.5px;
       position: relative;
       z-index: 1;
     }
 
-    /* MODAL */
+    /* ROLE MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -827,32 +950,36 @@ interface WizardStep {
     }
 
     .role-modal {
-      background: #0f1829;
+      background: white;
       border-radius: 18px;
       max-width: 580px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
       position: relative;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.15);
     }
 
     .modal-close {
       position: absolute;
       top: 14px;
       right: 14px;
-      background: rgba(255,255,255,0.05);
+      background: #f4f6f9;
       border: none;
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      color: #64748b;
+      color: #718096;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1;
+      transition: all 0.15s;
     }
+
+    .modal-close:hover { background: #fce8e6; color: #ea4335; }
 
     .role-modal-header {
       padding: 28px 32px;
@@ -862,18 +989,18 @@ interface WizardStep {
     }
 
     .role-modal-header .material-icons { font-size: 36px; }
-    .role-modal-header h2 { margin: 0; font-size: 22px; color: #fff; }
+    .role-modal-header h2 { margin: 0; font-size: 22px; color: #0f2d52; }
 
     .role-modal-body { padding: 0 32px 24px; }
-
-    .role-modal-body p { color: #cbd5e1; line-height: 1.7; font-size: 14px; margin: 0 0 20px; }
+    .role-modal-body p { color: #475569; line-height: 1.7; font-size: 14px; margin: 0 0 20px; }
 
     .role-modal-body h3 {
       margin: 16px 0 10px;
       font-size: 11px;
-      color: #D5001C;
+      color: #1a73e8;
       text-transform: uppercase;
       letter-spacing: 0.6px;
+      font-weight: 700;
     }
 
     .role-features { list-style: none; padding: 0; margin: 0; }
@@ -883,7 +1010,7 @@ interface WizardStep {
       align-items: center;
       gap: 10px;
       padding: 7px 0;
-      color: #cbd5e1;
+      color: #475569;
       font-size: 13px;
     }
 
@@ -893,9 +1020,9 @@ interface WizardStep {
 
     .page-badge {
       padding: 3px 9px;
-      background: rgba(213,0,28,0.08);
-      border: 1px solid rgba(213,0,28,0.18);
-      color: #f87171;
+      background: rgba(26,115,232,0.08);
+      border: 1px solid rgba(26,115,232,0.18);
+      color: #1557b0;
       border-radius: 5px;
       font-size: 11px;
       font-weight: 600;
@@ -904,17 +1031,17 @@ interface WizardStep {
 
     .role-modal-footer {
       padding: 18px 32px;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid #f0f4f8;
       display: flex;
       justify-content: flex-end;
     }
 
-    .btn-primary {
+    .btn-modal-primary {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 11px 22px;
-      background: #D5001C;
+      background: #1a73e8;
       color: white;
       border: none;
       border-radius: 10px;
@@ -922,16 +1049,23 @@ interface WizardStep {
       cursor: pointer;
       font-family: inherit;
       font-size: 14px;
+      transition: all 0.15s;
     }
+
+    .btn-modal-primary:hover { background: #1557b0; }
 
     @media (max-width: 700px) {
       .wizard-card { padding: 24px 18px; }
       .form-row { grid-template-columns: 1fr; }
       .welcome-features { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
       .option-grid { grid-template-columns: 1fr; }
-      .role-grid { grid-template-columns: 1fr; }
+      .role-grid { grid-template-columns: 1fr 1fr; }
       .step-hero h1 { font-size: 26px; }
+      .wizard-footer { flex-wrap: wrap; gap: 8px; }
+    }
+
+    @media (max-width: 480px) {
+      .role-grid { grid-template-columns: 1fr; }
     }
   `]
 })
@@ -945,14 +1079,17 @@ export class SetupComponent implements OnInit {
   showRoleModal = false;
   selectedRole: any = null;
 
+  emailPlaceholder = 'admin@yourclinic.md';
+  phonePlaceholder = '+373 ...';
+
   steps: WizardStep[] = [
-    { id: 'welcome',  title: 'Welcome',  icon: 'waving_hand' },
-    { id: 'about',    title: 'About',    icon: 'info' },
-    { id: 'scenario', title: 'Mode',     icon: 'tune' },
-    { id: 'roles',    title: 'Roles',    icon: 'school' },
-    { id: 'clinic',   title: 'Clinic',   icon: 'business' },
-    { id: 'admin',    title: 'Admin',    icon: 'admin_panel_settings' },
-    { id: 'finish',   title: 'Done',     icon: 'rocket_launch' }
+    { id: 'welcome',  titleKey: 'SETUP.STEPS.WELCOME', icon: 'waving_hand' },
+    { id: 'about',    titleKey: 'SETUP.STEPS.ABOUT',   icon: 'info' },
+    { id: 'scenario', titleKey: 'SETUP.STEPS.MODE',    icon: 'tune' },
+    { id: 'roles',    titleKey: 'SETUP.STEPS.ROLES',   icon: 'school' },
+    { id: 'clinic',   titleKey: 'SETUP.STEPS.CLINIC',  icon: 'business' },
+    { id: 'admin',    titleKey: 'SETUP.STEPS.ADMIN',   icon: 'admin_panel_settings' },
+    { id: 'finish',   titleKey: 'SETUP.STEPS.FINISH',  icon: 'rocket_launch' }
   ];
 
   langs = [
@@ -961,11 +1098,33 @@ export class SetupComponent implements OnInit {
     { code: 'en' }
   ];
 
-  currentLang = 'en';
+  currentLang = 'ru';
+
+  countries = [
+    { code: 'MD', name: 'Moldova',   tld: 'md',  phone: '+373', timezone: 'Europe/Chisinau',  currency: 'MDL' },
+    { code: 'RO', name: 'Romania',   tld: 'ro',  phone: '+40',  timezone: 'Europe/Bucharest', currency: 'RON' },
+    { code: 'RU', name: 'Russia',    tld: 'ru',  phone: '+7',   timezone: 'Europe/Moscow',    currency: 'RUB' },
+    { code: 'UA', name: 'Ukraine',   tld: 'ua',  phone: '+380', timezone: 'Europe/Kyiv',      currency: 'UAH' },
+    { code: 'US', name: 'USA',       tld: 'com', phone: '+1',   timezone: 'America/New_York', currency: 'USD' },
+    { code: 'GB', name: 'UK',        tld: 'uk',  phone: '+44',  timezone: 'Europe/London',    currency: 'GBP' },
+    { code: 'DE', name: 'Germany',   tld: 'de',  phone: '+49',  timezone: 'Europe/Berlin',    currency: 'EUR' },
+  ];
+
+  timezones = [
+    { value: 'Europe/Chisinau',  label: 'Chișinău (EET UTC+2/+3)' },
+    { value: 'Europe/Bucharest', label: 'Bucharest (EET UTC+2/+3)' },
+    { value: 'Europe/Moscow',    label: 'Moscow (MSK UTC+3)' },
+    { value: 'Europe/Kyiv',      label: 'Kyiv (EET UTC+2/+3)' },
+    { value: 'Europe/Berlin',    label: 'Berlin (CET UTC+1/+2)' },
+    { value: 'Europe/London',    label: 'London (GMT UTC+0/+1)' },
+    { value: 'America/New_York', label: 'New York (ET UTC-5/-4)' },
+    { value: 'UTC',              label: 'UTC' },
+  ];
 
   clinic = {
     name: '',
     city: 'Chișinău',
+    country: 'MD',
     timezone: 'Europe/Chisinau',
     defaultLanguage: 'ru' as 'ru' | 'ro' | 'en',
     currency: 'MDL'
@@ -1071,13 +1230,23 @@ export class SetupComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const saved = localStorage.getItem('language') || localStorage.getItem('lang');
     const browserLang = navigator.language.split('-')[0];
-    if (['ru', 'ro', 'en'].includes(browserLang)) {
-      this.currentLang = browserLang;
-      this.clinic.defaultLanguage = browserLang as any;
-      this.translate.use(browserLang);
-    }
+    const langToUse = (['ru', 'ro', 'en'].includes(saved || '') ? saved : null)
+      || (['ru', 'ro', 'en'].includes(browserLang) ? browserLang : 'ru');
+
+    this.currentLang = langToUse!;
+    this.clinic.defaultLanguage = langToUse as any;
+
+    // Await translation load before first render
+    try {
+      await firstValueFrom(this.translate.use(langToUse!));
+    } catch {}
+
+    this.onCountryChange();
+    this.cdr.detectChanges();
+
     this.checkStatus();
   }
 
@@ -1090,24 +1259,54 @@ export class SetupComponent implements OnInit {
     } catch {}
   }
 
-  changeLang(lang: string) {
+  async changeLang(lang: string): Promise<void> {
     this.currentLang = lang;
     this.clinic.defaultLanguage = lang as any;
-    this.translate.use(lang);
+    try {
+      await firstValueFrom(this.translate.use(lang));
+    } catch {}
+    localStorage.setItem('language', lang);
+    this.cdr.detectChanges();
   }
 
-  get progress(): number {
+  onCountryChange(): void {
+    const country = this.countries.find(c => c.code === this.clinic.country);
+    if (!country) return;
+    this.clinic.timezone = country.timezone;
+    this.clinic.currency = country.currency;
+    this.phonePlaceholder = country.phone + ' ...';
+    this.updateEmailPlaceholder(country);
+  }
+
+  onClinicNameChange(): void {
+    const country = this.countries.find(c => c.code === this.clinic.country);
+    if (country) this.updateEmailPlaceholder(country);
+  }
+
+  private updateEmailPlaceholder(country: { tld: string }): void {
+    const slug = (this.clinic.name || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '')
+      .replace(/^-+|-+$/g, '');
+    this.emailPlaceholder = slug
+      ? `admin@${slug}.${country.tld}`
+      : `admin@yourclinic.${country.tld}`;
+  }
+
+  get progressPct(): number {
     return Math.round((this.currentStep / (this.steps.length - 1)) * 100);
   }
 
-  nextStep() {
+  nextStep(): void {
     if (this.canProceed() && this.currentStep < this.steps.length - 1) {
       this.currentStep++;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  prevStep() {
+  prevStep(): void {
     if (this.currentStep > 0) {
       this.currentStep--;
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1132,31 +1331,31 @@ export class SetupComponent implements OnInit {
     return this.canProceed();
   }
 
-  getPasswordStrength(): string {
+  getPasswordStrengthKey(): string {
     const p = this.admin.password;
     if (!p) return '';
-    if (p.length < 6) return 'Too short';
-    if (p.length < 8) return 'Acceptable';
-    if (p.length < 12) return 'Good';
-    return 'Strong';
+    if (p.length < 6) return 'SETUP.ADMIN.PASS_SHORT';
+    if (p.length < 8) return 'SETUP.ADMIN.PASS_OK';
+    if (p.length < 12) return 'SETUP.ADMIN.PASS_GOOD';
+    return 'SETUP.ADMIN.PASS_GREAT';
   }
 
-  viewRole(role: any) {
+  viewRole(role: any): void {
     this.selectedRole = role;
     this.showRoleModal = true;
   }
 
-  closeRoleModal() {
+  closeRoleModal(): void {
     this.showRoleModal = false;
   }
 
-  markRoleViewed() {
+  markRoleViewed(): void {
     if (this.selectedRole && !this.viewedRoles.includes(this.selectedRole.id)) {
       this.viewedRoles.push(this.selectedRole.id);
     }
   }
 
-  async completeSetup() {
+  async completeSetup(): Promise<void> {
     this.isSubmitting = true;
     this.cdr.detectChanges();
 
