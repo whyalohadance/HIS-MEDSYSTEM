@@ -112,8 +112,8 @@ import { firstValueFrom } from 'rxjs';
 
     .tutorials-page {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0a0e1a 0%, #131927 100%);
-      color: #e2e8f0;
+      background: #f4f6f9;
+      color: #1f2937;
       padding: 32px;
       position: relative;
     }
@@ -122,8 +122,8 @@ import { firstValueFrom } from 'rxjs';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(circle at 20% 50%, rgba(213, 0, 28, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(26,115,232,0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(99,102,241,0.03) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
@@ -144,23 +144,23 @@ import { firstValueFrom } from 'rxjs';
       align-items: center;
       gap: 12px;
       margin: 0 0 8px;
-      color: #fff;
+      color: #0f2d52;
       font-size: 28px;
     }
 
-    h1 .material-icons { color: #D5001C; font-size: 32px; }
+    h1 .material-icons { color: #1a73e8; font-size: 32px; }
 
-    .subtitle { margin: 0; color: #94a3b8; font-size: 14px; }
+    .subtitle { margin: 0; color: #718096; font-size: 14px; }
 
     .progress-circle { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
 
     .progress-circle svg { transform: rotate(-90deg); width: 100%; height: 100%; }
 
-    .circle-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 2; }
+    .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 2; }
 
     .circle-fill {
       fill: none;
-      stroke: #D5001C;
+      stroke: #1a73e8;
       stroke-width: 2;
       stroke-linecap: round;
       transition: stroke-dasharray 0.5s;
@@ -175,8 +175,8 @@ import { firstValueFrom } from 'rxjs';
       justify-content: center;
     }
 
-    .progress-text strong { font-size: 16px; color: #fff; }
-    .progress-text span { font-size: 9px; color: #94a3b8; text-transform: uppercase; }
+    .progress-text strong { font-size: 16px; color: #0f2d52; }
+    .progress-text span { font-size: 9px; color: #718096; text-transform: uppercase; }
 
     .filter-bar {
       max-width: 1200px;
@@ -193,10 +193,10 @@ import { firstValueFrom } from 'rxjs';
       align-items: center;
       gap: 6px;
       padding: 8px 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1.5px solid rgba(255,255,255,0.06);
+      background: white;
+      border: 1.5px solid #e2e8f0;
       border-radius: 20px;
-      color: #94a3b8;
+      color: #718096;
       font-family: inherit;
       font-size: 12px;
       font-weight: 600;
@@ -205,8 +205,8 @@ import { firstValueFrom } from 'rxjs';
     }
 
     .filter-btn .material-icons { font-size: 16px; }
-    .filter-btn:hover { background: rgba(255,255,255,0.06); }
-    .filter-btn.active { background: var(--c, #D5001C); border-color: var(--c, #D5001C); color: white; }
+    .filter-btn:hover { border-color: #1a73e8; color: #1a73e8; }
+    .filter-btn.active { background: var(--c, #1a73e8); border-color: var(--c, #1a73e8); color: white; }
 
     .tutorials-grid {
       max-width: 1200px;
@@ -219,14 +219,15 @@ import { firstValueFrom } from 'rxjs';
     }
 
     .tutorial-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: white;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 20px;
       cursor: pointer;
       transition: all 0.2s;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
 
     .tutorial-card::before {
@@ -234,22 +235,22 @@ import { firstValueFrom } from 'rxjs';
       position: absolute;
       top: 0; left: 0;
       width: 3px; height: 100%;
-      background: var(--card-color, #D5001C);
+      background: var(--card-color, #1a73e8);
       opacity: 0;
       transition: opacity 0.2s;
     }
 
     .tutorial-card:hover {
       transform: translateY(-3px);
-      border-color: var(--card-color, #D5001C);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      border-color: var(--card-color, #1a73e8);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
 
     .tutorial-card:hover::before { opacity: 1; }
 
     .tutorial-card.completed {
-      background: rgba(34, 197, 94, 0.05);
-      border-color: rgba(34, 197, 94, 0.2);
+      background: rgba(34, 197, 94, 0.04);
+      border-color: rgba(34, 197, 94, 0.3);
     }
 
     .card-header {
@@ -263,7 +264,7 @@ import { firstValueFrom } from 'rxjs';
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: var(--card-color, #D5001C);
+      background: var(--card-color, #1a73e8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -282,37 +283,37 @@ import { firstValueFrom } from 'rxjs';
       letter-spacing: 0.3px;
     }
 
-    .difficulty-easy { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
-    .difficulty-medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .difficulty-hard { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .difficulty-easy { background: rgba(34, 197, 94, 0.12); color: #16a34a; }
+    .difficulty-medium { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+    .difficulty-hard { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
 
     .badge.time {
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      background: rgba(255,255,255,0.05);
-      color: #94a3b8;
+      background: #f4f6f9;
+      color: #718096;
     }
 
     .badge.time .material-icons { font-size: 12px; }
 
-    .tutorial-card h3 { margin: 0 0 8px; font-size: 16px; color: #fff; line-height: 1.3; }
-    .tutorial-card p { margin: 0 0 14px; font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .tutorial-card h3 { margin: 0 0 8px; font-size: 16px; color: #0f2d52; line-height: 1.3; }
+    .tutorial-card p { margin: 0 0 14px; font-size: 13px; color: #718096; line-height: 1.5; }
 
     .card-sections { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
 
     .section-pill {
       padding: 3px 8px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: #f4f6f9;
+      border: 1px solid #e2e8f0;
       border-radius: 6px;
       font-size: 10px;
-      color: #94a3b8;
+      color: #718096;
     }
 
     .section-pill.more {
-      background: var(--card-color, #D5001C);
-      border-color: var(--card-color);
+      background: var(--card-color, #1a73e8);
+      border-color: var(--card-color, #1a73e8);
       color: white;
     }
 
@@ -321,16 +322,16 @@ import { firstValueFrom } from 'rxjs';
       justify-content: space-between;
       align-items: center;
       padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      border-top: 1px solid #f0f4f8;
     }
 
     .card-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
     .card-status .material-icons { font-size: 16px; color: #22c55e; }
-    .card-status.not-started .material-icons { color: var(--card-color, #D5001C); }
-    .card-status.not-started { color: var(--card-color, #D5001C); }
+    .card-status.not-started .material-icons { color: var(--card-color, #1a73e8); }
+    .card-status.not-started { color: var(--card-color, #1a73e8); }
 
-    .arrow { color: #475569; font-size: 18px !important; transition: transform 0.15s; }
-    .tutorial-card:hover .arrow { color: var(--card-color, #D5001C); transform: translateX(4px); }
+    .arrow { color: #94a3b8; font-size: 18px !important; transition: transform 0.15s; }
+    .tutorial-card:hover .arrow { color: var(--card-color, #1a73e8); transform: translateX(4px); }
 
     .page-footer { max-width: 1200px; margin: 32px auto 0; position: relative; z-index: 1; }
 
@@ -338,14 +339,14 @@ import { firstValueFrom } from 'rxjs';
       display: flex;
       gap: 16px;
       padding: 20px;
-      background: rgba(213, 0, 28, 0.05);
-      border: 1px solid rgba(213, 0, 28, 0.15);
+      background: rgba(26,115,232,0.04);
+      border: 1px solid rgba(26,115,232,0.15);
       border-radius: 12px;
     }
 
-    .info-box > .material-icons { font-size: 28px; color: #D5001C; flex-shrink: 0; }
-    .info-box strong { display: block; color: #fff; margin-bottom: 4px; }
-    .info-box p { margin: 0; color: #94a3b8; font-size: 13px; line-height: 1.5; }
+    .info-box > .material-icons { font-size: 28px; color: #1a73e8; flex-shrink: 0; }
+    .info-box strong { display: block; color: #0f2d52; margin-bottom: 4px; }
+    .info-box p { margin: 0; color: #718096; font-size: 13px; line-height: 1.5; }
 
     @media (max-width: 768px) {
       .tutorials-page { padding: 16px; }

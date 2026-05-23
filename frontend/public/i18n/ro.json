@@ -1136,29 +1136,34 @@
       "TECH_STACK": "Stack tehnologic:"
     },
     "MODE": {
-      "TITLE": "Mod de instalare",
-      "DEMO_TITLE": "Mod Demo",
-      "DEMO_DESC": "Sistem complet cu date de exemplu:",
+      "TITLE": "Alegeți modul de lansare",
+      "DEMO_TITLE": "Demo",
+      "DEMO_DESC": "Sistem cu exemple pentru cunoaștere",
       "DEMO_RECOMMENDED": "Recomandat",
       "CLEAN_TITLE": "Instalare curată",
-      "CLEAN_DESC": "Doar contul admin:",
+      "CLEAN_DESC": "Doar contul administratorului",
       "DEMO_F1": "12 pacienți",
       "DEMO_F2": "3 cabinete",
-      "DEMO_F3": "15 teste",
+      "DEMO_F3": "15 analize",
       "DEMO_F4": "20+ programări",
       "CLEAN_F1": "Pentru producție",
-      "CLEAN_F2": "Start curat",
-      "CLEAN_F3": "Fără date demo"
+      "CLEAN_F2": "Fără date demo",
+      "CLEAN_F3": "Start curat"
     },
     "ROLES": {
-      "TITLE": "Rolurile sistemului",
-      "DESC": "Învățați rolurile (puteți sări)",
-      "LEARN": "Mai mult →",
+      "TITLE": "Învățați rolurile",
+      "DESC": "Apăsați pe un rol pentru detalii. Puteți sări.",
+      "LEARN": "Învață →",
       "DONE": "Învățat",
-      "SKIP": "Sări peste și continuă",
-      "KEY_FEATURES": "Funcții cheie",
+      "SKIP": "Sari și continuă",
+      "KEY_FEATURES": "Capabilități",
       "PAGES": "Pagini",
-      "GOT_IT": "Înțeles"
+      "GOT_IT": "Înțeles",
+      "ROLE_ADMIN_SHORT": "Control complet al sistemului",
+      "ROLE_DOCTOR_SHORT": "Programări și diagnostice",
+      "ROLE_RECEPTION_SHORT": "Înregistrare pacienți",
+      "ROLE_RADIOLOGIST_SHORT": "DICOM și concluzii",
+      "ROLE_LAB_SHORT": "Analize și rezultate"
     },
     "CLINIC": {
       "TITLE": "Setările clinicii",

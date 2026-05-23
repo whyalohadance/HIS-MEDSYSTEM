@@ -1136,29 +1136,34 @@
       "TECH_STACK": "Technology stack:"
     },
     "MODE": {
-      "TITLE": "Setup mode",
-      "DEMO_TITLE": "Demo mode",
-      "DEMO_DESC": "Full system with sample data:",
+      "TITLE": "Choose launch mode",
+      "DEMO_TITLE": "Demo",
+      "DEMO_DESC": "Full system with sample data",
       "DEMO_RECOMMENDED": "Recommended",
       "CLEAN_TITLE": "Clean install",
-      "CLEAN_DESC": "Admin account only:",
+      "CLEAN_DESC": "Admin account only, no data",
       "DEMO_F1": "12 patients",
       "DEMO_F2": "3 rooms",
       "DEMO_F3": "15 tests",
       "DEMO_F4": "20+ appointments",
       "CLEAN_F1": "For production",
-      "CLEAN_F2": "Clean start",
-      "CLEAN_F3": "No demo records"
+      "CLEAN_F2": "No demo data",
+      "CLEAN_F3": "Clean start"
     },
     "ROLES": {
-      "TITLE": "System roles",
-      "DESC": "Learn about roles (can be skipped)",
-      "LEARN": "Learn more →",
+      "TITLE": "Learn the roles",
+      "DESC": "Click a role for details. You can skip.",
+      "LEARN": "Learn →",
       "DONE": "Learned",
       "SKIP": "Skip and continue",
-      "KEY_FEATURES": "Key features",
+      "KEY_FEATURES": "Capabilities",
       "PAGES": "Pages",
-      "GOT_IT": "Got it"
+      "GOT_IT": "Got it",
+      "ROLE_ADMIN_SHORT": "Full system control",
+      "ROLE_DOCTOR_SHORT": "Appointments and diagnoses",
+      "ROLE_RECEPTION_SHORT": "Patient registration",
+      "ROLE_RADIOLOGIST_SHORT": "DICOM and reports",
+      "ROLE_LAB_SHORT": "Tests and results"
     },
     "CLINIC": {
       "TITLE": "Clinic settings",

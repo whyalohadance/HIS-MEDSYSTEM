@@ -160,7 +160,7 @@ interface WizardStep {
               [class.viewed]="viewedRoles.includes(role.id)">
               <span class="material-icons" [style.color]="role.color">{{ role.icon }}</span>
               <h3>{{ role.title }}</h3>
-              <p>{{ role.description }}</p>
+              <p>{{ role.shortKey | translate }}</p>
               <span class="view-tour" *ngIf="!viewedRoles.includes(role.id)">
                 {{ 'SETUP.ROLES.LEARN' | translate }}
               </span>
@@ -176,6 +176,7 @@ interface WizardStep {
             {{ 'SETUP.ROLES.SKIP' | translate }}
           </button>
         </div>
+
 
         <!-- STEP 4: CLINIC -->
         <div class="step-content" *ngIf="currentStep === 4">
@@ -256,11 +257,13 @@ interface WizardStep {
             <div class="form-group">
               <label>{{ 'SETUP.ADMIN.FIRST_NAME' | translate }}</label>
               <input type="text" [(ngModel)]="admin.firstName"
+                (ngModelChange)="onFirstNameChange()"
                 [placeholder]="'SETUP.ADMIN.FIRST_PH' | translate">
             </div>
             <div class="form-group">
               <label>{{ 'SETUP.ADMIN.LAST_NAME' | translate }}</label>
               <input type="text" [(ngModel)]="admin.lastName"
+                (ngModelChange)="onLastNameChange()"
                 [placeholder]="'SETUP.ADMIN.LAST_PH' | translate">
             </div>
           </div>
@@ -664,7 +667,14 @@ interface WizardStep {
     .option-card h3 { margin: 0 0 8px; color: #0f2d52; font-size: 17px; }
     .option-card p { margin: 0 0 10px; color: #718096; font-size: 12px; }
     .option-card ul { margin: 0; padding-left: 18px; color: #475569; font-size: 12px; }
-    .option-card ul li { margin: 3px 0; }
+    .option-card ul li { margin: 3px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .option-card p {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .badge-recommended {
       position: absolute;
@@ -707,7 +717,16 @@ interface WizardStep {
     .role-card.viewed { border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.05); }
     .role-card .material-icons { font-size: 26px; margin-bottom: 8px; display: block; }
     .role-card h3 { margin: 0 0 4px; font-size: 13px; color: #0f2d52; }
-    .role-card p { margin: 0 0 10px; font-size: 11px; color: #718096; }
+    .role-card p {
+      margin: 0 0 10px;
+      font-size: 11px;
+      color: #718096;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .view-tour { font-size: 11px; color: #1a73e8; font-weight: 600; }
 
     .viewed-badge {
@@ -1081,6 +1100,7 @@ export class SetupComponent implements OnInit {
 
   emailPlaceholder = 'admin@yourclinic.md';
   phonePlaceholder = '+373 ...';
+  private lastAutoEmail = '';
 
   steps: WizardStep[] = [
     { id: 'welcome',  titleKey: 'SETUP.STEPS.WELCOME', icon: 'waving_hand' },
@@ -1101,13 +1121,13 @@ export class SetupComponent implements OnInit {
   currentLang = 'ru';
 
   countries = [
-    { code: 'MD', name: 'Moldova',   tld: 'md',  phone: '+373', timezone: 'Europe/Chisinau',  currency: 'MDL' },
-    { code: 'RO', name: 'Romania',   tld: 'ro',  phone: '+40',  timezone: 'Europe/Bucharest', currency: 'RON' },
-    { code: 'RU', name: 'Russia',    tld: 'ru',  phone: '+7',   timezone: 'Europe/Moscow',    currency: 'RUB' },
-    { code: 'UA', name: 'Ukraine',   tld: 'ua',  phone: '+380', timezone: 'Europe/Kyiv',      currency: 'UAH' },
-    { code: 'US', name: 'USA',       tld: 'com', phone: '+1',   timezone: 'America/New_York', currency: 'USD' },
-    { code: 'GB', name: 'UK',        tld: 'uk',  phone: '+44',  timezone: 'Europe/London',    currency: 'GBP' },
-    { code: 'DE', name: 'Germany',   tld: 'de',  phone: '+49',  timezone: 'Europe/Berlin',    currency: 'EUR' },
+    { code: 'MD', name: 'Moldova',  tld: 'md',  phone: '+373', timezone: 'Europe/Chisinau',  currency: 'MDL', cities: { ru: 'Кишинёв',    ro: 'Chișinău',   en: 'Chisinau'  } },
+    { code: 'RO', name: 'Romania',  tld: 'ro',  phone: '+40',  timezone: 'Europe/Bucharest', currency: 'RON', cities: { ru: 'Бухарест',   ro: 'București',  en: 'Bucharest' } },
+    { code: 'RU', name: 'Russia',   tld: 'ru',  phone: '+7',   timezone: 'Europe/Moscow',    currency: 'RUB', cities: { ru: 'Москва',     ro: 'Moscova',    en: 'Moscow'    } },
+    { code: 'UA', name: 'Ukraine',  tld: 'ua',  phone: '+380', timezone: 'Europe/Kyiv',      currency: 'UAH', cities: { ru: 'Киев',       ro: 'Kiev',       en: 'Kyiv'      } },
+    { code: 'US', name: 'USA',      tld: 'com', phone: '+1',   timezone: 'America/New_York', currency: 'USD', cities: { ru: 'Нью-Йорк',  ro: 'New York',   en: 'New York'  } },
+    { code: 'GB', name: 'UK',       tld: 'uk',  phone: '+44',  timezone: 'Europe/London',    currency: 'GBP', cities: { ru: 'Лондон',     ro: 'Londra',     en: 'London'    } },
+    { code: 'DE', name: 'Germany',  tld: 'de',  phone: '+49',  timezone: 'Europe/Berlin',    currency: 'EUR', cities: { ru: 'Берлин',     ro: 'Berlin',     en: 'Berlin'    } },
   ];
 
   timezones = [
@@ -1145,6 +1165,7 @@ export class SetupComponent implements OnInit {
       title: 'Administrator',
       icon: 'admin_panel_settings',
       color: '#1a73e8',
+      shortKey: 'SETUP.ROLES.ROLE_ADMIN_SHORT',
       description: 'Full system access',
       fullDescription: 'Administrator has full access to all system functions: staff management, cabinets, test catalogs, reports, and clinic settings.',
       features: [
@@ -1162,6 +1183,7 @@ export class SetupComponent implements OnInit {
       title: 'Doctor',
       icon: 'medical_services',
       color: '#10b981',
+      shortKey: 'SETUP.ROLES.ROLE_DOCTOR_SHORT',
       description: 'Appointments and diagnoses',
       fullDescription: 'Doctor manages patient appointments, enters diagnoses and treatment, orders lab tests, and reviews results.',
       features: [
@@ -1178,6 +1200,7 @@ export class SetupComponent implements OnInit {
       title: 'Receptionist',
       icon: 'support_agent',
       color: '#f59e0b',
+      shortKey: 'SETUP.ROLES.ROLE_RECEPTION_SHORT',
       description: 'Scheduling and registration',
       fullDescription: 'Receptionist registers new patients and books appointments with doctors, radiology, or laboratory.',
       features: [
@@ -1194,6 +1217,7 @@ export class SetupComponent implements OnInit {
       title: 'Radiologist',
       icon: 'medical_information',
       color: '#7c3aed',
+      shortKey: 'SETUP.ROLES.ROLE_RADIOLOGIST_SHORT',
       description: 'Radiology studies',
       fullDescription: 'Radiologist conducts MRI, CT, X-Ray, and Ultrasound studies, works with DICOM images, and creates reports.',
       features: [
@@ -1210,6 +1234,7 @@ export class SetupComponent implements OnInit {
       title: 'Lab Technician',
       icon: 'biotech',
       color: '#06b6d4',
+      shortKey: 'SETUP.ROLES.ROLE_LAB_SHORT',
       description: 'Lab orders and results',
       fullDescription: 'Lab technician processes test orders, enters results with auto-flag detection (normal/abnormal/critical).',
       features: [
@@ -1266,6 +1291,11 @@ export class SetupComponent implements OnInit {
       await firstValueFrom(this.translate.use(lang));
     } catch {}
     localStorage.setItem('language', lang);
+    // Update city name to the new language
+    const country = this.countries.find(c => c.code === this.clinic.country);
+    if (country) {
+      this.clinic.city = (country.cities as any)[lang] || country.cities.en;
+    }
     this.cdr.detectChanges();
   }
 
@@ -1275,6 +1305,7 @@ export class SetupComponent implements OnInit {
     this.clinic.timezone = country.timezone;
     this.clinic.currency = country.currency;
     this.phonePlaceholder = country.phone + ' ...';
+    this.clinic.city = (country.cities as any)[this.currentLang] || country.cities.en;
     this.updateEmailPlaceholder(country);
   }
 
@@ -1283,16 +1314,52 @@ export class SetupComponent implements OnInit {
     if (country) this.updateEmailPlaceholder(country);
   }
 
-  private updateEmailPlaceholder(country: { tld: string }): void {
-    const slug = (this.clinic.name || '')
+  onFirstNameChange(): void { this.updateAutoEmail(); }
+  onLastNameChange(): void  { this.updateAutoEmail(); }
+
+  private transliterate(text: string): string {
+    const map: Record<string, string> = {
+      'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z',
+      'и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r',
+      'с':'s','т':'t','у':'u','ф':'f','х':'kh','ц':'ts','ч':'ch','ш':'sh',
+      'щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+      'ă':'a','â':'a','î':'i','ș':'s','ț':'t','ş':'s','ţ':'t',
+    };
+    return text.toLowerCase().split('').map(c => map[c] !== undefined ? map[c] : c).join('');
+  }
+
+  private clinicSlug(): string {
+    return (this.clinic.name || '')
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '')
       .replace(/^-+|-+$/g, '');
-    this.emailPlaceholder = slug
-      ? `admin@${slug}.${country.tld}`
-      : `admin@yourclinic.${country.tld}`;
+  }
+
+  private updateEmailPlaceholder(country: { tld: string }): void {
+    const slug = this.clinicSlug();
+    const clinicPart = slug || 'yourclinic';
+    const first = this.transliterate(this.admin.firstName || '').replace(/[^a-z0-9]/g, '');
+    const last  = this.transliterate(this.admin.lastName  || '').replace(/[^a-z0-9]/g, '');
+    const namePart = (first + last) || 'admin';
+    this.emailPlaceholder = `${namePart}@${clinicPart}.${country.tld}`;
+    this.updateAutoEmail();
+  }
+
+  private updateAutoEmail(): void {
+    // Don't overwrite if the user typed their own email
+    if (this.admin.email && this.admin.email !== this.lastAutoEmail) return;
+    const country = this.countries.find(c => c.code === this.clinic.country);
+    if (!country) return;
+    const slug = this.clinicSlug();
+    const clinicPart = slug || 'yourclinic';
+    const first = this.transliterate(this.admin.firstName || '').replace(/[^a-z0-9]/g, '');
+    const last  = this.transliterate(this.admin.lastName  || '').replace(/[^a-z0-9]/g, '');
+    if (!first && !last) return; // don't auto-fill until at least one name char
+    const generated = `${first}${last}@${clinicPart}.${country.tld}`;
+    this.lastAutoEmail = generated;
+    this.admin.email = generated;
   }
 
   get progressPct(): number {
