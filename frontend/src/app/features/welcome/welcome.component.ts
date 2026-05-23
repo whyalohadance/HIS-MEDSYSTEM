@@ -58,6 +58,22 @@ import { firstValueFrom } from 'rxjs';
         </div>
       </section>
 
+      <!-- СОВЕТ ДНЯ -->
+      <section class="tip-section">
+        <div class="tip-card">
+          <div class="tip-icon">
+            <span class="material-icons">tips_and_updates</span>
+          </div>
+          <div class="tip-content">
+            <div class="tip-label">Совет дня</div>
+            <p class="tip-text">{{ currentTip }}</p>
+          </div>
+          <button class="tip-next" (click)="nextTip()" title="Следующий совет">
+            <span class="material-icons">refresh</span>
+          </button>
+        </div>
+      </section>
+
       <!-- ЧЕКЛИСТ -->
       <section class="checklist-section">
         <h2>
@@ -713,6 +729,87 @@ import { firstValueFrom } from 'rxjs';
 
     .footer-text { margin: 8px 0 0; color: #a0aec0; font-size: 11px; }
 
+    /* TIP OF THE DAY */
+    .tip-section {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tip-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+      border: 1px solid #fde68a;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, #f59e0b, #d97706);
+    }
+
+    .tip-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tip-icon .material-icons { color: white; font-size: 22px !important; }
+
+    .tip-content { flex: 1; min-width: 0; }
+
+    .tip-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #d97706;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .tip-text {
+      margin: 0;
+      color: #451a03;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tip-next {
+      background: rgba(245,158,11,0.12);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #d97706;
+      transition: all 0.3s;
+    }
+
+    .tip-next:hover {
+      background: rgba(245,158,11,0.22);
+      transform: rotate(180deg);
+    }
+
+    .tip-next .material-icons { font-size: 18px !important; }
+
     @media (max-width: 768px) {
       .welcome-page { padding: 20px 16px; }
       .welcome-header { flex-direction: column; gap: 16px; }
@@ -721,6 +818,7 @@ import { firstValueFrom } from 'rxjs';
       .check-item { flex-wrap: wrap; }
       .check-action { width: 100%; justify-content: center; margin-top: 8px; }
       .achievements-grid { grid-template-columns: 1fr; }
+      .tip-card { flex-wrap: wrap; gap: 12px; }
     }
   `]
 })
@@ -734,6 +832,21 @@ export class WelcomeComponent implements OnInit {
   achievements: any[] = [];
   stats: any = null;
 
+  private tips = [
+    'Добавьте всех врачей в раздел "Персонал" — это позволит распределять приёмы автоматически.',
+    'Используйте Reception для быстрой записи пациентов — регистрация занимает меньше минуты.',
+    'В разделе "Отчёты" можно скачать аналитику в PDF и Excel за любой период.',
+    'Каталог анализов поддерживает auto-flag: система сама помечает критические результаты.',
+    'DICOM Viewer поддерживает измерения длины, угла и плотности в единицах Хаунсфилда.',
+    'Все туториалы доступны 24/7 в разделе "Обучение" — возвращайтесь и переучивайтесь.',
+    'Система поддерживает 3 языка: переключайте язык в правом верхнем углу.',
+    'Безопасность: bcrypt пароли, JWT токены, RBAC роли — 5 уровней доступа.',
+    'Регулярно проверяйте достижения — некоторые легендарные требуют 100% настройки!',
+    'Тёмная тема включается в Профиле — удобна для работы ночью.',
+  ];
+  private tipIndex = 0;
+  currentTip = '';
+
   constructor(
     private api: ApiService,
     private router: Router,
@@ -744,8 +857,18 @@ export class WelcomeComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     this.userName = user.firstName || 'Admin';
 
+    // Rotate tip based on day of week so it changes daily
+    this.tipIndex = new Date().getDay() % this.tips.length;
+    this.currentTip = this.tips[this.tipIndex];
+
     this.loadProgress();
     this.loadClinic();
+  }
+
+  nextTip(): void {
+    this.tipIndex = (this.tipIndex + 1) % this.tips.length;
+    this.currentTip = this.tips[this.tipIndex];
+    this.cdr.detectChanges();
   }
 
   async loadProgress() {
