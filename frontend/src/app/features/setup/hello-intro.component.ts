@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="hello-screen" [class.fade-out]="isFadingOut">
       <div class="hello-container">
-        <div class="hello-text" *ngIf="currentGreeting" [key]="currentGreeting">
+        <div class="hello-text" *ngIf="currentGreeting">
           {{ currentGreeting }}
         </div>
       </div>
