@@ -1,10 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import { HelloIntroComponent } from './hello-intro.component';
+import { ToastService } from '../../core/services/toast.service';
 
 interface WizardStep {
   id: string;
@@ -15,9 +17,14 @@ interface WizardStep {
 @Component({
   selector: 'app-setup',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, HelloIntroComponent],
   template: `
-    <div class="setup-page">
+    <app-hello-intro
+      *ngIf="showHelloIntro"
+      (done)="onHelloDone()">
+    </app-hello-intro>
+
+    <div class="setup-page" *ngIf="!showHelloIntro">
 
       <div class="bg-gradient"></div>
 
@@ -31,7 +38,12 @@ interface WizardStep {
       </div>
 
       <!-- Progress bar -->
-      <div class="progress-bar">
+      <div class="progress-bar"
+        role="progressbar"
+        [attr.aria-valuenow]="progressPct"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-label]="'Шаг ' + (currentStep + 1) + ' из ' + steps.length">
         <div class="progress-fill" [style.width.%]="progressPct"></div>
       </div>
 
@@ -118,9 +130,10 @@ interface WizardStep {
         <div class="step-content" *ngIf="currentStep === 2">
           <h2><span class="material-icons">tune</span> {{ 'SETUP.MODE.TITLE' | translate }}</h2>
 
-          <div class="option-grid">
+          <div class="option-grid" role="radiogroup" aria-label="Режим запуска">
             <button class="option-card"
               [class.selected]="scenario === 'demo'"
+              [attr.aria-pressed]="scenario === 'demo'"
               (click)="scenario = 'demo'">
               <span class="material-icons option-icon">science</span>
               <h3>{{ 'SETUP.MODE.DEMO_TITLE' | translate }}</h3>
@@ -136,6 +149,7 @@ interface WizardStep {
 
             <button class="option-card"
               [class.selected]="scenario === 'clean'"
+              [attr.aria-pressed]="scenario === 'clean'"
               (click)="scenario = 'clean'">
               <span class="material-icons option-icon">construction</span>
               <h3>{{ 'SETUP.MODE.CLEAN_TITLE' | translate }}</h3>
@@ -1089,6 +1103,7 @@ interface WizardStep {
   `]
 })
 export class SetupComponent implements OnInit {
+  showHelloIntro = false; // set in ngOnInit based on localStorage
   currentStep = 0;
   isSubmitting = false;
   setupComplete = false;
@@ -1252,10 +1267,42 @@ export class SetupComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private translate: TranslateService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toast: ToastService
   ) {}
 
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.showRoleModal) {
+      this.closeRoleModal();
+      event.preventDefault();
+    }
+    if (this.showHelloIntro) return;
+    const tag = (event.target as HTMLElement).tagName;
+    if (event.key === 'ArrowRight' && !this.showRoleModal) {
+      if (this.canProceed() && this.currentStep < this.steps.length - 1) this.nextStep();
+    }
+    if (event.key === 'ArrowLeft' && !this.showRoleModal) {
+      if (this.currentStep > 0) this.prevStep();
+    }
+    if (event.key === 'Enter' && tag !== 'INPUT' && tag !== 'SELECT' && tag !== 'TEXTAREA' && !this.showRoleModal) {
+      if (this.currentStep < this.steps.length - 1 && this.canProceed()) {
+        this.nextStep();
+        event.preventDefault();
+      }
+    }
+  }
+
+  onHelloDone() {
+    this.showHelloIntro = false;
+    localStorage.setItem('hello_seen', 'true');
+    this.cdr.detectChanges();
+  }
+
   async ngOnInit(): Promise<void> {
+    // Show hello intro only on first visit
+    this.showHelloIntro = localStorage.getItem('hello_seen') !== 'true';
+
     const saved = localStorage.getItem('language') || localStorage.getItem('lang');
     const browserLang = navigator.language.split('-')[0];
     const langToUse = (['ru', 'ro', 'en'].includes(saved || '') ? saved : null)
@@ -1449,6 +1496,7 @@ export class SetupComponent implements OnInit {
 
       this.isSubmitting = false;
       this.setupComplete = true;
+      this.toast.success('Система настроена! Добро пожаловать в HIS-MedSystem 🎉');
       this.cdr.detectChanges();
 
       setTimeout(() => {
@@ -1458,7 +1506,8 @@ export class SetupComponent implements OnInit {
       }, 3000);
     } catch (err: any) {
       this.isSubmitting = false;
-      alert('Error: ' + (err?.error?.message || err?.message || 'Unknown error'));
+      const errMsg = err?.error?.message || err?.message || 'Unknown error';
+      this.toast.error('Ошибка: ' + errMsg);
       this.cdr.detectChanges();
     }
   }
