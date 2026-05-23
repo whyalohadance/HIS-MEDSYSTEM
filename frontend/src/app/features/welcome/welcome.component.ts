@@ -66,7 +66,7 @@ import { firstValueFrom } from 'rxjs';
         </h2>
 
         <div class="checklist">
-          <div class="check-item"
+          <div class="check-item stagger-item lift-on-hover"
             *ngFor="let item of checklist; let i = index"
             [class.completed]="item.completed">
 
@@ -113,7 +113,7 @@ import { firstValueFrom } from 'rxjs';
         </h2>
 
         <div class="achievements-grid">
-          <div class="achievement"
+          <div class="achievement stagger-item"
             *ngFor="let a of achievements"
             [class.unlocked]="a.unlocked"
             [class.legendary]="a.legendary"
@@ -147,32 +147,32 @@ import { firstValueFrom } from 'rxjs';
         </h2>
 
         <div class="stats-grid">
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">people</span>
             <div class="stat-value">{{ stats?.usersCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.STAFF_COUNT' | translate }}</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">medical_services</span>
             <div class="stat-value">{{ stats?.doctorCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.DOCTOR_COUNT' | translate }}</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">meeting_room</span>
             <div class="stat-value">{{ stats?.roomsCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.ROOM_COUNT' | translate }}</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">biotech</span>
             <div class="stat-value">{{ stats?.testsCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.TESTS_COUNT' | translate }}</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">person</span>
             <div class="stat-value">{{ stats?.patientsCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.PATIENTS_COUNT' | translate }}</div>
           </div>
-          <div class="stat-card">
+          <div class="stat-card stagger-item lift-on-hover">
             <span class="material-icons">event</span>
             <div class="stat-value">{{ stats?.appointmentsCount || 0 }}</div>
             <div class="stat-label">{{ 'WELCOME.APTS_COUNT' | translate }}</div>

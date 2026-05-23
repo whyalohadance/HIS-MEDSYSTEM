@@ -53,7 +53,7 @@ import { firstValueFrom } from 'rxjs';
       </div>
 
       <div class="tutorials-grid">
-        <article class="tutorial-card"
+        <article class="tutorial-card stagger-item lift-on-hover"
           *ngFor="let t of filteredTutorials"
           [class.completed]="isCompleted(t.id)"
           [style.--card-color]="t.color"

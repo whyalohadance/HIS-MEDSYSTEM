@@ -348,6 +348,82 @@ body {
 
 
 
+/* ===== MICRO-ANIMATION TOKENS ===== */
+:root {
+  --ease-out-cubic: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
+}
+
+/* Page fade-in */
+.fade-in {
+  animation: pageFadeIn 0.4s var(--ease-out-cubic) both;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger for list items */
+.stagger-item {
+  animation: staggerIn 0.4s var(--ease-out-cubic) backwards;
+}
+.stagger-item:nth-child(1)  { animation-delay: 0.05s; }
+.stagger-item:nth-child(2)  { animation-delay: 0.10s; }
+.stagger-item:nth-child(3)  { animation-delay: 0.15s; }
+.stagger-item:nth-child(4)  { animation-delay: 0.20s; }
+.stagger-item:nth-child(5)  { animation-delay: 0.25s; }
+.stagger-item:nth-child(6)  { animation-delay: 0.30s; }
+.stagger-item:nth-child(n+7){ animation-delay: 0.35s; }
+
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover lift */
+.lift-on-hover {
+  transition: transform var(--duration-normal) var(--ease-out-cubic),
+              box-shadow var(--duration-normal) var(--ease-out-cubic);
+}
+.lift-on-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Modal bounce-in */
+@keyframes modalBounceIn {
+  0%   { opacity: 0; transform: scale(0.92) translateY(16px); }
+  65%  { opacity: 1; transform: scale(1.01) translateY(-3px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-bounce-in {
+  animation: modalBounceIn 0.38s var(--ease-spring) forwards;
+}
+
+/* Smooth focus ring */
+input:focus-visible,
+button:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 0%, #e8e8e8 50%, #f0f0f0 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 6px;
+}
+
 /* ===== ANIMATIONS ===== */
 
 /* 1 — Кнопки: плавные переходы и нажатие */

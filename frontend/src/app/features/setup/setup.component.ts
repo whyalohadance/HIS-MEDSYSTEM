@@ -96,17 +96,17 @@ interface WizardStep {
           <h2><span class="material-icons">info</span> {{ 'SETUP.ABOUT.TITLE' | translate }}</h2>
 
           <div class="info-grid">
-            <div class="info-card">
+            <div class="info-card stagger-item lift-on-hover">
               <span class="material-icons">people</span>
               <h3>HIS</h3>
               <p>{{ 'SETUP.ABOUT.HIS_DESC' | translate }}</p>
             </div>
-            <div class="info-card">
+            <div class="info-card stagger-item lift-on-hover">
               <span class="material-icons">medical_information</span>
               <h3>RIS</h3>
               <p>{{ 'SETUP.ABOUT.RIS_DESC' | translate }}</p>
             </div>
-            <div class="info-card">
+            <div class="info-card stagger-item lift-on-hover">
               <span class="material-icons">biotech</span>
               <h3>LIS</h3>
               <p>{{ 'SETUP.ABOUT.LIS_DESC' | translate }}</p>
@@ -131,7 +131,7 @@ interface WizardStep {
           <h2><span class="material-icons">tune</span> {{ 'SETUP.MODE.TITLE' | translate }}</h2>
 
           <div class="option-grid" role="radiogroup" aria-label="Режим запуска">
-            <button class="option-card"
+            <button class="option-card stagger-item"
               [class.selected]="scenario === 'demo'"
               [attr.aria-pressed]="scenario === 'demo'"
               (click)="scenario = 'demo'">
@@ -147,7 +147,7 @@ interface WizardStep {
               <span class="badge-recommended">{{ 'SETUP.MODE.DEMO_RECOMMENDED' | translate }}</span>
             </button>
 
-            <button class="option-card"
+            <button class="option-card stagger-item"
               [class.selected]="scenario === 'clean'"
               [attr.aria-pressed]="scenario === 'clean'"
               (click)="scenario = 'clean'">
@@ -169,7 +169,7 @@ interface WizardStep {
           <p class="step-description">{{ 'SETUP.ROLES.DESC' | translate }}</p>
 
           <div class="role-grid">
-            <button class="role-card" *ngFor="let role of roles"
+            <button class="role-card stagger-item" *ngFor="let role of roles"
               (click)="viewRole(role)"
               [class.viewed]="viewedRoles.includes(role.id)">
               <span class="material-icons" [style.color]="role.color">{{ role.icon }}</span>
