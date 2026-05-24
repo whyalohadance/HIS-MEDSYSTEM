@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../core/services/api.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -438,7 +438,7 @@ export class TutorialDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
+    private api: ApiService,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -450,7 +450,7 @@ export class TutorialDetailComponent implements OnInit {
 
   async loadTutorial() {
     try {
-      const res: any = await firstValueFrom(this.http.get('/api/tutorials/list'));
+      const res: any = await firstValueFrom(this.api.get('/tutorials/list'));
       this.tutorial = (res?.data || []).find((t: any) => t.id === this.tutorialId);
       this.cdr.detectChanges();
     } catch {}
@@ -458,7 +458,7 @@ export class TutorialDetailComponent implements OnInit {
 
   async loadProgress() {
     try {
-      const res: any = await firstValueFrom(this.http.get('/api/tutorials/progress'));
+      const res: any = await firstValueFrom(this.api.get('/tutorials/progress'));
       this.completed = (res?.data || []).some((p: any) =>
         p.tutorialId === this.tutorialId && p.completed,
       );
@@ -468,7 +468,7 @@ export class TutorialDetailComponent implements OnInit {
 
   async markComplete() {
     try {
-      await firstValueFrom(this.http.post(`/api/tutorials/complete/${this.tutorialId}`, {}));
+      await firstValueFrom(this.api.post(`/tutorials/complete/${this.tutorialId}`, {}));
       this.completed = true;
       this.cdr.detectChanges();
     } catch {}

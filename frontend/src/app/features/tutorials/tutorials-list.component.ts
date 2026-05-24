@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../core/services/api.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -371,7 +371,7 @@ export class TutorialsListComponent implements OnInit {
   ];
 
   constructor(
-    private http: HttpClient,
+    private api: ApiService,
     private router: Router,
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
@@ -385,7 +385,7 @@ export class TutorialsListComponent implements OnInit {
 
   async loadTutorials() {
     try {
-      const res: any = await firstValueFrom(this.http.get('/api/tutorials/list'));
+      const res: any = await firstValueFrom(this.api.get('/tutorials/list'));
       this.tutorials = res?.data || [];
       this.applyFilter();
       this.cdr.detectChanges();
@@ -396,7 +396,7 @@ export class TutorialsListComponent implements OnInit {
 
   async loadProgress() {
     try {
-      const res: any = await firstValueFrom(this.http.get('/api/tutorials/progress'));
+      const res: any = await firstValueFrom(this.api.get('/tutorials/progress'));
       this.userProgress = res?.data || [];
       this.cdr.detectChanges();
     } catch {}
