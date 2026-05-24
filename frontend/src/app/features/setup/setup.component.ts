@@ -654,9 +654,10 @@ interface WizardStep {
     /* OPTIONS */
     .option-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
       gap: 16px;
       width: 100%;
+      align-items: stretch;
     }
 
     .option-card {
@@ -671,7 +672,8 @@ interface WizardStep {
       color: inherit;
       font-family: inherit;
       min-width: 0;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .option-card:hover { border-color: #1a73e8; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(26,115,232,0.12); }
@@ -679,21 +681,28 @@ interface WizardStep {
 
     .option-icon { font-size: 30px !important; color: #1a73e8; margin-bottom: 10px; display: block; }
     .option-card h3 { margin: 0 0 8px; color: #0f2d52; font-size: 17px; }
-    .option-card p { margin: 0 0 10px; color: #718096; font-size: 12px; }
-    .option-card ul { margin: 0; padding-left: 18px; color: #475569; font-size: 12px; }
-    .option-card ul li { margin: 3px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .option-card p {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .option-card p { margin: 0 0 10px; color: #718096; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word; }
+    .option-card ul { margin: 0; padding: 0; list-style: none; color: #475569; font-size: 12px; flex: 1; }
+    .option-card ul li {
+      margin: 5px 0;
+      padding-left: 22px;
+      position: relative;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.4;
+    }
+    .option-card ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #1a73e8;
+      font-weight: 700;
+      font-size: 11px;
     }
 
     .badge-recommended {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+      display: inline-block;
+      margin-top: 12px;
       padding: 3px 8px;
       background: #1a73e8;
       color: white;
@@ -702,15 +711,17 @@ interface WizardStep {
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      align-self: flex-start;
     }
 
     /* ROLES */
     .role-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
       gap: 10px;
       margin-bottom: 16px;
       width: 100%;
+      align-items: stretch;
     }
 
     .role-card {
@@ -724,7 +735,8 @@ interface WizardStep {
       color: inherit;
       font-family: inherit;
       min-width: 0;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .role-card:hover { border-color: #1a73e8; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(26,115,232,0.1); }
@@ -735,11 +747,10 @@ interface WizardStep {
       margin: 0 0 10px;
       font-size: 11px;
       color: #718096;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+      flex: 1;
     }
     .view-tour { font-size: 11px; color: #1a73e8; font-weight: 600; }
 
