@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { RolesGuard, Roles } from './common/guards/roles.guard';
 import { UserRole, User } from './modules/users/user.entity';
@@ -11,6 +12,7 @@ import { Review } from './modules/reviews/review.entity';
 @Controller()
 export class AppController {
   constructor(
+    @InjectDataSource() private dataSource: DataSource,
     @InjectRepository(User) private usersRepo: Repository<User>,
     @InjectRepository(Patient) private patientsRepo: Repository<Patient>,
     @InjectRepository(Appointment) private appointmentsRepo: Repository<Appointment>,
@@ -18,8 +20,30 @@ export class AppController {
   ) {}
 
   @Get('health')
-  health() {
-    return { status: 'ok', service: 'MedSystem API', version: '1.0.0', timestamp: new Date() };
+  async health() {
+    let dbStatus = 'down';
+    let tablesCount = 0;
+
+    try {
+      if (this.dataSource.isInitialized) {
+        const result = await this.dataSource.query(
+          `SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public'`
+        );
+        tablesCount = parseInt(result[0]?.count || '0', 10);
+        dbStatus = tablesCount > 0 ? 'ok' : 'no-tables';
+      }
+    } catch (e) {
+      dbStatus = 'error';
+    }
+
+    return {
+      status: dbStatus === 'ok' ? 'ok' : 'degraded',
+      service: 'MedSystem API',
+      version: '1.0.0',
+      database: dbStatus,
+      tables: tablesCount,
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @Get('admin/stats')

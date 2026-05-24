@@ -61,7 +61,16 @@ import { TutorialProgress } from './modules/tutorials/tutorial-progress.entity';
         database: config.get('DB_DATABASE'),
         entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress],
         synchronize: config.get('DB_SYNCHRONIZE', 'true') !== 'false',
-        logging: false,
+        logging: ['error'],
+        retryAttempts: 30,
+        retryDelay: 3000,
+        autoLoadEntities: true,
+        keepConnectionAlive: true,
+        extra: {
+          max: 20,
+          connectionTimeoutMillis: 5000,
+          idleTimeoutMillis: 30000,
+        },
       }),
     }),
     ThrottlerModule.forRootAsync({

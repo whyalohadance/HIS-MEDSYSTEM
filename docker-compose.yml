@@ -68,10 +68,10 @@ services:
       - dicom_data:/app/dicom
       - ./backend/fonts:/app/fonts:ro
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
       start_period: 60s
     mem_limit: 1g
     cpus: 1.5
