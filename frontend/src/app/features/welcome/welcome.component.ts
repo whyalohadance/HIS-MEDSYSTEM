@@ -65,10 +65,10 @@ import { firstValueFrom } from 'rxjs';
             <span class="material-icons">tips_and_updates</span>
           </div>
           <div class="tip-content">
-            <div class="tip-label">Совет дня</div>
-            <p class="tip-text">{{ currentTip }}</p>
+            <div class="tip-label">{{ 'WELCOME.TIP_LABEL' | translate }}</div>
+            <p class="tip-text">{{ ('WELCOME.TIPS.' + currentTipKey) | translate }}</p>
           </div>
-          <button class="tip-next" (click)="nextTip()" title="Следующий совет">
+          <button class="tip-next" (click)="nextTip()" [title]="'WELCOME.TIP_LABEL' | translate">
             <span class="material-icons">refresh</span>
           </button>
         </div>
@@ -93,12 +93,12 @@ import { firstValueFrom } from 'rxjs';
 
             <div class="check-content">
               <div class="check-title">
-                <span>{{ item.title }}</span>
+                <span>{{ ('WELCOME.CHECKLIST.' + item.id.toUpperCase() + '_TITLE') | translate }}</span>
                 <span class="check-progress" *ngIf="!item.completed && item.target > 1">
                   {{ item.current }} / {{ item.target }}
                 </span>
               </div>
-              <div class="check-description">{{ item.description }}</div>
+              <div class="check-description">{{ ('WELCOME.CHECKLIST.' + item.id.toUpperCase() + '_DESC') | translate }}</div>
               <div class="mini-progress" *ngIf="!item.completed && item.target > 1">
                 <div class="mini-fill" [style.width.%]="(item.current / item.target) * 100"></div>
               </div>
@@ -143,8 +143,8 @@ import { firstValueFrom } from 'rxjs';
             </div>
 
             <div class="ach-info">
-              <div class="ach-title">{{ a.title }}</div>
-              <div class="ach-desc">{{ a.description }}</div>
+              <div class="ach-title">{{ ('WELCOME.ACH.' + getAchKey(a.id)) | translate }}</div>
+              <div class="ach-desc">{{ ('WELCOME.ACH.' + getAchKey(a.id) + '_DESC') | translate }}</div>
             </div>
 
             <div class="ach-status">
@@ -832,20 +832,9 @@ export class WelcomeComponent implements OnInit {
   achievements: any[] = [];
   stats: any = null;
 
-  private tips = [
-    'Добавьте всех врачей в раздел "Персонал" — это позволит распределять приёмы автоматически.',
-    'Используйте Reception для быстрой записи пациентов — регистрация занимает меньше минуты.',
-    'В разделе "Отчёты" можно скачать аналитику в PDF и Excel за любой период.',
-    'Каталог анализов поддерживает auto-flag: система сама помечает критические результаты.',
-    'DICOM Viewer поддерживает измерения длины, угла и плотности в единицах Хаунсфилда.',
-    'Все туториалы доступны 24/7 в разделе "Обучение" — возвращайтесь и переучивайтесь.',
-    'Система поддерживает 3 языка: переключайте язык в правом верхнем углу.',
-    'Безопасность: bcrypt пароли, JWT токены, RBAC роли — 5 уровней доступа.',
-    'Регулярно проверяйте достижения — некоторые легендарные требуют 100% настройки!',
-    'Тёмная тема включается в Профиле — удобна для работы ночью.',
-  ];
+  private tipKeys = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10'];
   private tipIndex = 0;
-  currentTip = '';
+  currentTipKey = 'T1';
 
   constructor(
     private api: ApiService,
@@ -858,17 +847,21 @@ export class WelcomeComponent implements OnInit {
     this.userName = user.firstName || 'Admin';
 
     // Rotate tip based on day of week so it changes daily
-    this.tipIndex = new Date().getDay() % this.tips.length;
-    this.currentTip = this.tips[this.tipIndex];
+    this.tipIndex = new Date().getDay() % this.tipKeys.length;
+    this.currentTipKey = this.tipKeys[this.tipIndex];
 
     this.loadProgress();
     this.loadClinic();
   }
 
   nextTip(): void {
-    this.tipIndex = (this.tipIndex + 1) % this.tips.length;
-    this.currentTip = this.tips[this.tipIndex];
+    this.tipIndex = (this.tipIndex + 1) % this.tipKeys.length;
+    this.currentTipKey = this.tipKeys[this.tipIndex];
     this.cdr.detectChanges();
+  }
+
+  getAchKey(id: string): string {
+    return id.toUpperCase();
   }
 
   async loadProgress() {
