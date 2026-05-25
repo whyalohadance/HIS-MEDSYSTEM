@@ -38,7 +38,7 @@ const TUTORIALS = [
     description: 'Регистрация пациентов и создание приёмов',
     icon: 'support_agent',
     color: '#f59e0b',
-    role: 'reception',
+    role: 'receptionist',
     duration: 8,
     difficulty: 'medium',
     sections: ['Регистрация пациента', 'Создание приёма', 'Выбор кабинета', 'Проверка свободности доктора'],
@@ -117,8 +117,9 @@ export class TutorialsService {
     private repo: Repository<TutorialProgress>,
   ) {}
 
-  getTutorials() {
-    return TUTORIALS;
+  getTutorials(userRole?: string) {
+    if (!userRole || userRole === 'admin') return TUTORIALS;
+    return TUTORIALS.filter(t => t.role === userRole || t.role === 'all');
   }
 
   async getUserProgress(userId: number) {

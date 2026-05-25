@@ -35,7 +35,7 @@ import { firstValueFrom } from 'rxjs';
         </div>
       </header>
 
-      <div class="filter-bar">
+      <div class="filter-bar" *ngIf="userRole === 'admin'">
         <button class="filter-btn"
           [class.active]="selectedRole === 'all'"
           (click)="filterByRole('all')">
@@ -361,11 +361,12 @@ export class TutorialsListComponent implements OnInit {
   selectedRole = 'all';
   userProgress: any[] = [];
   currentLang = 'ru';
+  userRole = 'doctor';
 
   availableRoles = [
     { id: 'admin',         label: 'Admin',       icon: 'admin_panel_settings', color: '#1a73e8' },
     { id: 'doctor',        label: 'Doctor',      icon: 'medical_services',     color: '#10b981' },
-    { id: 'reception',     label: 'Reception',   icon: 'support_agent',        color: '#f59e0b' },
+    { id: 'receptionist',  label: 'Reception',   icon: 'support_agent',        color: '#f59e0b' },
     { id: 'radiologist',   label: 'Radiolog',    icon: 'medical_information',  color: '#7c3aed' },
     { id: 'lab_technician',label: 'Lab',         icon: 'biotech',              color: '#06b6d4' },
   ];
@@ -379,6 +380,8 @@ export class TutorialsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentLang = this.translate.currentLang || 'ru';
+    const stored = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.userRole = stored.role || 'doctor';
     this.loadTutorials();
     this.loadProgress();
   }
@@ -418,7 +421,7 @@ export class TutorialsListComponent implements OnInit {
   }
 
   countByRole(role: string): number {
-    return this.tutorials.filter(t => t.role === role || t.role === 'all').length;
+    return this.tutorials.filter(t => t.role === role).length;
   }
 
   isCompleted(tutorialId: string): boolean {
@@ -445,8 +448,7 @@ export class TutorialsListComponent implements OnInit {
   }
 
   getDifficultyLabel(d: string): string {
-    const map: Record<string, string> = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
-    return map[d] || d;
+    return this.translate.instant(`TUT.COMMON.DIFFICULTY.${d?.toUpperCase()}`) || d;
   }
 
   openTutorial(t: any) {

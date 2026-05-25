@@ -8,8 +8,8 @@ export class TutorialsController {
   constructor(private tutorialsService: TutorialsService) {}
 
   @Get('list')
-  getList() {
-    return { success: true, data: this.tutorialsService.getTutorials() };
+  getList(@Request() req: any) {
+    return { success: true, data: this.tutorialsService.getTutorials(req.user?.role) };
   }
 
   @Get('progress')
