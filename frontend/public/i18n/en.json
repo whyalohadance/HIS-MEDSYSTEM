@@ -1136,7 +1136,11 @@
       "FIRST_VISIT": "First Visit",
       "FIRST_VISIT_DESC": "First appointment created",
       "PRODUCTION_READY": "Production Ready",
-      "PRODUCTION_READY_DESC": "All setup steps completed"
+      "PRODUCTION_READY_DESC": "All setup steps completed",
+      "UNLOCKED": "unlocked",
+      "LOCKED": "Locked",
+      "IN_PROGRESS": "Setup in progress",
+      "STEPS_LEFT": "steps to completion"
     }
   },
   "SETUP": {

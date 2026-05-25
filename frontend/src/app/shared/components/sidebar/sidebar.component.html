@@ -16,8 +16,8 @@
         <span class="sidebar-section-label">{{ item.sectionKey | translate }}</span>
       </div>
 
-      <!-- Nav Item -->
-      <a *ngIf="!item.divider"
+      <!-- Nav Item (hide /welcome when setup 100% complete) -->
+      <a *ngIf="!item.divider && !(item.route === '/welcome' && welcomeComplete)"
          [routerLink]="item.route"
          routerLinkActive="active"
          class="nav-item"

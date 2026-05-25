@@ -282,6 +282,9 @@
       </div>
     </div>
 
+    <!-- Achievements block (shown when admin views own profile) -->
+    <app-achievements-section *ngIf="isAdmin && selectedUser?.role === 'admin'"></app-achievements-section>
+
     <div class="loading-state" *ngIf="!selectedUser && isLoading">
       <div class="spinner"></div>
       <span>{{ 'COMMON.LOADING' | translate }}</span>

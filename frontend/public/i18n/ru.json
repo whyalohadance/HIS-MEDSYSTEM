@@ -1136,7 +1136,11 @@
       "FIRST_VISIT": "Первый Приём",
       "FIRST_VISIT_DESC": "Первый приём создан",
       "PRODUCTION_READY": "Полная Готовность",
-      "PRODUCTION_READY_DESC": "Все шаги настройки выполнены"
+      "PRODUCTION_READY_DESC": "Все шаги настройки выполнены",
+      "UNLOCKED": "разблокировано",
+      "LOCKED": "Заблокировано",
+      "IN_PROGRESS": "В процессе настройки",
+      "STEPS_LEFT": "шагов до полной готовности"
     }
   },
   "SETUP": {

@@ -5,11 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
+import { AchievementsSectionComponent } from './achievements-section.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, AchievementsSectionComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })

@@ -4,7 +4,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { SidebarService } from '../../../core/services/sidebar.service';
-import { Subscription } from 'rxjs';
+import { ApiService } from '../../../core/services/api.service';
+import { Subscription, firstValueFrom } from 'rxjs';
 
 export interface NavItem {
   key: string;
@@ -25,6 +26,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   navItems: NavItem[] = [];
   isOpen = false;
   collapsed = false;
+  welcomeComplete = false;
   private subs = new Subscription();
 
   private adminNav: NavItem[] = [
@@ -107,7 +109,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-    public sidebarService: SidebarService
+    public sidebarService: SidebarService,
+    private api: ApiService
   ) {}
 
   @HostListener('window:resize')
@@ -131,7 +134,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.authService.currentUser$.subscribe(user => {
         switch (user?.role) {
-          case 'admin':           this.navItems = this.adminNav; break;
+          case 'admin':           this.navItems = this.adminNav; this.loadWelcomeProgress(); break;
           case 'doctor':          this.navItems = this.doctorNav; break;
           case 'receptionist':    this.navItems = this.receptionistNav; break;
           case 'radiologist':     this.navItems = this.radiologistNav; break;
@@ -143,6 +146,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.sidebarService.isOpen$.subscribe(open => this.isOpen = open)
     );
+  }
+
+  private async loadWelcomeProgress(): Promise<void> {
+    try {
+      const res: any = await firstValueFrom(this.api.get('/welcome/progress'));
+      this.welcomeComplete = res?.data?.progress?.isComplete === true;
+    } catch {}
   }
 
   ngOnDestroy(): void {

@@ -1136,7 +1136,11 @@
       "FIRST_VISIT": "Prima Programare",
       "FIRST_VISIT_DESC": "Prima programare creată",
       "PRODUCTION_READY": "Gata pentru Producție",
-      "PRODUCTION_READY_DESC": "Toți pașii de configurare completați"
+      "PRODUCTION_READY_DESC": "Toți pașii de configurare completați",
+      "UNLOCKED": "deblocate",
+      "LOCKED": "Blocat",
+      "IN_PROGRESS": "În curs de configurare",
+      "STEPS_LEFT": "pași până la finalizare"
     }
   },
   "SETUP": {
