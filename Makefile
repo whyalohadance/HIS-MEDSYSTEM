@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY: help up down restart logs logs-be logs-fe logs-db build rebuild dev dev-down \
+        hot hot-down hot-build \
         status shell-be shell-fe shell-db backup restore seed seed-demo reset-db \
         pgadmin clean clean-all prune health deploy update
 
@@ -25,6 +26,10 @@ help: ## Показать список команд
 	@echo "  $(YELLOW)make dev$(NC)             Только БД (для local dev)"
 	@echo ""
 	@echo "$(GREEN)🔧 Разработка:$(NC)"
+	@echo "  $(YELLOW)make dev$(NC)             Только PostgreSQL (запусти BE/FE локально)"
+	@echo "  $(YELLOW)make hot$(NC)             Hot-reload в Docker (ng serve + NestJS watch)"
+	@echo "  $(YELLOW)make hot-build$(NC)       Пересобрать dev образы + hot-reload"
+	@echo "  $(YELLOW)make hot-down$(NC)        Остановить hot-reload"
 	@echo "  $(YELLOW)make build$(NC)           Пересобрать образы"
 	@echo "  $(YELLOW)make rebuild$(NC)         Полная пересборка с нуля"
 	@echo "  $(YELLOW)make logs$(NC)            Все логи (follow)"
@@ -105,6 +110,25 @@ dev: ## Запустить только БД для локальной разр�
 
 dev-down: ## Остановить dev (только БД)
 	docker-compose stop postgres
+
+hot: ## Hot-reload в Docker (backend + frontend с watch)
+	@echo "$(CYAN)🔥 Запуск hot-reload режима...$(NC)"
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+	@echo ""
+	@echo "$(GREEN)✅ Hot-reload запущен!$(NC)"
+	@echo "   🌐 Frontend (ng serve): $(CYAN)http://localhost:4200$(NC)"
+	@echo "   🔌 Backend API:         $(CYAN)http://localhost:3000$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Редактируй src/ — изменения применяются автоматически$(NC)"
+
+hot-build: ## Пересобрать dev образы и запустить hot-reload
+	@echo "$(CYAN)🔨 Сборка dev образов + hot-reload...$(NC)"
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+hot-down: ## Остановить hot-reload режим
+	@echo "$(YELLOW)🛑 Остановка hot-reload...$(NC)"
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+	@echo "$(GREEN)✅ Остановлено$(NC)"
 
 logs: ## Все логи (follow)
 	docker-compose logs -f --tail=100

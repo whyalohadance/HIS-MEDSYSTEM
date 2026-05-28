@@ -1,0 +1,25 @@
+# ============================================
+# Dev image — hot reload via volume mount
+# src/ is mounted at runtime, NOT copied here
+# ============================================
+FROM node:20-alpine
+
+# Native build tools (same as production deps stage)
+RUN apk add --no-cache python3 make g++ tzdata
+ENV TZ=Europe/Chisinau
+
+WORKDIR /app
+
+# Dependencies first — layer is cached until package.json changes
+COPY package*.json ./
+RUN npm ci
+
+# Config files required by NestJS CLI / TypeScript compiler
+COPY tsconfig*.json nest-cli.json ./
+
+# src/ is provided via bind mount at runtime:
+#   ./backend/src:/app/src
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start:dev"]

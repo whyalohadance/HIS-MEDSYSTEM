@@ -1,0 +1,27 @@
+# ============================================
+# Dev image — hot reload via volume mount
+# src/ is mounted at runtime, NOT copied here
+# ============================================
+FROM node:20-alpine
+
+RUN apk add --no-cache tzdata
+ENV TZ=Europe/Chisinau
+
+WORKDIR /app
+
+# Dependencies first — layer is cached until package.json changes
+COPY package*.json ./
+RUN npm ci
+
+# Config files required by Angular CLI / TypeScript compiler
+COPY angular.json tsconfig*.json ./
+
+# i18n translation files (public/ is not under src/, mount separately if needed)
+COPY public ./public
+
+# src/ is provided via bind mount at runtime:
+#   ./frontend/src:/app/src
+
+EXPOSE 4200
+
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--poll", "2000"]

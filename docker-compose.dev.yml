@@ -1,35 +1,51 @@
+# ============================================
+# Docker Compose override — Hot Reload mode
+# ============================================
+# Usage:
+#   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+#   or:  make hot
+#
+# What changes vs production:
+#   - backend: Dockerfile.dev + src/ bind mount + npm run start:dev (NestJS watch)
+#   - frontend: Dockerfile.dev + src/ bind mount + ng serve on port 4200
+#   - postgres:  unchanged (uses base config)
+# ============================================
+
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: his_postgres_dev
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: medical_db
-      POSTGRES_USER: medical_user
-      POSTGRES_PASSWORD: medical123
-    ports:
-      - "5432:5432"
+
+  # ─────────────────────────────────────────
+  # Backend — NestJS watch mode
+  # ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    image: his-medsystem-backend:dev
+    # Bind-mount source so edits are visible instantly
     volumes:
-      - postgres_dev_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U medical_user -d medical_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: his_pgadmin_dev
-    restart: unless-stopped
+      - ./backend/src:/app/src
+    command: npm run start:dev
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@his.local
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
+      NODE_ENV: development
+    # More RAM for TypeScript compilation
+    mem_limit: 2g
+    cpus: 2
 
-volumes:
-  postgres_dev_data:
-    driver: local
+  # ─────────────────────────────────────────
+  # Frontend — Angular dev server (ng serve)
+  # ─────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    image: his-medsystem-frontend:dev
+    # Bind-mount source so edits are visible instantly
+    volumes:
+      - ./frontend/src:/app/src
+    # Expose Angular dev server on port 4200 (in addition to base 80)
+    ports:
+      - "4200:4200"
+    command: npx ng serve --host 0.0.0.0 --poll 2000
+    # More RAM for ng serve + incremental compilation
+    mem_limit: 1g
+    cpus: 1

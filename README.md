@@ -195,11 +195,57 @@ Access the application at **http://localhost**
 
 ---
 
+## Development Mode
+
+Hot-reload setup — code changes apply automatically without rebuilding containers.
+
+### First-time setup
+
+```bash
+# Build the dev images (only needed once or after package.json changes)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+Or with Make:
+
+```bash
+make hot-build
+```
+
+### Day-to-day usage
+
+```bash
+# Start hot-reload (uses cached images)
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+# Or shorter:
+make hot
+```
+
+| Service | URL | Hot-reload trigger |
+|---------|-----|--------------------|
+| Frontend (ng serve) | http://localhost:4200 | Any change in `frontend/src/` |
+| Backend API (NestJS watch) | http://localhost:3000 | Any change in `backend/src/` |
+| API Docs (Swagger) | http://localhost:3000/api/docs | — |
+
+> **How it works**: `./backend/src` and `./frontend/src` are bind-mounted into their respective containers. The Angular CLI (`--poll 2000`) and NestJS (`--watch`) detect changes and recompile automatically.
+
+### Stop
+
+```bash
+make hot-down
+# or
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+```
+
+---
+
 ## Commands
 
 ```bash
-make up               # Start all containers
+make up               # Start all containers (production)
 make down             # Stop all containers
+make hot              # Start hot-reload dev mode
 make logs             # View logs
 make seed-demo        # Load demonstration data
 make test             # Run full test suite
