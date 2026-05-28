@@ -101,7 +101,10 @@
     "FEATURE_1": "Gestionarea pacienților",
     "FEATURE_2": "Programări medicale",
     "FEATURE_3": "Sistem RIS cu DICOM Viewer",
-    "FEATURE_4": "Rapoarte PDF și Excel"
+    "FEATURE_4": "Rapoarte PDF și Excel",
+    "ERROR_THROTTLE": "Prea multe încercări. Așteptați un minut și reîncercați.",
+    "ERROR_LOCKED": "Cont blocat temporar din motive de securitate. Reîncercați în 15 minute.",
+    "ERROR_INVALID": "Credențiale invalide"
   },
   "DASHBOARD": {
     "TITLE": "Panou de control",

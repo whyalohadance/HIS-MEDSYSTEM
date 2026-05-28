@@ -110,9 +110,16 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.getRoleRoute(role)]);
         }
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.error = 'Неверный email или пароль';
+        const msg: string = err?.error?.error?.message || err?.error?.message || '';
+        if (err?.status === 429) {
+          this.error = 'AUTH.ERROR_THROTTLE';
+        } else if (err?.status === 401 && msg.includes('blocat')) {
+          this.error = 'AUTH.ERROR_LOCKED';
+        } else {
+          this.error = 'AUTH.ERROR_INVALID';
+        }
         this.cdr.detectChanges();
       }
     });

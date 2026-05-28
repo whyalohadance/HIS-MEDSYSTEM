@@ -101,7 +101,10 @@
     "FEATURE_1": "Patient management",
     "FEATURE_2": "Medical appointments",
     "FEATURE_3": "RIS System with DICOM Viewer",
-    "FEATURE_4": "PDF and Excel reports"
+    "FEATURE_4": "PDF and Excel reports",
+    "ERROR_THROTTLE": "Too many attempts. Please wait a minute and try again.",
+    "ERROR_LOCKED": "Account temporarily locked for security reasons. Try again in 15 minutes.",
+    "ERROR_INVALID": "Invalid email or password"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",
