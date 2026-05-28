@@ -121,4 +121,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Lockout overlay — перекрывает весь экран при блокировке -->
+  <app-lockout-overlay
+    *ngIf="showLockout"
+    [secondsLeft]="lockoutSeconds"
+    [reason]="lockoutReason"
+    (expired)="onLockoutExpired()">
+  </app-lockout-overlay>
 </main>

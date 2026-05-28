@@ -8,7 +8,9 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { ApiResponse } from '../dto/response.dto';
+
+// NestJS default fields that are not meaningful extras
+const NESTJS_DEFAULT_KEYS = new Set(['message', 'statusCode', 'error']);
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -19,26 +21,36 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // Берём requestId из запроса или генерируем новый
     const requestId = (request as any).requestId || uuidv4();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Внутренняя ошибка сервера';
+    const extras: Record<string, any> = {};
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exResponse = exception.getResponse();
-      message = typeof exResponse === 'string'
-        ? exResponse
-        : (exResponse as any).message || message;
+
+      if (typeof exResponse === 'string') {
+        message = exResponse;
+      } else {
+        const exObj = exResponse as Record<string, any>;
+        message = exObj['message'] || message;
+
+        // Collect extra fields (lockedUntil, code, etc.) excluding NestJS defaults
+        for (const key of Object.keys(exObj)) {
+          if (!NESTJS_DEFAULT_KEYS.has(key)) {
+            extras[key] = exObj[key];
+          }
+        }
+      }
 
       // Если message — массив (ошибки валидации), объединяем
       if (Array.isArray(message)) {
-        message = message.join(', ');
+        message = (message as string[]).join(', ');
       }
     }
 
-    // Логируем реальный exception (не только message для HttpException)
     if (exception instanceof HttpException) {
       this.logger.error(`[${requestId}] ${status} ${request.method} ${request.url}: ${message}`);
     } else {
@@ -49,8 +61,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       );
     }
 
-    response.status(status).json(
-      ApiResponse.fail(status, message, requestId)
-    );
+    response.status(status).json({
+      success: false,
+      requestId,
+      error: { code: status, message, ...extras },
+      timestamp: new Date().toISOString(),
+    });
   }
 }

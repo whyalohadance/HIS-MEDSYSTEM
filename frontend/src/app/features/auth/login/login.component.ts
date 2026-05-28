@@ -5,11 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
+import { LockoutOverlayComponent } from '../../../shared/components/lockout-overlay/lockout-overlay.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, NgClass, FormsModule, TranslateModule],
+  imports: [CommonModule, NgClass, FormsModule, TranslateModule, LockoutOverlayComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -23,6 +24,11 @@ export class LoginComponent implements OnInit {
   emailFocused = false;
   passwordFocused = false;
   isLanguageChanging = false;
+
+  // Lockout overlay state
+  showLockout = false;
+  lockoutSeconds = 60;
+  lockoutReason: 'throttle' | 'locked' = 'throttle';
 
   demoAccounts = [
     { role: 'admin',         email: 'admin@med.com',     label: 'Admin',     icon: 'admin_panel_settings', color: '#1a73e8' },
@@ -88,6 +94,12 @@ export class LoginComponent implements OnInit {
     }, 100);
   }
 
+  onLockoutExpired(): void {
+    this.showLockout = false;
+    this.error = '';
+    this.cdr.detectChanges();
+  }
+
   private getRoleRoute(role: string): string {
     if (role === 'lab_technician') return '/lab-dashboard';
     if (role === 'radiologist') return '/ris-dashboard';
@@ -112,14 +124,31 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        const msg: string = err?.error?.error?.message || err?.error?.message || '';
+
         if (err?.status === 429) {
-          this.error = 'AUTH.ERROR_THROTTLE';
-        } else if (err?.status === 401 && msg.includes('blocat')) {
-          this.error = 'AUTH.ERROR_LOCKED';
+          // Throttler: читаем Retry-After header (секунды), fallback 60
+          const retryAfter = Number(err.headers?.get('Retry-After')) || 60;
+          this.lockoutReason = 'throttle';
+          this.lockoutSeconds = retryAfter;
+          this.showLockout = true;
+        } else if (err?.status === 401 && err?.error?.error?.code === 'ACCOUNT_LOCKED') {
+          // Account lockout: считаем секунды до разблокировки
+          const lockedUntil = err?.error?.error?.lockedUntil;
+          const secondsLeft = lockedUntil
+            ? Math.max(1, Math.ceil((new Date(lockedUntil).getTime() - Date.now()) / 1000))
+            : 15 * 60;
+          this.lockoutReason = 'locked';
+          this.lockoutSeconds = secondsLeft;
+          this.showLockout = true;
         } else {
-          this.error = 'AUTH.ERROR_INVALID';
+          const msg: string = err?.error?.error?.message || err?.error?.message || '';
+          if (msg.includes('blocat')) {
+            this.error = 'AUTH.ERROR_LOCKED';
+          } else {
+            this.error = 'AUTH.ERROR_INVALID';
+          }
         }
+
         this.cdr.detectChanges();
       }
     });

@@ -1426,5 +1426,12 @@
       "SEC4_ITEM3": "CSRF — JWT in Authorization headers",
       "WARN1": "Never share your access token or password with anyone, including other staff members."
     }
+  },
+  "LOCKOUT": {
+    "THROTTLE_TITLE": "Too many attempts",
+    "LOCKED_TITLE": "Account temporarily locked",
+    "THROTTLE_DESC": "You have exceeded the maximum number of login attempts. Please wait and try again.",
+    "LOCKED_DESC": "Your account has been temporarily locked for security reasons after multiple failed attempts.",
+    "WAIT": "You can retry in"
   }
 }

@@ -58,9 +58,11 @@ export class AuthService {
 
     // Проверка блокировки
     if (user.lockedUntil && user.lockedUntil > new Date()) {
-      throw new UnauthorizedException(
-        'Cont blocat temporar. Reîncercați mai târziu',
-      );
+      throw new UnauthorizedException({
+        message: 'Cont blocat temporar',
+        lockedUntil: user.lockedUntil.toISOString(),
+        code: 'ACCOUNT_LOCKED',
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);

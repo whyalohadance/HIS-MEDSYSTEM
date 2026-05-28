@@ -1426,5 +1426,12 @@
       "SEC4_ITEM3": "CSRF — JWT în headerele Authorization",
       "WARN1": "Nu împărtășiți niciodată token-ul sau parola cu alți angajați."
     }
+  },
+  "LOCKOUT": {
+    "THROTTLE_TITLE": "Prea multe încercări",
+    "LOCKED_TITLE": "Cont blocat temporar",
+    "THROTTLE_DESC": "Ați depășit numărul maxim de încercări de autentificare. Așteptați și reîncercați.",
+    "LOCKED_DESC": "Contul a fost blocat temporar din motive de securitate după mai multe încercări eșuate.",
+    "WAIT": "Puteți reîncerca în"
   }
 }
