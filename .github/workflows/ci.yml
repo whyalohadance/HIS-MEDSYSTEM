@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Backend build
+        working-directory: ./backend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Frontend build
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify reports exist
+        run: |
+          test -f API_TEST_REPORT.md || exit 1
+          test -f SECURITY_REPORT.md || exit 1
+          test -f LIGHTHOUSE_REPORT.md || exit 1
+          echo "All test reports present"
