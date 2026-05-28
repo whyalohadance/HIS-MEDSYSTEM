@@ -3,9 +3,12 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
@@ -14,16 +17,16 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    @InjectRepository(User)
+    private usersRepo: Repository<User>,
   ) {}
 
   async register(dto: RegisterDto) {
-    // Проверяем что email не занят
     const existing = await this.usersService.findByEmail(dto.email);
     if (existing) {
       throw new ConflictException('Пользователь с таким email уже существует');
     }
 
-    // Хешируем пароль
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     const user = await this.usersService.create({
@@ -47,14 +50,35 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.usersService.findByEmail(dto.email);
+    const user = await this.usersRepo.findOne({ where: { email: dto.email } });
+
     if (!user) {
-      throw new UnauthorizedException('Неверный email или пароль');
+      throw new UnauthorizedException('Credențiale invalide');
+    }
+
+    // Проверка блокировки
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      throw new UnauthorizedException(
+        'Cont blocat temporar. Reîncercați mai târziu',
+      );
     }
 
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Неверный email или пароль');
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      if (user.failedLoginAttempts >= 5) {
+        user.lockedUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
+      }
+      await this.usersRepo.save(user);
+      throw new UnauthorizedException('Credențiale invalide');
+    }
+
+    // Успешный вход — сбрасываем счётчик
+    if (user.failedLoginAttempts > 0 || user.lockedUntil) {
+      user.failedLoginAttempts = 0;
+      user.lockedUntil = null;
+      await this.usersRepo.save(user);
     }
 
     const token = this.generateToken(user.id, user.email, user.role);

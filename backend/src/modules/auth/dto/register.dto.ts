@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength, IsEnum, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsEnum, IsOptional, Matches } from 'class-validator';
 import { UserRole } from '../../users/user.entity';
 
 export class RegisterDto {
@@ -12,7 +12,9 @@ export class RegisterDto {
   email: string;
 
   @IsString()
-  @MinLength(6)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, {
+    message: 'Parola: minim 8 caractere, o literă mare, una mică și o cifră',
+  })
   password: string;
 
   @IsEnum(UserRole)

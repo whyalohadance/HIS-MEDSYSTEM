@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -68,6 +69,8 @@ async function bootstrap() {
     swaggerOptions: { persistAuthorization: true },
     customSiteTitle: 'HIS-MedSystem API Docs',
   });
+
+  app.use(helmet());
 
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);
