@@ -51,6 +51,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     { key: 'section-system',      divider: true, sectionKey: 'NAV.SECTION_SYSTEM' },
     { key: 'NAV.NOTIFICATIONS',   icon: 'notifications', route: '/notifications' },
     { key: 'NAV.REPORTS',         icon: 'assessment',    route: '/reports' },
+    { key: 'NAV.SYSTEM_HEALTH',   icon: 'monitor_heart', route: '/system-health' },
     { key: 'NAV.TUTORIALS',       icon: 'school',        route: '/tutorials' },
     { key: 'NAV.PROFILE',         icon: 'person',        route: '/profile' },
   ];

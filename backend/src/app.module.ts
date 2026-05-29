@@ -46,6 +46,7 @@ import { SetupModule } from './modules/setup/setup.module';
 import { WelcomeModule } from './modules/dashboard/welcome.module';
 import { TutorialsModule } from './modules/tutorials/tutorials.module';
 import { TutorialProgress } from './modules/tutorials/tutorial-progress.entity';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -100,6 +101,7 @@ import { TutorialProgress } from './modules/tutorials/tutorial-progress.entity';
     SetupModule,
     WelcomeModule,
     TutorialsModule,
+    HealthModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],

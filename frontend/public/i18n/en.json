@@ -30,7 +30,8 @@
     "LAB_WORKLIST_NAV": "Lab Worklist",
     "DICOM_VIEWER": "DICOM Viewer",
     "WELCOME": "Start",
-    "TUTORIALS": "Learn"
+    "TUTORIALS": "Learn",
+    "SYSTEM_HEALTH": "System Health"
   },
   "COMMON": {
     "SAVE": "Save",
@@ -1433,5 +1434,29 @@
     "THROTTLE_DESC": "You have exceeded the maximum number of login attempts. Please wait and try again.",
     "LOCKED_DESC": "Your account has been temporarily locked for security reasons after multiple failed attempts.",
     "WAIT": "You can retry in"
+  },
+  "SYSTEM_HEALTH": {
+    "TITLE": "System Health",
+    "SUBTITLE": "Real-time monitoring of all system components",
+    "REFRESH": "Refresh",
+    "LAST_UPDATED": "Updated",
+    "AGO": "ago",
+    "STATUS_OK": "Operational",
+    "STATUS_OFFLINE": "Offline",
+    "STATUS_DEGRADED": "Degraded",
+    "BACKEND": "Backend",
+    "DATABASE": "Database",
+    "DISK": "Disk Storage",
+    "MEMORY": "Memory",
+    "UPTIME": "Uptime",
+    "DB_COUNTS": "Database Records",
+    "PATIENTS": "Patients",
+    "APPOINTMENTS": "Appointments",
+    "USERS": "Users",
+    "STUDIES": "Studies",
+    "RESPONSE_TIME": "Response time",
+    "HEAP_USED": "Heap used",
+    "USED_OF": "of",
+    "LOADING": "Loading system status..."
   }
 }
