@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { LanguageService } from '../../../core/services/language.service';
 import { LockoutOverlayComponent } from '../../../shared/components/lockout-overlay/lockout-overlay.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,9 @@ export class LoginComponent implements OnInit {
   emailFocused = false;
   passwordFocused = false;
   isLanguageChanging = false;
+
+  /** Demo accounts visible only in non-production builds */
+  showDemo = !environment.production;
 
   // Lockout overlay state
   showLockout = false;

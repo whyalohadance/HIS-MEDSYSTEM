@@ -99,7 +99,7 @@
           <div class="btn-spinner" *ngIf="isLoading"></div>
         </button>
       </form>
-      <div class="demo-section fg-4">
+      <div class="demo-section fg-4" *ngIf="showDemo">
         <div class="demo-label">Demo accounts</div>
         <div class="demo-accounts">
           <button class="demo-btn" *ngFor="let acc of demoAccounts"
