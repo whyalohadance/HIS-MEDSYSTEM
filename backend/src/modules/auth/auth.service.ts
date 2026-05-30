@@ -11,6 +11,8 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuditService } from '../audit/audit.service';
+import { AuditAction } from '../audit/audit-log.entity';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(User)
     private usersRepo: Repository<User>,
+    private auditService: AuditService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -53,6 +56,14 @@ export class AuthService {
     const user = await this.usersRepo.findOne({ where: { email: dto.email } });
 
     if (!user) {
+      this.auditService.log({
+        action: AuditAction.LOGIN_FAILED,
+        resource: 'auth',
+        method: 'POST',
+        endpoint: '/api/auth/login',
+        success: false,
+        description: `Failed login: unknown email`,
+      }).catch(() => {});
       throw new UnauthorizedException('Credențiale invalide');
     }
 
@@ -70,9 +81,18 @@ export class AuthService {
     if (!isPasswordValid) {
       user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
       if (user.failedLoginAttempts >= 5) {
-        user.lockedUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
+        user.lockedUntil = new Date(Date.now() + 15 * 60 * 1000);
       }
       await this.usersRepo.save(user);
+      this.auditService.log({
+        userId: user.id,
+        action: AuditAction.LOGIN_FAILED,
+        resource: 'auth',
+        method: 'POST',
+        endpoint: '/api/auth/login',
+        success: false,
+        description: `Failed login attempt for ${user.email}`,
+      }).catch(() => {});
       throw new UnauthorizedException('Credențiale invalide');
     }
 
@@ -82,6 +102,16 @@ export class AuthService {
       user.lockedUntil = null;
       await this.usersRepo.save(user);
     }
+
+    this.auditService.log({
+      userId: user.id,
+      action: AuditAction.LOGIN,
+      resource: 'auth',
+      method: 'POST',
+      endpoint: '/api/auth/login',
+      success: true,
+      description: `User ${user.email} logged in`,
+    }).catch(() => {});
 
     const token = this.generateToken(user.id, user.email, user.role);
 

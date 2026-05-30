@@ -31,7 +31,8 @@
     "DICOM_VIEWER": "DICOM Viewer",
     "WELCOME": "Start",
     "TUTORIALS": "Learn",
-    "SYSTEM_HEALTH": "System Health"
+    "SYSTEM_HEALTH": "System Health",
+    "AUDIT": "Audit Log"
   },
   "COMMON": {
     "SAVE": "Save",
@@ -1471,6 +1472,38 @@
       "DISK_DICOM": "DICOM studies use a lot of space",
       "MEMORY_LEAK": "Possible memory leak",
       "MEMORY_LOAD": "High load — many concurrent users"
+    }
+  },
+  "AUDIT": {
+    "TITLE": "Activity Log",
+    "SUBTITLE": "All administrative actions",
+    "TOTAL": "Total actions",
+    "TODAY": "Today",
+    "TOP_USERS": "Active users",
+    "TOP_ACTIONS": "Action types",
+    "FILTERS": "Filters",
+    "ACTION": "Action",
+    "USER": "User",
+    "RESOURCE": "Resource",
+    "DATE_FROM": "From",
+    "DATE_TO": "To",
+    "SEARCH": "Search",
+    "ALL": "All",
+    "EXPORT_CSV": "Export CSV",
+    "TIMESTAMP": "Date & Time",
+    "STATUS": "Status",
+    "IP_ADDRESS": "IP",
+    "NO_RESULTS": "No records found",
+    "AUTO_REFRESH": "Auto-refresh",
+    "ACTIONS": {
+      "CREATE": "Created",
+      "UPDATE": "Updated",
+      "DELETE": "Deleted",
+      "LOGIN": "Logged in",
+      "LOGOUT": "Logged out",
+      "LOGIN_FAILED": "Login failed",
+      "ACCESS": "Access",
+      "EXPORT": "Export"
     }
   }
 }

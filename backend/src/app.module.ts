@@ -47,6 +47,9 @@ import { WelcomeModule } from './modules/dashboard/welcome.module';
 import { TutorialsModule } from './modules/tutorials/tutorials.module';
 import { TutorialProgress } from './modules/tutorials/tutorial-progress.entity';
 import { HealthModule } from './modules/health/health.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { AuditLog } from './modules/audit/audit-log.entity';
+import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
 @Module({
   imports: [
@@ -61,7 +64,7 @@ import { HealthModule } from './modules/health/health.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
-        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress],
+        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress, AuditLog],
         synchronize: config.get('DB_SYNCHRONIZE', 'true') !== 'false',
         logging: ['error'],
         retryAttempts: 30,
@@ -102,6 +105,7 @@ import { HealthModule } from './modules/health/health.module';
     WelcomeModule,
     TutorialsModule,
     HealthModule,
+    AuditModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],
@@ -110,6 +114,7 @@ import { HealthModule } from './modules/health/health.module';
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: RequestIdInterceptor },
     { provide: APP_INTERCEPTOR, useClass: TimeoutInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: AuditInterceptor },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })

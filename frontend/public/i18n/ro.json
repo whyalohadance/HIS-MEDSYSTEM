@@ -31,7 +31,8 @@
     "DICOM_VIEWER": "DICOM Viewer",
     "WELCOME": "Start",
     "TUTORIALS": "Învățare",
-    "SYSTEM_HEALTH": "Sănătatea sistemului"
+    "SYSTEM_HEALTH": "Sănătatea sistemului",
+    "AUDIT": "Jurnal de audit"
   },
   "COMMON": {
     "SAVE": "Salvează",
@@ -1471,6 +1472,38 @@
       "DISK_DICOM": "Studii DICOM ocupă mult spațiu",
       "MEMORY_LEAK": "Posibilă scurgere de memorie (memory leak)",
       "MEMORY_LOAD": "Încărcare mare — prea mulți utilizatori simultan"
+    }
+  },
+  "AUDIT": {
+    "TITLE": "Jurnal de activitate",
+    "SUBTITLE": "Toate acțiunile administrative",
+    "TOTAL": "Total acțiuni",
+    "TODAY": "Astăzi",
+    "TOP_USERS": "Utilizatori activi",
+    "TOP_ACTIONS": "Tipuri de acțiuni",
+    "FILTERS": "Filtre",
+    "ACTION": "Acțiune",
+    "USER": "Utilizator",
+    "RESOURCE": "Resursă",
+    "DATE_FROM": "De la",
+    "DATE_TO": "Până la",
+    "SEARCH": "Caută",
+    "ALL": "Toate",
+    "EXPORT_CSV": "Exportă CSV",
+    "TIMESTAMP": "Data și ora",
+    "STATUS": "Status",
+    "IP_ADDRESS": "IP",
+    "NO_RESULTS": "Nu există înregistrări",
+    "AUTO_REFRESH": "Auto-reîmprospătare",
+    "ACTIONS": {
+      "CREATE": "Creat",
+      "UPDATE": "Modificat",
+      "DELETE": "Șters",
+      "LOGIN": "Autentificat",
+      "LOGOUT": "Deconectat",
+      "LOGIN_FAILED": "Autentificare eșuată",
+      "ACCESS": "Acces",
+      "EXPORT": "Export"
     }
   }
 }

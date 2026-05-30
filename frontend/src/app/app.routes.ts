@@ -56,6 +56,7 @@ export const routes: Routes = [
       { path: 'examinations', loadComponent: () => import('./features/examinations/examinations.component').then(m => m.ExaminationsComponent), canActivate: [adminGuard] },
       { path: 'reports', loadComponent: () => import('./features/reports/reports.component').then(m => m.ReportsComponent), canActivate: [adminGuard] },
       { path: 'system-health', loadComponent: () => import('./features/system-health/system-health.component').then(m => m.SystemHealthComponent), canActivate: [adminGuard] },
+      { path: 'audit', loadComponent: () => import('./features/audit-log/audit-log.component').then(m => m.AuditLogComponent), canActivate: [adminGuard] },
 
       // Tutorial Center (all roles)
       { path: 'tutorials', loadComponent: () => import('./features/tutorials/tutorials-list.component').then(m => m.TutorialsListComponent) },

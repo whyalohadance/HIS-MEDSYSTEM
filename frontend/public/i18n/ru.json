@@ -31,7 +31,8 @@
     "DICOM_VIEWER": "DICOM Viewer",
     "WELCOME": "Старт",
     "TUTORIALS": "Обучение",
-    "SYSTEM_HEALTH": "Здоровье системы"
+    "SYSTEM_HEALTH": "Здоровье системы",
+    "AUDIT": "Журнал аудита"
   },
   "COMMON": {
     "SAVE": "Сохранить",
@@ -1471,6 +1472,38 @@
       "DISK_DICOM": "DICOM-исследования занимают место",
       "MEMORY_LEAK": "Возможная утечка памяти",
       "MEMORY_LOAD": "Высокая нагрузка — много пользователей"
+    }
+  },
+  "AUDIT": {
+    "TITLE": "Журнал активности",
+    "SUBTITLE": "Все административные действия",
+    "TOTAL": "Всего действий",
+    "TODAY": "Сегодня",
+    "TOP_USERS": "Активные пользователи",
+    "TOP_ACTIONS": "Типы действий",
+    "FILTERS": "Фильтры",
+    "ACTION": "Действие",
+    "USER": "Пользователь",
+    "RESOURCE": "Ресурс",
+    "DATE_FROM": "От",
+    "DATE_TO": "До",
+    "SEARCH": "Поиск",
+    "ALL": "Все",
+    "EXPORT_CSV": "Экспорт CSV",
+    "TIMESTAMP": "Дата и время",
+    "STATUS": "Статус",
+    "IP_ADDRESS": "IP",
+    "NO_RESULTS": "Записей не найдено",
+    "AUTO_REFRESH": "Авто-обновление",
+    "ACTIONS": {
+      "CREATE": "Создание",
+      "UPDATE": "Изменение",
+      "DELETE": "Удаление",
+      "LOGIN": "Вход",
+      "LOGOUT": "Выход",
+      "LOGIN_FAILED": "Ошибка входа",
+      "ACCESS": "Доступ",
+      "EXPORT": "Экспорт"
     }
   }
 }
