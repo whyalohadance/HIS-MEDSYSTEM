@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { Subject, interval } from 'rxjs';
-import { takeUntil, switchMap, startWith } from 'rxjs/operators';
+import { takeUntil, startWith } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 
 interface HealthCheck {
@@ -50,46 +50,88 @@ interface HealthStats {
 
       <!-- Loading skeleton -->
       <div class="sh-grid" *ngIf="loading && !check">
-        <div class="sh-card skeleton" *ngFor="let i of [1,2,3,4,5,6]"></div>
+        <div class="sh-card skeleton" *ngFor="let i of [1,2,3,4,5]"></div>
+        <div class="sh-card skeleton counts-card"></div>
       </div>
 
       <!-- Cards grid -->
       <div class="sh-grid" *ngIf="check || stats">
 
         <!-- Card 1: Backend status -->
-        <div class="sh-card" [class.card-ok]="check?.status === 'ok'" [class.card-err]="check?.status !== 'ok'">
-          <div class="card-icon">
-            <span class="material-icons">dns</span>
+        <div class="sh-card" [class.card-ok]="check?.status === 'ok'" [class.card-err]="check?.status !== 'ok'" [class.refreshing]="isRefreshing">
+          <div class="card-icon-wrap">
+            <span class="material-icons">{{ check?.status === 'ok' ? 'cloud_done' : 'cloud_off' }}</span>
           </div>
           <div class="card-body">
             <h3>{{ 'SYSTEM_HEALTH.BACKEND' | translate }}</h3>
-            <div class="status-badge" [class.ok]="check?.status === 'ok'" [class.err]="check?.status !== 'ok'">
+            <div class="status-badge" [class.online]="check?.status === 'ok'" [class.offline]="check?.status !== 'ok'">
               <span class="material-icons">{{ check?.status === 'ok' ? 'check_circle' : 'error' }}</span>
               {{ check?.status === 'ok' ? ('SYSTEM_HEALTH.ONLINE' | translate) : ('SYSTEM_HEALTH.OFFLINE' | translate) }}
+            </div>
+            <div class="error-details" *ngIf="check?.status !== 'ok'">
+              <button class="error-toggle" (click)="toggleErrorDetails('backend')">
+                <span class="material-icons">{{ expandedErrors.has('backend') ? 'expand_less' : 'expand_more' }}</span>
+                {{ (expandedErrors.has('backend') ? 'SYSTEM_HEALTH.HIDE_DETAILS' : 'SYSTEM_HEALTH.SHOW_DETAILS') | translate }}
+              </button>
+              <div class="error-content" *ngIf="expandedErrors.has('backend')">
+                <div class="error-causes">
+                  <p class="causes-label">{{ 'SYSTEM_HEALTH.POSSIBLE_CAUSES' | translate }}:</p>
+                  <ul>
+                    <li *ngFor="let cause of getCauses('backend')">{{ cause | translate }}</li>
+                  </ul>
+                </div>
+                <button class="retry-btn" (click)="refresh()">
+                  <span class="material-icons">refresh</span>
+                  {{ 'SYSTEM_HEALTH.RETRY' | translate }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Card 2: Database -->
-        <div class="sh-card" [class.card-ok]="dbStatus === 'up'" [class.card-err]="dbStatus !== 'up'">
-          <div class="card-icon">
+        <div class="sh-card" [class.card-ok]="dbStatus === 'up'" [class.card-err]="dbStatus !== 'up'" [class.refreshing]="isRefreshing">
+          <div class="card-icon-wrap">
             <span class="material-icons">storage</span>
           </div>
           <div class="card-body">
             <h3>{{ 'SYSTEM_HEALTH.DATABASE' | translate }}</h3>
-            <div class="status-badge" [class.ok]="dbStatus === 'up'" [class.err]="dbStatus !== 'up'">
+            <div class="status-badge" [class.online]="dbStatus === 'up'" [class.offline]="dbStatus !== 'up'">
               <span class="material-icons">{{ dbStatus === 'up' ? 'check_circle' : 'error' }}</span>
               {{ dbStatus === 'up' ? ('SYSTEM_HEALTH.ONLINE' | translate) : ('SYSTEM_HEALTH.OFFLINE' | translate) }}
             </div>
             <p class="card-detail" *ngIf="dbResponseTime != null">
+              <span class="material-icons" style="font-size:13px;vertical-align:middle">speed</span>
               {{ dbResponseTime }} {{ 'SYSTEM_HEALTH.MS' | translate }}
             </p>
+            <div class="error-details" *ngIf="dbStatus !== 'up'">
+              <button class="error-toggle" (click)="toggleErrorDetails('database')">
+                <span class="material-icons">{{ expandedErrors.has('database') ? 'expand_less' : 'expand_more' }}</span>
+                {{ (expandedErrors.has('database') ? 'SYSTEM_HEALTH.HIDE_DETAILS' : 'SYSTEM_HEALTH.SHOW_DETAILS') | translate }}
+              </button>
+              <div class="error-content" *ngIf="expandedErrors.has('database')">
+                <div class="error-causes">
+                  <p class="causes-label">{{ 'SYSTEM_HEALTH.POSSIBLE_CAUSES' | translate }}:</p>
+                  <ul>
+                    <li *ngFor="let cause of getCauses('database')">{{ cause | translate }}</li>
+                  </ul>
+                </div>
+                <button class="retry-btn" (click)="refresh()">
+                  <span class="material-icons">refresh</span>
+                  {{ 'SYSTEM_HEALTH.RETRY' | translate }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Card 3: Disk usage -->
-        <div class="sh-card" [class.card-ok]="diskPercent < 70" [class.card-warn]="diskPercent >= 70 && diskPercent < 90" [class.card-err]="diskPercent >= 90">
-          <div class="card-icon">
+        <div class="sh-card"
+          [class.card-ok]="diskPercent < 70"
+          [class.card-warn]="diskPercent >= 70 && diskPercent < 90"
+          [class.card-err]="diskPercent >= 90"
+          [class.refreshing]="isRefreshing">
+          <div class="card-icon-wrap">
             <span class="material-icons">hard_drive</span>
           </div>
           <div class="card-body">
@@ -105,7 +147,20 @@ interface HealthStats {
               </div>
               <span class="progress-label">{{ diskPercent }}%</span>
             </div>
-            <p class="card-detail" *ngIf="diskStatus">{{ diskStatus }}</p>
+            <div class="error-details" *ngIf="diskPercent >= 90">
+              <button class="error-toggle" (click)="toggleErrorDetails('disk')">
+                <span class="material-icons">{{ expandedErrors.has('disk') ? 'expand_less' : 'expand_more' }}</span>
+                {{ (expandedErrors.has('disk') ? 'SYSTEM_HEALTH.HIDE_DETAILS' : 'SYSTEM_HEALTH.SHOW_DETAILS') | translate }}
+              </button>
+              <div class="error-content" *ngIf="expandedErrors.has('disk')">
+                <div class="error-causes">
+                  <p class="causes-label">{{ 'SYSTEM_HEALTH.POSSIBLE_CAUSES' | translate }}:</p>
+                  <ul>
+                    <li *ngFor="let cause of getCauses('disk')">{{ cause | translate }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -113,8 +168,9 @@ interface HealthStats {
         <div class="sh-card" *ngIf="stats"
           [class.card-ok]="stats.memory.percent < 70"
           [class.card-warn]="stats.memory.percent >= 70 && stats.memory.percent < 90"
-          [class.card-err]="stats.memory.percent >= 90">
-          <div class="card-icon">
+          [class.card-err]="stats.memory.percent >= 90"
+          [class.refreshing]="isRefreshing">
+          <div class="card-icon-wrap">
             <span class="material-icons">memory</span>
           </div>
           <div class="card-body">
@@ -130,14 +186,32 @@ interface HealthStats {
               </div>
               <span class="progress-label">{{ stats.memory.percent }}%</span>
             </div>
-            <p class="card-detail">{{ stats.memory.heapUsedMB }} / {{ stats.memory.heapTotalMB }} MB heap · {{ stats.memory.rssMB }} MB RSS</p>
+            <p class="card-detail">{{ stats.memory.heapUsedMB }} / {{ stats.memory.heapTotalMB }} MB</p>
+            <div class="error-details" *ngIf="stats.memory.percent >= 90">
+              <button class="error-toggle" (click)="toggleErrorDetails('memory')">
+                <span class="material-icons">{{ expandedErrors.has('memory') ? 'expand_less' : 'expand_more' }}</span>
+                {{ (expandedErrors.has('memory') ? 'SYSTEM_HEALTH.HIDE_DETAILS' : 'SYSTEM_HEALTH.SHOW_DETAILS') | translate }}
+              </button>
+              <div class="error-content" *ngIf="expandedErrors.has('memory')">
+                <div class="error-causes">
+                  <p class="causes-label">{{ 'SYSTEM_HEALTH.POSSIBLE_CAUSES' | translate }}:</p>
+                  <ul>
+                    <li *ngFor="let cause of getCauses('memory')">{{ cause | translate }}</li>
+                  </ul>
+                </div>
+                <button class="retry-btn" (click)="refresh()">
+                  <span class="material-icons">refresh</span>
+                  {{ 'SYSTEM_HEALTH.RETRY' | translate }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Card 5: Uptime -->
-        <div class="sh-card card-neutral" *ngIf="stats">
-          <div class="card-icon">
-            <span class="material-icons">timer</span>
+        <div class="sh-card card-neutral" *ngIf="stats" [class.refreshing]="isRefreshing">
+          <div class="card-icon-wrap">
+            <span class="material-icons">schedule</span>
           </div>
           <div class="card-body">
             <h3>{{ 'SYSTEM_HEALTH.UPTIME' | translate }}</h3>
@@ -145,43 +219,47 @@ interface HealthStats {
           </div>
         </div>
 
-        <!-- Card 6: DB Counts -->
-        <div class="sh-card card-neutral" *ngIf="stats">
-          <div class="card-icon">
-            <span class="material-icons">bar_chart</span>
+        <!-- Card 6: DB Counts — spans 2 columns -->
+        <div class="sh-card card-neutral counts-card" *ngIf="stats" [class.refreshing]="isRefreshing">
+          <div class="card-header-row">
+            <div class="card-icon-wrap">
+              <span class="material-icons">analytics</span>
+            </div>
+            <h3>{{ 'SYSTEM_HEALTH.DB_COUNTS' | translate }}</h3>
           </div>
-          <div class="card-body">
-            <h3>{{ 'SYSTEM_HEALTH.COUNTS' | translate }}</h3>
-            <div class="counts-grid">
-              <div class="count-item">
-                <span class="count-number">{{ stats.counts.patients }}</span>
-                <span class="count-label">{{ 'SYSTEM_HEALTH.PATIENTS' | translate }}</span>
-              </div>
-              <div class="count-item">
-                <span class="count-number">{{ stats.counts.appointments }}</span>
-                <span class="count-label">{{ 'SYSTEM_HEALTH.APPOINTMENTS' | translate }}</span>
-              </div>
-              <div class="count-item">
-                <span class="count-number">{{ stats.counts.users }}</span>
-                <span class="count-label">{{ 'SYSTEM_HEALTH.USERS' | translate }}</span>
-              </div>
-              <div class="count-item">
-                <span class="count-number">{{ stats.counts.studies }}</span>
-                <span class="count-label">{{ 'SYSTEM_HEALTH.STUDIES' | translate }}</span>
-              </div>
+          <div class="counts-grid">
+            <div class="count-item">
+              <span class="material-icons count-icon">person</span>
+              <div class="count-number">{{ stats.counts.patients }}</div>
+              <div class="count-label">{{ 'SYSTEM_HEALTH.PATIENTS' | translate }}</div>
+            </div>
+            <div class="count-item">
+              <span class="material-icons count-icon">event</span>
+              <div class="count-number">{{ stats.counts.appointments }}</div>
+              <div class="count-label">{{ 'SYSTEM_HEALTH.APPOINTMENTS' | translate }}</div>
+            </div>
+            <div class="count-item">
+              <span class="material-icons count-icon">group</span>
+              <div class="count-number">{{ stats.counts.users }}</div>
+              <div class="count-label">{{ 'SYSTEM_HEALTH.USERS' | translate }}</div>
+            </div>
+            <div class="count-item">
+              <span class="material-icons count-icon">image</span>
+              <div class="count-number">{{ stats.counts.studies }}</div>
+              <div class="count-label">{{ 'SYSTEM_HEALTH.STUDIES' | translate }}</div>
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Error state -->
+      <!-- Full error state (no data at all) -->
       <div class="sh-error" *ngIf="loadError && !check && !stats">
         <span class="material-icons">cloud_off</span>
         <p>{{ loadError }}</p>
         <button class="btn-refresh" (click)="refresh()">
           <span class="material-icons">refresh</span>
-          {{ 'SYSTEM_HEALTH.MANUAL_REFRESH' | translate }}
+          {{ 'SYSTEM_HEALTH.RETRY' | translate }}
         </button>
       </div>
     </div>
@@ -228,12 +306,12 @@ interface HealthStats {
 
     .btn-refresh {
       display: flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 12px;
+      padding: 8px 18px; border-radius: 12px;
       background: #1a73e8; color: white; border: none;
       font-size: 14px; font-weight: 600; cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
     }
-    .btn-refresh:hover:not(:disabled) { background: #1558c0; }
+    .btn-refresh:hover:not(:disabled) { background: #1558c0; transform: translateY(-1px); }
     .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-refresh .material-icons { font-size: 18px; }
 
@@ -245,6 +323,8 @@ interface HealthStats {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     /* ── Cards ── */
@@ -255,93 +335,191 @@ interface HealthStats {
       display: flex; gap: 16px;
       border: 2px solid transparent;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1),
+                  box-shadow 0.25s cubic-bezier(0.4,0,0.2,1),
+                  border-color 0.25s;
       animation: fadeUp 0.4s ease both;
     }
-    .sh-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .sh-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.1);
+    }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .card-ok  { border-color: rgba(16,185,129,0.2); }
-    .card-warn { border-color: rgba(245,158,11,0.25); }
-    .card-err { border-color: rgba(239,68,68,0.2); }
-    .card-neutral { border-color: rgba(26,115,232,0.15); }
+    @keyframes refresh-flash {
+      0%   { background: white; }
+      40%  { background: rgba(26, 115, 232, 0.05); }
+      100% { background: white; }
+    }
+    .sh-card.refreshing { animation: refresh-flash 0.6s ease; }
 
-    .card-icon {
-      width: 52px; height: 52px; border-radius: 16px;
+    .card-ok     { border-color: rgba(16,185,129,0.25); }
+    .card-warn   { border-color: rgba(245,158,11,0.30); }
+    .card-err    { border-color: rgba(239,68,68,0.25); }
+    .card-neutral{ border-color: rgba(26,115,232,0.18); }
+
+    /* Card icon */
+    .card-icon-wrap {
+      width: 52px; height: 52px; min-width: 52px; border-radius: 16px;
       background: #f4f6f9;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
     }
-    .card-ok  .card-icon { background: #e8f5e9; }
-    .card-ok  .card-icon .material-icons { color: #10b981; }
-    .card-warn .card-icon { background: #fff8e1; }
-    .card-warn .card-icon .material-icons { color: #f59e0b; }
-    .card-err .card-icon { background: #fce8e6; }
-    .card-err .card-icon .material-icons { color: #ef4444; }
-    .card-neutral .card-icon { background: #e8f0fe; }
-    .card-neutral .card-icon .material-icons { color: #1a73e8; }
-    .card-icon .material-icons { font-size: 26px; color: #718096; }
+    .card-icon-wrap .material-icons { font-size: 26px; color: #718096; }
+
+    .card-ok   .card-icon-wrap { background: #e8f5e9; }
+    .card-ok   .card-icon-wrap .material-icons { color: #10b981; }
+    .card-warn .card-icon-wrap { background: #fff8e1; }
+    .card-warn .card-icon-wrap .material-icons { color: #f59e0b; }
+    .card-err  .card-icon-wrap { background: #fce8e6; }
+    .card-err  .card-icon-wrap .material-icons { color: #ef4444; }
+    .card-neutral .card-icon-wrap { background: #e8f0fe; }
+    .card-neutral .card-icon-wrap .material-icons { color: #1a73e8; }
 
     .card-body { flex: 1; min-width: 0; }
     .card-body h3 {
-      font-size: 13px; font-weight: 700; color: #a0aec0;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 12px; font-weight: 700; color: #a0aec0;
+      text-transform: uppercase; letter-spacing: 0.6px;
       margin: 0 0 10px;
     }
 
     /* Status badge */
     .status-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 15px; font-weight: 700; border-radius: 8px;
-      padding: 4px 10px;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 700; border-radius: 20px;
+      padding: 5px 12px;
     }
-    .status-badge.ok  { color: #10b981; background: #e8f5e9; }
-    .status-badge.err { color: #ef4444; background: #fce8e6; }
+    .status-badge.online  { color: #059669; background: rgba(16,185,129,0.10); }
+    .status-badge.online::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: #10b981; animation: pulse 2s infinite; flex-shrink: 0;
+    }
+    .status-badge.offline { color: #dc2626; background: rgba(239,68,68,0.10); }
     .status-badge .material-icons { font-size: 16px; }
 
-    .card-detail { font-size: 12px; color: #a0aec0; margin: 6px 0 0; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .card-detail { font-size: 12px; color: #a0aec0; margin: 6px 0 0; display: flex; align-items: center; gap: 4px; }
 
     /* Progress bar */
-    .progress-wrap { display: flex; align-items: center; gap: 10px; }
+    .progress-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
     .progress-bar {
       flex: 1; height: 10px; background: #f0f4f8; border-radius: 99px; overflow: hidden;
     }
     .progress-fill {
-      height: 100%; border-radius: 99px; transition: width 0.5s ease;
+      height: 100%; border-radius: 99px;
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
     }
     .fill-ok   { background: linear-gradient(90deg, #10b981, #34d399); }
     .fill-warn { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
     .fill-err  { background: linear-gradient(90deg, #ef4444, #f87171); }
-    .progress-label { font-size: 13px; font-weight: 700; color: #4a5568; min-width: 38px; text-align: right; }
+    .progress-label {
+      font-size: 13px; font-weight: 700; color: #4a5568; min-width: 38px; text-align: right;
+    }
 
     /* Uptime */
     .uptime-value {
-      font-size: 22px; font-weight: 800; color: #0f2d52;
+      font-size: 20px; font-weight: 800; color: #0f2d52;
       font-variant-numeric: tabular-nums;
     }
 
-    /* Counts grid */
+    /* ── DB Counts card ── */
+    .counts-card {
+      grid-column: span 2;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card-header-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .card-header-row h3 { margin: 0; }
     .counts-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
     }
     .count-item {
-      background: #f8faff; border-radius: 12px; padding: 10px 12px;
       text-align: center;
+      padding: 16px 8px;
+      background: rgba(26, 115, 232, 0.04);
+      border-radius: 14px;
+      transition: background 0.2s, transform 0.2s;
+      cursor: default;
+    }
+    .count-item:hover {
+      background: rgba(26, 115, 232, 0.09);
+      transform: translateY(-2px);
+    }
+    .count-icon {
+      display: block;
+      font-size: 22px !important;
+      color: #1a73e8;
+      margin-bottom: 6px;
     }
     .count-number {
-      display: block; font-size: 22px; font-weight: 800; color: #0f2d52;
-      line-height: 1.2;
+      display: block; font-size: 28px; font-weight: 800; color: #1a73e8;
+      line-height: 1.1; margin-bottom: 4px;
     }
     .count-label {
-      display: block; font-size: 11px; color: #a0aec0;
-      text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px;
+      display: block; font-size: 11px; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    /* Skeleton */
+    /* ── Error details ── */
+    .error-details { margin-top: 12px; }
+    .error-toggle {
+      background: rgba(239, 68, 68, 0.07);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #dc2626;
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600;
+      width: 100%; justify-content: center;
+      transition: background 0.2s;
+    }
+    .error-toggle:hover { background: rgba(239, 68, 68, 0.13); }
+    .error-toggle .material-icons { font-size: 16px; }
+
+    .error-content {
+      margin-top: 10px;
+      padding: 14px;
+      background: rgba(239, 68, 68, 0.04);
+      border-radius: 10px;
+      border-left: 3px solid #dc2626;
+    }
+    .causes-label {
+      font-size: 12px; font-weight: 600; color: #64748b;
+      margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .error-causes ul {
+      list-style: none; padding: 0; margin: 0 0 10px;
+    }
+    .error-causes li {
+      padding: 5px 0 5px 18px;
+      position: relative;
+      font-size: 12px; color: #64748b;
+    }
+    .error-causes li::before {
+      content: '•'; position: absolute; left: 4px; color: #ef4444;
+    }
+    .retry-btn {
+      background: white; border: 1px solid #ef4444; color: #dc2626;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; transition: all 0.2s;
+    }
+    .retry-btn:hover { background: #ef4444; color: white; }
+    .retry-btn .material-icons { font-size: 15px; }
+
+    /* ── Skeleton ── */
     .skeleton {
       min-height: 120px;
       background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
@@ -350,17 +528,31 @@ interface HealthStats {
     }
     @keyframes shimmer { to { background-position: -200% 0; } }
 
-    /* Error state */
+    /* ── Error state ── */
     .sh-error {
       text-align: center; padding: 60px 24px; color: #718096;
     }
     .sh-error .material-icons { font-size: 56px; color: #cbd5e0; display: block; margin-bottom: 12px; }
     .sh-error p { font-size: 15px; margin: 0 0 20px; }
 
-    @media (max-width: 600px) {
+    /* ── Mobile responsive ── */
+    @media (max-width: 768px) {
       .sh-page { padding: 16px; }
       .sh-header { flex-direction: column; }
-      .sh-grid { grid-template-columns: 1fr; }
+      .sh-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .counts-card { grid-column: span 1; }
+      .counts-grid { grid-template-columns: repeat(2, 1fr); }
+      .sh-card { padding: 16px; }
+      .count-number { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .sh-header h1 { font-size: 20px; }
+      .sh-header h1 .material-icons { font-size: 24px; }
+      .btn-refresh span:last-child { display: none; }
     }
   `]
 })
@@ -371,6 +563,8 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
   loadError = '';
   lastUpdate: Date | null = null;
   secondsSinceUpdate = 0;
+  isRefreshing = false;
+  expandedErrors = new Set<string>();
 
   private destroy$ = new Subject<void>();
   private ticker: any;
@@ -387,21 +581,16 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
   get diskPercent(): number {
     const disk = this.check?.info?.['disk'];
     if (!disk) return 0;
-    // terminus returns disk info differently; fall back to 0 if not available
     return (disk as any).usedPercent != null
       ? Math.round((disk as any).usedPercent * 100)
       : 0;
   }
 
-  get diskStatus(): string {
-    return this.check?.info?.['disk']?.status ?? '';
-  }
-
   constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // Auto-refresh every 10 seconds
-    interval(10000)
+    // Auto-refresh every 30 seconds
+    interval(30000)
       .pipe(startWith(0), takeUntil(this.destroy$))
       .subscribe(() => this.load());
 
@@ -424,6 +613,37 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
     this.load();
   }
 
+  toggleErrorDetails(cardId: string): void {
+    const next = new Set(this.expandedErrors);
+    next.has(cardId) ? next.delete(cardId) : next.add(cardId);
+    this.expandedErrors = next;
+    this.cdr.markForCheck();
+  }
+
+  getCauses(errorType: string): string[] {
+    const causes: Record<string, string[]> = {
+      backend: [
+        'SYSTEM_HEALTH.CAUSE.DB_CONTAINER_DOWN',
+        'SYSTEM_HEALTH.CAUSE.DB_NETWORK',
+      ],
+      database: [
+        'SYSTEM_HEALTH.CAUSE.DB_CONTAINER_DOWN',
+        'SYSTEM_HEALTH.CAUSE.DB_NETWORK',
+        'SYSTEM_HEALTH.CAUSE.DB_CREDENTIALS',
+      ],
+      disk: [
+        'SYSTEM_HEALTH.CAUSE.DISK_LOGS',
+        'SYSTEM_HEALTH.CAUSE.DISK_BACKUPS',
+        'SYSTEM_HEALTH.CAUSE.DISK_DICOM',
+      ],
+      memory: [
+        'SYSTEM_HEALTH.CAUSE.MEMORY_LEAK',
+        'SYSTEM_HEALTH.CAUSE.MEMORY_LOAD',
+      ],
+    };
+    return causes[errorType] || [];
+  }
+
   private load(): void {
     this.loading = true;
     this.loadError = '';
@@ -438,6 +658,14 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.lastUpdate = new Date();
         this.secondsSinceUpdate = 0;
+
+        // Trigger refresh-flash animation
+        this.isRefreshing = true;
+        setTimeout(() => {
+          this.isRefreshing = false;
+          this.cdr.markForCheck();
+        }, 650);
+
         this.cdr.markForCheck();
       },
       error: (err) => {
@@ -453,9 +681,9 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
     const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const parts: string[] = [];
-    if (d > 0) parts.push(`${d} zile`);
-    if (h > 0) parts.push(`${h} ore`);
-    parts.push(`${m} minute`);
-    return parts.join(', ');
+    if (d > 0) parts.push(`${d}d`);
+    if (h > 0) parts.push(`${h}h`);
+    parts.push(`${m}m`);
+    return parts.join(' ');
   }
 }

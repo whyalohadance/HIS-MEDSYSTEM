@@ -1456,6 +1456,21 @@
     "MS": "ms",
     "USED": "folosit",
     "FREE": "liber",
-    "LOADING": "Se încarcă..."
+    "LOADING": "Se încarcă...",
+    "SHOW_DETAILS": "Vezi detalii",
+    "HIDE_DETAILS": "Ascunde detalii",
+    "POSSIBLE_CAUSES": "Cauze posibile",
+    "RETRY": "Reîncearcă",
+    "DB_COUNTS": "Înregistrări în BD",
+    "CAUSE": {
+      "DB_CONTAINER_DOWN": "Containerul PostgreSQL nu rulează",
+      "DB_NETWORK": "Problemă de rețea între containere",
+      "DB_CREDENTIALS": "Credențiale incorecte în .env",
+      "DISK_LOGS": "Loguri prea voluminoase — rulează rotation",
+      "DISK_BACKUPS": "Prea multe backup-uri vechi",
+      "DISK_DICOM": "Studii DICOM ocupă mult spațiu",
+      "MEMORY_LEAK": "Posibilă scurgere de memorie (memory leak)",
+      "MEMORY_LOAD": "Încărcare mare — prea mulți utilizatori simultan"
+    }
   }
 }

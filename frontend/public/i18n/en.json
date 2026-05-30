@@ -1456,6 +1456,21 @@
     "MS": "ms",
     "USED": "used",
     "FREE": "free",
-    "LOADING": "Loading..."
+    "LOADING": "Loading...",
+    "SHOW_DETAILS": "Show details",
+    "HIDE_DETAILS": "Hide details",
+    "POSSIBLE_CAUSES": "Possible causes",
+    "RETRY": "Retry",
+    "DB_COUNTS": "Database records",
+    "CAUSE": {
+      "DB_CONTAINER_DOWN": "PostgreSQL container is not running",
+      "DB_NETWORK": "Network issue between containers",
+      "DB_CREDENTIALS": "Wrong credentials in .env",
+      "DISK_LOGS": "Logs too large — run rotation",
+      "DISK_BACKUPS": "Too many old backups",
+      "DISK_DICOM": "DICOM studies use a lot of space",
+      "MEMORY_LEAK": "Possible memory leak",
+      "MEMORY_LOAD": "High load — many concurrent users"
+    }
   }
 }
