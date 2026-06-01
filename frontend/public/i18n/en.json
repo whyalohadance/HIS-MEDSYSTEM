@@ -32,7 +32,8 @@
     "WELCOME": "Start",
     "TUTORIALS": "Learn",
     "SYSTEM_HEALTH": "System Health",
-    "AUDIT": "Audit Log"
+    "AUDIT": "Audit Log",
+    "BACKUP": "Backup"
   },
   "COMMON": {
     "SAVE": "Save",
@@ -1505,5 +1506,37 @@
       "ACCESS": "Access",
       "EXPORT": "Export"
     }
+  },
+  "BACKUP": {
+    "TITLE": "Backup Management",
+    "SUBTITLE": "Create, restore and delete database backups",
+    "CREATE_NOW": "Create backup now",
+    "CREATING": "Creating backup...",
+    "NO_BACKUPS": "No backups found",
+    "FILENAME": "Filename",
+    "SIZE": "Size",
+    "CREATED_AT": "Created at",
+    "ACTIONS": "Actions",
+    "DOWNLOAD": "Download",
+    "RESTORE": "Restore",
+    "DELETE": "Delete",
+    "RESTORE_TITLE": "Restore database",
+    "RESTORE_WARNING": "Warning! All current data will be replaced with the backup. This action cannot be undone.",
+    "RESTORE_CONFIRM_TEXT": "Type RESTORE to confirm:",
+    "RESTORE_PLACEHOLDER": "RESTORE",
+    "RESTORE_BUTTON": "Restore database",
+    "CANCEL": "Cancel",
+    "DELETE_TITLE": "Delete backup",
+    "DELETE_WARNING": "This backup file will be permanently deleted.",
+    "DELETE_BUTTON": "Delete",
+    "TOTAL_BACKUPS": "Total backups",
+    "TOTAL_SIZE": "Total size",
+    "LAST_BACKUP": "Last backup",
+    "SUCCESS_CREATED": "Backup created successfully",
+    "SUCCESS_RESTORED": "Database restored successfully",
+    "SUCCESS_DELETED": "Backup deleted",
+    "ERROR_CREATE": "Error creating backup",
+    "ERROR_RESTORE": "Error restoring database",
+    "ERROR_DELETE": "Error deleting backup"
   }
 }

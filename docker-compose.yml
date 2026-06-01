@@ -67,6 +67,7 @@ services:
       - uploads_data:/app/uploads
       - dicom_data:/app/dicom
       - ./backend/fonts:/app/fonts:ro
+      - ./backups:/app/backups
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/api/health || exit 1"]
       interval: 10s

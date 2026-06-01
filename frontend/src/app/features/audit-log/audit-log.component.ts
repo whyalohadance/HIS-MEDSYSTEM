@@ -173,7 +173,7 @@ const ACTION_COLORS: Record<string, string> = {
           </td>
           <td class="td-user">
             <span *ngIf="e.user" class="user-chip">
-              <span class="user-avatar">{{ (e.user.firstName?.[0] || '?') }}</span>
+              <span class="user-avatar">{{ (e.user!.firstName?.[0] || '?') }}</span>
               <span class="user-name">{{ e.user.firstName }} {{ e.user.lastName }}</span>
             </span>
             <span *ngIf="!e.user" class="text-muted">—</span>

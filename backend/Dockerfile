@@ -32,8 +32,8 @@ RUN npm run build
 # ============================================
 FROM node:20-alpine AS production
 
-# wget для healthcheck, tzdata для timezone, curl для отладки
-RUN apk add --no-cache wget tzdata curl
+# wget (healthcheck), tzdata, curl, postgresql-client (pg_dump/psql), gzip
+RUN apk add --no-cache wget tzdata curl postgresql-client gzip
 ENV TZ=Europe/Chisinau
 
 WORKDIR /app
@@ -49,7 +49,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/fonts ./fonts
 
 # Папки для файлов (перемонтируются как Docker volumes)
-RUN mkdir -p uploads dicom && chown -R node:node uploads dicom
+RUN mkdir -p uploads dicom backups && chown -R node:node uploads dicom backups
 
 # Непривилегированный пользователь
 USER node

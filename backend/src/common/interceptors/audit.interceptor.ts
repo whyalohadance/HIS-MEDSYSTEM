@@ -6,7 +6,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { AuditService } from '../../modules/audit/audit.service';
 import { AuditAction } from '../../modules/audit/audit-log.entity';
 
-const SKIP_PATTERNS = ['/health', '/audit', '/auth/refresh', '/auth/profile', '/upload'];
+const SKIP_PATTERNS = ['/health', '/audit', '/auth/refresh', '/auth/profile', '/upload', '/backup/download'];
 const LOGGED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
 const METHOD_TO_ACTION: Record<string, AuditAction> = {

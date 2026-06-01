@@ -50,6 +50,7 @@ import { HealthModule } from './modules/health/health.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuditLog } from './modules/audit/audit-log.entity';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
+import { BackupModule } from './modules/backup/backup.module';
 
 @Module({
   imports: [
@@ -106,6 +107,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     TutorialsModule,
     HealthModule,
     AuditModule,
+    BackupModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],

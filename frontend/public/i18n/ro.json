@@ -32,7 +32,8 @@
     "WELCOME": "Start",
     "TUTORIALS": "Învățare",
     "SYSTEM_HEALTH": "Sănătatea sistemului",
-    "AUDIT": "Jurnal de audit"
+    "AUDIT": "Jurnal de audit",
+    "BACKUP": "Copii de rezervă"
   },
   "COMMON": {
     "SAVE": "Salvează",
@@ -1505,5 +1506,37 @@
       "ACCESS": "Acces",
       "EXPORT": "Export"
     }
+  },
+  "BACKUP": {
+    "TITLE": "Gestionare backup",
+    "SUBTITLE": "Creare, restaurare și ștergere copii de rezervă",
+    "CREATE_NOW": "Creează backup acum",
+    "CREATING": "Se creează backup...",
+    "NO_BACKUPS": "Nu există copii de rezervă",
+    "FILENAME": "Nume fișier",
+    "SIZE": "Dimensiune",
+    "CREATED_AT": "Creat la",
+    "ACTIONS": "Acțiuni",
+    "DOWNLOAD": "Descarcă",
+    "RESTORE": "Restaurează",
+    "DELETE": "Șterge",
+    "RESTORE_TITLE": "Restaurare bază de date",
+    "RESTORE_WARNING": "Atenție! Toate datele curente vor fi înlocuite cu cele din backup. Această acțiune este ireversibilă.",
+    "RESTORE_CONFIRM_TEXT": "Scrie RESTORE pentru a confirma:",
+    "RESTORE_PLACEHOLDER": "RESTORE",
+    "RESTORE_BUTTON": "Restaurează baza de date",
+    "CANCEL": "Anulează",
+    "DELETE_TITLE": "Ștergere backup",
+    "DELETE_WARNING": "Fișierul backup va fi șters definitiv.",
+    "DELETE_BUTTON": "Șterge",
+    "TOTAL_BACKUPS": "Total backup-uri",
+    "TOTAL_SIZE": "Dimensiune totală",
+    "LAST_BACKUP": "Ultimul backup",
+    "SUCCESS_CREATED": "Backup creat cu succes",
+    "SUCCESS_RESTORED": "Baza de date restaurată",
+    "SUCCESS_DELETED": "Backup șters",
+    "ERROR_CREATE": "Eroare la creare backup",
+    "ERROR_RESTORE": "Eroare la restaurare",
+    "ERROR_DELETE": "Eroare la ștergere"
   }
 }
