@@ -23,7 +23,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [setupGuard, authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
       { path: 'welcome', loadComponent: () => import('./features/welcome/welcome.component').then(m => m.WelcomeComponent), canActivate: [adminGuard] },
