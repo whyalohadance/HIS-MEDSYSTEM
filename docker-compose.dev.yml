@@ -42,10 +42,11 @@ services:
     # Bind-mount source so edits are visible instantly
     volumes:
       - ./frontend/src:/app/src
+      - ./frontend/proxy.conf.json:/app/proxy.conf.json
     # Expose Angular dev server on port 4200 (in addition to base 80)
     ports:
       - "4200:4200"
-    command: npx ng serve --host 0.0.0.0 --poll 2000
+    command: npx ng serve --host 0.0.0.0 --poll 2000 --proxy-config proxy.conf.json
     # More RAM for ng serve + incremental compilation
     mem_limit: 1g
     cpus: 1
