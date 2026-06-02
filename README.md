@@ -4,333 +4,349 @@
 
 # HIS-MedSystem
 
-**Hospital Information System** — Radiology and Laboratory Modules Integrated
+**Sistem Informațional Spitalicesc** — Module Radiologie și Laborator Integrate
 
-*Engineered for Healthcare. Built for Performance.*
+*Inginerie pentru Sănătate. Construit pentru Performanță.*
 
 ---
 
-[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-95.5%2F100-D5001C?style=flat-square&labelColor=000000)]()
-[![Tests](https://img.shields.io/badge/Tests-272%20Passing-D5001C?style=flat-square&labelColor=000000)]()
-[![Coverage](https://img.shields.io/badge/Coverage-Production%20Ready-D5001C?style=flat-square&labelColor=000000)]()
-[![License](https://img.shields.io/badge/License-Academic-D5001C?style=flat-square&labelColor=000000)]()
+**Limbă**: 🇷🇴 Română · [🇬🇧 English](README.en.md) · [🇷🇺 Русский](README.ru.md)
 
-[**Live Demo**](#getting-started) · [**Documentation**](docs/) · [**Architecture**](docs/architecture/) · [**API**](docs/API.md)
+[![Versiune](https://img.shields.io/badge/Versiune-v3.0.1-D5001C?style=flat-square&labelColor=000000)]()
+[![Securitate](https://img.shields.io/badge/Securitate-Hardened-D5001C?style=flat-square&labelColor=000000)]()
+[![Conformitate](https://img.shields.io/badge/HIPAA%2FGDPR-Compliant-D5001C?style=flat-square&labelColor=000000)]()
+[![Licență](https://img.shields.io/badge/Licen%C8%9B%C4%83-Academic-D5001C?style=flat-square&labelColor=000000)]()
+
+[**Instalare rapidă**](#instalare-rapidă) · [**Documentație**](docs/) · [**Arhitectură**](docs/architecture/) · [**API**](docs/API.md) · [**Deployment**](docs/DEPLOYMENT.md)
 
 </div>
 
 ---
 
-## Overview
+## Despre proiect
 
-HIS-MedSystem is a comprehensive Hospital Information System designed for modern medical facilities. The platform integrates three critical healthcare modules into a unified, secure, and performant solution.
+HIS-MedSystem este un sistem informațional spitalicesc complet, dezvoltat ca proiect de licență la Colegiul Universității Tehnice a Moldovei (CUTM), specialitatea Administrarea Aplicațiilor Web. Sistemul integrează trei module medicale critice într-o soluție unificată, securizată și performantă.
 
-| Module | Purpose | Status |
-|--------|---------|--------|
-| **HIS** | Hospital workflow management, appointments, patient records | Production |
-| **RIS** | Radiology Information System with DICOM viewer | Production |
-| **LIS** | Laboratory Information System with auto-flag detection | Production |
+**Autor:** Ceban Devid · **Grupa:** AAW-221 · **An:** 2026
 
 ---
 
-## Performance
+## Module integrate
 
-Engineered to industrial standards. Measured by Google Lighthouse and custom benchmarks.
+| Modul | Funcționalități | Status |
+|-------|-----------------|--------|
+| **HIS** | Pacienți, programări, fișe medicale, rapoarte | Production |
+| **RIS** | Vizualizator DICOM, studii, worklist radiologi | Production |
+| **LIS** | Catalog analize, comenzi laborator, rezultate | Production |
+| **Setup Wizard** | Configurare inițială clinică, animație Mac-style | Production |
+| **System Health** | Monitorizare în timp real (DB, disc, RAM, uptime) | Production |
+| **Audit Log** | Jurnal automat conform HIPAA/GDPR | Production |
+| **Backup Management** | Copii de rezervă cu restore din UI | Production |
 
-| Category | Score |
-|----------|-------|
+---
+
+## Securitate
+
+Implementată conform standardelor industriei pentru aplicații medicale:
+
+- **Rate Limiting** — 5 încercări/minut pe login, 100 req/min global (Throttler)
+- **Account Lockout** — Blocare automată după 5 încercări eșuate (15 minute)
+- **Lockout Overlay** — Ecran complet cu cronometru de blocare
+- **Password Hardening** — Bcrypt cost 12, regex complexity validation
+- **JWT + RBAC** — 5 roluri (admin, doctor, receptionist, radiologist, lab_technician)
+- **Helmet** — Security headers (X-Frame-Options, CSP, HSTS)
+- **CORS Whitelist** — Configurabil prin .env
+- **User Enumeration Protection** — Mesaje generice la autentificare eșuată
+- **Audit Trail** — Toate acțiunile CRUD logate automat
+- **Restore Confirmation** — Restaurarea DB necesită tastarea "RESTORE"
+
+---
+
+## Performanță
+
+Măsurată cu Google Lighthouse și benchmark-uri interne:
+
+| Categorie | Scor |
+|-----------|------|
 | Performance | **91 / 100** |
 | Accessibility | **94 / 100** |
 | Best Practices | **97 / 100** |
 | SEO | **100 / 100** |
 
-**API Response Time**: 1–7ms (average)  
-**Frontend Bundle**: 525 KB  
-**First Contentful Paint**: < 600ms  
-**Database Indexes**: 40 optimized
+**API Response**: 1–7ms · **Frontend Bundle**: 525 KB · **FCP**: < 600ms · **DB Indexes**: 43 optimizate
 
 ---
 
-## Architecture
+## Arhitectură
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Angular 19 Frontend                                         │
-│  SSR · Lazy Loading · i18n (RU/RO/EN)                       │
+│  Angular 19 Frontend (Standalone Components · i18n RO/RU/EN) │
+│  Setup Wizard · System Health · Audit · Backup · DICOM Viewer│
 └─────────────────────────┬───────────────────────────────────┘
-                          │ HTTPS / REST
+                          │ HTTPS / REST + JWT
 ┌─────────────────────────┴───────────────────────────────────┐
-│  NestJS 10 Backend API                                       │
-│  JWT Auth · RBAC · Validation · Rate Limiting               │
+│  NestJS 10 API                                               │
+│  20 Module · Global Interceptors (Audit, Validation)         │
+│  Throttler · Helmet · Rate Limiting · RBAC Guards            │
 └─────────────────────────┬───────────────────────────────────┘
                           │
-               ┌──────────┴──────────┐
-               │                     │
-        ┌──────┴──────┐     ┌────────┴───────┐
-        │ PostgreSQL  │     │   Cron Jobs    │
-        │     16      │     │   Schedulers   │
-        └─────────────┘     └────────────────┘
+              ┌───────────┴───────────┐
+              │                       │
+       ┌──────┴──────┐         ┌──────┴──────┐
+       │ PostgreSQL  │         │   Backups   │
+       │     16      │◀────────│  pg_dump    │
+       │ 21 tabele   │         │   gzip      │
+       │ 43 indecși  │         │  /backups/  │
+       └─────────────┘         └─────────────┘
 ```
 
 ---
 
-## Technology Stack
+## Stack tehnologic
 
 **Frontend**
-- Angular 19 (Standalone Components)
+- Angular 19 (Standalone Components, signals)
 - TypeScript 5.3
-- Chart.js 4 (Analytics)
-- Cornerstone.js (DICOM Viewer)
-- ngx-translate (i18n)
+- Chart.js 4 (analytics, dashboards)
+- Cornerstone.js (DICOM viewer)
+- ngx-translate (i18n trei limbi)
+- Material Icons
 
 **Backend**
-- NestJS 10
+- NestJS 10 (20 module)
 - TypeORM 0.3
-- JWT (Passport.js)
-- bcryptjs (Password hashing)
-- class-validator (DTO validation)
+- @nestjs/terminus (health checks)
+- @nestjs/throttler (rate limiting)
+- helmet (security headers)
+- JWT + Passport.js
+- bcryptjs (cost 12)
+- class-validator
 
-**Database**
+**Bază de date**
 - PostgreSQL 16-alpine
-- 18 tables, 40 indexes
-- ENUM types for type safety
+- 21 tabele, 43 indecși, JSONB pentru audit changes
+- ENUM types pentru type safety
+- Timestamp audit trail
 
-**Infrastructure**
-- Docker Compose
-- Nginx (reverse proxy, gzip)
-- Health checks
-- Auto-restart policies
-
----
-
-## Features
-
-### Patient Management
-- Complete medical records with history
-- Appointment scheduling with conflict detection
-- Multi-tab patient cards (info, visits, labs, radiology, dynamics)
-- Edit modal with role-based field access
-
-### RIS (Radiology)
-- Worklist management with priority sorting
-- DICOM viewer with measurements (length, HU, angle)
-- Multi-frame series support
-- Auto-generated reports with templates
-- Window/Level presets (Brain, Bone, Lung, Abdomen)
-- PDF export
-
-### LIS (Laboratory)
-- Test catalog with parameters and reference ranges
-- Auto-flag detection (Normal / Low / High / Critical)
-- Priority handling (Routine / Urgent / STAT)
-- Sample type management (Blood / Urine / Stool / Saliva)
-- Result entry with validation
-- PDF reports
-
-### Security
-- JWT authentication with refresh tokens
-- Role-Based Access Control (5 roles)
-- SQL injection protection (TypeORM parameterized)
-- XSS sanitization
-- CORS strictly configured
-- Bcrypt password hashing
-
-### Internationalization
-- Russian, Romanian, English
-- 100+ translation keys per language
-- Dynamic language switching
-- APP_INITIALIZER ensures translations load before render
+**Infrastructură**
+- Docker Compose (3 containere)
+- Nginx (reverse proxy, gzip, security headers)
+- pg_dump + gzip pentru backup-uri
 
 ---
 
-## Quality Engineering
-
-Every commit is verified by automated test suite.
-
-| Test Category | Tests | Pass Rate |
-|---------------|-------|-----------|
-| API E2E | 67 | 100% |
-| Security | 28 | 100% |
-| Mobile / Responsive | 150 | 100% |
-| Performance | 19 | 100% |
-| Database Integrity | — | Verified |
-| Lighthouse Audit | 8 pages | 95.5/100 avg |
-| **Total** | **272** | **100%** |
-
-See detailed reports in [`docs/reports/`](docs/reports/).
-
----
-
-## Getting Started
-
-### Prerequisites
-- Docker 20+
-- Docker Compose 2+
-- 4 GB RAM minimum
-
-### Quick Start
+## Instalare rapidă
 
 ```bash
+# 1. Clone
 git clone https://github.com/whyalohadance/HIS-MEDSYSTEM.git
 cd HIS-MEDSYSTEM
 
-# Start all services
+# 2. Configurare .env
+cp .env.example .env
+
+# 3. Start (production mode)
 docker-compose up -d
 
-# Seed demo data
-make seed-demo
+# 4. Deschide în browser (după ~60 secunde)
+open http://localhost
 ```
 
-Access the application at **http://localhost**
+La prima rulare apare **Setup Wizard** cu animație Mac-style — completați 7 pași pentru configurarea clinicii și crearea contului administrator.
 
-### Demo Credentials
-
-| Role | Email | Password |
-|------|-------|----------|
-| Administrator | admin@med.com | password123 |
-| Doctor | doctor@med.com | password123 |
-| Reception | reception@med.com | password123 |
-| Radiologist | radiolog@med.com | password123 |
-| Lab Technician | lab@med.com | password123 |
+Pentru deployment complet pe server (Ubuntu/Cloudflare/HTTPS), vedeți [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ---
 
-## Development Mode
+## Mod dezvoltare
 
-Hot-reload setup — code changes apply automatically without rebuilding containers.
-
-### First-time setup
+Hot-reload — modificările apar instantaneu fără rebuild:
 
 ```bash
-# Build the dev images (only needed once or after package.json changes)
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-Or with Make:
-
-```bash
-make hot-build
-```
-
-### Day-to-day usage
-
-```bash
-# Start hot-reload (uses cached images)
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
-
-# Or shorter:
-make hot
-```
-
-| Service | URL | Hot-reload trigger |
-|---------|-----|--------------------|
-| Frontend (ng serve) | http://localhost:4200 | Any change in `frontend/src/` |
-| Backend API (NestJS watch) | http://localhost:3000 | Any change in `backend/src/` |
-| API Docs (Swagger) | http://localhost:3000/api/docs | — |
-
-> **How it works**: `./backend/src` and `./frontend/src` are bind-mounted into their respective containers. The Angular CLI (`--poll 2000`) and NestJS (`--watch`) detect changes and recompile automatically.
-
-### Stop
-
-```bash
-make hot-down
-# or
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
-```
+| Serviciu | URL | Hot-reload |
+|----------|-----|-----------|
+| Frontend (ng serve) | http://localhost:4200 | Orice modificare în `frontend/src/` |
+| Backend (NestJS watch) | http://localhost:3000 | Orice modificare în `backend/src/` |
+| Swagger | http://localhost:3000/api/docs | — |
 
 ---
 
-## Commands
+## Roluri și permisiuni
+
+| Rol | Funcționalități cheie |
+|-----|----------------------|
+| **admin** | Acces total · System Health · Audit Log · Backup · Personal · Configurare |
+| **doctor** | Pacienți · Programări · Fișe medicale · Cabinetul meu |
+| **receptionist** | Programări · Pacienți · Înregistrare |
+| **radiologist** | Studii DICOM · Worklist · Raport radiologic |
+| **lab_technician** | Comenzi laborator · Worklist · Catalog analize · Rezultate |
+
+### Conturi demo (parola: `password123`)
+
+| Email | Rol |
+|-------|-----|
+| admin@med.com | Administrator |
+| doctor@med.com | Doctor |
+| reception@med.com | Recepționist |
+| radiolog@med.com | Radiolog |
+| lab@med.com | Laborant |
+
+---
+
+## Funcționalități administrative
+
+### System Health Dashboard
+
+Monitorizare în timp real cu auto-refresh la 30 secunde:
+
+- Status Backend API și PostgreSQL (cu ping time)
+- Utilizare disc (progress bar + alerte)
+- Memorie RAM heap (limită 250 MB)
+- Uptime aplicație
+- Contoare baze de date (pacienți, programări, utilizatori, studii)
+- Card-uri expandabile cu cauze posibile pentru erori
+
+### Audit Log
+
+Jurnalizare automată conform HIPAA/GDPR Article 30:
+
+- Toate acțiunile CRUD (POST/PUT/PATCH/DELETE) logate prin Interceptor global
+- Skip pentru endpoint-uri interne (/health, /audit, /auth/refresh)
+- Filtre: utilizator, acțiune, resursă, interval de date
+- Export CSV cu BOM UTF-8
+- Auto-refresh 30s (toggle)
+- Indexare DB pentru queries rapide
+
+### Backup Management
+
+- Creare backup cu un click (pg_dump | gzip)
+- Listă backup-uri cu metadata (dimensiune, dată)
+- Download direct prin UI
+- Restore cu confirmare textuală "RESTORE"
+- Auto-cleanup la depășirea 1 GB
+- Toate operațiile audit-logate
+- Stocare în volume Docker persistent
+
+---
+
+## Comenzi utile
 
 ```bash
-make up               # Start all containers (production)
-make down             # Stop all containers
+make up               # Start toate containerele (production)
+make down             # Oprire containere
 make hot              # Start hot-reload dev mode
-make logs             # View logs
-make seed-demo        # Load demonstration data
-make test             # Run full test suite
-make backup           # Backup database
-make restore          # Restore database
-make clean            # Remove containers and volumes
+make logs             # Vizualizare logs
+make seed-demo        # Date de demonstrație
+make test             # Rulează test suite complet
+make backup           # Backup bază de date
+make restore          # Restore bază de date
+make clean            # Eliminare containere și volume
 ```
 
 ---
 
-## Project Structure
+## Structura proiectului
 
 ```
 HIS-MEDSYSTEM/
-├── backend/              NestJS API server
-│   ├── src/
-│   │   ├── modules/      Feature modules (patients, appointments, ...)
-│   │   ├── database/     Migrations and seeds
-│   │   └── shared/       Guards, decorators, filters
-│   └── Dockerfile
-│
-├── frontend/             Angular SPA
-│   ├── src/app/
-│   │   ├── features/     Page-level components
-│   │   ├── shared/       Reusable components
-│   │   ├── core/         Services, interceptors, guards
-│   │   └── public/i18n/  Translation files
-│   └── Dockerfile
-│
-├── tests/                Automated test suite
-│   ├── api/              API E2E tests
-│   ├── security/         Security audit
-│   ├── e2e/              Browser tests (Puppeteer)
-│   └── database/         DB integrity checks
-│
-├── docs/                 Technical documentation
-├── scripts/              Utility scripts
-└── docker-compose.yml    Infrastructure as code
+├── backend/                    NestJS 10 API
+│   └── src/modules/            20 module (auth, patients, audit, backup, health...)
+├── frontend/                   Angular 19 SPA
+│   └── src/app/
+│       ├── features/           35 features (HIS, RIS, LIS, admin)
+│       ├── shared/             Componente reutilizabile
+│       └── core/               Services, guards, models
+├── docs/                       Documentație
+│   ├── API.md
+│   ├── DEPLOYMENT.md
+│   ├── DOCKER.md
+│   ├── architecture/           Diagrame UML
+│   └── reports/                Rapoarte de testare
+├── scripts/                    Init DB, seed-uri
+├── tests/                      API, E2E, security, smoke
+├── backups/                    Volume pentru backup-uri
+├── docker-compose.yml          Production
+├── docker-compose.dev.yml      Development hot-reload
+└── .github/workflows/          CI/CD
 ```
 
 ---
 
-## Documentation
+## Documentație
 
-- [Architecture Overview](docs/architecture/README.md)
-- [Database Schema](docs/architecture/DATABASE.md)
-- [Security Model](docs/architecture/SECURITY.md)
-- [Testing Strategy](docs/TESTING.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
+- [Instalare detaliată](docs/INSTALLATION.md)
+- [Deployment pe server](docs/DEPLOYMENT.md) — Ubuntu, HTTPS, Cloudflare
+- [Arhitectură](docs/architecture/) — diagrame UML, ER, flow
 - [API Reference](docs/API.md)
-
-## Test Reports
-
-Latest verified reports:
-
-- [API Test Report](docs/reports/api-tests.md)
-- [Security Audit](docs/reports/security.md)
-- [Mobile Responsiveness](docs/reports/mobile.md)
-- [Performance Benchmarks](docs/reports/performance.md)
-- [Database Integrity](docs/reports/database.md)
-- [Lighthouse Audit](docs/reports/lighthouse.md)
+- [Docker](docs/DOCKER.md)
+- [Testing](docs/TESTING.md)
+- [Rapoarte testare](docs/reports/)
 
 ---
 
-## Academic Context
+## Conformitate
 
-This project was developed as part of practical training at **Centrul de Diagnostic German (CDG)**, Chișinău, Moldova.
-
-**Training Period**: 21.04.2026 — 12.06.2026  
-**Institution**: CUTM (Colegiul Universității Tehnice a Moldovei)  
-**Specialization**: Administrarea Aplicațiilor Web (AAW)  
-**Student**: Ceban Devid
+| Standard | Implementare |
+|----------|-------------|
+| **HIPAA** | Audit trail complet, access control, encryption |
+| **GDPR Article 30** | Records of processing activities (audit logs) |
+| **OWASP Top 10** | Protecție injection, broken auth, XSS, etc. |
+| **ISO 27001** | Information security best practices |
 
 ---
 
-## License
+## Status
 
-This project is released for academic and educational purposes. See [LICENSE](LICENSE) for details.
+**Implementat (v3.0.1):**
+
+- HIS core (pacienți, programări, fișe)
+- RIS cu DICOM viewer (Cornerstone.js)
+- LIS cu catalog analize și auto-flag detection
+- Setup Wizard cu Mac-style intro (12 limbi, carusel infinit)
+- Security hardening (rate limit, lockout, helmet, CORS)
+- System Health Dashboard (real-time, auto-refresh)
+- Audit Log conform HIPAA/GDPR
+- Backup Management cu restore confirmat
+- i18n trei limbi (RO/RU/EN)
+- Dev mode cu hot-reload și proxy config
+
+**Planificat (post-defensiune):**
+
+- WebSocket alerts pentru evenimente critice
+- Istoricul metricilor pe 24h cu grafice
+- Escalare blocaj exponențial (exponential backoff)
+- Mobile app native (Capacitor)
+- Modul facturare și integrare CAS
+
+---
+
+## Context academic
+
+**Autor:** Ceban Devid  
+**Instituție:** Colegiul Universității Tehnice a Moldovei (CUTM)  
+**Specialitatea:** Administrarea Aplicațiilor Web (AAW)  
+**Grupa:** AAW-221  
+**An academic:** 2025–2026  
+**Practică:** Centrul de Diagnostic German (CDG), Chișinău  
+**Perioada:** 21.04.2026 – 12.06.2026  
+**GitHub:** [@whyalohadance](https://github.com/whyalohadance)
+
+---
+
+## Licență
+
+Proiect academic dezvoltat în cadrul tezei de licență. Toate drepturile rezervate © 2026 Ceban Devid.
 
 ---
 
 <div align="center">
 
-Built with precision. Tested with rigor.
+Construit cu precizie. Testat cu rigoare.
 
-*If everything seems under control, you're not going fast enough. — Mario Andretti*
+*Dacă totul pare sub control, nu mergi suficient de repede. — Mario Andretti*
 
 </div>
