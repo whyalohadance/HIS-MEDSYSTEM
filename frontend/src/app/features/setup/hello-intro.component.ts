@@ -6,44 +6,50 @@ import { trigger, transition, style, animate } from '@angular/animations';
   selector: 'app-hello-intro',
   standalone: true,
   imports: [CommonModule],
+
+  // Mac-style плавные переходы — длительность и cubic-bezier как у Apple
   animations: [
     trigger('textSwap', [
       transition('* => *', [
-        style({ opacity: 0, transform: 'translateY(8px)', filter: 'blur(4px)' }),
-        animate('500ms cubic-bezier(0.4, 0, 0.2, 1)',
-          style({ opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }))
+        style({
+          opacity: 0,
+          transform: 'translateY(12px) scale(0.96)',
+          filter: 'blur(8px)'
+        }),
+        animate('900ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({
+            opacity: 1,
+            transform: 'translateY(0) scale(1)',
+            filter: 'blur(0)'
+          })
+        )
       ])
     ])
   ],
+
   template: `
     <div class="hello-screen" [class.fade-out]="isFadingOut">
 
-      <!-- Floating orbs -->
       <div class="orb orb-blue"></div>
       <div class="orb orb-purple"></div>
       <div class="orb orb-cyan"></div>
 
       <div class="hello-content">
-
-        <!-- Logo -->
         <div class="hello-logo">
           <span class="material-icons">local_hospital</span>
         </div>
 
-        <!-- Main greeting -->
+        <!-- БЕЗ *ngIf — элементы ВСЕГДА в DOM -->
         <div class="hello-main">
           <div class="hello-word" [@textSwap]="currentGreeting">{{ currentGreeting }}</div>
         </div>
 
-        <!-- Language carousel -->
         <div class="hello-lang" [@textSwap]="currentLang">{{ currentLang }}</div>
 
-        <!-- Subtitle — appears after delay -->
         <div class="hello-subtitle" [class.visible]="showSubtitle">
           HIS-MedSystem — Medical Information System
         </div>
 
-        <!-- Continue button — appears last -->
         <button
           class="hello-continue"
           [class.visible]="showContinue"
@@ -51,75 +57,73 @@ import { trigger, transition, style, animate } from '@angular/animations';
           <span>Continue</span>
           <span class="material-icons">arrow_forward</span>
         </button>
-
       </div>
     </div>
   `,
+
   styles: [`
     :host { display: block; }
 
     .hello-screen {
       position: fixed;
       inset: 0;
-      background: #0a0e1a;
+      background: #000;
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hello-screen.fade-out {
       opacity: 0;
-      transform: scale(1.05);
+      transform: scale(1.03);
       pointer-events: none;
     }
 
-    /* ── Floating orbs ── */
+    /* Subtle orbs — slower, more atmospheric */
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(100px);
       pointer-events: none;
-      animation: orbFloat 8s ease-in-out infinite;
+      animation: orbFloat 14s ease-in-out infinite;
     }
 
     .orb-blue {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(26,115,232,0.35) 0%, transparent 70%);
-      top: -100px;
-      left: -100px;
-      animation-delay: 0s;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(26,115,232,0.28) 0%, transparent 70%);
+      top: -150px;
+      left: -150px;
     }
 
     .orb-purple {
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(124,58,237,0.3) 0%, transparent 70%);
-      bottom: -80px;
-      right: -80px;
-      animation-delay: -3s;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(124,58,237,0.24) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: -5s;
     }
 
     .orb-cyan {
-      width: 260px;
-      height: 260px;
-      background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%);
       top: 40%;
-      right: 10%;
-      animation-delay: -5s;
+      right: 12%;
+      animation-delay: -8s;
     }
 
     @keyframes orbFloat {
       0%, 100% { transform: translate(0, 0) scale(1); }
-      33%       { transform: translate(30px, -40px) scale(1.05); }
-      66%       { transform: translate(-20px, 20px) scale(0.97); }
+      33%       { transform: translate(40px, -50px) scale(1.08); }
+      66%       { transform: translate(-30px, 30px) scale(0.95); }
     }
 
-    /* ── Content ── */
     .hello-content {
       display: flex;
       flex-direction: column;
@@ -130,63 +134,32 @@ import { trigger, transition, style, animate } from '@angular/animations';
       z-index: 1;
     }
 
-    /* ── Logo ── */
+    /* Логотип — появляется ОДИН РАЗ медленно, потом застывает */
     .hello-logo {
-      width: 88px;
-      height: 88px;
+      width: 96px;
+      height: 96px;
       background: linear-gradient(135deg, #1a73e8 0%, #7c3aed 100%);
-      border-radius: 24px;
+      border-radius: 26px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 40px;
+      margin-bottom: 56px;
       box-shadow:
         0 0 0 1px rgba(255,255,255,0.08),
-        0 20px 60px rgba(26,115,232,0.4);
-      animation: logoFloat 4s ease-in-out infinite, logoAppear 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+        0 25px 80px rgba(26,115,232,0.45);
+      animation: logoAppear 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
     }
 
     .hello-logo .material-icons {
-      font-size: 48px;
+      font-size: 52px;
       color: white;
     }
 
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-8px); }
-    }
-
     @keyframes logoAppear {
-      from { opacity: 0; transform: translateY(20px) scale(0.85); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ── Main greeting ── */
-    .hello-main {
-      height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-
-    .hello-word {
-      font-size: clamp(64px, 10vw, 108px);
-      font-weight: 300;
-      letter-spacing: -0.04em;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      opacity: 1;
-      animation: wordAppearOnce 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    @keyframes wordAppearOnce {
       from {
         opacity: 0;
-        transform: translateY(20px) scale(0.92);
+        transform: translateY(30px) scale(0.7);
         filter: blur(8px);
       }
       to {
@@ -196,31 +169,50 @@ import { trigger, transition, style, animate } from '@angular/animations';
       }
     }
 
-    /* ── Language label ── */
-    .hello-lang {
-      font-size: 18px;
-      font-weight: 400;
-      color: #94a3b8;
-      letter-spacing: 0.02em;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      height: 28px;
+    /* Главное приветствие — фиксированная высота, БЕЗ *ngIf */
+    .hello-main {
+      height: 140px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 56px;
+      margin-bottom: 24px;
     }
 
-    /* ── Subtitle ── */
+    .hello-word {
+      font-size: clamp(72px, 11vw, 124px);
+      font-weight: 200;
+      letter-spacing: -0.04em;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+      color: white;
+      line-height: 1;
+    }
+
+    /* Подпись языка */
+    .hello-lang {
+      font-size: 17px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.02em;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 80px;
+    }
+
+    /* Subtitle — плавное появление */
     .hello-subtitle {
-      font-size: 14px;
-      color: rgba(148,163,184,0.7);
-      letter-spacing: 0.05em;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.15em;
       font-weight: 400;
       text-transform: uppercase;
       opacity: 0;
       transform: translateY(8px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-      margin-bottom: 40px;
+      transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s,
+                  transform 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+      margin-bottom: 56px;
     }
 
     .hello-subtitle.visible {
@@ -228,24 +220,26 @@ import { trigger, transition, style, animate } from '@angular/animations';
       transform: translateY(0);
     }
 
-    /* ── Continue button ── */
+    /* Continue button */
     .hello-continue {
       display: inline-flex;
       align-items: center;
       gap: 10px;
       padding: 14px 32px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
       color: white;
       border-radius: 100px;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 400;
       cursor: pointer;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(20px);
       opacity: 0;
       transform: translateY(12px);
-      transition: opacity 0.6s ease, transform 0.6s ease, background 0.2s, border-color 0.2s;
+      transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.3s, border-color 0.3s;
       letter-spacing: 0.01em;
     }
 
@@ -255,25 +249,25 @@ import { trigger, transition, style, animate } from '@angular/animations';
     }
 
     .hello-continue:hover {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
     }
 
     .hello-continue .material-icons {
       font-size: 18px;
-      transition: transform 0.2s;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .hello-continue:hover .material-icons {
-      transform: translateX(4px);
+      transform: translateX(5px);
     }
 
     @media (max-width: 600px) {
-      .hello-logo { width: 72px; height: 72px; margin-bottom: 32px; }
-      .hello-logo .material-icons { font-size: 38px; }
-      .hello-main { height: 90px; }
-      .orb-blue { width: 260px; height: 260px; }
-      .orb-purple { width: 200px; height: 200px; }
+      .hello-logo { width: 80px; height: 80px; margin-bottom: 40px; }
+      .hello-logo .material-icons { font-size: 42px; }
+      .hello-main { height: 100px; }
+      .orb-blue { width: 320px; height: 320px; }
+      .orb-purple { width: 240px; height: 240px; }
     }
   `]
 })
@@ -290,12 +284,14 @@ export class HelloIntroComponent implements OnInit, OnDestroy {
     { word: 'こんにちは',    lang: '日本語' },
     { word: 'Hallo',       lang: 'Deutsch' },
     { word: '안녕하세요',    lang: '한국어' },
-    { word: 'Hello',       lang: 'Welcome' },
+    { word: 'Olá',         lang: 'Português' },
+    { word: 'مرحبا',        lang: 'العربية' },
+    { word: '你好',         lang: '中文' },
   ];
 
   currentGreeting = '';
   currentLang = '';
-  currentIndex = 0;
+  private currentIndex = 0;
   isFadingOut = false;
   showSubtitle = false;
   showContinue = false;
@@ -307,36 +303,39 @@ export class HelloIntroComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.showFirst();
+    // Первое слово показываем через 1.5с после старта (даём логотипу появиться)
+    setTimeout(() => {
+      this.currentGreeting = this.greetings[0].word;
+      this.currentLang = this.greetings[0].lang;
+      this.cdr.detectChanges();
+    }, 1500);
 
+    // КАРУСЕЛЬ — бесконечный цикл через modulo, ~3 сек на слово как у Mac
     this.intervalId = setInterval(() => {
       this.currentIndex = (this.currentIndex + 1) % this.greetings.length;
       this.currentGreeting = this.greetings[this.currentIndex].word;
       this.currentLang = this.greetings[this.currentIndex].lang;
       this.cdr.detectChanges();
-    }, 1800);
+    }, 3200);
 
+    // Subtitle через 4 секунды
     this.subtitleTimer = setTimeout(() => {
       this.showSubtitle = true;
       this.cdr.detectChanges();
-    }, 2800);
+    }, 4000);
 
+    // Continue button через 6 секунд
     this.continueTimer = setTimeout(() => {
       this.showContinue = true;
       this.cdr.detectChanges();
-    }, 3800);
-  }
-
-  showFirst() {
-    this.currentGreeting = this.greetings[0].word;
-    this.currentLang = this.greetings[0].lang;
+    }, 6000);
   }
 
   onContinue() {
     this.complete();
   }
 
-  @HostListener('keydown', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
     if ((event.key === 'Enter' || event.key === ' ') && this.showContinue) {
       event.preventDefault();
@@ -351,7 +350,7 @@ export class HelloIntroComponent implements OnInit, OnDestroy {
     }
     this.isFadingOut = true;
     this.cdr.detectChanges();
-    setTimeout(() => this.done.emit(), 900);
+    setTimeout(() => this.done.emit(), 1200);
   }
 
   ngOnDestroy() {
