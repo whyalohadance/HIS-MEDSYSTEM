@@ -1,10 +1,20 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-hello-intro',
   standalone: true,
   imports: [CommonModule],
+  animations: [
+    trigger('textSwap', [
+      transition('* => *', [
+        style({ opacity: 0, transform: 'translateY(8px)', filter: 'blur(4px)' }),
+        animate('500ms cubic-bezier(0.4, 0, 0.2, 1)',
+          style({ opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }))
+      ])
+    ])
+  ],
   template: `
     <div class="hello-screen" [class.fade-out]="isFadingOut">
 
@@ -22,11 +32,11 @@ import { CommonModule } from '@angular/common';
 
         <!-- Main greeting -->
         <div class="hello-main">
-          <div class="hello-word" *ngIf="currentGreeting">{{ currentGreeting }}</div>
+          <div class="hello-word" [@textSwap]="currentGreeting">{{ currentGreeting }}</div>
         </div>
 
         <!-- Language carousel -->
-        <div class="hello-lang" *ngIf="currentLang">{{ currentLang }}</div>
+        <div class="hello-lang" [@textSwap]="currentLang">{{ currentLang }}</div>
 
         <!-- Subtitle — appears after delay -->
         <div class="hello-subtitle" [class.visible]="showSubtitle">
@@ -169,25 +179,20 @@ import { CommonModule } from '@angular/common';
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: wordAppear 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      opacity: 0;
+      opacity: 1;
+      animation: wordAppearOnce 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    @keyframes wordAppear {
-      0% {
+    @keyframes wordAppearOnce {
+      from {
         opacity: 0;
-        transform: translateY(24px) scale(0.92);
-        filter: blur(12px);
+        transform: translateY(20px) scale(0.92);
+        filter: blur(8px);
       }
-      25%, 65% {
+      to {
         opacity: 1;
         transform: translateY(0) scale(1);
         filter: blur(0);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-16px) scale(1.04);
-        filter: blur(8px);
       }
     }
 
@@ -203,12 +208,6 @@ import { CommonModule } from '@angular/common';
       align-items: center;
       justify-content: center;
       margin-bottom: 56px;
-      animation: langFadeIn 0.4s ease-out forwards;
-    }
-
-    @keyframes langFadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
     }
 
     /* ── Subtitle ── */
@@ -308,43 +307,29 @@ export class HelloIntroComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.showNext();
+    this.showFirst();
 
     this.intervalId = setInterval(() => {
-      this.currentIndex++;
-      if (this.currentIndex >= this.greetings.length) {
-        // stop cycling but don't auto-complete — wait for user
-        if (this.intervalId) {
-          clearInterval(this.intervalId);
-          this.intervalId = null;
-        }
-        return;
-      }
-      this.showNext();
+      this.currentIndex = (this.currentIndex + 1) % this.greetings.length;
+      this.currentGreeting = this.greetings[this.currentIndex].word;
+      this.currentLang = this.greetings[this.currentIndex].lang;
+      this.cdr.detectChanges();
     }, 1800);
 
-    // Subtitle appears at 2.8s
     this.subtitleTimer = setTimeout(() => {
       this.showSubtitle = true;
       this.cdr.detectChanges();
     }, 2800);
 
-    // Continue button appears at 3.8s
     this.continueTimer = setTimeout(() => {
       this.showContinue = true;
       this.cdr.detectChanges();
     }, 3800);
   }
 
-  showNext() {
-    this.currentGreeting = '';
-    this.currentLang = '';
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.currentGreeting = this.greetings[this.currentIndex].word;
-      this.currentLang = this.greetings[this.currentIndex].lang;
-      this.cdr.detectChanges();
-    }, 50);
+  showFirst() {
+    this.currentGreeting = this.greetings[0].word;
+    this.currentLang = this.greetings[0].lang;
   }
 
   onContinue() {
