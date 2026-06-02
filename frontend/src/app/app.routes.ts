@@ -7,7 +7,6 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'setup',
     loadComponent: () => import('./features/setup/setup.component').then(m => m.SetupComponent),
