@@ -63,3 +63,6 @@ backend/dicom/*
 backups/*.sql
 backups/*.dump
 !backups/.gitkeep
+
+# Database backups (auto-generated)
+backups/*.sql.gz
