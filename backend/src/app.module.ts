@@ -51,6 +51,8 @@ import { AuditModule } from './modules/audit/audit.module';
 import { AuditLog } from './modules/audit/audit-log.entity';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 import { BackupModule } from './modules/backup/backup.module';
+import { DevicesModule } from './modules/devices/devices.module';
+import { Device } from './modules/devices/device.entity';
 
 @Module({
   imports: [
@@ -65,7 +67,7 @@ import { BackupModule } from './modules/backup/backup.module';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_DATABASE'),
-        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress, AuditLog],
+        entities: [User, Patient, Appointment, Result, Notification, Review, Room, Examination, Schedule, Study, Modality, Series, DicomImage, Measurement, Annotation, LabTest, LabOrder, LabResult, TutorialProgress, AuditLog, Device],
         synchronize: config.get('DB_SYNCHRONIZE', 'true') !== 'false',
         logging: ['error'],
         retryAttempts: 30,
@@ -108,6 +110,7 @@ import { BackupModule } from './modules/backup/backup.module';
     HealthModule,
     AuditModule,
     BackupModule,
+    DevicesModule,
     TypeOrmModule.forFeature([User, Patient, Appointment, Review]),
   ],
   controllers: [AppController],
